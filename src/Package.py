@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Sep 18 14:53:00 2020
+
+@author: fatih
+"""
+
+import apt
+
+
+class Package(object):
+    def __init__(self):
+        # self.updatecache()
+
+        """
+        self.MainWindowUIFileName = "SplashScreen.glade"
+        try:
+            self.GtkBuilder = Gtk.Builder.new_from_file(self.MainWindowUIFileName)
+            self.GtkBuilder.connect_signals(self)
+        except GObject.GError:
+            print(_("Error reading GUI file: ") + self.MainWindowUIFileName)
+            raise
+
+        self.splashwindow = self.GtkBuilder.get_object("splashwindow")
+
+        self.splashwindow.set_auto_startup_notification(False)
+        
+        p = threading.Thread(target=self.updatecache)
+        p.start()
+        p.join()
+        
+        self.splashwindow.show_all()
+        """
+        self.cache = apt.Cache()
+        self.cache.open()
+        print("cache updated")
+        # p = threading.Thread(target=self.updatecache)
+        # p.start()
+
+    """
+    def updatecache(self):
+        self.cache = apt.Cache()
+        self.cache.open()
+        time.sleep(1)
+        print("cache updated")
+        # self.splashwindow.close()
+    """
+
+    """
+    def onDestroy(self, widget):
+        print("splashwindow destroyed")
+        self.splashwindow.destroy()
+    """
+
+    def updatecache(self):
+        self.cache = apt.Cache()
+        self.cache.open()
+        print("cache re-updated")
+
+    def isinstalled(self, packagename):
+
+        package = self.cache[packagename]
+        if package.is_installed:
+            return True
+        else:
+            return False
+
+    def missingdeps(self, packagename):
+        package = self.cache[packagename]
+        for rd in package.candidate.get_dependencies("Depends"):
+            if not rd.installed_target_versions:
+                return True
+                break
+        return False
+
+        # print(package.versions[0].get_dependencies("Depends"))

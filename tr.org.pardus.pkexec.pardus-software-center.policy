@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD polkit Policy Configuration 1.0//EN"
+"http://www.freedesktop.org/software/polkit/policyconfig-1.dtd">
+<policyconfig>
+
+  <vendor>Pardus Developers</vendor>
+  <vendor_url>https://www.pardus.org.tr</vendor_url>
+
+  <action id="tr.org.pardus.pkexec.pardus-software-center">
+    <description>Pardus Software Center Authentication</description>
+    <message>Authentication is required for Pardus Software Center</message>
+    <message xml:lang="tr">Pardus Yazılım Merkezi için yetkilendirme gerekiyor</message>
+    <icon_name>preferences-system</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/share/pardus/pardus-software-center/src/Actions.py</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+
+</policyconfig>

@@ -1,0 +1,3 @@
+*.glade~
+*.idea
+__pycache__
