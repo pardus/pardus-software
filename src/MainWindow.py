@@ -38,6 +38,8 @@ class MainWindow(object):
         self.isSearching = False
 
         self.CategoryListBox = self.GtkBuilder.get_object("CategoryListBox")
+
+        self.HomeCategoryFlowBox = self.GtkBuilder.get_object("HomeCategoryFlowBox")
         """
         self.CategoryAllRow = Gtk.ListBoxRow.new()
         self.CategoryListBox.add(self.CategoryAllRow)
@@ -86,6 +88,34 @@ class MainWindow(object):
 
             grid.add(caticon)
             grid.attach(label, 1, 0, 3, 1)
+
+        for i in self.categories:
+
+            try:
+                caticon = Gtk.Image.new_from_pixbuf(
+                    Gtk.IconTheme.get_default().load_icon("applications-" + i, 38, Gtk.IconLookupFlags(16)))
+            except:
+                if i == "education":
+                    caticon = Gtk.Image.new_from_pixbuf(
+                        Gtk.IconTheme.get_default().load_icon("applications-science", 38, Gtk.IconLookupFlags(16)))
+                elif i == "all":
+                    caticon = Gtk.Image.new_from_pixbuf(
+                        Gtk.IconTheme.get_default().load_icon("applications-other", 38, Gtk.IconLookupFlags(16)))
+                else:
+                    caticon = Gtk.Image.new_from_pixbuf(
+                        Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 38, Gtk.IconLookupFlags(16)))
+
+            label = Gtk.Label.new()
+            label_text = str(i).capitalize()
+            label.set_text(" " + label_text)
+
+            grid = Gtk.Grid.new()
+
+            grid.add(caticon)
+
+            grid.attach(label, 1, 0, 3, 1)
+
+            self.HomeCategoryFlowBox.add(grid)
 
         self.searchbar = self.GtkBuilder.get_object("searchbar")
 
@@ -317,7 +347,8 @@ class MainWindow(object):
         self.normalpage()
 
     def normalpage(self):
-        self.mainstack.set_visible_child_name("page1")
+        # self.mainstack.set_visible_child_name("page1")
+        self.mainstack.set_visible_child_name("page2")
         self.rightstack.set_visible_child_name("page0")
         self.splashspinner.stop()
         self.splashbarstatus = False
@@ -474,6 +505,21 @@ class MainWindow(object):
                 self.MainIconView.unselect_all()
         """
 
+    def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
+        self.isSearching = False
+        self.homebutton.grab_focus()
+        self.mainstack.set_visible_child_name("page1")
+        self.rightstack.set_visible_child_name("page0")
+
+        self.CurrentCategory = child.get_index()
+        self.CategoryFilter.refilter()
+
+        print("home category selected " + str(self.CurrentCategory))
+
+    def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
+        print("changed")
+        self.isSearching = False
+
     def on_CategoryListBox_row_selected(self, listbox, row):
         # self.CurrentCategory = row.get_index()
         # self.CategoryFilter.refilter()
@@ -485,10 +531,13 @@ class MainWindow(object):
         self.CurrentCategory = row.get_index()
         self.CategoryFilter.refilter()
         self.rightstack.set_visible_child_name("page0")
+        self.mainstack.set_visible_child_name("page1")
         print("category selected")
+        # print(row)
 
     def on_homebutton_clicked(self, widget):
-        self.rightstack.set_visible_child_name("page2")
+        self.mainstack.set_visible_child_name("page2")
+        # self.rightstack.set_visible_child_name("page2")
         self.CategoryListBox.unselect_all()
         self.MainIconView.unselect_all()
 
