@@ -118,15 +118,21 @@ class MainWindow(object):
             self.HomeCategoryFlowBox.add(grid)
 
         self.searchbar = self.GtkBuilder.get_object("searchbar")
+        self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.rightstack = self.GtkBuilder.get_object("rightstack")
+        self.homestack = self.GtkBuilder.get_object("homestack")
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
 
         self.homebutton = self.GtkBuilder.get_object("homebutton")
         self.homebutton.set_image(Gtk.Image.new_from_stock("gtk-home", Gtk.IconSize.DND))
+
+        self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
+        self.topbutton1.get_style_context().add_class("suggested-action")
+        self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
 
         self.settingsbutton = self.GtkBuilder.get_object("settingsbutton")
         self.settingsbutton.set_image(Gtk.Image.new_from_stock("gtk-preferences", Gtk.IconSize.DND))
@@ -147,6 +153,10 @@ class MainWindow(object):
         self.MainIconView = self.GtkBuilder.get_object("MainIconView")
         self.MainIconView.set_pixbuf_column(0)
         self.MainIconView.set_text_column(3)
+
+        self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
+        self.PardusAppsIconView.set_pixbuf_column(0)
+        self.PardusAppsIconView.set_text_column(3)
 
         self.AppListStore = self.GtkBuilder.get_object("AppListStore")
 
@@ -453,7 +463,8 @@ class MainWindow(object):
             self.Package.missingdeps(self.appname)
 
     def CategoryFilterFunction(self, model, iteration, data):
-        search_entry_text = self.searchbar.get_text()
+        # search_entry_text = self.searchbar.get_text()
+        search_entry_text = self.pardussearchbar.get_text()
         categorynumber = int(model[iteration][2])
         appname = model[iteration][1]
         showall = True
@@ -508,8 +519,9 @@ class MainWindow(object):
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         self.isSearching = False
         self.homebutton.grab_focus()
-        self.mainstack.set_visible_child_name("page1")
+        self.mainstack.set_visible_child_name("page2")
         self.rightstack.set_visible_child_name("page0")
+        self.homestack.set_visible_child_name("page2")
 
         self.CurrentCategory = child.get_index()
         self.CategoryFilter.refilter()
@@ -517,7 +529,7 @@ class MainWindow(object):
         print("home category selected " + str(self.CurrentCategory))
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
-        print("changed")
+        print("on_HomeCategoryFlowBox_selected_children_changed")
         self.isSearching = False
 
     def on_CategoryListBox_row_selected(self, listbox, row):
@@ -565,6 +577,43 @@ class MainWindow(object):
 
         self.actionPackage()
         print("action " + self.appname)
+
+    def on_topbutton1_clicked(self, button):
+        self.homestack.set_visible_child_name("page0")
+        self.HomeCategoryFlowBox.unselect_all()
+        if self.topbutton2.get_style_context().has_class("suggested-action"):
+            self.topbutton2.get_style_context().remove_class("suggested-action")
+        if not self.topbutton1.get_style_context().has_class("suggested-action"):
+            self.topbutton1.get_style_context().add_class("suggested-action")
+
+    def on_topbutton2_clicked(self, button):
+        self.homestack.set_visible_child_name("page1")
+        if self.topbutton1.get_style_context().has_class("suggested-action"):
+            self.topbutton1.get_style_context().remove_class("suggested-action")
+        if not self.topbutton2.get_style_context().has_class("suggested-action"):
+            self.topbutton2.get_style_context().add_class("suggested-action")
+
+    def on_pardussearchbar_search_changed(self, entry_search):
+        self.isSearching = True
+
+        print("len search filter " + str(len(self.SearchFilter)))
+        # self.SearchFilter.refilter()
+        self.CategoryFilter.refilter()
+
+    def on_pardussearchbar_button_press_event(self, widget, click):
+        # self.rightstack.set_visible_child_name("page0")
+        # self.SearchFilter.refilter()
+        self.isSearching = True
+        print("on_searchbar_button_press_event")
+        self.CategoryFilter.refilter()
+
+    def on_pardussearchbar_focus_in_event(self, widget, click):
+        # self.rightstack.set_visible_child_name("page0")
+        # self.SearchFilter.refilter()
+        print("on_searchbar_focus_in_event")
+        self.isSearching = True
+        # self.SearchFilter.refilter()
+        self.CategoryFilter.refilter()
 
     def actionPackage(self):
 
