@@ -158,7 +158,12 @@ class MainWindow(object):
         self.PardusAppsIconView.set_pixbuf_column(0)
         self.PardusAppsIconView.set_text_column(3)
 
+        self.EditorAppsIconView = self.GtkBuilder.get_object("EditorAppsIconView")
+        self.EditorAppsIconView.set_pixbuf_column(0)
+        self.EditorAppsIconView.set_text_column(3)
+
         self.AppListStore = self.GtkBuilder.get_object("AppListStore")
+        self.EditorListStore = self.GtkBuilder.get_object("EditorListStore")
 
         self.apps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
                      {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
@@ -331,6 +336,28 @@ class MainWindow(object):
             category = app['category']
             categorynumber = self.get_category_number(app['category'])
             self.AppListStore.append([pixbuf, appname, categorynumber, prettyname])
+
+        self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
+                     {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
+                     {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
+
+        for ediapp in self.editorapps:
+            try:
+                edipixbuf = Gtk.IconTheme.get_default().load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
+                # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
+            except:
+                # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
+                try:
+                    edipixbuf = self.parduspixbuf.load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
+                except:
+                    edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, Gtk.IconLookupFlags(16))
+
+            ediappname = ediapp['name']
+            ediprettyname = ediapp['prettyname']
+            edicategory = ediapp['category']
+            edicategorynumber = self.get_category_number(ediapp['category'])
+            self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
+
 
         self.CurrentCategory = -1
 
