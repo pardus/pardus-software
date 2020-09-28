@@ -141,6 +141,8 @@ class MainWindow(object):
         # self.categorybutton.set_image(Gtk.Image.new_from_stock("gtk-justify-fill", Gtk.IconSize.DND))
 
         self.backbutton = self.GtkBuilder.get_object("backbutton")
+        self.appsbackbutton = self.GtkBuilder.get_object("appsbackbutton")
+        self.appsbackbutton.set_image(Gtk.Image.new_from_stock("gtk-go-back", Gtk.IconSize.BUTTON))
 
         self.progressbar = self.GtkBuilder.get_object("progressbar")
 
@@ -338,8 +340,8 @@ class MainWindow(object):
             self.AppListStore.append([pixbuf, appname, categorynumber, prettyname])
 
         self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
-                     {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
-                     {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
+                           {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
+                           {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
 
         for ediapp in self.editorapps:
             try:
@@ -357,7 +359,6 @@ class MainWindow(object):
             edicategory = ediapp['category']
             edicategorynumber = self.get_category_number(ediapp['category'])
             self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
-
 
         self.CurrentCategory = -1
 
@@ -441,7 +442,12 @@ class MainWindow(object):
         self.MainWindow.destroy()
 
     def on_backbutton_clicked(self, widget):
-        self.rightstack.set_visible_child_name("page0")
+        self.homestack.set_visible_child_name("page2")
+        self.PardusAppsIconView.unselect_all()
+
+    def on_appsbackbutton_clicked(self, widget):
+        self.homestack.set_visible_child_name("page0")
+        self.HomeCategoryFlowBox.unselect_all()
 
     def on_MainIconView_selection_changed(self, iconview):
 
@@ -455,6 +461,52 @@ class MainWindow(object):
             print(self.appname)
 
             self.rightstack.set_visible_child_name("page1")
+
+            try:
+                pixbuf = Gtk.IconTheme.get_default().load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
+                # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
+            except:
+                # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
+                try:
+                    pixbuf = self.parduspixbuf.load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
+                except:
+                    pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
+
+            self.dIcon.set_from_pixbuf(pixbuf)
+
+            self.dName.set_markup("<b> " + prettyname + "</b>")
+
+            if self.Package.isinstalled(self.appname):
+                if self.dActionButton.get_style_context().has_class("suggested-action"):
+                    self.dActionButton.get_style_context().remove_class("suggested-action")
+                self.dActionButton.get_style_context().add_class("destructive-action")
+                self.dActionButton.set_label(" Uninstall")
+                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+            else:
+                if self.dActionButton.get_style_context().has_class("destructive-action"):
+                    self.dActionButton.get_style_context().remove_class("destructive-action")
+                self.dActionButton.get_style_context().add_class("suggested-action")
+                self.dActionButton.set_label(" Install")
+                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+            self.backbutton.set_image(Gtk.Image.new_from_stock("gtk-go-back", Gtk.IconSize.BUTTON))
+
+            print(self.Package.isinstalled(self.appname))
+
+            self.Package.missingdeps(self.appname)
+
+    def on_PardusAppsIconView_selection_changed(self, iconview):
+
+        selected_items = iconview.get_selected_items()
+
+        if len(selected_items) == 1:
+            treeiter = self.CategoryFilter.get_iter(selected_items[0])
+            self.appname = self.CategoryFilter.get(treeiter, 1)[0]
+            prettyname = self.CategoryFilter.get(treeiter, 3)[0]
+            print(selected_items[0])
+            print(self.appname)
+
+            self.homestack.set_visible_child_name("page3")
 
             try:
                 pixbuf = Gtk.IconTheme.get_default().load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
