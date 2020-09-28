@@ -93,17 +93,17 @@ class MainWindow(object):
 
             try:
                 caticon = Gtk.Image.new_from_pixbuf(
-                    Gtk.IconTheme.get_default().load_icon("applications-" + i, 38, Gtk.IconLookupFlags(16)))
+                    Gtk.IconTheme.get_default().load_icon("applications-" + i, 48, Gtk.IconLookupFlags(16)))
             except:
                 if i == "education":
                     caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("applications-science", 38, Gtk.IconLookupFlags(16)))
+                        Gtk.IconTheme.get_default().load_icon("applications-science", 48, Gtk.IconLookupFlags(16)))
                 elif i == "all":
                     caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("applications-other", 38, Gtk.IconLookupFlags(16)))
+                        Gtk.IconTheme.get_default().load_icon("applications-other", 48, Gtk.IconLookupFlags(16)))
                 else:
                     caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 38, Gtk.IconLookupFlags(16)))
+                        Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48, Gtk.IconLookupFlags(16)))
 
             label = Gtk.Label.new()
             label_text = str(i).capitalize()
@@ -674,6 +674,7 @@ class MainWindow(object):
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isSearching = True
+        self.homestack.set_visible_child_name("page2")
 
         print("len search filter " + str(len(self.SearchFilter)))
         # self.SearchFilter.refilter()
@@ -681,12 +682,14 @@ class MainWindow(object):
 
     def on_pardussearchbar_button_press_event(self, widget, click):
         # self.rightstack.set_visible_child_name("page0")
+        self.homestack.set_visible_child_name("page2")
         # self.SearchFilter.refilter()
         self.isSearching = True
         print("on_searchbar_button_press_event")
         self.CategoryFilter.refilter()
 
     def on_pardussearchbar_focus_in_event(self, widget, click):
+        self.homestack.set_visible_child_name("page2")
         # self.rightstack.set_visible_child_name("page0")
         # self.SearchFilter.refilter()
         print("on_searchbar_focus_in_event")
