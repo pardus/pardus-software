@@ -60,6 +60,12 @@
       </object>
     </child>
   </object>
+  <object class="GtkImage" id="backimage">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-next-rtl-symbolic</property>
+    <property name="icon_size">3</property>
+  </object>
   <object class="GtkWindow" id="MainWindow">
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
@@ -2474,6 +2480,7 @@
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="hexpand">True</property>
+                <property name="column_homogeneous">True</property>
                 <child>
                   <object class="GtkGrid">
                     <property name="visible">True</property>
@@ -2532,12 +2539,11 @@
                     <property name="hexpand">True</property>
                     <property name="column_spacing">7</property>
                     <child>
-                      <object class="GtkSpinner">
+                      <object class="GtkSpinner" id="topspinner">
                         <property name="width_request">35</property>
                         <property name="height_request">35</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="active">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">3</property>
@@ -2545,10 +2551,10 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="progresstextlabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Blobby installing</property>
+                        <property name="hexpand">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -2556,15 +2562,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">%10</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">2</property>
-                        <property name="top_attach">0</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <placeholder/>
@@ -2619,11 +2617,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="backimage">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">go-next-rtl-symbolic</property>
-    <property name="icon_size">3</property>
   </object>
 </interface>

@@ -176,6 +176,9 @@ class MainWindow(object):
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
         self.menubackbutton.set_sensitive(False)
 
+        self.progresstextlabel = self.GtkBuilder.get_object("progresstextlabel")
+        self.topspinner = self.GtkBuilder.get_object("topspinner")
+
         self.apps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
                      {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
                      {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'},
@@ -712,6 +715,8 @@ class MainWindow(object):
 
     def actionPackage(self):
 
+        self.topspinner.start()
+
         self.dActionButton.set_sensitive(False)
 
         self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
@@ -760,9 +765,13 @@ class MainWindow(object):
             if self.Package.missingdeps(self.actionedappname):
                 print("Downloading dependencies " + percent + " %")
                 self.progressbar.set_text(self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
+                self.progresstextlabel.set_text(
+                    self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
             else:
                 print("Controlling dependencies : " + percent + " %")
                 self.progressbar.set_text(self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
+                self.progresstextlabel.set_text(
+                    self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
             self.progressbar.set_fraction(int(percent) / 100)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
@@ -770,8 +779,10 @@ class MainWindow(object):
             self.progressbar.set_show_text(True)
             if self.isinstalled:
                 self.progressbar.set_text(self.actionedappname + " | " + "Removing" + ": " + percent + " %")
+                self.progresstextlabel.set_text(self.actionedappname + " | " + "Removing" + ": " + percent + " %")
             else:
                 self.progressbar.set_text(self.actionedappname + " | " + "Installing" + ": " + percent + " %")
+                self.progresstextlabel.set_text(self.actionedappname + " | " + "Installing" + ": " + percent + " %")
             self.progressbar.set_fraction(int(percent) / 100)
 
         return True
@@ -781,8 +792,10 @@ class MainWindow(object):
             if self.progressbar.get_show_text():
                 if self.isinstalled:
                     self.progressbar.set_text(self.actionedappname + " | Removed : 100 %")
+                    self.progresstextlabel.set_text(self.actionedappname + " | Removed : 100 %")
                 else:
                     self.progressbar.set_text(self.actionedappname + " | Installed : 100 %")
+                    self.progresstextlabel.set_text(self.actionedappname + " | Installed : 100 %")
                 self.progressbar.set_fraction(1)
             self.Package.updatecache()
             self.controlView()
@@ -793,10 +806,12 @@ class MainWindow(object):
                 self.progressbar.set_fraction(0)
 
         self.dActionButton.set_sensitive(True)
+        self.topspinner.stop()
         print(status)
 
     def controlView(self):
-        selected_items = self.MainIconView.get_selected_items()
+        selected_items = self.PardusAppsIconView.get_selected_items()
+        print("selected_items " + str(selected_items))
         if len(selected_items) == 1:
             treeiter = self.CategoryFilter.get_iter(selected_items[0])
             appname = self.CategoryFilter.get(treeiter, 1)[0]
