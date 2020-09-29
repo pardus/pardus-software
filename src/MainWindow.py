@@ -140,10 +140,6 @@ class MainWindow(object):
         self.categorybutton = self.GtkBuilder.get_object("categorybutton")
         # self.categorybutton.set_image(Gtk.Image.new_from_stock("gtk-justify-fill", Gtk.IconSize.DND))
 
-        self.backbutton = self.GtkBuilder.get_object("backbutton")
-        self.appsbackbutton = self.GtkBuilder.get_object("appsbackbutton")
-        self.appsbackbutton.set_image(Gtk.Image.new_from_stock("gtk-go-back", Gtk.IconSize.BUTTON))
-
         self.progressbar = self.GtkBuilder.get_object("progressbar")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
@@ -166,6 +162,19 @@ class MainWindow(object):
 
         self.AppListStore = self.GtkBuilder.get_object("AppListStore")
         self.EditorListStore = self.GtkBuilder.get_object("EditorListStore")
+
+        self.HeaderBarMenu = self.GtkBuilder.get_object("HeaderBarMenu")
+        self.menu1 = self.GtkBuilder.get_object("menu1")
+        self.menu1.set_use_stock(False)
+        self.menu1.set_label("Menu 1")
+        self.menu1.set_image(Gtk.Image.new_from_icon_name('gtk-dialog-question', Gtk.IconSize.BUTTON))
+        self.menu2 = self.GtkBuilder.get_object("menu2")
+        self.menu2.set_use_stock(False)
+        self.menu2.set_label("Menu 2")
+        self.menu2.set_image(Gtk.Image.new_from_icon_name('gtk-dialog-question', Gtk.IconSize.BUTTON))
+
+        self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
+        self.menubackbutton.set_sensitive(False)
 
         self.apps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
                      {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
@@ -441,13 +450,15 @@ class MainWindow(object):
     def onDestroy(self, widget):
         self.MainWindow.destroy()
 
-    def on_backbutton_clicked(self, widget):
-        self.homestack.set_visible_child_name("page2")
-        self.PardusAppsIconView.unselect_all()
-
-    def on_appsbackbutton_clicked(self, widget):
-        self.homestack.set_visible_child_name("page0")
-        self.HomeCategoryFlowBox.unselect_all()
+    def on_menubackbutton_clicked(self, widget):
+        print("menuback")
+        if self.homestack.get_visible_child_name() == "page2":
+            self.homestack.set_visible_child_name("page0")
+            self.HomeCategoryFlowBox.unselect_all()
+            self.menubackbutton.set_sensitive(False)
+        elif self.homestack.get_visible_child_name() == "page3":
+            self.homestack.set_visible_child_name("page2")
+            self.PardusAppsIconView.unselect_all()
 
     def on_MainIconView_selection_changed(self, iconview):
 
@@ -535,8 +546,6 @@ class MainWindow(object):
                 self.dActionButton.set_label(" Install")
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
-            self.backbutton.set_image(Gtk.Image.new_from_stock("gtk-go-back", Gtk.IconSize.BUTTON))
-
             print(self.Package.isinstalled(self.appname))
 
             self.Package.missingdeps(self.appname)
@@ -601,7 +610,7 @@ class MainWindow(object):
         self.mainstack.set_visible_child_name("page2")
         self.rightstack.set_visible_child_name("page0")
         self.homestack.set_visible_child_name("page2")
-
+        self.menubackbutton.set_sensitive(True)
         self.CurrentCategory = child.get_index()
         self.CategoryFilter.refilter()
 
@@ -660,6 +669,7 @@ class MainWindow(object):
     def on_topbutton1_clicked(self, button):
         self.homestack.set_visible_child_name("page0")
         self.HomeCategoryFlowBox.unselect_all()
+        self.menubackbutton.set_sensitive(False)
         if self.topbutton2.get_style_context().has_class("suggested-action"):
             self.topbutton2.get_style_context().remove_class("suggested-action")
         if not self.topbutton1.get_style_context().has_class("suggested-action"):
@@ -667,6 +677,7 @@ class MainWindow(object):
 
     def on_topbutton2_clicked(self, button):
         self.homestack.set_visible_child_name("page1")
+        self.menubackbutton.set_sensitive(False)
         if self.topbutton1.get_style_context().has_class("suggested-action"):
             self.topbutton1.get_style_context().remove_class("suggested-action")
         if not self.topbutton2.get_style_context().has_class("suggested-action"):
@@ -675,7 +686,7 @@ class MainWindow(object):
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isSearching = True
         self.homestack.set_visible_child_name("page2")
-
+        self.menubackbutton.set_sensitive(True)
         print("len search filter " + str(len(self.SearchFilter)))
         # self.SearchFilter.refilter()
         self.CategoryFilter.refilter()
@@ -684,12 +695,14 @@ class MainWindow(object):
         # self.rightstack.set_visible_child_name("page0")
         self.homestack.set_visible_child_name("page2")
         # self.SearchFilter.refilter()
+        self.menubackbutton.set_sensitive(True)
         self.isSearching = True
         print("on_searchbar_button_press_event")
         self.CategoryFilter.refilter()
 
     def on_pardussearchbar_focus_in_event(self, widget, click):
         self.homestack.set_visible_child_name("page2")
+        self.menubackbutton.set_sensitive(True)
         # self.rightstack.set_visible_child_name("page0")
         # self.SearchFilter.refilter()
         print("on_searchbar_focus_in_event")
