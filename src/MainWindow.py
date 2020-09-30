@@ -36,6 +36,7 @@ class MainWindow(object):
         self.parduspixbuf.set_custom_theme("pardus")
 
         self.isSearching = False
+        self.isRepoSearching = False
 
         self.CategoryListBox = self.GtkBuilder.get_object("CategoryListBox")
         self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
@@ -120,10 +121,12 @@ class MainWindow(object):
 
         self.searchbar = self.GtkBuilder.get_object("searchbar")
         self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
+        self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.rightstack = self.GtkBuilder.get_object("rightstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
+        self.searchstack = self.GtkBuilder.get_object("searchstack")
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
@@ -161,8 +164,11 @@ class MainWindow(object):
         self.EditorAppsIconView.set_pixbuf_column(0)
         self.EditorAppsIconView.set_text_column(3)
 
+        self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
+
         self.AppListStore = self.GtkBuilder.get_object("AppListStore")
         self.EditorListStore = self.GtkBuilder.get_object("EditorListStore")
+        self.RepoAppListStore = self.GtkBuilder.get_object("RepoAppListStore")
 
         self.HeaderBarMenu = self.GtkBuilder.get_object("HeaderBarMenu")
         self.menu1 = self.GtkBuilder.get_object("menu1")
@@ -374,10 +380,15 @@ class MainWindow(object):
             self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
 
         self.CurrentCategory = -1
+        self.RepoCurrentCategory = "empty"
 
         self.CategoryFilter = self.GtkBuilder.get_object("CategoryFilter")
         self.CategoryFilter.set_visible_func(self.CategoryFilterFunction)
         self.CategoryFilter.refilter()
+
+        self.RepoCategoryFilter = self.GtkBuilder.get_object("RepoCategoryFilter")
+        self.RepoCategoryFilter.set_visible_func(self.RepoCategoryFilterFunction)
+        self.RepoCategoryFilter.refilter()
 
         self.SearchFilter = self.GtkBuilder.get_object("SearchFilter")
         self.SearchFilter.set_visible_func(self.SearchFilterFunction)
@@ -395,6 +406,7 @@ class MainWindow(object):
     def worker(self):
         self.package()
         self.setRepoCategories()
+        self.setRepoApps()
         self.server()
         self.normalpage()
 
@@ -416,21 +428,40 @@ class MainWindow(object):
 
     def setRepoCategories(self):
         self.splashlabel.set_markup("<b>Setting Repo Categories</b>")
-        for i in self.Package.uniqsections:
-            row = Gtk.ListBoxRow.new()
+        for i in self.Package.sections:
+            # row = Gtk.ListBoxRow.new()
+            # self.RepoCategoryListBox.add(row)
+            #
+            label = Gtk.Label.new()
+            label.set_text(" " + str(i["name"]).capitalize())
+            label.set_property("xalign", 0)
+
+            row = Gtk.ListBoxRow()
+            row.add(label)
+
             self.RepoCategoryListBox.add(row)
 
-            grid = Gtk.Grid.new()
-            row.add(grid)
-
-
-            label = Gtk.Label.new()
-            label_text = str(i).capitalize()
-            label.set_text(" " + label_text)
-
-            grid.attach(label, 1, 0, 3, 1)
         self.RepoCategoryListBox.show_all()
         print("Repo Categories setted")
+
+    def setRepoApps(self):
+        self.splashlabel.set_markup("<b>Setting Repo Apps</b>")
+        print("Repo apps setting")
+        for app in self.Package.apps:
+            appname = app['name']
+            category = app['category']
+            categorynumber = self.get_repo_category_number(app["category"])
+            self.RepoAppListStore.append([appname, categorynumber, category])
+
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn("Name", renderer, text=0)
+        self.RepoAppsTreeView.append_column(column)
+
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn("Section", renderer, text=1)
+        self.RepoAppsTreeView.append_column(column)
+
+        self.RepoAppsTreeView.show_all()
 
     def server(self):
         # self.splashspinner.start()
@@ -469,6 +500,13 @@ class MainWindow(object):
             return 9
         else:
             return 404
+
+    def get_repo_category_number(self, thatcategory):
+        repocatnumber = 404
+        for i in self.Package.sections:
+            if thatcategory == i["name"]:
+                repocatnumber = i["number"]
+        return repocatnumber
 
     def onDestroy(self, widget):
         self.MainWindow.destroy()
@@ -599,6 +637,25 @@ class MainWindow(object):
             else:
                 return categorynumber == self.CurrentCategory
 
+    def RepoCategoryFilterFunction(self, model, iteration, data):
+        search_entry_text = self.reposearchbar.get_text()
+        appname = model[iteration][0]
+        categorynumber = int(model[iteration][1])
+        category = model[iteration][2]
+        showall = True
+
+        if self.isRepoSearching:
+            self.RepoCategoryListBox.unselect_all()
+            if search_entry_text in appname:
+                return True
+        else:
+            if self.RepoCurrentCategory == "all":
+                return True
+            elif self.RepoCurrentCategory == "empty":
+                return True
+            else:
+                return category == self.RepoCurrentCategory
+
     def SearchFilterFunction(self, model, iteration, data):
         search_entry_text = self.searchbar.get_text()
 
@@ -661,6 +718,21 @@ class MainWindow(object):
         print("category selected")
         # print(row)
 
+    def on_RepoCategoryListBox_row_selected(self, listbox, row):
+        # self.CurrentCategory = row.get_index()
+        # self.CategoryFilter.refilter()
+        # self.stack.set_visible_child_name("page0")
+        self.isRepoSearching = False
+
+    def on_RepoCategoryListBox_row_activated(self, listbox, row):
+        self.isRepoSearching = False
+        # self.RepoCurrentCategory = row.get_index()
+        self.RepoCurrentCategory = row.get_child().get_text().lower().strip()
+        print(row.get_child().get_text().lower().strip())
+        self.RepoCategoryFilter.refilter()
+        print("category selected")
+        # print(row)
+
     def on_homebutton_clicked(self, widget):
         self.mainstack.set_visible_child_name("page2")
         # self.rightstack.set_visible_child_name("page2")
@@ -677,7 +749,6 @@ class MainWindow(object):
         # self.SearchFilter.refilter()
         self.isSearching = True
         print("on_searchbar_button_press_event")
-        self.CategoryFilter.refilter()
 
     def on_searchbar_focus_in_event(self, widget, click):
         self.rightstack.set_visible_child_name("page0")
@@ -693,6 +764,7 @@ class MainWindow(object):
         print("action " + self.appname)
 
     def on_topbutton1_clicked(self, button):
+        self.searchstack.set_visible_child_name("page0")
         self.homestack.set_visible_child_name("page0")
         self.HomeCategoryFlowBox.unselect_all()
         self.EditorAppsIconView.unselect_all()
@@ -704,6 +776,7 @@ class MainWindow(object):
             self.topbutton1.get_style_context().add_class("suggested-action")
 
     def on_topbutton2_clicked(self, button):
+        self.searchstack.set_visible_child_name("page1")
         self.homestack.set_visible_child_name("page1")
         self.menubackbutton.set_sensitive(False)
         if self.topbutton1.get_style_context().has_class("suggested-action"):
@@ -737,6 +810,31 @@ class MainWindow(object):
         self.isSearching = True
         # self.SearchFilter.refilter()
         self.CategoryFilter.refilter()
+
+    def on_reposearchbar_search_changed(self, entry_search):
+        self.isRepoSearching = True
+        # self.homestack.set_visible_child_name("page2")
+        print("len search filter " + str(len(self.SearchFilter)))
+        # self.SearchFilter.refilter()
+        self.RepoCategoryFilter.refilter()
+
+    def on_reposearchbar_button_press_event(self, widget, click):
+        # self.rightstack.set_visible_child_name("page0")
+        # self.homestack.set_visible_child_name("page2")
+        # self.SearchFilter.refilter()
+        self.isRepoSearching = True
+        print("on_reposearchbar_button_press_event")
+        # self.RepoCategoryFilter.refilter()
+
+    def on_reposearchbar_focus_in_event(self, widget, click):
+        # self.homestack.set_visible_child_name("page2")
+        # self.rightstack.set_visible_child_name("page0")
+        # self.SearchFilter.refilter()
+        print("on_reposearchbar_focus_in_event")
+        self.isRepoSearching = True
+        # self.SearchFilter.refilter()
+        if self.reposearchbar.get_text() != "":
+            self.RepoCategoryFilter.refilter()
 
     def actionPackage(self):
 

@@ -37,12 +37,20 @@ class Package(object):
         print("cache updated")
 
         self.apps = []
+        self.secs = []
         self.sections = []
         for mypkg in apt.Cache():
-            self.apps.append(mypkg.name)
-            self.sections.append(mypkg.section.lower())
+            self.apps.append({"name": mypkg.name, "category": mypkg.section.lower()})
+            self.secs.append(mypkg.section.lower())
 
-        self.uniqsections = sorted(list(set(self.sections)))
+        self.uniqsections = sorted(list(set(self.secs)))
+
+        lencat = len(self.uniqsections)
+
+        self.sections.append({"name": "all", "number": 0})
+        for i in range(0, lencat):
+            self.sections.append({"name": self.uniqsections[i], "number": i + 1})
+
         # p = threading.Thread(target=self.updatecache)
         # p.start()
 

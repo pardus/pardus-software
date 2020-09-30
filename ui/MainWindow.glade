@@ -60,6 +60,19 @@
       </object>
     </child>
   </object>
+  <object class="GtkListStore" id="RepoAppListStore">
+    <columns>
+      <!-- column-name AppName -->
+      <column type="gchararray"/>
+      <!-- column-name AppCategory -->
+      <column type="gint"/>
+      <!-- column-name Category -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkTreeModelFilter" id="RepoCategoryFilter">
+    <property name="child_model">RepoAppListStore</property>
+  </object>
   <object class="GtkImage" id="backimage">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -1942,7 +1955,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="shadow_type">in</property>
                                 <property name="min_content_width">150</property>
-                                <property name="min_content_height">250</property>
                                 <child>
                                   <object class="GtkViewport">
                                     <property name="visible">True</property>
@@ -1951,13 +1963,15 @@
                                       <object class="GtkListBox" id="RepoCategoryListBox">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
+                                        <signal name="row-activated" handler="on_RepoCategoryListBox_row_activated" swapped="no"/>
+                                        <signal name="row-selected" handler="on_RepoCategoryListBox_row_selected" swapped="no"/>
                                       </object>
                                     </child>
                                   </object>
                                 </child>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
+                                <property name="expand">True</property>
                                 <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
@@ -1976,14 +1990,34 @@
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
+                          <object class="GtkScrolledWindow">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkTreeView" id="RepoAppsTreeView">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="model">RepoCategoryFilter</property>
+                                <property name="reorderable">True</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                         <child>
                           <placeholder/>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
@@ -2626,19 +2660,52 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkSearchEntry" id="pardussearchbar">
-                    <property name="width_request">250</property>
+                  <object class="GtkStack" id="searchstack">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
                     <property name="halign">center</property>
                     <property name="hexpand">True</property>
-                    <property name="primary_icon_name">edit-find-symbolic</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">False</property>
-                    <property name="placeholder_text" translatable="yes">Search an app</property>
-                    <signal name="button-press-event" handler="on_pardussearchbar_button_press_event" swapped="no"/>
-                    <signal name="focus-in-event" handler="on_pardussearchbar_focus_in_event" swapped="no"/>
-                    <signal name="search-changed" handler="on_pardussearchbar_search_changed" swapped="no"/>
+                    <child>
+                      <object class="GtkSearchEntry" id="pardussearchbar">
+                        <property name="width_request">250</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="hexpand">True</property>
+                        <property name="primary_icon_name">edit-find-symbolic</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">False</property>
+                        <property name="placeholder_text" translatable="yes">Search an app</property>
+                        <signal name="button-press-event" handler="on_pardussearchbar_button_press_event" swapped="no"/>
+                        <signal name="focus-in-event" handler="on_pardussearchbar_focus_in_event" swapped="no"/>
+                        <signal name="search-changed" handler="on_pardussearchbar_search_changed" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="name">page0</property>
+                        <property name="title" translatable="yes">page0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSearchEntry" id="reposearchbar">
+                        <property name="width_request">250</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="hexpand">True</property>
+                        <property name="primary_icon_name">edit-find-symbolic</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">False</property>
+                        <property name="placeholder_text" translatable="yes">Search an app in repo</property>
+                        <signal name="button-press-event" handler="on_reposearchbar_button_press_event" swapped="no"/>
+                        <signal name="focus-in-event" handler="on_reposearchbar_focus_in_event" swapped="no"/>
+                        <signal name="search-changed" handler="on_reposearchbar_search_changed" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="name">page1</property>
+                        <property name="title" translatable="yes">page1</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
