@@ -38,6 +38,7 @@ class MainWindow(object):
         self.isSearching = False
 
         self.CategoryListBox = self.GtkBuilder.get_object("CategoryListBox")
+        self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
 
         self.HomeCategoryFlowBox = self.GtkBuilder.get_object("HomeCategoryFlowBox")
         """
@@ -393,6 +394,7 @@ class MainWindow(object):
 
     def worker(self):
         self.package()
+        self.setRepoCategories()
         self.server()
         self.normalpage()
 
@@ -411,6 +413,24 @@ class MainWindow(object):
         self.splashlabel.set_markup("<b>Updating Cache</b>")
         self.Package = Package()
         print("package completed")
+
+    def setRepoCategories(self):
+        self.splashlabel.set_markup("<b>Setting Repo Categories</b>")
+        for i in self.Package.uniqsections:
+            row = Gtk.ListBoxRow.new()
+            self.RepoCategoryListBox.add(row)
+
+            grid = Gtk.Grid.new()
+            row.add(grid)
+
+
+            label = Gtk.Label.new()
+            label_text = str(i).capitalize()
+            label.set_text(" " + label_text)
+
+            grid.attach(label, 1, 0, 3, 1)
+        self.RepoCategoryListBox.show_all()
+        print("Repo Categories setted")
 
     def server(self):
         # self.splashspinner.start()
