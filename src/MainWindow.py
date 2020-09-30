@@ -458,6 +458,7 @@ class MainWindow(object):
         if self.homestack.get_visible_child_name() == "page2":
             self.homestack.set_visible_child_name("page0")
             self.HomeCategoryFlowBox.unselect_all()
+            self.EditorAppsIconView.unselect_all()
             self.menubackbutton.set_sensitive(False)
         elif self.homestack.get_visible_child_name() == "page3":
             self.homestack.set_visible_child_name("page2")
@@ -510,6 +511,8 @@ class MainWindow(object):
             self.Package.missingdeps(self.appname)
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
+
+        self.menubackbutton.set_sensitive(True)
 
         selected_items = iconview.get_selected_items()
 
@@ -672,6 +675,8 @@ class MainWindow(object):
     def on_topbutton1_clicked(self, button):
         self.homestack.set_visible_child_name("page0")
         self.HomeCategoryFlowBox.unselect_all()
+        self.EditorAppsIconView.unselect_all()
+        self.PardusAppsIconView.unselect_all()
         self.menubackbutton.set_sensitive(False)
         if self.topbutton2.get_style_context().has_class("suggested-action"):
             self.topbutton2.get_style_context().remove_class("suggested-action")

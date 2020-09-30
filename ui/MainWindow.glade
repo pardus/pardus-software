@@ -1837,6 +1837,7 @@
                         <property name="model">EditorListStore</property>
                         <property name="item_width">150</property>
                         <property name="reorderable">True</property>
+                        <signal name="selection-changed" handler="on_PardusAppsIconView_selection_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
