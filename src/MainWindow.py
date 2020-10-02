@@ -35,10 +35,9 @@ class MainWindow(object):
         self.parduspixbuf = Gtk.IconTheme.new()
         self.parduspixbuf.set_custom_theme("pardus")
 
-        self.isSearching = False
+        self.isPardusSearching = False
         self.isRepoSearching = False
 
-        self.CategoryListBox = self.GtkBuilder.get_object("CategoryListBox")
         self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
 
         self.HomeCategoryFlowBox = self.GtkBuilder.get_object("HomeCategoryFlowBox")
@@ -62,34 +61,6 @@ class MainWindow(object):
 
         self.categories = ["all", "development", "education", "games", "graphics", "internet", "multimedia", "office",
                            "system", "other"]
-
-        for i in self.categories:
-            row = Gtk.ListBoxRow.new()
-            self.CategoryListBox.add(row)
-
-            grid = Gtk.Grid.new()
-            row.add(grid)
-
-            try:
-                caticon = Gtk.Image.new_from_pixbuf(
-                    Gtk.IconTheme.get_default().load_icon("applications-" + i, 38, Gtk.IconLookupFlags(16)))
-            except:
-                if i == "education":
-                    caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("applications-science", 38, Gtk.IconLookupFlags(16)))
-                elif i == "all":
-                    caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("applications-other", 38, Gtk.IconLookupFlags(16)))
-                else:
-                    caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 38, Gtk.IconLookupFlags(16)))
-
-            label = Gtk.Label.new()
-            label_text = str(i).capitalize()
-            label.set_text(" " + label_text)
-
-            grid.add(caticon)
-            grid.attach(label, 1, 0, 3, 1)
 
         for i in self.categories:
 
@@ -124,25 +95,15 @@ class MainWindow(object):
         self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
-        self.rightstack = self.GtkBuilder.get_object("rightstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
         self.searchstack = self.GtkBuilder.get_object("searchstack")
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
 
-        self.homebutton = self.GtkBuilder.get_object("homebutton")
-        self.homebutton.set_image(Gtk.Image.new_from_stock("gtk-home", Gtk.IconSize.DND))
-
         self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
         self.topbutton1.get_style_context().add_class("suggested-action")
         self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
-
-        self.settingsbutton = self.GtkBuilder.get_object("settingsbutton")
-        self.settingsbutton.set_image(Gtk.Image.new_from_stock("gtk-preferences", Gtk.IconSize.DND))
-
-        self.categorybutton = self.GtkBuilder.get_object("categorybutton")
-        # self.categorybutton.set_image(Gtk.Image.new_from_stock("gtk-justify-fill", Gtk.IconSize.DND))
 
         self.progressbar = self.GtkBuilder.get_object("progressbar")
 
@@ -151,10 +112,6 @@ class MainWindow(object):
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
         self.splashbarstatus = True
         GLib.timeout_add(200, self.on_timeout, None)
-
-        self.MainIconView = self.GtkBuilder.get_object("MainIconView")
-        self.MainIconView.set_pixbuf_column(0)
-        self.MainIconView.set_text_column(3)
 
         self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
         self.PardusAppsIconView.set_pixbuf_column(0)
@@ -166,7 +123,7 @@ class MainWindow(object):
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
 
-        self.AppListStore = self.GtkBuilder.get_object("AppListStore")
+        self.PardusAppListStore = self.GtkBuilder.get_object("PardusAppListStore")
         self.EditorListStore = self.GtkBuilder.get_object("EditorListStore")
         self.RepoAppListStore = self.GtkBuilder.get_object("RepoAppListStore")
 
@@ -356,7 +313,7 @@ class MainWindow(object):
             prettyname = app['prettyname']
             category = app['category']
             categorynumber = self.get_category_number(app['category'])
-            self.AppListStore.append([pixbuf, appname, categorynumber, prettyname])
+            self.PardusAppListStore.append([pixbuf, appname, categorynumber, prettyname])
 
         self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
                            {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
@@ -379,20 +336,16 @@ class MainWindow(object):
             edicategorynumber = self.get_category_number(ediapp['category'])
             self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
 
-        self.CurrentCategory = -1
+        self.PardusCurrentCategory = -1
         self.RepoCurrentCategory = "empty"
 
-        self.CategoryFilter = self.GtkBuilder.get_object("CategoryFilter")
-        self.CategoryFilter.set_visible_func(self.CategoryFilterFunction)
-        self.CategoryFilter.refilter()
+        self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
+        self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
+        self.PardusCategoryFilter.refilter()
 
         self.RepoCategoryFilter = self.GtkBuilder.get_object("RepoCategoryFilter")
         self.RepoCategoryFilter.set_visible_func(self.RepoCategoryFilterFunction)
         self.RepoCategoryFilter.refilter()
-
-        self.SearchFilter = self.GtkBuilder.get_object("SearchFilter")
-        self.SearchFilter.set_visible_func(self.SearchFilterFunction)
-        self.SearchFilter.refilter()
 
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
@@ -413,7 +366,6 @@ class MainWindow(object):
     def normalpage(self):
         # self.mainstack.set_visible_child_name("page1")
         self.mainstack.set_visible_child_name("page2")
-        self.rightstack.set_visible_child_name("page0")
         self.splashspinner.stop()
         self.splashbarstatus = False
         self.splashlabel.set_text("")
@@ -458,13 +410,11 @@ class MainWindow(object):
         self.RepoAppsTreeView.append_column(column)
 
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Section", renderer, text=1)
+        column = Gtk.TreeViewColumn("Section", renderer, text=2)
         self.RepoAppsTreeView.append_column(column)
-
         self.RepoAppsTreeView.show_all()
 
     def server(self):
-        # self.splashspinner.start()
         self.splashbar.pulse()
         self.splashlabel.set_markup("<b>Getting applications from server</b>")
         self.Server = Server()
@@ -522,52 +472,6 @@ class MainWindow(object):
             self.homestack.set_visible_child_name("page2")
             self.PardusAppsIconView.unselect_all()
 
-    def on_MainIconView_selection_changed(self, iconview):
-
-        selected_items = iconview.get_selected_items()
-
-        if len(selected_items) == 1:
-            treeiter = self.CategoryFilter.get_iter(selected_items[0])
-            self.appname = self.CategoryFilter.get(treeiter, 1)[0]
-            prettyname = self.CategoryFilter.get(treeiter, 3)[0]
-            print(selected_items[0])
-            print(self.appname)
-
-            self.rightstack.set_visible_child_name("page1")
-
-            try:
-                pixbuf = Gtk.IconTheme.get_default().load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
-                # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
-            except:
-                # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
-                try:
-                    pixbuf = self.parduspixbuf.load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
-                except:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
-
-            self.dIcon.set_from_pixbuf(pixbuf)
-
-            self.dName.set_markup("<b> " + prettyname + "</b>")
-
-            if self.Package.isinstalled(self.appname):
-                if self.dActionButton.get_style_context().has_class("suggested-action"):
-                    self.dActionButton.get_style_context().remove_class("suggested-action")
-                self.dActionButton.get_style_context().add_class("destructive-action")
-                self.dActionButton.set_label(" Uninstall")
-                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
-            else:
-                if self.dActionButton.get_style_context().has_class("destructive-action"):
-                    self.dActionButton.get_style_context().remove_class("destructive-action")
-                self.dActionButton.get_style_context().add_class("suggested-action")
-                self.dActionButton.set_label(" Install")
-                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
-
-            self.backbutton.set_image(Gtk.Image.new_from_stock("gtk-go-back", Gtk.IconSize.BUTTON))
-
-            print(self.Package.isinstalled(self.appname))
-
-            self.Package.missingdeps(self.appname)
-
     def on_PardusAppsIconView_selection_changed(self, iconview):
 
         self.menubackbutton.set_sensitive(True)
@@ -575,9 +479,9 @@ class MainWindow(object):
         selected_items = iconview.get_selected_items()
 
         if len(selected_items) == 1:
-            treeiter = self.CategoryFilter.get_iter(selected_items[0])
-            self.appname = self.CategoryFilter.get(treeiter, 1)[0]
-            prettyname = self.CategoryFilter.get(treeiter, 3)[0]
+            treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
+            self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
+            prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
             print(selected_items[0])
             print(self.appname)
 
@@ -614,28 +518,24 @@ class MainWindow(object):
 
             self.Package.missingdeps(self.appname)
 
-    def CategoryFilterFunction(self, model, iteration, data):
-        # search_entry_text = self.searchbar.get_text()
+    def PardusCategoryFilterFunction(self, model, iteration, data):
         search_entry_text = self.pardussearchbar.get_text()
         categorynumber = int(model[iteration][2])
         appname = model[iteration][1]
         showall = True
 
-        # print(self.CurrentCategory)
-
-        # print(search_entry_text)
-        if self.isSearching:
-            self.CategoryListBox.unselect_all()
+        if self.isPardusSearching:
+            self.HomeCategoryFlowBox.unselect_all()
             if search_entry_text in appname:
                 return True
         else:
 
-            if showall and self.CurrentCategory == -1:
+            if showall and self.PardusCurrentCategory == -1:
                 return True
-            elif showall and self.CurrentCategory == 0:
+            elif showall and self.PardusCurrentCategory == 0:
                 return True
             else:
-                return categorynumber == self.CurrentCategory
+                return categorynumber == self.PardusCurrentCategory
 
     def RepoCategoryFilterFunction(self, model, iteration, data):
         search_entry_text = self.reposearchbar.get_text()
@@ -656,67 +556,19 @@ class MainWindow(object):
             else:
                 return category == self.RepoCurrentCategory
 
-    def SearchFilterFunction(self, model, iteration, data):
-        search_entry_text = self.searchbar.get_text()
-
-        appname = model[iteration][1]
-
-        showall = True
-
-        if search_entry_text in appname:
-            # print("found")
-            return True
-
-    def on_searchbar_search_changed(self, entry_search):
-        self.isSearching = True
-
-        print("len search filter " + str(len(self.SearchFilter)))
-        # self.SearchFilter.refilter()
-        self.CategoryFilter.refilter()
-        """
-        for i in range(0, len(self.SearchFilter)):
-            treeiter = self.SearchFilter.get_iter(i)
-            treepath = self.SearchFilter.get_path(treeiter)
-            if self.searchbar.get_text() in self.SearchFilter.get(treeiter, 1)[0]:
-                #self.SearchIconView.unselect_all()
-                self.SearchFilter.refilter()
-                print("burada")
-                # self.MainIconView.select_path(treepath)
-                break
-            else:
-                self.MainIconView.unselect_all()
-        """
-
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
-        self.isSearching = False
-        self.homebutton.grab_focus()
+        self.isPardusSearching = False
         self.mainstack.set_visible_child_name("page2")
-        self.rightstack.set_visible_child_name("page0")
         self.homestack.set_visible_child_name("page2")
         self.menubackbutton.set_sensitive(True)
-        self.CurrentCategory = child.get_index()
-        self.CategoryFilter.refilter()
+        self.PardusCurrentCategory = child.get_index()
+        self.PardusCategoryFilter.refilter()
 
-        print("home category selected " + str(self.CurrentCategory))
+        print("home category selected " + str(self.PardusCurrentCategory))
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
         print("on_HomeCategoryFlowBox_selected_children_changed")
-        self.isSearching = False
-
-    def on_CategoryListBox_row_selected(self, listbox, row):
-        # self.CurrentCategory = row.get_index()
-        # self.CategoryFilter.refilter()
-        # self.stack.set_visible_child_name("page0")
-        self.isSearching = False
-
-    def on_CategoryListBox_row_activated(self, listbox, row):
-        self.isSearching = False
-        self.CurrentCategory = row.get_index()
-        self.CategoryFilter.refilter()
-        self.rightstack.set_visible_child_name("page0")
-        self.mainstack.set_visible_child_name("page1")
-        print("category selected")
-        # print(row)
+        self.isPardusSearching = False
 
     def on_RepoCategoryListBox_row_selected(self, listbox, row):
         # self.CurrentCategory = row.get_index()
@@ -731,35 +583,8 @@ class MainWindow(object):
         print(row.get_child().get_text().lower().strip())
         self.RepoCategoryFilter.refilter()
         print("category selected")
-        # print(row)
-
-    def on_homebutton_clicked(self, widget):
-        self.mainstack.set_visible_child_name("page2")
-        # self.rightstack.set_visible_child_name("page2")
-        self.CategoryListBox.unselect_all()
-        self.MainIconView.unselect_all()
-
-    def on_settingsbutton_clicked(self, widget):
-        self.rightstack.set_visible_child_name("page3")
-        self.CategoryListBox.unselect_all()
-        self.MainIconView.unselect_all()
-
-    def on_searchbar_button_press_event(self, widget, click):
-        self.rightstack.set_visible_child_name("page0")
-        # self.SearchFilter.refilter()
-        self.isSearching = True
-        print("on_searchbar_button_press_event")
-
-    def on_searchbar_focus_in_event(self, widget, click):
-        self.rightstack.set_visible_child_name("page0")
-        # self.SearchFilter.refilter()
-        print("on_searchbar_focus_in_event")
-        self.isSearching = True
-        # self.SearchFilter.refilter()
-        self.CategoryFilter.refilter()
 
     def on_dActionButton_clicked(self, button):
-
         self.actionPackage()
         print("action " + self.appname)
 
@@ -785,54 +610,38 @@ class MainWindow(object):
             self.topbutton2.get_style_context().add_class("suggested-action")
 
     def on_pardussearchbar_search_changed(self, entry_search):
-        self.isSearching = True
+        self.isPardusSearching = True
         self.homestack.set_visible_child_name("page2")
         self.menubackbutton.set_sensitive(True)
-        print("len search filter " + str(len(self.SearchFilter)))
         # self.SearchFilter.refilter()
-        self.CategoryFilter.refilter()
+        self.PardusCategoryFilter.refilter()
 
     def on_pardussearchbar_button_press_event(self, widget, click):
-        # self.rightstack.set_visible_child_name("page0")
         self.homestack.set_visible_child_name("page2")
         # self.SearchFilter.refilter()
         self.menubackbutton.set_sensitive(True)
-        self.isSearching = True
+        self.isPardusSearching = True
         print("on_searchbar_button_press_event")
-        self.CategoryFilter.refilter()
+        self.PardusCategoryFilter.refilter()
 
     def on_pardussearchbar_focus_in_event(self, widget, click):
         self.homestack.set_visible_child_name("page2")
         self.menubackbutton.set_sensitive(True)
-        # self.rightstack.set_visible_child_name("page0")
-        # self.SearchFilter.refilter()
         print("on_searchbar_focus_in_event")
-        self.isSearching = True
-        # self.SearchFilter.refilter()
-        self.CategoryFilter.refilter()
+        self.isPardusSearching = True
+        self.PardusCategoryFilter.refilter()
 
     def on_reposearchbar_search_changed(self, entry_search):
         self.isRepoSearching = True
-        # self.homestack.set_visible_child_name("page2")
-        print("len search filter " + str(len(self.SearchFilter)))
-        # self.SearchFilter.refilter()
         self.RepoCategoryFilter.refilter()
 
     def on_reposearchbar_button_press_event(self, widget, click):
-        # self.rightstack.set_visible_child_name("page0")
-        # self.homestack.set_visible_child_name("page2")
-        # self.SearchFilter.refilter()
         self.isRepoSearching = True
         print("on_reposearchbar_button_press_event")
-        # self.RepoCategoryFilter.refilter()
 
     def on_reposearchbar_focus_in_event(self, widget, click):
-        # self.homestack.set_visible_child_name("page2")
-        # self.rightstack.set_visible_child_name("page0")
-        # self.SearchFilter.refilter()
         print("on_reposearchbar_focus_in_event")
         self.isRepoSearching = True
-        # self.SearchFilter.refilter()
         if self.reposearchbar.get_text() != "":
             self.RepoCategoryFilter.refilter()
 
@@ -884,49 +693,36 @@ class MainWindow(object):
 
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
-            self.progressbar.set_show_text(True)
             if self.Package.missingdeps(self.actionedappname):
                 print("Downloading dependencies " + percent + " %")
-                self.progressbar.set_text(self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
                 self.progresstextlabel.set_text(
                     self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
             else:
                 print("Controlling dependencies : " + percent + " %")
-                self.progressbar.set_text(self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
                 self.progresstextlabel.set_text(
                     self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
             self.progressbar.set_fraction(int(percent) / 100)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             print("Processing : " + percent)
-            self.progressbar.set_show_text(True)
             if self.isinstalled:
-                self.progressbar.set_text(self.actionedappname + " | " + "Removing" + ": " + percent + " %")
                 self.progresstextlabel.set_text(self.actionedappname + " | " + "Removing" + ": " + percent + " %")
             else:
-                self.progressbar.set_text(self.actionedappname + " | " + "Installing" + ": " + percent + " %")
                 self.progresstextlabel.set_text(self.actionedappname + " | " + "Installing" + ": " + percent + " %")
-            self.progressbar.set_fraction(int(percent) / 100)
-
         return True
 
     def onProcessExit(self, pid, status):
         if status == 0:
-            if self.progressbar.get_show_text():
-                if self.isinstalled:
-                    self.progressbar.set_text(self.actionedappname + " | Removed : 100 %")
-                    self.progresstextlabel.set_text(self.actionedappname + " | Removed : 100 %")
-                else:
-                    self.progressbar.set_text(self.actionedappname + " | Installed : 100 %")
-                    self.progresstextlabel.set_text(self.actionedappname + " | Installed : 100 %")
-                self.progressbar.set_fraction(1)
+
+            if self.isinstalled:
+                self.progresstextlabel.set_text(self.actionedappname + " | Removed : 100 %")
+            else:
+                self.progresstextlabel.set_text(self.actionedappname + " | Installed : 100 %")
             self.Package.updatecache()
             self.controlView()
             self.notify()
         else:
-            if self.progressbar.get_show_text():
-                self.progressbar.set_text(self.actionedappname + " | " + " Not Completed")
-                self.progressbar.set_fraction(0)
+            self.progresstextlabel.set_text(self.actionedappname + " | " + " Not Completed")
 
         self.dActionButton.set_sensitive(True)
         self.topspinner.stop()
@@ -936,9 +732,9 @@ class MainWindow(object):
         selected_items = self.PardusAppsIconView.get_selected_items()
         print("selected_items " + str(selected_items))
         if len(selected_items) == 1:
-            treeiter = self.CategoryFilter.get_iter(selected_items[0])
-            appname = self.CategoryFilter.get(treeiter, 1)[0]
-            prettyname = self.CategoryFilter.get(treeiter, 3)[0]
+            treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
+            appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
+            prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
             print("in controlView " + appname)
             if appname == self.actionedappname:
                 try:
