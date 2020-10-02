@@ -29,7 +29,7 @@ class MainWindow(object):
             self.GtkBuilder = Gtk.Builder.new_from_file(self.MainWindowUIFileName)
             self.GtkBuilder.connect_signals(self)
         except GObject.GError:
-            print(_("Error reading GUI file: ") + self.MainWindowUIFileName)
+            print("Error reading GUI file: " + self.MainWindowUIFileName)
             raise
 
         self.parduspixbuf = Gtk.IconTheme.new()
@@ -104,8 +104,6 @@ class MainWindow(object):
         self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
         self.topbutton1.get_style_context().add_class("suggested-action")
         self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
-
-        self.progressbar = self.GtkBuilder.get_object("progressbar")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
@@ -542,7 +540,6 @@ class MainWindow(object):
         appname = model[iteration][0]
         categorynumber = int(model[iteration][1])
         category = model[iteration][2]
-        showall = True
 
         if self.isRepoSearching:
             self.RepoCategoryListBox.unselect_all()
@@ -701,7 +698,6 @@ class MainWindow(object):
                 print("Controlling dependencies : " + percent + " %")
                 self.progresstextlabel.set_text(
                     self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
-            self.progressbar.set_fraction(int(percent) / 100)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             print("Processing : " + percent)
