@@ -343,9 +343,9 @@ class MainWindow(object):
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
         self.PardusCategoryFilter.refilter()
 
-        self.RepoCategoryFilter = self.GtkBuilder.get_object("RepoCategoryFilter")
-        self.RepoCategoryFilter.set_visible_func(self.RepoCategoryFilterFunction)
-        self.RepoCategoryFilter.refilter()
+        # self.RepoCategoryFilter = self.GtkBuilder.get_object("RepoCategoryFilter")
+        # self.RepoCategoryFilter.set_visible_func(self.RepoCategoryFilterFunction)
+        # self.RepoCategoryFilter.refilter()
 
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
@@ -550,23 +550,23 @@ class MainWindow(object):
             else:
                 return categorynumber == self.PardusCurrentCategory
 
-    def RepoCategoryFilterFunction(self, model, iteration, data):
-        search_entry_text = self.reposearchbar.get_text()
-        appname = model[iteration][0]
-        categorynumber = int(model[iteration][2])
-        category = model[iteration][1]
-
-        if self.isRepoSearching:
-            self.RepoCategoryListBox.unselect_all()
-            if search_entry_text in appname:
-                return True
-        else:
-            if self.RepoCurrentCategory == "all":
-                return True
-            elif self.RepoCurrentCategory == "empty":
-                return True
-            else:
-                return category == self.RepoCurrentCategory
+    # def RepoCategoryFilterFunction(self, model, iteration, data):
+    #     search_entry_text = self.reposearchbar.get_text()
+    #     appname = model[iteration][0]
+    #     categorynumber = int(model[iteration][2])
+    #     category = model[iteration][1]
+    #
+    #     if self.isRepoSearching:
+    #         self.RepoCategoryListBox.unselect_all()
+    #         if search_entry_text in appname:
+    #             return True
+    #     else:
+    #         if self.RepoCurrentCategory == "all":
+    #             return True
+    #         elif self.RepoCurrentCategory == "empty":
+    #             return True
+    #         else:
+    #             return category == self.RepoCurrentCategory
 
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         self.isPardusSearching = False
