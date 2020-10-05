@@ -337,6 +337,8 @@ class MainWindow(object):
         self.PardusCurrentCategory = -1
         self.RepoCurrentCategory = "empty"
 
+        self.useDynamicListStore = True
+
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
         self.PardusCategoryFilter.refilter()
@@ -400,17 +402,30 @@ class MainWindow(object):
         for app in self.Package.apps:
             appname = app['name']
             category = app['category']
-            categorynumber = self.get_repo_category_number(app["category"])
-            self.RepoAppListStore.append([appname, categorynumber, category])
+            # categorynumber = self.get_repo_category_number(app["category"])
+            self.RepoAppListStore.append([appname, category, 0])
 
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("Name", renderer, text=0)
         self.RepoAppsTreeView.append_column(column)
 
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Section", renderer, text=2)
+        column = Gtk.TreeViewColumn("Section", renderer, text=1)
         self.RepoAppsTreeView.append_column(column)
         self.RepoAppsTreeView.show_all()
+
+        self.repoapps = self.Package.repoapps
+
+        if self.useDynamicListStore:
+
+            self.storedict = {}
+
+            for i in self.repoapps:
+                self.storedict[i] = Gtk.ListStore(str, str)
+
+            for i in self.storedict:
+                for j in self.repoapps[i]:
+                    self.storedict[i].append([j["name"], j["category"]])
 
     def server(self):
         self.splashbar.pulse()
@@ -538,8 +553,8 @@ class MainWindow(object):
     def RepoCategoryFilterFunction(self, model, iteration, data):
         search_entry_text = self.reposearchbar.get_text()
         appname = model[iteration][0]
-        categorynumber = int(model[iteration][1])
-        category = model[iteration][2]
+        categorynumber = int(model[iteration][2])
+        category = model[iteration][1]
 
         if self.isRepoSearching:
             self.RepoCategoryListBox.unselect_all()
@@ -578,8 +593,39 @@ class MainWindow(object):
         # self.RepoCurrentCategory = row.get_index()
         self.RepoCurrentCategory = row.get_child().get_text().lower().strip()
         print(row.get_child().get_text().lower().strip())
-        self.RepoCategoryFilter.refilter()
-        print("category selected")
+
+        if self.useDynamicListStore:
+
+            if self.RepoCurrentCategory != "all":
+
+                self.RepoAppsTreeView.set_model(self.storedict[self.RepoCurrentCategory])
+                self.RepoAppsTreeView.show_all()
+
+            else:
+                self.RepoAppsTreeView.set_model(self.RepoAppListStore)
+                self.RepoAppsTreeView.show_all()
+
+        else:
+
+            if self.RepoCurrentCategory != "all":
+
+                store = Gtk.ListStore(str, str)
+
+                for i in self.repoapps[self.RepoCurrentCategory]:
+                    store.append([i["name"], i["category"]])
+
+                print(self.repoapps[self.RepoCurrentCategory])
+
+                self.RepoAppsTreeView.set_model(store)
+
+                self.RepoAppsTreeView.show_all()
+
+            else:
+                self.RepoAppsTreeView.set_model(self.RepoAppListStore)
+                self.RepoAppsTreeView.show_all()
+
+        # self.RepoCategoryFilter.refilter()
+        # print("category selected")
 
     def on_dActionButton_clicked(self, button):
         self.actionPackage()

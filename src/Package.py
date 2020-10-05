@@ -51,6 +51,18 @@ class Package(object):
         for i in range(0, lencat):
             self.sections.append({"name": self.uniqsections[i], "number": i + 1})
 
+        self.repoapps = {}
+
+        lenuniqsec = len(self.uniqsections)
+        lenapss = len(self.apps)
+
+        for i in range(0, lenuniqsec):
+            temp = []
+            for j in range(0, lenapss):
+                if self.uniqsections[i] == self.apps[j]["category"]:
+                    temp.append({"name": self.apps[j]["name"], "category": self.apps[j]["category"]})
+            self.repoapps[self.uniqsections[i]] = temp
+
         # p = threading.Thread(target=self.updatecache)
         # p.start()
 

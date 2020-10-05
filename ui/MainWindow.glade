@@ -61,10 +61,10 @@
     <columns>
       <!-- column-name AppName -->
       <column type="gchararray"/>
-      <!-- column-name AppCategory -->
-      <column type="gint"/>
-      <!-- column-name Category -->
+      <!-- column-name CategoryName -->
       <column type="gchararray"/>
+      <!-- column-name Category -->
+      <column type="gint"/>
     </columns>
   </object>
   <object class="GtkTreeModelFilter" id="RepoCategoryFilter">
@@ -343,9 +343,6 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
-        </child>
-        <child>
           <object class="GtkGrid" id="HomeGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -578,7 +575,7 @@
                               <object class="GtkTreeView" id="RepoAppsTreeView">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="model">RepoCategoryFilter</property>
+                                <property name="model">RepoAppListStore</property>
                                 <property name="reorderable">True</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
@@ -1311,7 +1308,7 @@
           <packing>
             <property name="name">page2</property>
             <property name="title" translatable="yes">page2</property>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
