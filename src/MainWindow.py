@@ -675,18 +675,43 @@ class MainWindow(object):
         self.PardusCategoryFilter.refilter()
 
     def on_reposearchbar_search_changed(self, entry_search):
+        self.RepoCategoryListBox.unselect_all()
         self.isRepoSearching = True
-        self.RepoCategoryFilter.refilter()
+        # self.RepoCategoryFilter.refilter()
+
+        print("searched for : " + entry_search.get_text())
+
+        # searchstore = Gtk.ListStore(str, str)
+        # for i in self.Package.apps:
+        #     if entry_search.get_text() in i["name"]:
+        #         searchstore.append([i["name"], i["category"]])
+        #
+        # self.RepoAppsTreeView.set_model(searchstore)
+        # self.RepoAppsTreeView.show_all()
 
     def on_reposearchbar_button_press_event(self, widget, click):
+        self.RepoCategoryListBox.unselect_all()
         self.isRepoSearching = True
         print("on_reposearchbar_button_press_event")
 
     def on_reposearchbar_focus_in_event(self, widget, click):
+        self.RepoCategoryListBox.unselect_all()
         print("on_reposearchbar_focus_in_event")
         self.isRepoSearching = True
-        if self.reposearchbar.get_text() != "":
-            self.RepoCategoryFilter.refilter()
+        # if self.reposearchbar.get_text() != "":
+        #     self.RepoCategoryFilter.refilter()
+
+    def on_reposearchbutton_clicked(self, button):
+        self.isRepoSearching = True
+        print("on_reposearchbutton_clicked")
+
+        searchstore = Gtk.ListStore(str, str)
+        for i in self.Package.apps:
+            if self.reposearchbar.get_text() in i["name"]:
+                searchstore.append([i["name"], i["category"]])
+
+        self.RepoAppsTreeView.set_model(searchstore)
+        self.RepoAppsTreeView.show_all()
 
     def actionPackage(self):
 
