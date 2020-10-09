@@ -40,8 +40,13 @@ class Package(object):
         self.secs = []
         self.sections = []
         for mypkg in apt.Cache():
-            self.apps.append({"name": mypkg.name, "category": mypkg.section.lower()})
-            self.secs.append(mypkg.section.lower())
+            name = mypkg.name
+            try:
+                section = mypkg.candidate.section.lower()
+            except:
+                section = mypkg.versions[0].section.lower()
+            self.apps.append({"name": name, "category": section})
+            self.secs.append(section)
 
         self.uniqsections = sorted(list(set(self.secs)))
 
