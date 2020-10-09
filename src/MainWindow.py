@@ -75,9 +75,12 @@ class MainWindow(object):
                     caticon = Gtk.Image.new_from_pixbuf(
                         Gtk.IconTheme.get_default().load_icon("applications-other", 48, Gtk.IconLookupFlags(16)))
                 else:
-                    caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48, Gtk.IconLookupFlags(16)))
-
+                    try:
+                        caticon = Gtk.Image.new_from_pixbuf(
+                            Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48, Gtk.IconLookupFlags(16)))
+                    except:
+                        caticon = Gtk.Image.new_from_pixbuf(
+                            Gtk.IconTheme.get_default().load_icon("image-missing", 48, Gtk.IconLookupFlags(16)))
             label = Gtk.Label.new()
             label_text = str(i).capitalize()
             label.set_text(" " + label_text)
@@ -305,7 +308,10 @@ class MainWindow(object):
                 try:
                     pixbuf = self.parduspixbuf.load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
                 except:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, Gtk.IconLookupFlags(16))
+                    try:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, Gtk.IconLookupFlags(16))
+                    except:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
 
             appname = app['name']
             prettyname = app['prettyname']
@@ -326,7 +332,11 @@ class MainWindow(object):
                 try:
                     edipixbuf = self.parduspixbuf.load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
                 except:
-                    edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, Gtk.IconLookupFlags(16))
+                    try:
+                        edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
+                                                                          Gtk.IconLookupFlags(16))
+                    except:
+                        edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
 
             ediappname = ediapp['name']
             ediprettyname = ediapp['prettyname']
@@ -508,7 +518,10 @@ class MainWindow(object):
                 try:
                     pixbuf = self.parduspixbuf.load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
                 except:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
+                    try:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
+                    except:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96, Gtk.IconLookupFlags(16))
 
             self.dIcon.set_from_pixbuf(pixbuf)
 
@@ -810,7 +823,12 @@ class MainWindow(object):
                     try:
                         pixbuf = self.parduspixbuf.load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
                     except:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
+                        try:
+                            pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
+                                                                           Gtk.IconLookupFlags(16))
+                        except:
+                            pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
+                                                                           Gtk.IconLookupFlags(16))
 
                 self.dIcon.set_from_pixbuf(pixbuf)
 
@@ -845,6 +863,10 @@ class MainWindow(object):
             try:
                 pixbuf = self.parduspixbuf.load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
             except:
-                pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
+                try:
+                    pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
+                except:
+                    pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96, Gtk.IconLookupFlags(16))
+
         notification.set_icon_from_pixbuf(pixbuf)
         notification.show()
