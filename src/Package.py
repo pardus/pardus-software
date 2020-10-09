@@ -108,3 +108,14 @@ class Package(object):
         return False
 
         # print(package.versions[0].get_dependencies("Depends"))
+
+    def description(self, packagename):
+        package = self.cache[packagename]
+        try:
+            desc = package.candidate.raw_description.replace("\n", "")
+        except:
+            try:
+                desc = package.versions[0].raw_description.replace("\n", "")
+            except:
+                desc = "Description is not found"
+        return desc

@@ -103,6 +103,7 @@ class MainWindow(object):
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
+        self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
 
         self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
         self.topbutton1.get_style_context().add_class("suggested-action")
@@ -526,6 +527,8 @@ class MainWindow(object):
             self.dIcon.set_from_pixbuf(pixbuf)
 
             self.dName.set_markup("<b> " + prettyname + "</b>")
+
+            self.dDescriptionLabel.set_text(self.Package.description(self.appname))
 
             if self.Package.isinstalled(self.appname):
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
