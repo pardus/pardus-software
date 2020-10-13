@@ -346,7 +346,7 @@ class MainWindow(object):
             self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
 
         self.PardusCurrentCategory = -1
-        self.RepoCurrentCategory = "empty"
+        self.RepoCurrentCategory = "all"
 
         self.useDynamicListStore = True
 
@@ -625,14 +625,14 @@ class MainWindow(object):
 
             if self.RepoCurrentCategory != "all":
 
-                store = Gtk.ListStore(str, str)
+                self.store = Gtk.ListStore(str, str)
 
                 for i in self.repoapps[self.RepoCurrentCategory]:
-                    store.append([i["name"], i["category"]])
+                    self.store.append([i["name"], i["category"]])
 
-                print(self.repoapps[self.RepoCurrentCategory])
+                # print(self.repoapps[self.RepoCurrentCategory])
 
-                self.RepoAppsTreeView.set_model(store)
+                self.RepoAppsTreeView.set_model(self.store)
 
                 self.RepoAppsTreeView.show_all()
 
@@ -691,11 +691,7 @@ class MainWindow(object):
         self.PardusCategoryFilter.refilter()
 
     def on_reposearchbar_search_changed(self, entry_search):
-        self.RepoCategoryListBox.unselect_all()
-        self.isRepoSearching = True
-        # self.RepoCategoryFilter.refilter()
-
-        print("searched for : " + entry_search.get_text())
+        print(entry_search.get_text())
 
         # searchstore = Gtk.ListStore(str, str)
         # for i in self.Package.apps:
@@ -706,28 +702,48 @@ class MainWindow(object):
         # self.RepoAppsTreeView.show_all()
 
     def on_reposearchbar_button_press_event(self, widget, click):
-        self.RepoCategoryListBox.unselect_all()
-        self.isRepoSearching = True
         print("on_reposearchbar_button_press_event")
 
     def on_reposearchbar_focus_in_event(self, widget, click):
-        self.RepoCategoryListBox.unselect_all()
         print("on_reposearchbar_focus_in_event")
-        self.isRepoSearching = True
         # if self.reposearchbar.get_text() != "":
         #     self.RepoCategoryFilter.refilter()
 
     def on_reposearchbutton_clicked(self, button):
+        self.RepoCategoryListBox.unselect_all()
         self.isRepoSearching = True
         print("on_reposearchbutton_clicked")
 
-        searchstore = Gtk.ListStore(str, str)
+        self.searchstore = Gtk.ListStore(str, str)
         for i in self.Package.apps:
             if self.reposearchbar.get_text() in i["name"]:
-                searchstore.append([i["name"], i["category"]])
+                self.searchstore.append([i["name"], i["category"]])
 
-        self.RepoAppsTreeView.set_model(searchstore)
+        self.RepoAppsTreeView.set_model(self.searchstore)
         self.RepoAppsTreeView.show_all()
+
+    def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
+
+        if not self.isRepoSearching:
+            if self.useDynamicListStore:
+                if self.RepoCurrentCategory != "all":
+                    iter = self.storedict[self.RepoCurrentCategory].get_iter(path)
+                    value = self.storedict[self.RepoCurrentCategory].get_value(iter, 0)
+                else:
+                    iter = self.RepoAppListStore.get_iter(path)
+                    value = self.RepoAppListStore.get_value(iter, 0)
+            else:
+                if self.RepoCurrentCategory != "all":
+                    iter = self.store.get_iter(path)
+                    value = self.store.get_value(iter, 0)
+                else:
+                    iter = self.RepoAppListStore.get_iter(path)
+                    value = self.RepoAppListStore.get_value(iter, 0)
+        else:
+            iter = self.searchstore.get_iter(path)
+            value = self.searchstore.get_value(iter, 0)
+
+        print(value)
 
     def actionPackage(self):
 
