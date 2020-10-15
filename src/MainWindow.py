@@ -547,6 +547,57 @@ class MainWindow(object):
 
             self.Package.missingdeps(self.appname)
 
+    def on_EditorAppsIconView_selection_changed(self, iconview):
+
+        self.menubackbutton.set_sensitive(True)
+
+        selected_items = iconview.get_selected_items()
+
+        if len(selected_items) == 1:
+            treeiter = self.EditorListStore.get_iter(selected_items[0])
+            self.appname = self.EditorListStore.get(treeiter, 1)[0]
+            prettyname = self.EditorListStore.get(treeiter, 3)[0]
+            print(selected_items[0])
+            print(self.appname)
+
+            self.homestack.set_visible_child_name("page3")
+
+            try:
+                pixbuf = Gtk.IconTheme.get_default().load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
+                # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
+            except:
+                # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
+                try:
+                    pixbuf = self.parduspixbuf.load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
+                except:
+                    try:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
+                    except:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96, Gtk.IconLookupFlags(16))
+
+            self.dIcon.set_from_pixbuf(pixbuf)
+
+            self.dName.set_markup("<b> " + prettyname + "</b>")
+
+            self.dDescriptionLabel.set_text(self.Package.description(self.appname))
+
+            if self.Package.isinstalled(self.appname):
+                if self.dActionButton.get_style_context().has_class("suggested-action"):
+                    self.dActionButton.get_style_context().remove_class("suggested-action")
+                self.dActionButton.get_style_context().add_class("destructive-action")
+                self.dActionButton.set_label(" Uninstall")
+                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+            else:
+                if self.dActionButton.get_style_context().has_class("destructive-action"):
+                    self.dActionButton.get_style_context().remove_class("destructive-action")
+                self.dActionButton.get_style_context().add_class("suggested-action")
+                self.dActionButton.set_label(" Install")
+                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+            print(self.Package.isinstalled(self.appname))
+
+            self.Package.missingdeps(self.appname)
+
     def PardusCategoryFilterFunction(self, model, iteration, data):
         search_entry_text = self.pardussearchbar.get_text()
         categorynumber = int(model[iteration][2])
