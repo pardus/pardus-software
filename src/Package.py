@@ -39,7 +39,7 @@ class Package(object):
         self.apps = []
         self.secs = []
         self.sections = []
-        for mypkg in apt.Cache():
+        for mypkg in self.cache:
             name = mypkg.name
             try:
                 section = mypkg.candidate.section.lower()
