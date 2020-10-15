@@ -410,11 +410,11 @@ class MainWindow(object):
     def setRepoApps(self):
         self.splashlabel.set_markup("<b>Setting Repo Apps</b>")
         print("Repo apps setting")
-        for app in self.Package.apps:
-            appname = app['name']
-            category = app['category']
-            # categorynumber = self.get_repo_category_number(app["category"])
-            self.RepoAppListStore.append([appname, category, 0])
+        # for app in self.Package.apps:
+        #     appname = app['name']
+        #     category = app['category']
+        #     # categorynumber = self.get_repo_category_number(app["category"])
+        #     self.RepoAppListStore.append([appname, category, 0])
 
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("Name", renderer, text=0)
