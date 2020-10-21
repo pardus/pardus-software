@@ -65,6 +65,10 @@
       <column type="gchararray"/>
       <!-- column-name Category -->
       <column type="gint"/>
+      <!-- column-name isInstalled -->
+      <column type="gboolean"/>
+      <!-- column-name isInstalledText -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkTreeModelFilter" id="RepoCategoryFilter">
