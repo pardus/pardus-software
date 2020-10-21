@@ -420,25 +420,35 @@ class MainWindow(object):
         #         installtext = "Remove"
         #     else:
         #         installtext = "Install"
-        #     self.RepoAppListStore.append([appname, category, 0, installstatus, installtext])
+        #     self.RepoAppListStore.append([appname, category, 0, installstatus, installtext, self.Package.summary(appname)])
 
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Name", renderer, text=0)
-        self.RepoAppsTreeView.append_column(column)
+        column_name = Gtk.TreeViewColumn("Name", renderer, text=0)
+        column_name.set_resizable(True)
+        column_name.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
+        self.RepoAppsTreeView.append_column(column_name)
 
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("Section", renderer, text=1)
-        self.RepoAppsTreeView.append_column(column)
+        column_cat = Gtk.TreeViewColumn("Section", renderer, text=1)
+        column_cat.set_resizable(True)
+        self.RepoAppsTreeView.append_column(column_cat)
 
         renderer_toggle = Gtk.CellRendererToggle()
         renderer_toggle.connect("toggled", self.on_cell_toggled)
         column_toggle = Gtk.TreeViewColumn("Status", renderer_toggle, active=3)
+        column_toggle.set_resizable(True)
         self.RepoAppsTreeView.append_column(column_toggle)
 
         renderer_btn = CellRendererButton()
         renderer_btn.connect("clicked", self.on_cell_clicked)
         column_btn = Gtk.TreeViewColumn("Action", renderer_btn, text=4)
+        column_btn.set_resizable(True)
         self.RepoAppsTreeView.append_column(column_btn)
+
+        renderer = Gtk.CellRendererText()
+        column_desc = Gtk.TreeViewColumn("Description", renderer, text=5)
+        column_desc.set_resizable(True)
+        self.RepoAppsTreeView.append_column(column_desc)
 
         self.RepoAppsTreeView.show_all()
 
@@ -449,7 +459,7 @@ class MainWindow(object):
             self.storedict = {}
 
             for i in self.repoapps:
-                self.storedict[i] = Gtk.ListStore(str, str, int, bool, str)
+                self.storedict[i] = Gtk.ListStore(str, str, int, bool, str, str)
 
             for i in self.storedict:
                 for j in self.repoapps[i]:
@@ -458,7 +468,8 @@ class MainWindow(object):
                         installtext = "Remove"
                     else:
                         installtext = "Install"
-                    self.storedict[i].append([j["name"], j["category"], 0, installstatus, installtext])
+                    self.storedict[i].append(
+                        [j["name"], j["category"], 0, installstatus, installtext, self.Package.summary(j["name"])])
 
     def on_cell_toggled(self, widget, path):
         # self.RepoAppListStore[path][3] = not self.RepoAppListStore[path][3]
@@ -705,7 +716,7 @@ class MainWindow(object):
 
             if self.RepoCurrentCategory != "all":
 
-                self.store = Gtk.ListStore(str, str, int, bool, str)
+                self.store = Gtk.ListStore(str, str, int, bool, str, str)
 
                 for i in self.repoapps[self.RepoCurrentCategory]:
                     installstatus = self.Package.isinstalled(i["name"])
@@ -713,7 +724,8 @@ class MainWindow(object):
                         installtext = "Remove"
                     else:
                         installtext = "Install"
-                    self.store.append([i["name"], i["category"], 0, installstatus, installtext])
+                    self.store.append(
+                        [i["name"], i["category"], 0, installstatus, installtext, self.Package.summary(i["name"])])
 
                 # print(self.repoapps[self.RepoCurrentCategory])
 
@@ -799,7 +811,7 @@ class MainWindow(object):
         self.isRepoSearching = True
         print("on_reposearchbutton_clicked")
 
-        self.searchstore = Gtk.ListStore(str, str, int, bool, str)
+        self.searchstore = Gtk.ListStore(str, str, int, bool, str, str)
         for i in self.Package.apps:
             if self.reposearchbar.get_text() in i["name"]:
                 installstatus = self.Package.isinstalled(i["name"])
@@ -807,7 +819,8 @@ class MainWindow(object):
                     installtext = "Remove"
                 else:
                     installtext = "Install"
-                self.searchstore.append([i["name"], i["category"], 0, installstatus, installtext])
+                self.searchstore.append(
+                    [i["name"], i["category"], 0, installstatus, installtext, self.Package.summary(i["name"])])
 
         self.RepoAppsTreeView.set_model(self.searchstore)
         self.RepoAppsTreeView.show_all()

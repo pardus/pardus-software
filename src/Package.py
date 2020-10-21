@@ -119,3 +119,14 @@ class Package(object):
             except:
                 desc = "Description is not found"
         return desc
+
+    def summary(self, packagename):
+        package = self.cache[packagename]
+        try:
+            summ = package.candidate.summary
+        except:
+            try:
+                summ = package.versions[0].summary
+            except:
+                summ = "Summary is not found"
+        return summ
