@@ -106,6 +106,12 @@ class MainWindow(object):
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
 
+        self.raction = self.GtkBuilder.get_object("raction")
+        self.rtitle = self.GtkBuilder.get_object("rtitle")
+        self.rdetail = self.GtkBuilder.get_object("rdetail")
+        self.rbotstack = self.GtkBuilder.get_object("rbotstack")
+
+
         self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
         self.topbutton1.get_style_context().add_class("suggested-action")
         self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
@@ -349,7 +355,7 @@ class MainWindow(object):
         self.PardusCurrentCategory = -1
         self.RepoCurrentCategory = "all"
 
-        self.useDynamicListStore = True
+        self.useDynamicListStore = False
 
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
@@ -392,20 +398,20 @@ class MainWindow(object):
 
     def setRepoCategories(self):
         self.splashlabel.set_markup("<b>Setting Repo Categories</b>")
-        for i in self.Package.sections:
-            # row = Gtk.ListBoxRow.new()
-            # self.RepoCategoryListBox.add(row)
-            #
-            label = Gtk.Label.new()
-            label.set_text(" " + str(i["name"]).capitalize())
-            label.set_property("xalign", 0)
-
-            row = Gtk.ListBoxRow()
-            row.add(label)
-
-            self.RepoCategoryListBox.add(row)
-
-        self.RepoCategoryListBox.show_all()
+        # for i in self.Package.sections:
+        #     # row = Gtk.ListBoxRow.new()
+        #     # self.RepoCategoryListBox.add(row)
+        #     #
+        #     label = Gtk.Label.new()
+        #     label.set_text(" " + str(i["name"]).capitalize())
+        #     label.set_property("xalign", 0)
+        #
+        #     row = Gtk.ListBoxRow()
+        #     row.add(label)
+        #
+        #     self.RepoCategoryListBox.add(row)
+        #
+        # self.RepoCategoryListBox.show_all()
         print("Repo Categories setted")
 
     def setRepoApps(self):
@@ -422,6 +428,13 @@ class MainWindow(object):
         #         installtext = "Install"
         #     self.RepoAppListStore.append([appname, category, 0, installstatus, installtext, self.Package.summary(appname)])
 
+        renderer_toggle = Gtk.CellRendererToggle()
+        renderer_toggle.connect("toggled", self.on_cell_toggled)
+        column_toggle = Gtk.TreeViewColumn("Status", renderer_toggle, active=3)
+        column_toggle.set_resizable(True)
+        column_toggle.set_sort_column_id(3)
+        self.RepoAppsTreeView.append_column(column_toggle)
+
         renderer = Gtk.CellRendererText()
         column_name = Gtk.TreeViewColumn("Name", renderer, text=0)
         column_name.set_resizable(True)
@@ -434,19 +447,12 @@ class MainWindow(object):
         column_cat.set_sort_column_id(1)
         self.RepoAppsTreeView.append_column(column_cat)
 
-        renderer_toggle = Gtk.CellRendererToggle()
-        renderer_toggle.connect("toggled", self.on_cell_toggled)
-        column_toggle = Gtk.TreeViewColumn("Status", renderer_toggle, active=3)
-        column_toggle.set_resizable(True)
-        column_toggle.set_sort_column_id(3)
-        self.RepoAppsTreeView.append_column(column_toggle)
-
-        renderer_btn = CellRendererButton()
-        renderer_btn.connect("clicked", self.on_cell_clicked)
-        column_btn = Gtk.TreeViewColumn("Action", renderer_btn, text=4)
-        column_btn.set_resizable(True)
-        column_btn.set_sort_column_id(4)
-        self.RepoAppsTreeView.append_column(column_btn)
+        # renderer_btn = CellRendererButton()
+        # renderer_btn.connect("clicked", self.on_cell_clicked)
+        # column_btn = Gtk.TreeViewColumn("Action", renderer_btn, text=4)
+        # column_btn.set_resizable(True)
+        # column_btn.set_sort_column_id(4)
+        # self.RepoAppsTreeView.append_column(column_btn)
 
         renderer = Gtk.CellRendererText()
         column_desc = Gtk.TreeViewColumn("Description", renderer, text=5)
@@ -458,22 +464,22 @@ class MainWindow(object):
 
         self.repoapps = self.Package.repoapps
 
-        if self.useDynamicListStore:
-
-            self.storedict = {}
-
-            for i in self.repoapps:
-                self.storedict[i] = Gtk.ListStore(str, str, int, bool, str, str)
-
-            for i in self.storedict:
-                for j in self.repoapps[i]:
-                    installstatus = self.Package.isinstalled(j["name"])
-                    if installstatus:
-                        installtext = "Remove"
-                    else:
-                        installtext = "Install"
-                    self.storedict[i].append(
-                        [j["name"], j["category"], 0, installstatus, installtext, self.Package.summary(j["name"])])
+        # if self.useDynamicListStore:
+        #
+        #     self.storedict = {}
+        #
+        #     for i in self.repoapps:
+        #         self.storedict[i] = Gtk.ListStore(str, str, int, bool, str, str)
+        #
+        #     for i in self.storedict:
+        #         for j in self.repoapps[i]:
+        #             installstatus = self.Package.isinstalled(j["name"])
+        #             if installstatus:
+        #                 installtext = "Remove"
+        #             else:
+        #                 installtext = "Install"
+        #             self.storedict[i].append(
+        #                 [j["name"], j["category"], 0, installstatus, installtext, self.Package.summary(j["name"])])
 
     def on_cell_toggled(self, widget, path):
         # self.RepoAppListStore[path][3] = not self.RepoAppListStore[path][3]
@@ -572,7 +578,7 @@ class MainWindow(object):
 
             self.dName.set_markup("<b> " + prettyname + "</b>")
 
-            self.dDescriptionLabel.set_text(self.Package.description(self.appname))
+            self.dDescriptionLabel.set_text(self.Package.description(self.appname, True))
 
             if self.Package.isinstalled(self.appname):
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
@@ -623,7 +629,7 @@ class MainWindow(object):
 
             self.dName.set_markup("<b> " + prettyname + "</b>")
 
-            self.dDescriptionLabel.set_text(self.Package.description(self.appname))
+            self.dDescriptionLabel.set_text(self.Package.description(self.appname, True))
 
             if self.Package.isinstalled(self.appname):
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
@@ -811,7 +817,7 @@ class MainWindow(object):
         #     self.RepoCategoryFilter.refilter()
 
     def on_reposearchbutton_clicked(self, button):
-        self.RepoCategoryListBox.unselect_all()
+        # self.RepoCategoryListBox.unselect_all()
         self.isRepoSearching = True
         print("on_reposearchbutton_clicked")
 
@@ -831,24 +837,42 @@ class MainWindow(object):
 
     def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
 
-        if not self.isRepoSearching:
-            if self.useDynamicListStore:
-                if self.RepoCurrentCategory != "all":
-                    iter = self.storedict[self.RepoCurrentCategory].get_iter(path)
-                    value = self.storedict[self.RepoCurrentCategory].get_value(iter, 0)
-                else:
-                    iter = self.RepoAppListStore.get_iter(path)
-                    value = self.RepoAppListStore.get_value(iter, 0)
-            else:
-                if self.RepoCurrentCategory != "all":
-                    iter = self.store.get_iter(path)
-                    value = self.store.get_value(iter, 0)
-                else:
-                    iter = self.RepoAppListStore.get_iter(path)
-                    value = self.RepoAppListStore.get_value(iter, 0)
+        # if not self.isRepoSearching:
+        #     if self.useDynamicListStore:
+        #         if self.RepoCurrentCategory != "all":
+        #             iter = self.storedict[self.RepoCurrentCategory].get_iter(path)
+        #             value = self.storedict[self.RepoCurrentCategory].get_value(iter, 0)
+        #         else:
+        #             iter = self.RepoAppListStore.get_iter(path)
+        #             value = self.RepoAppListStore.get_value(iter, 0)
+        #     else:
+        #         if self.RepoCurrentCategory != "all":
+        #             iter = self.store.get_iter(path)
+        #             value = self.store.get_value(iter, 0)
+        #         else:
+        #             iter = self.RepoAppListStore.get_iter(path)
+        #             value = self.RepoAppListStore.get_value(iter, 0)
+        # else:
+
+        iter = self.searchstore.get_iter(path)
+        value = self.searchstore.get_value(iter, 0)
+
+        if self.Package.isinstalled(value):
+            if self.raction.get_style_context().has_class("suggested-action"):
+                self.raction.get_style_context().remove_class("suggested-action")
+            self.raction.get_style_context().add_class("destructive-action")
+            self.raction.set_label(" Uninstall")
+            self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
         else:
-            iter = self.searchstore.get_iter(path)
-            value = self.searchstore.get_value(iter, 0)
+            if self.raction.get_style_context().has_class("destructive-action"):
+                self.raction.get_style_context().remove_class("destructive-action")
+            self.raction.get_style_context().add_class("suggested-action")
+            self.raction.set_label(" Install")
+            self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+        self.rbotstack.set_visible_child_name("page1")
+        self.rtitle.set_text(self.Package.summary(value))
+        self.rdetail.set_text(self.Package.description(value, False))
 
         print(value)
 

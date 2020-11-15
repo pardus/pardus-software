@@ -520,50 +520,142 @@
                     <property name="can_focus">True</property>
                     <property name="wide_handle">True</property>
                     <child>
-                      <object class="GtkScrolledWindow">
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <object class="GtkPaned">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="shadow_type">in</property>
-                        <property name="min_content_width">150</property>
-                        <property name="max_content_width">500</property>
+                        <property name="orientation">vertical</property>
+                        <property name="wide_handle">True</property>
                         <child>
-                          <object class="GtkViewport">
+                          <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can_focus">True</property>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkListBox" id="RepoCategoryListBox">
+                              <object class="GtkTreeView" id="RepoAppsTreeView">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <signal name="row-activated" handler="on_RepoCategoryListBox_row_activated" swapped="no"/>
-                                <signal name="row-selected" handler="on_RepoCategoryListBox_row_selected" swapped="no"/>
+                                <property name="can_focus">True</property>
+                                <property name="model">RepoAppListStore</property>
+                                <property name="reorderable">True</property>
+                                <property name="search_column">0</property>
+                                <property name="enable_tree_lines">True</property>
+                                <property name="activate_on_single_click">True</property>
+                                <signal name="row-activated" handler="on_RepoAppsTreeView_row_activated" swapped="no"/>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
                               </object>
                             </child>
                           </object>
+                          <packing>
+                            <property name="resize">True</property>
+                            <property name="shrink">True</property>
+                          </packing>
                         </child>
-                      </object>
-                      <packing>
-                        <property name="resize">False</property>
-                        <property name="shrink">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkScrolledWindow">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="shadow_type">in</property>
                         <child>
-                          <object class="GtkTreeView" id="RepoAppsTreeView">
+                          <object class="GtkStack" id="rbotstack">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="model">RepoAppListStore</property>
-                            <property name="reorderable">True</property>
-                            <property name="enable_tree_lines">True</property>
-                            <property name="activate_on_single_click">True</property>
-                            <signal name="row-activated" handler="on_RepoAppsTreeView_row_activated" swapped="no"/>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="margin_left">13</property>
+                                <property name="margin_right">13</property>
+                                <property name="margin_top">13</property>
+                                <property name="margin_bottom">13</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">You can search for applications in repositories using search.</property>
+                                    <attributes>
+                                      <attribute name="weight" value="bold"/>
+                                    </attributes>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="name">page0</property>
+                                <property name="title" translatable="yes">page0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="margin_left">13</property>
+                                <property name="margin_right">13</property>
+                                <property name="margin_top">13</property>
+                                <property name="margin_bottom">13</property>
+                                <property name="row_spacing">13</property>
+                                <child>
+                                  <object class="GtkLabel" id="rtitle">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">No package is selected.</property>
+                                    <attributes>
+                                      <attribute name="weight" value="bold"/>
+                                    </attributes>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkGrid">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="row_spacing">13</property>
+                                    <child>
+                                      <object class="GtkLabel" id="rdetail">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">aa</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="raction">
+                                        <property name="label" translatable="yes">button</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                        <property name="halign">center</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="name">page1</property>
+                                <property name="title" translatable="yes">page1</property>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </object>
+                          <packing>
+                            <property name="resize">False</property>
+                            <property name="shrink">True</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>
