@@ -111,7 +111,6 @@ class MainWindow(object):
         self.rdetail = self.GtkBuilder.get_object("rdetail")
         self.rbotstack = self.GtkBuilder.get_object("rbotstack")
 
-
         self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
         self.topbutton1.get_style_context().add_class("suggested-action")
         self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
@@ -151,6 +150,8 @@ class MainWindow(object):
 
         self.progresstextlabel = self.GtkBuilder.get_object("progresstextlabel")
         self.topspinner = self.GtkBuilder.get_object("topspinner")
+
+        self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
         self.apps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
                      {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
@@ -384,6 +385,12 @@ class MainWindow(object):
     def normalpage(self):
         # self.mainstack.set_visible_child_name("page1")
         self.mainstack.set_visible_child_name("page2")
+        if self.Server.connection and self.Server.scode == 200:
+            self.homestack.set_visible_child_name("page0")
+        else:
+            self.homestack.set_visible_child_name("page4")
+            self.noserverlabel.set_markup(
+                "<b>{} {} : {}</b>".format("Could not connect to server.", "Error Code", self.Server.scode))
         self.splashspinner.stop()
         self.splashbarstatus = False
         self.splashlabel.set_text("")
@@ -492,6 +499,7 @@ class MainWindow(object):
         self.splashbar.pulse()
         self.splashlabel.set_markup("<b>Getting applications from server</b>")
         self.Server = Server()
+        print("{} {}".format("connection", self.Server.connection))
         print("server completed")
 
     def on_timeout(self, user_data):
@@ -755,11 +763,16 @@ class MainWindow(object):
         print("action " + self.appname)
 
     def on_topbutton1_clicked(self, button):
-        self.searchstack.set_visible_child_name("page0")
-        self.homestack.set_visible_child_name("page0")
-        self.HomeCategoryFlowBox.unselect_all()
-        self.EditorAppsIconView.unselect_all()
-        self.PardusAppsIconView.unselect_all()
+        if self.Server.connection and self.Server.scode == 200:
+            self.searchstack.set_visible_child_name("page0")
+            self.homestack.set_visible_child_name("page0")
+            self.HomeCategoryFlowBox.unselect_all()
+            self.EditorAppsIconView.unselect_all()
+            self.PardusAppsIconView.unselect_all()
+        else:
+            self.searchstack.set_visible_child_name("page2")
+            self.homestack.set_visible_child_name("page4")
+
         self.menubackbutton.set_sensitive(False)
         if self.topbutton2.get_style_context().has_class("suggested-action"):
             self.topbutton2.get_style_context().remove_class("suggested-action")

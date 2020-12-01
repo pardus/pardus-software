@@ -11,14 +11,22 @@ import requests
 
 class Server(object):
     def __init__(self):
-        server = "http://store.pardus.org.tr:5000/api/v1/apps/"
+        serverurl = "http://192.168.1.13"
+        server = serverurl + "/api/v2/apps/"
+        self.connection = True
+        self.scode = 0
+        self.applist = []
+        try:
+            request = requests.get(server)
+        except Exception as e:
+            print(e)
+            print("Connection problem")
+            self.connection = False
 
-        appsrequest = requests.get(server)
-
-        print("apps getted")
-
-        print(appsrequest.status_code)
-
-        app = appsrequest.json()["app-list"][0]["name"]
-
-        print(app)
+        if self.connection:
+            self.scode = request.status_code
+            if self.scode == 200:
+                print("Connection successful")
+                self.applist = request.json()["app-list"]
+            else:
+                self.connection = False
