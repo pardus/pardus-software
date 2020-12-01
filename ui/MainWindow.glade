@@ -509,7 +509,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="name">page0</property>
+                    <property name="name">pardushome</property>
                     <property name="title" translatable="yes">Pardus Vitrin</property>
                   </packing>
                 </child>
@@ -664,7 +664,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="name">page1</property>
+                    <property name="name">repohome</property>
                     <property name="title" translatable="yes">Depo</property>
                     <property name="position">1</property>
                   </packing>
@@ -740,8 +740,8 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="name">page2</property>
-                    <property name="title" translatable="yes">page2</property>
+                    <property name="name">pardusapps</property>
+                    <property name="title" translatable="yes">page3</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -1183,8 +1183,8 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="name">page3</property>
-                    <property name="title" translatable="yes">page3</property>
+                    <property name="name">pardusappsdetail</property>
+                    <property name="title" translatable="yes">page4</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -1214,8 +1214,8 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="name">page4</property>
-                    <property name="title" translatable="yes">page4</property>
+                    <property name="name">noserver</property>
+                    <property name="title" translatable="yes">page0</property>
                     <property name="position">4</property>
                   </packing>
                 </child>
@@ -1402,6 +1402,30 @@
                       <object class="GtkGrid" id="NoServerSearch">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
                         <child>
                           <placeholder/>
                         </child>

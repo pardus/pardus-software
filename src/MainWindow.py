@@ -386,9 +386,9 @@ class MainWindow(object):
         # self.mainstack.set_visible_child_name("page1")
         self.mainstack.set_visible_child_name("page2")
         if self.Server.connection and self.Server.scode == 200:
-            self.homestack.set_visible_child_name("page0")
+            self.homestack.set_visible_child_name("pardushome")
         else:
-            self.homestack.set_visible_child_name("page4")
+            self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
                 "<b>{} {} : {}</b>".format("Could not connect to server.", "Error Code", self.Server.scode))
         self.splashspinner.stop()
@@ -545,13 +545,13 @@ class MainWindow(object):
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
-        if self.homestack.get_visible_child_name() == "page2":
-            self.homestack.set_visible_child_name("page0")
+        if self.homestack.get_visible_child_name() == "pardusapps":
+            self.homestack.set_visible_child_name("pardushome")
             self.HomeCategoryFlowBox.unselect_all()
             self.EditorAppsIconView.unselect_all()
             self.menubackbutton.set_sensitive(False)
-        elif self.homestack.get_visible_child_name() == "page3":
-            self.homestack.set_visible_child_name("page2")
+        elif self.homestack.get_visible_child_name() == "pardusappsdetail":
+            self.homestack.set_visible_child_name("pardusapps")
             self.PardusAppsIconView.unselect_all()
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
@@ -567,7 +567,7 @@ class MainWindow(object):
             print(selected_items[0])
             print(self.appname)
 
-            self.homestack.set_visible_child_name("page3")
+            self.homestack.set_visible_child_name("pardusappsdetail")
 
             try:
                 pixbuf = Gtk.IconTheme.get_default().load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
@@ -618,7 +618,7 @@ class MainWindow(object):
             print(selected_items[0])
             print(self.appname)
 
-            self.homestack.set_visible_child_name("page3")
+            self.homestack.set_visible_child_name("pardusappsdetail")
 
             try:
                 pixbuf = Gtk.IconTheme.get_default().load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
@@ -696,7 +696,7 @@ class MainWindow(object):
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         self.isPardusSearching = False
         self.mainstack.set_visible_child_name("page2")
-        self.homestack.set_visible_child_name("page2")
+        self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
         self.PardusCategoryFilter.refilter()
@@ -765,13 +765,13 @@ class MainWindow(object):
     def on_topbutton1_clicked(self, button):
         if self.Server.connection and self.Server.scode == 200:
             self.searchstack.set_visible_child_name("page0")
-            self.homestack.set_visible_child_name("page0")
+            self.homestack.set_visible_child_name("pardushome")
             self.HomeCategoryFlowBox.unselect_all()
             self.EditorAppsIconView.unselect_all()
             self.PardusAppsIconView.unselect_all()
         else:
             self.searchstack.set_visible_child_name("page2")
-            self.homestack.set_visible_child_name("page4")
+            self.homestack.set_visible_child_name("noserver")
 
         self.menubackbutton.set_sensitive(False)
         if self.topbutton2.get_style_context().has_class("suggested-action"):
@@ -781,7 +781,7 @@ class MainWindow(object):
 
     def on_topbutton2_clicked(self, button):
         self.searchstack.set_visible_child_name("page1")
-        self.homestack.set_visible_child_name("page1")
+        self.homestack.set_visible_child_name("repohome")
         self.menubackbutton.set_sensitive(False)
         if self.topbutton1.get_style_context().has_class("suggested-action"):
             self.topbutton1.get_style_context().remove_class("suggested-action")
@@ -790,13 +790,13 @@ class MainWindow(object):
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
-        self.homestack.set_visible_child_name("page2")
+        self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         # self.SearchFilter.refilter()
         self.PardusCategoryFilter.refilter()
 
     def on_pardussearchbar_button_press_event(self, widget, click):
-        self.homestack.set_visible_child_name("page2")
+        self.homestack.set_visible_child_name("pardusapps")
         # self.SearchFilter.refilter()
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
@@ -804,7 +804,7 @@ class MainWindow(object):
         self.PardusCategoryFilter.refilter()
 
     def on_pardussearchbar_focus_in_event(self, widget, click):
-        self.homestack.set_visible_child_name("page2")
+        self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         print("on_searchbar_focus_in_event")
         self.isPardusSearching = True
