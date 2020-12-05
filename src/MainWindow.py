@@ -60,40 +60,6 @@ class MainWindow(object):
         """
         # caticon = Gtk.Image.new_from_icon_name("applications-other",0)
 
-        self.categories = ["all", "development", "education", "games", "graphics", "internet", "multimedia", "office",
-                           "system", "other"]
-
-        for i in self.categories:
-
-            try:
-                caticon = Gtk.Image.new_from_pixbuf(
-                    Gtk.IconTheme.get_default().load_icon("applications-" + i, 48, Gtk.IconLookupFlags(16)))
-            except:
-                if i == "education":
-                    caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("applications-science", 48, Gtk.IconLookupFlags(16)))
-                elif i == "all":
-                    caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("applications-other", 48, Gtk.IconLookupFlags(16)))
-                else:
-                    try:
-                        caticon = Gtk.Image.new_from_pixbuf(
-                            Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48, Gtk.IconLookupFlags(16)))
-                    except:
-                        caticon = Gtk.Image.new_from_pixbuf(
-                            Gtk.IconTheme.get_default().load_icon("image-missing", 48, Gtk.IconLookupFlags(16)))
-            label = Gtk.Label.new()
-            label_text = str(i).capitalize()
-            label.set_text(" " + label_text)
-
-            grid = Gtk.Grid.new()
-
-            grid.add(caticon)
-
-            grid.attach(label, 1, 0, 3, 1)
-
-            self.HomeCategoryFlowBox.add(grid)
-
         self.searchbar = self.GtkBuilder.get_object("searchbar")
         self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
         self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
@@ -153,207 +119,33 @@ class MainWindow(object):
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
-        self.apps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
-                     {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
-                     {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'},
-                     {'name': 'amule', 'category': 'internet', 'prettyname': 'aMule'},
-                     {'name': 'android-studio', 'category': 'development', 'prettyname': 'Android Studio'},
-                     {'name': 'anjuta', 'category': 'development', 'prettyname': 'Anjuta'},
-                     {'name': 'anydesk', 'category': 'system', 'prettyname': 'AnyDesk'},
-                     {'name': 'arduino', 'category': 'development', 'prettyname': 'Arduino'},
-                     {'name': 'armagetronad', 'category': 'games', 'prettyname': 'Armagetron Advanced'},
-                     {'name': 'atom', 'category': 'development', 'prettyname': 'Atom'},
-                     {'name': 'atomix', 'category': 'games', 'prettyname': 'Atomix'},
-                     {'name': 'audacious', 'category': 'multimedia', 'prettyname': 'Audacious'},
-                     {'name': 'audacity', 'category': 'multimedia', 'prettyname': 'Audacity'},
-                     {'name': 'baobab', 'category': 'system', 'prettyname': 'Disk Usage Analyzer'},
-                     {'name': 'bleachbit', 'category': 'system', 'prettyname': 'BleachBit'},
-                     {'name': 'blender', 'category': 'graphics', 'prettyname': 'Blender'},
-                     {'name': 'bless', 'category': 'development', 'prettyname': 'Bless Hex Editor'},
-                     {'name': 'blobby', 'category': 'games', 'prettyname': 'Blobby Volley 2'},
-                     {'name': 'boswars', 'category': 'games', 'prettyname': 'Bos Wars'},
-                     {'name': 'brasero', 'category': 'multimedia', 'prettyname': 'Brasero CD/DVD Creator'},
-                     {'name': 'calibre', 'category': 'office', 'prettyname': 'calibre'},
-                     {'name': 'cheese', 'category': 'multimedia', 'prettyname': 'Cheese'},
-                     {'name': 'chessx', 'category': 'games', 'prettyname': 'ChessX'},
-                     {'name': 'chromium', 'category': 'internet', 'prettyname': 'Chromium'},
-                     {'name': 'clamtk', 'category': 'system', 'prettyname': 'ClamTk'},
-                     {'name': 'code', 'category': 'development', 'prettyname': 'Visual Studio Code'},
-                     {'name': 'codeblocks', 'category': 'development', 'prettyname': 'Code::Blocks IDE'},
-                     {'name': 'darktable', 'category': 'graphics', 'prettyname': 'Darktable'},
-                     {'name': 'deepin-movie', 'category': 'multimedia', 'prettyname': 'Deepin Movie'},
-                     {'name': 'deepin-music', 'category': 'multimedia', 'prettyname': 'Deepin Music'},
-                     {'name': 'deepin-terminal', 'category': 'system', 'prettyname': 'Deepin Terminal'},
-                     {'name': 'deja-dup', 'category': 'system', 'prettyname': 'Deja Dup Backup Monitor'},
-                     {'name': 'discord', 'category': 'internet', 'prettyname': 'Discord'},
-                     {'name': 'diyanet-cocuktakvim', 'category': 'other', 'prettyname': 'Diyanet Çocuk Takvimi'},
-                     {'name': 'diyanet-namazvaktim', 'category': 'other', 'prettyname': 'Diyanet Namaz Vaktim'},
-                     {'name': 'drawing', 'category': 'graphics', 'prettyname': 'Drawing'},
-                     {'name': 'driconf', 'category': 'system', 'prettyname': '3D Acceleration'},
-                     {'name': 'dropbox', 'category': 'internet', 'prettyname': 'Dropbox'},
-                     {'name': 'emacs24', 'category': 'office', 'prettyname': 'GNU Emacs 24 (GUI)'},
-                     {'name': 'entangle', 'category': 'graphics', 'prettyname': 'Entangle'},
-                     {'name': 'eog', 'category': 'graphics', 'prettyname': 'Eye of GNOME'},
-                     {'name': 'epiphany', 'category': 'games', 'prettyname': 'Epiphany'},
-                     {'name': 'epiphany-browser', 'category': 'internet', 'prettyname': 'Epiphany Browser'},
-                     {'name': 'eric', 'category': 'internet', 'prettyname': 'Eric python IDE'},
-                     {'name': 'eureka', 'category': 'games', 'prettyname': 'Eureka DOOM Editor'},
-                     {'name': 'evince', 'category': 'office', 'prettyname': 'Evince'},
-                     {'name': 'evolution', 'category': 'internet', 'prettyname': 'Evolution'},
-                     {'name': 'ferdi', 'category': 'internet', 'prettyname': 'Ferdi'},
-                     {'name': 'filelight', 'category': 'system', 'prettyname': 'Filelight'},
-                     {'name': 'filezilla', 'category': 'internet', 'prettyname': 'FileZilla'},
-                     {'name': 'firefox-esr', 'category': 'internet', 'prettyname': 'Firefox Esr'},
-                     {'name': 'five-or-more', 'category': 'games', 'prettyname': 'Five or More'},
-                     {'name': 'fluid', 'category': 'development', 'prettyname': 'FLUID'},
-                     {'name': 'focuswriter', 'category': 'office', 'prettyname': 'FocusWriter'},
-                     {'name': 'fontforge', 'category': 'graphics', 'prettyname': 'FontForge'},
-                     {'name': 'foobillardplus', 'category': 'games', 'prettyname': 'FooBillard++'},
-                     {'name': 'four-in-a-row', 'category': 'games', 'prettyname': 'Four-in-a-row'},
-                     {'name': 'franz', 'category': 'internet', 'prettyname': 'Franz'},
-                     {'name': 'freecad', 'category': 'graphics', 'prettyname': 'FreeCAD'},
-                     {'name': 'freeorion', 'category': 'games', 'prettyname': 'FreeOrion'},
-                     {'name': 'freeplane', 'category': 'graphics', 'prettyname': 'Freeplane'},
-                     {'name': 'frescobaldi', 'category': 'multimedia', 'prettyname': 'Frescobaldi'},
-                     {'name': 'fritzing', 'category': 'development', 'prettyname': 'Fritzing'},
-                     {'name': 'frozen-bubble', 'category': 'games', 'prettyname': 'Frozen-Bubble'},
-                     {'name': 'fs-uae-launcher', 'category': 'system', 'prettyname': 'FS-UAE Launcher'},
-                     {'name': 'gbrainy', 'category': 'education', 'prettyname': 'gbrainy'},
-                     {'name': 'gcompris', 'category': 'education', 'prettyname': 'GCompris'},
-                     {'name': 'gdebi', 'category': 'other', 'prettyname': 'GDebi'},
-                     {'name': 'geany', 'category': 'development', 'prettyname': 'Geany'},
-                     {'name': 'geary', 'category': 'internet', 'prettyname': 'Geary'},
-                     {'name': 'gedit', 'category': 'office', 'prettyname': 'Gedit'},
-                     {'name': 'geeqie', 'category': 'graphics', 'prettyname': 'Geeqie'},
-                     {'name': 'gelemental', 'category': 'education', 'prettyname': 'Periodic Table'},
-                     {'name': 'geogebra', 'category': 'education', 'prettyname': 'GeoGebra'},
-                     {'name': 'ghex', 'category': 'development', 'prettyname': 'GHex'},
-                     {'name': 'giggle', 'category': 'development', 'prettyname': 'Giggle'},
-                     {'name': 'gimp', 'category': 'graphics', 'prettyname': 'GIMP'},
-                     {'name': 'glade', 'category': 'graphics', 'prettyname': 'Glade'},
-                     {'name': 'gnome-2048', 'category': 'games', 'prettyname': '2048'},
-                     {'name': 'gnome-boxes', 'category': 'system', 'prettyname': 'Boxes'},
-                     {'name': 'gnome-builder', 'category': 'development', 'prettyname': 'Builder'},
-                     {'name': 'gnome-characters', 'category': 'other', 'prettyname': 'Characters'},
-                     {'name': 'gnome-mpv', 'category': 'multimedia', 'prettyname': 'GNOME MPV'},
-                     {'name': 'google-chrome-stable', 'category': 'internet', 'prettyname': 'Google Chrome'},
-                     {'name': 'gparted', 'category': 'system', 'prettyname': 'GParted'},
-                     {'name': 'guake', 'category': 'development', 'prettyname': 'Guake'},
-                     {'name': 'hardinfo', 'category': 'system', 'prettyname': 'System Profiler and Benchmark'},
-                     {'name': 'hexchat', 'category': 'internet', 'prettyname': 'HexChat'},
-                     {'name': 'inkscape', 'category': 'graphics', 'prettyname': 'Inkscape'},
-                     {'name': 'kazam', 'category': 'multimedia', 'prettyname': 'Kazam'},
-                     {'name': 'kdenlive', 'category': 'multimedia', 'prettyname': 'Kdenlive'},
-                     {'name': 'leocad', 'category': 'graphics', 'prettyname': 'LeoCAD'},
-                     {'name': 'librecad', 'category': 'graphics', 'prettyname': 'LibreCAD'},
-                     {'name': 'libreoffice', 'category': 'office', 'prettyname': 'LibreOffice'},
-                     {'name': 'linphone', 'category': 'internet', 'prettyname': 'Linphone'},
-                     {'name': 'master-pdf-editor', 'category': 'office', 'prettyname': 'Master PDF Editor 5'},
-                     {'name': 'mblock-4', 'category': 'development', 'prettyname': 'mBlock'},
-                     {'name': 'mpv', 'category': 'multimedia', 'prettyname': 'mpv Media Player'},
-                     {'name': 'nautilus', 'category': 'system', 'prettyname': 'Nautilus'},
-                     {'name': 'obs-studio', 'category': 'multimedia', 'prettyname': 'OBS Studio'},
-                     {'name': 'openscad', 'category': 'graphics', 'prettyname': 'OpenSCAD'},
-                     {'name': 'opera-stable', 'category': 'internet', 'prettyname': 'Opera'},
-                     {'name': 'pardus-imagewriter', 'category': 'system', 'prettyname': 'Pardus Image Writer'},
-                     {'name': 'pdebi', 'category': 'system', 'prettyname': 'Pardus Package Installer'},
-                     {'name': 'pdfarranger', 'category': 'office', 'prettyname': 'PDF Arranger'},
-                     {'name': 'pdfsam', 'category': 'office', 'prettyname': 'PDFsam Basic'},
-                     {'name': 'pergono', 'category': 'other', 'prettyname': 'Pergono'},
-                     {'name': 'pidgin', 'category': 'internet', 'prettyname': 'Pidgin Internet Messenger'},
-                     {'name': 'pinta', 'category': 'graphics', 'prettyname': 'Pinta'},
-                     {'name': 'playonlinux', 'category': 'games', 'prettyname': 'PlayOnLinux'},
-                     {'name': 'pokerth', 'category': 'games', 'prettyname': 'PokerTH'},
-                     {'name': 'polari', 'category': 'internet', 'prettyname': 'Polari'},
-                     {'name': 'pycharm', 'category': 'development', 'prettyname': 'PyCharm Community Edition'},
-                     {'name': 'pythoncad', 'category': 'graphics', 'prettyname': 'PyCAD'},
-                     {'name': 'qbittorrent', 'category': 'internet', 'prettyname': 'qBittorrent'},
-                     {'name': 'qtcreator', 'category': 'development', 'prettyname': 'Qt Creator'},
-                     {'name': 'remmina', 'category': 'system', 'prettyname': 'Remmina'},
-                     {'name': 'rhythmbox', 'category': 'multimedia', 'prettyname': 'Rhythmbox'},
-                     {'name': 'scratch', 'category': 'development', 'prettyname': 'Scratch'},
-                     {'name': 'scribus', 'category': 'graphics', 'prettyname': 'Scribus'},
-                     {'name': 'skypeforlinux', 'category': 'internet', 'prettyname': 'Skype'},
-                     {'name': 'smplayer', 'category': 'multimedia', 'prettyname': 'SMPlayer'},
-                     {'name': 'solvespace', 'category': 'graphics', 'prettyname': 'SolveSpace'},
-                     {'name': 'soundconverter', 'category': 'multimedia', 'prettyname': 'Sound Converter'},
-                     {'name': 'sound-juicer', 'category': 'multimedia', 'prettyname': 'Sound Juicer'},
-                     {'name': 'spotify-client', 'category': 'multimedia', 'prettyname': 'Spotify'},
-                     {'name': 'spyder3', 'category': 'development', 'prettyname': 'Spyder3'},
-                     {'name': 'stacer', 'category': 'system', 'prettyname': 'Stacer'},
-                     {'name': 'steam', 'category': 'games', 'prettyname': 'Steam'},
-                     {'name': 'sublime-text', 'category': 'development', 'prettyname': 'Sublime Text'},
-                     {'name': 'supertux', 'category': 'games', 'prettyname': 'SuperTux 2'},
-                     {'name': 'swell-foop', 'category': 'games', 'prettyname': 'Swell Foop'},
-                     {'name': 'synaptic', 'category': 'system', 'prettyname': 'Synaptic Package Manager'},
-                     {'name': 'sysprof', 'category': 'system', 'prettyname': 'Sysprof'},
-                     {'name': 'teamviewer', 'category': 'system', 'prettyname': 'TeamViewer'},
-                     {'name': 'telegram-desktop', 'category': 'internet', 'prettyname': 'Telegram'},
-                     {'name': 'thunderbird', 'category': 'internet', 'prettyname': 'Thunderbird'},
-                     {'name': 'timeshift', 'category': 'system', 'prettyname': 'Timeshift'},
-                     {'name': 'transmission', 'category': 'internet', 'prettyname': 'Transmission'},
-                     {'name': 'tuxguitar', 'category': 'multimedia', 'prettyname': 'tuxguitar'},
-                     {'name': 'tuxmath', 'category': 'education', 'prettyname': 'Tux Math'},
-                     {'name': 'uget', 'category': 'internet', 'prettyname': 'uGet'},
-                     {'name': 'viber', 'category': 'internet', 'prettyname': 'Viber'},
-                     {'name': 'virt-manager', 'category': 'system', 'prettyname': 'Virtual Machine Manager'},
-                     {'name': 'virtualbox-6.0', 'category': 'system', 'prettyname': 'Oracle VM VirtualBox'},
-                     {'name': 'vlc', 'category': 'multimedia', 'prettyname': 'VLC media player'},
-                     {'name': 'vmpk', 'category': 'multimedia', 'prettyname': 'VMPK'},
-                     {'name': 'vokoscreen', 'category': 'multimedia', 'prettyname': 'vokoscreen'},
-                     {'name': 'vym', 'category': 'development', 'prettyname': 'VYM - View Your Mind'},
-                     {'name': 'warmux', 'category': 'games', 'prettyname': 'Warmux'},
-                     {'name': 'zeal', 'category': 'development', 'prettyname': 'Zeal'},
-                     {'name': 'zegrapher', 'category': 'education', 'prettyname': 'ZeGrapher'},
-                     {'name': 'zenmap', 'category': 'system', 'prettyname': 'Zenmap'},
-                     {'name': 'zim', 'category': 'office', 'prettyname': 'Zim Desktop Wiki'}]
-
-        for app in self.apps:
-            try:
-                pixbuf = Gtk.IconTheme.get_default().load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
-                # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
-            except:
-                # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
-                try:
-                    pixbuf = self.parduspixbuf.load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
-                except:
-                    try:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, Gtk.IconLookupFlags(16))
-                    except:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
-
-            appname = app['name']
-            prettyname = app['prettyname']
-            category = app['category']
-            categorynumber = self.get_category_number(app['category'])
-            self.PardusAppListStore.append([pixbuf, appname, categorynumber, prettyname])
-
-        self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
-                           {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
-                           {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
-
-        for ediapp in self.editorapps:
-            try:
-                edipixbuf = Gtk.IconTheme.get_default().load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
-                # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
-            except:
-                # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
-                try:
-                    edipixbuf = self.parduspixbuf.load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
-                except:
-                    try:
-                        edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
-                                                                          Gtk.IconLookupFlags(16))
-                    except:
-                        edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
-
-            ediappname = ediapp['name']
-            ediprettyname = ediapp['prettyname']
-            edicategory = ediapp['category']
-            edicategorynumber = self.get_category_number(ediapp['category'])
-            self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
+        # self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
+        #                    {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
+        #                    {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
+        #
+        # for ediapp in self.editorapps:
+        #     try:
+        #         edipixbuf = Gtk.IconTheme.get_default().load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
+        #         # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
+        #     except:
+        #         # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
+        #         try:
+        #             edipixbuf = self.parduspixbuf.load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
+        #         except:
+        #             try:
+        #                 edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
+        #                                                                   Gtk.IconLookupFlags(16))
+        #             except:
+        #                 edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
+        #
+        #     ediappname = ediapp['name']
+        #     ediprettyname = ediapp['prettyname']
+        #     edicategory = ediapp['category']
+        #     edicategorynumber = self.get_category_number(ediapp['category'])
+        #     self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
 
         self.PardusCurrentCategory = -1
+        self.PardusCurrentCategoryString = "all"
         self.RepoCurrentCategory = "all"
 
         self.useDynamicListStore = False
@@ -380,6 +172,8 @@ class MainWindow(object):
         self.setRepoCategories()
         self.setRepoApps()
         self.server()
+        self.setPardusCategories()
+        self.setPardusApps()
         self.normalpage()
 
     def normalpage(self):
@@ -499,8 +293,69 @@ class MainWindow(object):
         self.splashbar.pulse()
         self.splashlabel.set_markup("<b>Getting applications from server</b>")
         self.Server = Server()
-        print("{} {}".format("connection", self.Server.connection))
-        print("server completed")
+        print("{} {}".format("server connection", self.Server.connection))
+
+    def setPardusApps(self):
+        if self.Server.connection:
+            self.splashlabel.set_markup("<b>Setting applications</b>")
+            for app in self.Server.applist:
+                try:
+                    pixbuf = Gtk.IconTheme.get_default().load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
+                    # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
+                except:
+                    # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
+                    try:
+                        pixbuf = self.parduspixbuf.load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
+                    except:
+                        try:
+                            pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
+                                                                           Gtk.IconLookupFlags(16))
+                        except:
+                            pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
+
+                appname = app['name']
+                prettyname = app['prettyname']['en']
+                category = app['category']['en']
+                categorynumber = self.get_category_number(category)
+                self.PardusAppListStore.append([pixbuf, appname, categorynumber, prettyname, category])
+
+    def setPardusCategories(self):
+        if self.Server.connection:
+            self.allcats = ["all"]
+            for app in self.Server.applist:
+                self.allcats.append(app['category']['en'])
+            self.categories = sorted(list(set(self.allcats)))
+
+            for i in self.categories:
+                try:
+                    caticon = Gtk.Image.new_from_pixbuf(
+                        Gtk.IconTheme.get_default().load_icon("applications-" + i, 48, Gtk.IconLookupFlags(16)))
+                except:
+                    if i == "education":
+                        caticon = Gtk.Image.new_from_pixbuf(
+                            Gtk.IconTheme.get_default().load_icon("applications-science", 48, Gtk.IconLookupFlags(16)))
+                    elif i == "all":
+                        caticon = Gtk.Image.new_from_pixbuf(
+                            Gtk.IconTheme.get_default().load_icon("applications-other", 48, Gtk.IconLookupFlags(16)))
+                    else:
+                        try:
+                            caticon = Gtk.Image.new_from_pixbuf(
+                                Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48, Gtk.IconLookupFlags(16)))
+                        except:
+                            caticon = Gtk.Image.new_from_pixbuf(
+                                Gtk.IconTheme.get_default().load_icon("image-missing", 48, Gtk.IconLookupFlags(16)))
+                label = Gtk.Label.new()
+                label_text = str(i).capitalize()
+                label.set_text(" " + label_text)
+
+                grid = Gtk.Grid.new()
+
+                grid.add(caticon)
+
+                grid.attach(label, 1, 0, 3, 1)
+
+                self.HomeCategoryFlowBox.add(grid)
+            self.HomeCategoryFlowBox.show_all()
 
     def on_timeout(self, user_data):
         if self.splashbarstatus:
@@ -510,28 +365,16 @@ class MainWindow(object):
         return True
 
     def get_category_number(self, thatcategory):
-        if thatcategory == "all":
-            return 0
-        if thatcategory == "development":
-            return 1
-        elif thatcategory == "education":
-            return 2
-        elif thatcategory == "games":
-            return 3
-        elif thatcategory == "graphics":
-            return 4
-        elif thatcategory == "internet":
-            return 5
-        elif thatcategory == "multimedia":
-            return 6
-        elif thatcategory == "office":
-            return 7
-        elif thatcategory == "system":
-            return 8
-        elif thatcategory == "other":
-            return 9
-        else:
-            return 404
+        lencat = len(self.categories)
+        for i in range(0, lencat):
+            if thatcategory == self.categories[i]:
+                return i
+
+    def get_category_name(self, thatnumber):
+        lencat = len(self.categories)
+        for i in range(0, lencat):
+            if thatnumber == i:
+                return self.categories[i]
 
     def get_repo_category_number(self, thatcategory):
         repocatnumber = 404
@@ -659,21 +502,20 @@ class MainWindow(object):
     def PardusCategoryFilterFunction(self, model, iteration, data):
         search_entry_text = self.pardussearchbar.get_text()
         categorynumber = int(model[iteration][2])
+        category = model[iteration][4]
         appname = model[iteration][1]
         showall = True
-
+        # print(category + " " + self.PardusCurrentCategoryString)
         if self.isPardusSearching:
             self.HomeCategoryFlowBox.unselect_all()
             if search_entry_text in appname:
                 return True
         else:
 
-            if showall and self.PardusCurrentCategory == -1:
-                return True
-            elif showall and self.PardusCurrentCategory == 0:
+            if showall and self.PardusCurrentCategoryString == "all":
                 return True
             else:
-                return categorynumber == self.PardusCurrentCategory
+                return category == self.PardusCurrentCategoryString
 
     # def RepoCategoryFilterFunction(self, model, iteration, data):
     #     search_entry_text = self.reposearchbar.get_text()
@@ -699,9 +541,12 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
-        self.PardusCategoryFilter.refilter()
 
         print("home category selected " + str(self.PardusCurrentCategory))
+
+        self.PardusCurrentCategoryString = self.get_category_name(self.PardusCurrentCategory)
+        print(self.PardusCurrentCategoryString)
+        self.PardusCategoryFilter.refilter()
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
         print("on_HomeCategoryFlowBox_selected_children_changed")
