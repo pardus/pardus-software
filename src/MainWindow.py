@@ -14,7 +14,8 @@ import gi
 gi.require_version("GLib", "2.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Notify", "0.7")
-from gi.repository import GLib, Gtk, GObject, Notify
+gi.require_version("GdkPixbuf", "2.0")
+from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf
 
 from Package import Package
 from Server import Server
@@ -298,20 +299,30 @@ class MainWindow(object):
     def setPardusApps(self):
         if self.Server.connection:
             self.splashlabel.set_markup("<b>Setting applications</b>")
+
+            localappicons = self.Server.getAppIcons()
+            print("{} : {}".format("localappicons", localappicons))
+            if not localappicons:
+                print("local appicons folder doesn't exists so appicons getting from system")
             for app in self.Server.applist:
                 try:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
-                    # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
+                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                        self.Server.cachedir + "appicons/" + app['name'] + ".svg", 64, 64)
                 except:
-                    # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
+                    if localappicons:
+                        print("{} {}".format(app['name'], "app icon not found in local"))
                     try:
-                        pixbuf = self.parduspixbuf.load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
+                        pixbuf = Gtk.IconTheme.get_default().load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
                     except:
                         try:
-                            pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
-                                                                           Gtk.IconLookupFlags(16))
+                            pixbuf = self.parduspixbuf.load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
                         except:
-                            pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
+                            try:
+                                pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
+                                                                               Gtk.IconLookupFlags(16))
+                            except:
+                                pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64,
+                                                                               Gtk.IconLookupFlags(16))
 
                 appname = app['name']
                 prettyname = app['prettyname']['en']
@@ -326,24 +337,38 @@ class MainWindow(object):
                 self.allcats.append(app['category']['en'])
             self.categories = sorted(list(set(self.allcats)))
 
+            localcaticons = self.Server.getCategoryIcons()
+            print("{} : {}".format("localcaticons", localcaticons))
+            if not localcaticons:
+                print("local categoryicons folder doesn't exists so categoryicons getting from system")
             for i in self.categories:
                 try:
                     caticon = Gtk.Image.new_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("applications-" + i, 48, Gtk.IconLookupFlags(16)))
+                        GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "categoryicons/" + i + ".svg", 48,
+                                                               48))
                 except:
-                    if i == "education":
+                    if localcaticons:
+                        print("{} {}".format(i, "category icon not found in local"))
+                    try:
                         caticon = Gtk.Image.new_from_pixbuf(
-                            Gtk.IconTheme.get_default().load_icon("applications-science", 48, Gtk.IconLookupFlags(16)))
-                    elif i == "all":
-                        caticon = Gtk.Image.new_from_pixbuf(
-                            Gtk.IconTheme.get_default().load_icon("applications-other", 48, Gtk.IconLookupFlags(16)))
-                    else:
-                        try:
+                            Gtk.IconTheme.get_default().load_icon("applications-" + i, 48, Gtk.IconLookupFlags(16)))
+                    except:
+                        if i == "education":
                             caticon = Gtk.Image.new_from_pixbuf(
-                                Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48, Gtk.IconLookupFlags(16)))
-                        except:
+                                Gtk.IconTheme.get_default().load_icon("applications-science", 48,
+                                                                      Gtk.IconLookupFlags(16)))
+                        elif i == "all":
                             caticon = Gtk.Image.new_from_pixbuf(
-                                Gtk.IconTheme.get_default().load_icon("image-missing", 48, Gtk.IconLookupFlags(16)))
+                                Gtk.IconTheme.get_default().load_icon("applications-other", 48,
+                                                                      Gtk.IconLookupFlags(16)))
+                        else:
+                            try:
+                                caticon = Gtk.Image.new_from_pixbuf(
+                                    Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48,
+                                                                          Gtk.IconLookupFlags(16)))
+                            except:
+                                caticon = Gtk.Image.new_from_pixbuf(
+                                    Gtk.IconTheme.get_default().load_icon("image-missing", 48, Gtk.IconLookupFlags(16)))
                 label = Gtk.Label.new()
                 label_text = str(i).capitalize()
                 label.set_text(" " + label_text)
