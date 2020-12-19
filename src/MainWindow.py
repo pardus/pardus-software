@@ -180,12 +180,13 @@ class MainWindow(object):
     def normalpage(self):
         # self.mainstack.set_visible_child_name("page1")
         self.mainstack.set_visible_child_name("page2")
-        if self.Server.connection and self.Server.scode == 200:
+        if self.Server.connection and self.Server.app_scode == 200 and self.Server.cat_scode == 200:
             self.homestack.set_visible_child_name("pardushome")
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
-                "<b>{} {} : {}</b>".format("Could not connect to server.", "Error Code", self.Server.scode))
+                "<b>{}\n{} : {}\n{} : {}</b>".format("Could not connect to server.", "Error Code (app)",
+                                                     self.Server.app_scode, "Error Code (cat)", self.Server.cat_scode))
         self.splashspinner.stop()
         self.splashbarstatus = False
         self.splashlabel.set_text("")
@@ -325,16 +326,20 @@ class MainWindow(object):
                                                                                Gtk.IconLookupFlags(16))
 
                 appname = app['name']
-                prettyname = app['prettyname']['en']
-                category = app['category']['en']
+                prettyname = app['prettyname']["en"]
+                category = ""
+                for i in app['category']:
+                    category += i["en"] + ","
+                category = category.rstrip(",")
+                print(appname + " : " + category)
                 categorynumber = self.get_category_number(category)
                 self.PardusAppListStore.append([pixbuf, appname, categorynumber, prettyname, category])
 
     def setPardusCategories(self):
         if self.Server.connection:
             self.allcats = ["all"]
-            for app in self.Server.applist:
-                self.allcats.append(app['category']['en'])
+            for app in self.Server.catlist:
+                self.allcats.append(app['en'])
             self.categories = sorted(list(set(self.allcats)))
 
             localcaticons = self.Server.getCategoryIcons()
@@ -390,10 +395,13 @@ class MainWindow(object):
         return True
 
     def get_category_number(self, thatcategory):
+        listcat = list(thatcategory.split(","))
+        lenlistcat = len(listcat)
         lencat = len(self.categories)
         for i in range(0, lencat):
-            if thatcategory == self.categories[i]:
-                return i
+            for j in range(0, lenlistcat):
+                if self.categories[i] == listcat[j]:
+                    return i
 
     def get_category_name(self, thatnumber):
         lencat = len(self.categories)
@@ -540,7 +548,9 @@ class MainWindow(object):
             if showall and self.PardusCurrentCategoryString == "all":
                 return True
             else:
-                return category == self.PardusCurrentCategoryString
+                # return category == self.PardusCurrentCategoryString
+                if self.PardusCurrentCategoryString in category:
+                    return True
 
     # def RepoCategoryFilterFunction(self, model, iteration, data):
     #     search_entry_text = self.reposearchbar.get_text()
@@ -567,10 +577,10 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
 
-        print("home category selected " + str(self.PardusCurrentCategory))
 
         self.PardusCurrentCategoryString = self.get_category_name(self.PardusCurrentCategory)
-        print(self.PardusCurrentCategoryString)
+        print("home category selected " + str(self.PardusCurrentCategory) + " " + self.PardusCurrentCategoryString)
+
         self.PardusCategoryFilter.refilter()
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
@@ -633,7 +643,7 @@ class MainWindow(object):
         print("action " + self.appname)
 
     def on_topbutton1_clicked(self, button):
-        if self.Server.connection and self.Server.scode == 200:
+        if self.Server.connection and self.Server.app_scode == 200 and self.Server.cat_scode == 200:
             self.searchstack.set_visible_child_name("page0")
             self.homestack.set_visible_child_name("pardushome")
             self.HomeCategoryFlowBox.unselect_all()

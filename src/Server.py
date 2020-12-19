@@ -13,8 +13,9 @@ import tarfile
 
 class Server(object):
     def __init__(self):
-        self.serverurl = "http://192.168.1.13"
-        self.serverapi = "/api/v2/apps/"
+        self.serverurl = "http://192.168.1.28:8000"
+        self.serverapps = "/api/v2/apps/"
+        self.servercats = "/api/v2/cats/"
         self.serverfiles = "/files/"
         self.serverappicons = "appicons"
         self.servercaticons = "categoryicons"
@@ -24,21 +25,34 @@ class Server(object):
         self.cachedir = userhome + "/.cache/pardus-software-center/"
 
         self.connection = True
-        self.scode = 0
+        self.app_scode = 0
+        self.cat_scode = 0
         self.applist = []
+        self.catlist = []
 
         try:
-            request = requests.get(self.serverurl + self.serverapi)
+            request_app = requests.get(self.serverurl + self.serverapps)
         except Exception as e:
             print(e)
-            print("Connection problem")
+            print("Connection problem on serverapps")
+            self.connection = False
+
+        try:
+            request_cat = requests.get(self.serverurl + self.servercats)
+        except Exception as e:
+            print(e)
+            print("Connection problem on servercats")
             self.connection = False
 
         if self.connection:
-            self.scode = request.status_code
-            if self.scode == 200:
+            self.app_scode = request_app.status_code
+            self.cat_scode = request_cat.status_code
+            if self.app_scode == 200 and self.cat_scode == 200:
                 print("Connection successful")
-                self.applist = request.json()["app-list"]
+                self.applist = request_app.json()["app-list"]
+                print(self.applist)
+                self.catlist = request_cat.json()["cat-list"]
+                print(self.catlist)
             else:
                 self.connection = False
 
