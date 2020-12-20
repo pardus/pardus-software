@@ -120,6 +120,9 @@ class MainWindow(object):
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
+        self.NavCategoryImage = self.GtkBuilder.get_object("NavCategoryImage")
+        self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
+
         # self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
         #                    {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
         #                    {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
@@ -342,17 +345,18 @@ class MainWindow(object):
                 self.allcats.append(app['en'])
             self.categories = sorted(list(set(self.allcats)))
 
-            localcaticons = self.Server.getCategoryIcons()
-            print("{} : {}".format("localcaticons", localcaticons))
-            if not localcaticons:
+            self.localcaticons = self.Server.getCategoryIcons()
+            print("{} : {}".format("localcaticons", self.localcaticons))
+            if not self.localcaticons:
                 print("local categoryicons folder doesn't exists so categoryicons getting from system")
             for i in self.categories:
                 try:
                     caticon = Gtk.Image.new_from_pixbuf(
-                        GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "categoryicons/" + i + ".svg", 48,
-                                                               48))
+                        GdkPixbuf.Pixbuf.new_from_file_at_size(
+                            self.Server.cachedir + "categoryicons/applications-" + i + ".svg", 48,
+                            48))
                 except:
-                    if localcaticons:
+                    if self.localcaticons:
                         print("{} {}".format(i, "category icon not found in local"))
                     try:
                         caticon = Gtk.Image.new_from_pixbuf(
@@ -577,10 +581,35 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
 
-
         self.PardusCurrentCategoryString = self.get_category_name(self.PardusCurrentCategory)
         print("home category selected " + str(self.PardusCurrentCategory) + " " + self.PardusCurrentCategoryString)
 
+        ciname = "applications-" + self.PardusCurrentCategoryString
+        if ciname == "applications-all":
+            ciname = "applications-other"
+        elif ciname == "applications-education":
+            ciname = "applications-science"
+        try:
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                self.Server.cachedir + "caticons/" + ciname + ".svg", 32, 32)
+        except:
+            if self.localcaticons:
+                print("{} {}".format(ciname, "cat icon not found in local"))
+            try:
+                pixbuf = Gtk.IconTheme.get_default().load_icon(ciname, 32, Gtk.IconLookupFlags(16))
+            except:
+                try:
+                    pixbuf = self.parduspixbuf.load_icon(ciname, 32, Gtk.IconLookupFlags(16))
+                except:
+                    try:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 32,
+                                                                       Gtk.IconLookupFlags(16))
+                    except:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 32,
+                                                                       Gtk.IconLookupFlags(16))
+
+        self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.capitalize())
         self.PardusCategoryFilter.refilter()
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
@@ -688,6 +717,29 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         print("on_searchbar_focus_in_event")
         self.isPardusSearching = True
+        self.PardusAppsIconView.unselect_all()
+
+        try:
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                self.Server.cachedir + "caticons/applications-other.svg", 32, 32)
+        except:
+            if self.localcaticons:
+                print("{}".format("applications-other.svg cat icon not found in local"))
+            try:
+                pixbuf = Gtk.IconTheme.get_default().load_icon("applications-other", 32, Gtk.IconLookupFlags(16))
+            except:
+                try:
+                    pixbuf = self.parduspixbuf.load_icon("applications-other", 32, Gtk.IconLookupFlags(16))
+                except:
+                    try:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 32,
+                                                                       Gtk.IconLookupFlags(16))
+                    except:
+                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 32,
+                                                                       Gtk.IconLookupFlags(16))
+
+        self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        self.NavCategoryLabel.set_text("All")
         self.PardusCategoryFilter.refilter()
 
     def on_reposearchbar_search_changed(self, entry_search):
