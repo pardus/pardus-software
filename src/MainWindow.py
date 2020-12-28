@@ -15,11 +15,13 @@ gi.require_version("GLib", "2.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Notify", "0.7")
 gi.require_version("GdkPixbuf", "2.0")
-from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf
+from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk
 
 from Package import Package
 from Server import Server
-from CellRendererButton import CellRendererButton
+# from CellRendererButton import CellRendererButton
+
+from AppImage import AppImage
 
 
 class MainWindow(object):
@@ -36,6 +38,13 @@ class MainWindow(object):
 
         self.parduspixbuf = Gtk.IconTheme.new()
         self.parduspixbuf.set_custom_theme("pardus")
+
+        try:
+            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
+                                                                        Gtk.IconLookupFlags(16))
+        except:
+            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
+                                                                        Gtk.IconLookupFlags(16))
 
         self.isPardusSearching = False
         self.isRepoSearching = False
@@ -162,6 +171,16 @@ class MainWindow(object):
         # self.RepoCategoryFilter.set_visible_func(self.RepoCategoryFilterFunction)
         # self.RepoCategoryFilter.refilter()
 
+        self.dImage1 = self.GtkBuilder.get_object("dImage1")
+        self.dImage2 = self.GtkBuilder.get_object("dImage2")
+        self.pop1 = self.GtkBuilder.get_object("pop1")
+        self.pop2 = self.GtkBuilder.get_object("pop2")
+        self.pop1Image = self.GtkBuilder.get_object("pop1Image")
+        self.pop2Image = self.GtkBuilder.get_object("pop2Image")
+        self.pixbuf1 = None
+        self.pixbuf2 = None
+        self.getDisplay()
+
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
         self.mainstack.set_visible_child_name("page0")
@@ -171,8 +190,17 @@ class MainWindow(object):
         p1.start()
         print("start done")
 
+    def getDisplay(self):
+        # defwindow = Gdk.get_default_root_window()
+        display = Gdk.Display.get_default()
+        monitor = display.get_primary_monitor()
+        geometry = monitor.get_geometry()
+        self.s_width = geometry.width
+        self.s_height = geometry.height
+
     def worker(self):
         self.package()
+        self.appimage()
         self.setRepoCategories()
         self.setRepoApps()
         self.server()
@@ -200,7 +228,26 @@ class MainWindow(object):
         self.splashbar.pulse()
         self.splashlabel.set_markup("<b>Updating Cache</b>")
         self.Package = Package()
+
         print("package completed")
+
+    def appimage(self):
+        self.AppImage = AppImage()
+        self.AppImage.Pixbuf = self.Pixbuf
+        print("appimage completed")
+
+    def on_dEventBox1_button_press_event(self, widget, event):
+        print("here")
+        self.pop1.show_all()
+        self.pop1.popup()
+
+    def on_dEventBox2_button_press_event(self, widget, event):
+        print("here")
+        self.pop2.show_all()
+        self.pop2.popup()
+
+    def on_dImage2_button_press_event(self, widget, event):
+        print("image press")
 
     def setRepoCategories(self):
         self.splashlabel.set_markup("<b>Setting Repo Categories</b>")
@@ -334,7 +381,7 @@ class MainWindow(object):
                 for i in app['category']:
                     category += i["en"] + ","
                 category = category.rstrip(",")
-                print(appname + " : " + category)
+                # print(appname + " : " + category)
                 categorynumber = self.get_category_number(category)
                 self.PardusAppListStore.append([pixbuf, appname, categorynumber, prettyname, category])
 
@@ -484,6 +531,72 @@ class MainWindow(object):
             print(self.Package.isinstalled(self.appname))
 
             self.Package.missingdeps(self.appname)
+
+            self.pixbuf1 = None
+            self.pixbuf2 = None
+
+            if self.appname + "#1" in self.AppImage.imgcache:
+                print("image1 in cache")
+                self.pixbuf1 = self.AppImage.imgcache[self.appname + "#1"]
+                self.resizeAppImage()
+            else:
+                print("image1 not in cache")
+                self.AppImage.fetch(self.appname, "1")
+
+            if self.appname + "#2" in self.AppImage.imgcache:
+                print("image2 in cache")
+                self.pixbuf2 = self.AppImage.imgcache[self.appname + "#2"]
+                self.resizeAppImage()
+            else:
+                print("image2 not in cache")
+                self.pixbuf1 = None
+                self.pixbuf2 = None
+                self.AppImage.fetch(self.appname, "2")
+
+    def Pixbuf(self, status, pixbuf, i):
+        if status and i:
+            i = i.split("#")[1]
+            if i == "1":
+                self.pixbuf1 = pixbuf
+                self.resizeAppImage()
+            if i == "2":
+                self.pixbuf2 = pixbuf
+                self.resizeAppImage()
+        else:
+            print("image not in cache")
+            self.dImage1.set_from_pixbuf(self.missing_pixbuf)
+            self.dImage2.set_from_pixbuf(self.missing_pixbuf)
+
+            self.pop1Image.set_from_pixbuf(self.missing_pixbuf)
+            self.pop2Image.set_from_pixbuf(self.missing_pixbuf)
+
+    def on_PardusAppsDetailGrid_size_allocate(self, widget, allocated):
+
+        # we are resizing app images when PardusAppsDetail size changed
+
+        self.resizeAppImage()
+
+    def resizeAppImage(self):
+        allocation = self.MainWindow.get_allocation()
+        w = allocation.width / 3.3      # this is for detail Image
+        h = allocation.height / 3.3     # this is for detail Image
+
+        pw = allocation.width / 1.3     # this is for popup Image
+        ph = allocation.height / 1.3    # this is for popup Image
+
+        if self.pixbuf1:
+            pixbuf = self.pixbuf1.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
+            self.dImage1.set_from_pixbuf(pixbuf)
+
+            poppixbuf = self.pixbuf1.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
+            self.pop1Image.set_from_pixbuf(poppixbuf)
+
+        if self.pixbuf2:
+            pixbuf = self.pixbuf2.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
+            self.dImage2.set_from_pixbuf(pixbuf)
+
+            poppixbuf = self.pixbuf2.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
+            self.pop2Image.set_from_pixbuf(poppixbuf)
 
     def on_EditorAppsIconView_selection_changed(self, iconview):
 
