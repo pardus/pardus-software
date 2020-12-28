@@ -513,24 +513,38 @@ class MainWindow(object):
 
             self.dName.set_markup("<b> " + prettyname + "</b>")
 
-            self.dDescriptionLabel.set_text(self.Package.description(self.appname, True))
+            description = ""
+            for i in self.Server.applist:
+                if i["name"] == self.appname:
+                    description = i["description"]["en"]
 
-            if self.Package.isinstalled(self.appname):
-                if self.dActionButton.get_style_context().has_class("suggested-action"):
-                    self.dActionButton.get_style_context().remove_class("suggested-action")
-                self.dActionButton.get_style_context().add_class("destructive-action")
-                self.dActionButton.set_label(" Uninstall")
-                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+            self.dDescriptionLabel.set_text(description)
+
+            isinstalled = self.Package.isinstalled(self.appname)
+
+            if isinstalled is not None:
+                self.dActionButton.set_sensitive(True)
+                if isinstalled:
+                    if self.dActionButton.get_style_context().has_class("suggested-action"):
+                        self.dActionButton.get_style_context().remove_class("suggested-action")
+                    self.dActionButton.get_style_context().add_class("destructive-action")
+                    self.dActionButton.set_label(" Uninstall")
+                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+                else:
+                    if self.dActionButton.get_style_context().has_class("destructive-action"):
+                        self.dActionButton.get_style_context().remove_class("destructive-action")
+                    self.dActionButton.get_style_context().add_class("suggested-action")
+                    self.dActionButton.set_label(" Install")
+                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
             else:
+                self.dActionButton.set_sensitive(False)
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
                     self.dActionButton.get_style_context().remove_class("destructive-action")
-                self.dActionButton.get_style_context().add_class("suggested-action")
-                self.dActionButton.set_label(" Install")
-                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+                if self.dActionButton.get_style_context().has_class("suggested-action"):
+                    self.dActionButton.get_style_context().remove_class("suggested-action")
 
-            print(self.Package.isinstalled(self.appname))
-
-            self.Package.missingdeps(self.appname)
+                self.dActionButton.set_label(" Not Found")
+                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON))
 
             self.pixbuf1 = None
             self.pixbuf2 = None
@@ -578,11 +592,11 @@ class MainWindow(object):
 
     def resizeAppImage(self):
         allocation = self.MainWindow.get_allocation()
-        w = allocation.width / 3.3      # this is for detail Image
-        h = allocation.height / 3.3     # this is for detail Image
+        w = allocation.width / 3.3  # this is for detail Image
+        h = allocation.height / 3.3  # this is for detail Image
 
-        pw = allocation.width / 1.3     # this is for popup Image
-        ph = allocation.height / 1.3    # this is for popup Image
+        pw = allocation.width / 1.3  # this is for popup Image
+        ph = allocation.height / 1.3  # this is for popup Image
 
         if self.pixbuf1:
             pixbuf = self.pixbuf1.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
@@ -944,7 +958,7 @@ class MainWindow(object):
 
         self.actionedappname = self.appname
 
-        self.isinstalled = self.Package.isinstalled(self.appname)
+        self.isinstalled = self.Package.isinstalled(self.actionedappname)
 
         if self.isinstalled:
             self.dActionButton.set_label(" Removing")
@@ -1011,6 +1025,7 @@ class MainWindow(object):
             self.notify()
         else:
             self.progresstextlabel.set_text(self.actionedappname + " | " + " Not Completed")
+            self.controlView()
 
         self.dActionButton.set_sensitive(True)
         self.topspinner.stop()

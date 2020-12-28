@@ -92,25 +92,26 @@ class Package(object):
         print("cache re-updated")
 
     def isinstalled(self, packagename):
-
-        package = self.cache[packagename]
+        try:
+            package = self.cache[packagename]
+        except:
+            return None
         if package.is_installed:
             return True
         else:
             return False
 
-    def missingdeps(self, packagename):
-        package = self.cache[packagename]
-        for rd in package.candidate.get_dependencies("Depends"):
-            if not rd.installed_target_versions:
-                return True
-                break
-        return False
+    # def missingdeps(self, packagename):
+    #     package = self.cache[packagename]
+    #     for rd in package.candidate.get_dependencies("Depends"):
+    #         if not rd.installed_target_versions:
+    #             return True
+    #             break
+    #     return False
 
-        # print(package.versions[0].get_dependencies("Depends"))
+    # print(package.versions[0].get_dependencies("Depends"))
 
     def description(self, packagename, israw):
-        package = self.cache[packagename]
         try:
             if israw:
                 desc = package.candidate.raw_description.replace("\n", "")
