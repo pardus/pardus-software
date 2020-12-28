@@ -50,9 +50,8 @@ class Server(object):
             if self.app_scode == 200 and self.cat_scode == 200:
                 print("Connection successful")
                 self.applist = request_app.json()["app-list"]
-                print(self.applist)
+                self.applist = sorted(self.applist, key=lambda x: x["name"])
                 self.catlist = request_cat.json()["cat-list"]
-                print(self.catlist)
             else:
                 self.connection = False
 
