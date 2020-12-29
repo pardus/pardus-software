@@ -101,13 +101,13 @@ class Package(object):
         else:
             return False
 
-    # def missingdeps(self, packagename):
-    #     package = self.cache[packagename]
-    #     for rd in package.candidate.get_dependencies("Depends"):
-    #         if not rd.installed_target_versions:
-    #             return True
-    #             break
-    #     return False
+    def missingdeps(self, packagename):
+        package = self.cache[packagename]
+        for rd in package.candidate.get_dependencies("Depends"):
+            if not rd.installed_target_versions:
+                return True
+                break
+        return False
 
     # print(package.versions[0].get_dependencies("Depends"))
 
