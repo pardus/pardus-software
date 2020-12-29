@@ -584,7 +584,7 @@ class MainWindow(object):
             self.pop1Image.set_from_pixbuf(self.missing_pixbuf)
             self.pop2Image.set_from_pixbuf(self.missing_pixbuf)
 
-    def on_PardusAppsDetailGrid_size_allocate(self, widget, allocated):
+    def on_PardusAppDetailBox_size_allocate(self, widget, allocated):
 
         # we are resizing app images when PardusAppsDetail size changed
 
