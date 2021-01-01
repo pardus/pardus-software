@@ -8,6 +8,8 @@ Created on Fri Sep 18 14:53:00 2020
 
 import os
 import threading
+import netifaces
+import psutil
 
 import gi
 
@@ -182,6 +184,8 @@ class MainWindow(object):
         self.pixbuf2 = None
         self.getDisplay()
 
+        self.mac = self.getMac()
+
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
         self.mainstack.set_visible_child_name("page0")
@@ -190,6 +194,32 @@ class MainWindow(object):
         p1 = threading.Thread(target=self.worker)
         p1.start()
         print("start done")
+
+    def getMac(self):
+        mac = ""
+        try:
+            AF_LINK = netifaces.AF_LINK
+        except:
+            AF_LINK = 17
+        gateway_info = netifaces.gateways()
+        default_gateways = gateway_info['default']
+        for family in default_gateways:
+            interface = default_gateways[family][1]  # 0 for gateway, 1 for interface
+            mac = netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]["addr"].upper()
+            break
+        if mac is None or mac == "":
+            print("mac address can not get from netifaces, trying psutil")
+            nics = psutil.net_if_addrs()
+            nics.pop('lo')  # remove loopback
+            for i in nics:
+                for j in nics[i]:
+                    if j.family == AF_LINK:
+                        mac = j.address.upper()
+                        break
+                else:
+                    continue
+                break
+        return mac
 
     def getDisplay(self):
         # defwindow = Gdk.get_default_root_window()
@@ -574,7 +604,6 @@ class MainWindow(object):
                 self.pixbuf2 = None
                 self.AppImage.fetch(self.appname, "2")
 
-            self.mac = "AA"
             dic = {"mac": self.mac, "app": self.appname}
             self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)
 
