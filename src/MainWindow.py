@@ -22,6 +22,7 @@ from Server import Server
 # from CellRendererButton import CellRendererButton
 
 from AppImage import AppImage
+from AppDetail import AppDetail
 
 
 class MainWindow(object):
@@ -201,6 +202,7 @@ class MainWindow(object):
     def worker(self):
         self.package()
         self.appimage()
+        self.appdetail()
         self.setRepoCategories()
         self.setRepoApps()
         self.server()
@@ -235,6 +237,11 @@ class MainWindow(object):
         self.AppImage = AppImage()
         self.AppImage.Pixbuf = self.Pixbuf
         print("appimage completed")
+
+    def appdetail(self):
+        self.AppDetail = AppDetail()
+        self.AppDetail.Detail = self.Detail
+        print("appdetail completed")
 
     def on_dEventBox1_button_press_event(self, widget, event):
         print("here")
@@ -566,6 +573,14 @@ class MainWindow(object):
                 self.pixbuf1 = None
                 self.pixbuf2 = None
                 self.AppImage.fetch(self.appname, "2")
+
+            self.mac = "AA"
+            dic = {"mac": self.mac, "app": self.appname}
+            self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)
+
+    def Detail(self, status, response):
+        if status:
+            print(response)
 
     def Pixbuf(self, status, pixbuf, i):
         if status and i:
