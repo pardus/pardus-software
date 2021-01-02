@@ -186,6 +186,11 @@ class MainWindow(object):
 
         self.mac = self.getMac()
 
+        self.descSwBox = self.GtkBuilder.get_object("descSwBox")
+        self.descSwBox.set_visible(False)
+
+        self.descSw = self.GtkBuilder.get_object("descSw")
+
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
         self.mainstack.set_visible_child_name("page0")
@@ -522,6 +527,8 @@ class MainWindow(object):
 
         self.menubackbutton.set_sensitive(True)
 
+        self.descSw.set_state(False)
+
         selected_items = iconview.get_selected_items()
 
         if len(selected_items) == 1:
@@ -550,12 +557,18 @@ class MainWindow(object):
 
             self.dName.set_markup("<b> " + prettyname + "</b>")
 
-            description = ""
+            self.description = ""
             for i in self.Server.applist:
                 if i["name"] == self.appname:
-                    description = i["description"]["en"]
+                    self.description = i["description"]["en"]
 
-            self.dDescriptionLabel.set_text(description)
+            if self.description.count("\n") > 5:
+                self.s_description = "\n".join(self.description.splitlines()[0:5])
+                self.descSwBox.set_visible(True)
+                self.dDescriptionLabel.set_text(self.s_description)
+            else:
+                self.descSwBox.set_visible(False)
+                self.dDescriptionLabel.set_text(self.description)
 
             isinstalled = self.Package.isinstalled(self.appname)
 
@@ -607,6 +620,13 @@ class MainWindow(object):
             dic = {"mac": self.mac, "app": self.appname}
             self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)
 
+    def on_descSw_state_set(self, switch, state):
+        print("switched {}".format(state))
+        if state:
+            self.dDescriptionLabel.set_text(self.description)
+        else:
+            self.dDescriptionLabel.set_text(self.s_description)
+
     def Detail(self, status, response):
         if status:
             print(response)
@@ -632,7 +652,8 @@ class MainWindow(object):
 
         # we are resizing app images when PardusAppsDetail size changed
 
-        self.resizeAppImage()
+        # self.resizeAppImage()
+        pass
 
     def resizeAppImage(self):
         allocation = self.MainWindow.get_allocation()
