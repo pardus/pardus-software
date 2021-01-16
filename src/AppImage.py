@@ -19,7 +19,7 @@ class AppImage(object):
         self.imgcache = {}
 
     def fetch(self, appname, i):
-        url = "http://192.168.1.28:8000/files/screenshots/" + appname + "/" + appname + "-" + i + ".png"
+        url = "http://localhost:8000/files/screenshots/" + appname + "/" + appname + "-" + i + ".png"
         img_file = Gio.File.new_for_uri(url)
         img_file.read_async(GLib.PRIORITY_LOW, None, self._open_stream, appname + "#" + i)
 

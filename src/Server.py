@@ -13,7 +13,7 @@ import tarfile
 
 class Server(object):
     def __init__(self):
-        self.serverurl = "http://192.168.1.28:8000"
+        self.serverurl = "http://localhost:8000"
         self.serverapps = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
         self.serverfiles = "/files/"
