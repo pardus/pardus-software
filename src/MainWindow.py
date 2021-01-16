@@ -194,6 +194,15 @@ class MainWindow(object):
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
         self.mainstack.set_visible_child_name("page0")
+
+        cssProvider = Gtk.CssProvider()
+        cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
+        screen = Gdk.Screen.get_default()
+        styleContext = Gtk.StyleContext()
+        styleContext.add_provider_for_screen(screen, cssProvider,
+                                             Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
+
         self.MainWindow.show_all()
 
         p1 = threading.Thread(target=self.worker)
@@ -471,13 +480,19 @@ class MainWindow(object):
                 label_text = str(i).capitalize()
                 label.set_text(" " + label_text)
 
-                grid = Gtk.Grid.new()
+                # grid = Gtk.Grid.new()
+                #
+                # grid.add(caticon)
+                #
+                # grid.attach(label, 1, 0, 3, 1)
 
-                grid.add(caticon)
+                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
 
-                grid.attach(label, 1, 0, 3, 1)
+                box1.pack_start(caticon, False, True, 0)
+                box1.pack_start(label, False, True, 0)
+                box1.set_name("homecats")
 
-                self.HomeCategoryFlowBox.add(grid)
+                self.HomeCategoryFlowBox.add(box1)
             self.HomeCategoryFlowBox.show_all()
 
     def on_timeout(self, user_data):
