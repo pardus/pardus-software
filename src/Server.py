@@ -20,9 +20,12 @@ class Server(object):
         self.serverappicons = "appicons"
         self.servercaticons = "categoryicons"
         self.serverarchive = ".tar.gz"
+        self.serversettings = "/api/v2/settings"
+        self.settingsfile = "settings.ini"
 
         userhome = str(Path.home())
         self.cachedir = userhome + "/.cache/pardus-software-center/"
+        self.configdir = userhome + "/.config/pardus-software-center/"
 
         self.connection = True
         self.app_scode = 0
@@ -56,7 +59,7 @@ class Server(object):
                 self.connection = False
 
     def getAppIcons(self):
-        if not self.isCacheFiles(self.serverappicons):
+        if not self.isExists(self.cachedir + self.serverappicons):
             print("trying to downlad " + self.serverappicons)
             try:
                 response = requests.get(self.serverurl + self.serverfiles + self.serverappicons + self.serverarchive)
@@ -65,7 +68,7 @@ class Server(object):
                     "server error getting " + self.serverurl + self.serverfiles + self.serverappicons + self.serverarchive)
                 return False
             if response.status_code == 200:
-                if self.createCacheDir():
+                if self.createDir(self.cachedir):
                     with open(self.cachedir + self.serverappicons + self.serverarchive, "wb") as file:
                         file.write(response.content)
                     if self.extractArchive(self.cachedir + self.serverappicons + self.serverarchive,
@@ -79,7 +82,7 @@ class Server(object):
             return True
 
     def getCategoryIcons(self):
-        if not self.isCacheFiles(self.servercaticons):
+        if not self.isExists(self.cachedir + self.servercaticons):
             print("trying to downlad " + self.servercaticons)
             try:
                 response = requests.get(self.serverurl + self.serverfiles + self.servercaticons + self.serverarchive)
@@ -88,7 +91,7 @@ class Server(object):
                     "server error getting " + self.serverurl + self.serverfiles + self.servercaticons + self.serverarchive)
                 return False
             if response.status_code == 200:
-                if self.createCacheDir():
+                if self.createDir(self.cachedir):
                     with open(self.cachedir + self.servercaticons + self.serverarchive, "wb") as file:
                         file.write(response.content)
                     if self.extractArchive(self.cachedir + self.servercaticons + self.serverarchive,
@@ -101,9 +104,28 @@ class Server(object):
         else:
             return True
 
-    def createCacheDir(self):
+    def getDefaultSettings(self):
+        if not self.isExists(self.configdir):
+            print("trying to get settings from server")
+            try:
+                response = requests.get(self.serverurl + self.serversettings)
+            except:
+                print("server error getting " + self.serverurl + self.serversettings)
+                return False
+            if response.status_code == 200:
+                if self.createDir(self.configdir):
+                    with open(self.configdir + self.settingsfile, "wb") as file:
+                        file.write(response.content)
+                        return True
+            else:
+                print("{} : {}".format("error getting settings, status code", response.status_code))
+                return False
+        else:
+            return True
+
+    def createDir(self, dir):
         try:
-            Path(self.cachedir).mkdir(parents=True, exist_ok=True)
+            Path(dir).mkdir(parents=True, exist_ok=True)
             return True
         except:
             print("{} : {}".format("mkdir error", self.cachedir))
@@ -121,10 +143,10 @@ class Server(object):
                 return False
         return True
 
-    def isCacheFiles(self, type):
-        if Path(self.cachedir + type).exists():
-            print(self.cachedir + type + " folder exists")
+    def isExists(self, dir):
+        if Path(dir).exists():
+            print(dir + " folder exists")
             return True
         else:
-            print(self.cachedir + type + " folder not exists")
+            print(dir + " folder not exists")
             return False
