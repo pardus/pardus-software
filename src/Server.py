@@ -21,7 +21,7 @@ class Server(object):
         self.servercaticons = "categoryicons"
         self.serverarchive = ".tar.gz"
         self.serversettings = "/api/v2/settings"
-        self.settingsfile = "settings.ini"
+        self.settingsfile = "serversettings.ini"
 
         userhome = str(Path.home())
         self.cachedir = userhome + "/.cache/pardus-software-center/"
