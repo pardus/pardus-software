@@ -26,6 +26,7 @@ from Server import Server
 from AppImage import AppImage
 from AppDetail import AppDetail
 
+from UserSettings import UserSettings
 
 class MainWindow(object):
     def __init__(self, application):
@@ -244,6 +245,7 @@ class MainWindow(object):
         self.s_height = geometry.height
 
     def worker(self):
+        self.usersettings()
         self.package()
         self.appimage()
         self.appdetail()
@@ -276,6 +278,14 @@ class MainWindow(object):
         self.Package = Package()
 
         print("package completed")
+
+    def usersettings(self):
+        self.UserSettings = UserSettings()
+        self.UserSettings.createDefaultConfig()
+        self.UserSettings.readConfig()
+
+        print("{} {}".format("config_usi", self.UserSettings.config_usi))
+        print("{} {}".format("config_anim", self.UserSettings.config_anim))
 
     def appimage(self):
         self.AppImage = AppImage()
