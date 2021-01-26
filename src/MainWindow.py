@@ -28,6 +28,7 @@ from AppDetail import AppDetail
 
 from UserSettings import UserSettings
 
+
 class MainWindow(object):
     def __init__(self, application):
         self.Application = application
@@ -412,39 +413,37 @@ class MainWindow(object):
         if self.Server.connection:
             self.splashlabel.set_markup("<b>Setting applications</b>")
 
-            localappicons = self.Server.getAppIcons()
-            print("{} : {}".format("localappicons", localappicons))
-            if not localappicons:
-                print("local appicons folder doesn't exists so appicons getting from system")
-            for app in self.Server.applist:
-                try:
-                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                        self.Server.cachedir + "appicons/" + app['name'] + ".svg", 64, 64)
-                except:
-                    if localappicons:
-                        print("{} {}".format(app['name'], "app icon not found in local"))
-                    try:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
-                    except:
-                        try:
-                            pixbuf = self.parduspixbuf.load_icon(app['name'], 64, Gtk.IconLookupFlags(16))
-                        except:
-                            try:
-                                pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
-                                                                               Gtk.IconLookupFlags(16))
-                            except:
-                                pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64,
-                                                                               Gtk.IconLookupFlags(16))
-
-                appname = app['name']
-                prettyname = app['prettyname']["en"]
-                category = ""
-                for i in app['category']:
-                    category += i["en"] + ","
-                category = category.rstrip(",")
-                # print(appname + " : " + category)
-                categorynumber = self.get_category_number(category)
-                self.PardusAppListStore.append([pixbuf, appname, categorynumber, prettyname, category])
+            if self.UserSettings.config_usi:
+                print("User want to use system icons [app]")
+                for app in self.Server.applist:
+                    appicon = self.getSystemAppIcon(app["name"])
+                    appname = app['name']
+                    prettyname = app['prettyname']["en"]
+                    category = ""
+                    for i in app['category']:
+                        category += i["en"] + ","
+                    category = category.rstrip(",")
+                    # print(appname + " : " + category)
+                    categorynumber = self.get_category_number(category)
+                    self.PardusAppListStore.append([appicon, appname, categorynumber, prettyname, category])
+            else:
+                print("User want to use server icons [app]")
+                self.serverappicons = self.Server.getAppIcons()
+                print("{} : {}".format("serverappicons", self.serverappicons))
+                if self.serverappicons:
+                    for app in self.Server.applist:
+                        appicon = self.getServerAppIcon(app["name"])
+                        appname = app['name']
+                        prettyname = app['prettyname']["en"]
+                        category = ""
+                        for i in app['category']:
+                            category += i["en"] + ","
+                        category = category.rstrip(",")
+                        # print(appname + " : " + category)
+                        categorynumber = self.get_category_number(category)
+                        self.PardusAppListStore.append([appicon, appname, categorynumber, prettyname, category])
+                else:
+                    print("user want to use server icons [app]; but serverappicons return as false")
 
     def setPardusCategories(self):
         if self.Server.connection:
@@ -453,57 +452,91 @@ class MainWindow(object):
                 self.allcats.append(app['en'])
             self.categories = sorted(list(set(self.allcats)))
 
-            self.localcaticons = self.Server.getCategoryIcons()
-            print("{} : {}".format("localcaticons", self.localcaticons))
-            if not self.localcaticons:
-                print("local categoryicons folder doesn't exists so categoryicons getting from system")
-            for i in self.categories:
-                try:
-                    caticon = Gtk.Image.new_from_pixbuf(
-                        GdkPixbuf.Pixbuf.new_from_file_at_size(
-                            self.Server.cachedir + "categoryicons/applications-" + i + ".svg", 48,
-                            48))
-                except:
-                    if self.localcaticons:
-                        print("{} {}".format(i, "category icon not found in local"))
-                    try:
-                        caticon = Gtk.Image.new_from_pixbuf(
-                            Gtk.IconTheme.get_default().load_icon("applications-" + i, 48, Gtk.IconLookupFlags(16)))
-                    except:
-                        if i == "education":
-                            caticon = Gtk.Image.new_from_pixbuf(
-                                Gtk.IconTheme.get_default().load_icon("applications-science", 48,
-                                                                      Gtk.IconLookupFlags(16)))
-                        elif i == "all":
-                            caticon = Gtk.Image.new_from_pixbuf(
-                                Gtk.IconTheme.get_default().load_icon("applications-other", 48,
-                                                                      Gtk.IconLookupFlags(16)))
-                        else:
-                            try:
-                                caticon = Gtk.Image.new_from_pixbuf(
-                                    Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 48,
-                                                                          Gtk.IconLookupFlags(16)))
-                            except:
-                                caticon = Gtk.Image.new_from_pixbuf(
-                                    Gtk.IconTheme.get_default().load_icon("image-missing", 48, Gtk.IconLookupFlags(16)))
-                label = Gtk.Label.new()
-                label_text = str(i).capitalize()
-                label.set_text(" " + label_text)
+            if self.UserSettings.config_usi:
+                print("User want to use system icons [cat]")
 
-                # grid = Gtk.Grid.new()
-                #
-                # grid.add(caticon)
-                #
-                # grid.attach(label, 1, 0, 3, 1)
+                for cat in self.categories:
+                    caticon = Gtk.Image.new()
+                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat))
+                    label = Gtk.Label.new()
+                    label_text = str(cat).capitalize()
+                    label.set_text(" " + label_text)
+                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                    box1.pack_start(caticon, False, True, 0)
+                    box1.pack_start(label, False, True, 0)
+                    box1.set_name("homecats")
+                    self.HomeCategoryFlowBox.add(box1)
+            else:
+                print("User want to use server icons [cat]")
+                self.servercaticons = self.Server.getCategoryIcons()
+                print("{} : {}".format("servercaticons", self.servercaticons))
+                if self.servercaticons:
+                    for cat in self.categories:
+                        caticon = Gtk.Image.new()
+                        caticon.set_from_pixbuf(self.getServerCatIcon(cat))
+                        label = Gtk.Label.new()
+                        label_text = str(cat).capitalize()
+                        label.set_text(" " + label_text)
+                        box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                        box1.pack_start(caticon, False, True, 0)
+                        box1.pack_start(label, False, True, 0)
+                        box1.set_name("homecats")
+                        self.HomeCategoryFlowBox.add(box1)
+                else:
+                    print("user want to use server icons [cat]; but servercaticons return as false")
 
-                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-
-                box1.pack_start(caticon, False, True, 0)
-                box1.pack_start(label, False, True, 0)
-                box1.set_name("homecats")
-
-                self.HomeCategoryFlowBox.add(box1)
             self.HomeCategoryFlowBox.show_all()
+
+    def getSystemCatIcon(self, cat, size=48):
+        try:
+            caticon = Gtk.IconTheme.get_default().load_icon("applications-" + cat, size, Gtk.IconLookupFlags(16))
+        except:
+            if cat == "education":
+                caticon = Gtk.IconTheme.get_default().load_icon("applications-science", size, Gtk.IconLookupFlags(16))
+            elif cat == "all":
+                caticon = Gtk.IconTheme.get_default().load_icon("applications-other", size, Gtk.IconLookupFlags(16))
+            else:
+                try:
+                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                except:
+                    caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+        return caticon
+
+    def getServerCatIcon(self, cat, size=48):
+        try:
+            caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                self.Server.cachedir + "categoryicons/applications-" + cat + ".svg", size, size)
+        except:
+            print("{} {}".format(cat, "category icon not found in server icons"))
+            try:
+                caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+            except:
+                caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+        return caticon
+
+    def getSystemAppIcon(self, app, size=64):
+        try:
+            appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
+        except:
+            try:
+                appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
+            except:
+                try:
+                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                except:
+                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+        return appicon
+
+    def getServerAppIcon(self, app, size=64):
+        try:
+            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg", size,
+                                                             size)
+        except:
+            try:
+                appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+            except:
+                appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+        return appicon
 
     def on_timeout(self, user_data):
         if self.splashbarstatus:
@@ -565,18 +598,10 @@ class MainWindow(object):
 
             self.homestack.set_visible_child_name("pardusappsdetail")
 
-            try:
-                pixbuf = Gtk.IconTheme.get_default().load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
-                # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
-            except:
-                # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
-                try:
-                    pixbuf = self.parduspixbuf.load_icon(self.appname, 96, Gtk.IconLookupFlags(16))
-                except:
-                    try:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
-                    except:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96, Gtk.IconLookupFlags(16))
+            if self.UserSettings.config_usi:
+                pixbuf = self.getSystemAppIcon(self.appname, 96)
+            else:
+                pixbuf = self.getServerAppIcon(self.appname, 96)
 
             self.dIcon.set_from_pixbuf(pixbuf)
 
@@ -801,29 +826,10 @@ class MainWindow(object):
         self.PardusCurrentCategoryString = self.get_category_name(self.PardusCurrentCategory)
         print("home category selected " + str(self.PardusCurrentCategory) + " " + self.PardusCurrentCategoryString)
 
-        ciname = "applications-" + self.PardusCurrentCategoryString
-        if ciname == "applications-all":
-            ciname = "applications-other"
-        elif ciname == "applications-education":
-            ciname = "applications-science"
-        try:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                self.Server.cachedir + "caticons/" + ciname + ".svg", 32, 32)
-        except:
-            if self.localcaticons:
-                print("{} {}".format(ciname, "cat icon not found in local"))
-            try:
-                pixbuf = Gtk.IconTheme.get_default().load_icon(ciname, 32, Gtk.IconLookupFlags(16))
-            except:
-                try:
-                    pixbuf = self.parduspixbuf.load_icon(ciname, 32, Gtk.IconLookupFlags(16))
-                except:
-                    try:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 32,
-                                                                       Gtk.IconLookupFlags(16))
-                    except:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 32,
-                                                                       Gtk.IconLookupFlags(16))
+        if self.UserSettings.config_usi:
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryString, 32)
+        else:
+            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryString, 32)
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.capitalize())
