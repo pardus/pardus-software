@@ -112,6 +112,7 @@ class Package(object):
     # print(package.versions[0].get_dependencies("Depends"))
 
     def description(self, packagename, israw):
+        package = self.cache[packagename]
         try:
             if israw:
                 desc = package.candidate.raw_description.replace("\n", "")
