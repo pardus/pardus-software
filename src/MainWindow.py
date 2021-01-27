@@ -51,6 +51,11 @@ class MainWindow(object):
             self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
                                                                         Gtk.IconLookupFlags(16))
 
+        self.staron = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 24, 24)
+        self.staroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 24, 24)
+
         self.isPardusSearching = False
         self.isRepoSearching = False
 
@@ -86,6 +91,18 @@ class MainWindow(object):
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
+        self.dSection = self.GtkBuilder.get_object("dSection")
+        self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
+        self.dtDownload = self.GtkBuilder.get_object("dtDownload")
+        self.dtTotalRating = self.GtkBuilder.get_object("dtTotalRating")
+        self.dtUserRating = self.GtkBuilder.get_object("dtUserRating")
+        self.dtAverageRating = self.GtkBuilder.get_object("dtAverageRating")
+
+        self.dtStar1 = self.GtkBuilder.get_object("dtStar1")
+        self.dtStar2 = self.GtkBuilder.get_object("dtStar2")
+        self.dtStar3 = self.GtkBuilder.get_object("dtStar3")
+        self.dtStar4 = self.GtkBuilder.get_object("dtStar4")
+        self.dtStar5 = self.GtkBuilder.get_object("dtStar5")
 
         self.raction = self.GtkBuilder.get_object("raction")
         self.rtitle = self.GtkBuilder.get_object("rtitle")
@@ -599,18 +616,19 @@ class MainWindow(object):
             self.homestack.set_visible_child_name("pardusappsdetail")
 
             if self.UserSettings.config_usi:
-                pixbuf = self.getSystemAppIcon(self.appname, 96)
+                pixbuf = self.getSystemAppIcon(self.appname, 128)
             else:
-                pixbuf = self.getServerAppIcon(self.appname, 96)
+                pixbuf = self.getServerAppIcon(self.appname, 128)
 
             self.dIcon.set_from_pixbuf(pixbuf)
-
-            self.dName.set_markup("<b> " + prettyname + "</b>")
 
             self.description = ""
             for i in self.Server.applist:
                 if i["name"] == self.appname:
                     self.description = i["description"]["en"]
+                    self.section = i["section"][0]["en"]
+                    self.maintainer_name = i["maintainer"][0]["name"]
+                    self.maintainer_mail = i["maintainer"][0]["mail"]
 
             if self.description.count("\n") > 5:
                 self.s_description = "\n".join(self.description.splitlines()[0:5])
@@ -619,6 +637,10 @@ class MainWindow(object):
             else:
                 self.descSwBox.set_visible(False)
                 self.dDescriptionLabel.set_text(self.description)
+
+            self.dName.set_markup("<span font='23'><b>" + prettyname + "</b></span>")
+            self.dSection.set_markup("<i>" + self.section + "</i>")
+            self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
 
             isinstalled = self.Package.isinstalled(self.appname)
 
@@ -680,6 +702,68 @@ class MainWindow(object):
     def Detail(self, status, response):
         if status:
             print(response)
+            self.dtDownload.set_markup(
+                "{} {}".format(response["details"]["download"]["count"], "Download"))
+
+            self.dtTotalRating.set_markup(
+                "{} {}".format(response["details"]["rate"]["count"], "Ratings"))
+
+            self.dtAverageRating.set_markup(
+                "<big>{:.2}</big>".format(float(response["details"]["rate"]["average"])))
+
+            if response["details"]["rate"]["individual"] == 0:
+                self.dtUserRating.set_markup(
+                    "{} {}".format("Your Rate", "is None"))
+            else:
+                self.dtUserRating.set_markup(
+                    "{} {}".format("Your Rate", response["details"]["rate"]["individual"]))
+
+            self.setAppStar(response["details"]["rate"]["average"])
+
+    def setAppStar(self, average):
+        average = int(average)
+
+        if average == 0:
+            self.dtStar1.set_from_pixbuf(self.staroff)
+            self.dtStar2.set_from_pixbuf(self.staroff)
+            self.dtStar3.set_from_pixbuf(self.staroff)
+            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+        elif average == 1:
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staroff)
+            self.dtStar3.set_from_pixbuf(self.staroff)
+            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+        elif average == 2:
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staroff)
+            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+        elif average == 3:
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staron)
+            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+        elif average == 4:
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staron)
+            self.dtStar4.set_from_pixbuf(self.staron)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+        elif average == 5:
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staron)
+            self.dtStar4.set_from_pixbuf(self.staron)
+            self.dtStar5.set_from_pixbuf(self.staron)
+        else:
+            print("star error")
+
+    def on_test(self, widget, event):
+        print("test")
 
     def Pixbuf(self, status, pixbuf, i):
         if status and i:
@@ -942,24 +1026,10 @@ class MainWindow(object):
         self.isPardusSearching = True
         self.PardusAppsIconView.unselect_all()
 
-        try:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                self.Server.cachedir + "caticons/applications-other.svg", 32, 32)
-        except:
-            if self.localcaticons:
-                print("{}".format("applications-other.svg cat icon not found in local"))
-            try:
-                pixbuf = Gtk.IconTheme.get_default().load_icon("applications-other", 32, Gtk.IconLookupFlags(16))
-            except:
-                try:
-                    pixbuf = self.parduspixbuf.load_icon("applications-other", 32, Gtk.IconLookupFlags(16))
-                except:
-                    try:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 32,
-                                                                       Gtk.IconLookupFlags(16))
-                    except:
-                        pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 32,
-                                                                       Gtk.IconLookupFlags(16))
+        if self.UserSettings.config_usi:
+            pixbuf = self.getSystemCatIcon("all", 32)
+        else:
+            pixbuf = self.getServerCatIcon("all", 32)
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text("All")
