@@ -96,6 +96,12 @@ class MainWindow(object):
         self.dVersion = self.GtkBuilder.get_object("dVersion")
         self.dSize = self.GtkBuilder.get_object("dSize")
         self.dComponent = self.GtkBuilder.get_object("dComponent")
+        self.dType = self.GtkBuilder.get_object("dType")
+        self.dCategory = self.GtkBuilder.get_object("dCategory")
+        self.dLicense = self.GtkBuilder.get_object("dLicense")
+        self.dCodename = self.GtkBuilder.get_object("dCodename")
+        self.dWeb = self.GtkBuilder.get_object("dWeb")
+        self.dMail = self.GtkBuilder.get_object("dMail")
         self.dtDownload = self.GtkBuilder.get_object("dtDownload")
         self.dtTotalRating = self.GtkBuilder.get_object("dtTotalRating")
         self.dtUserRating = self.GtkBuilder.get_object("dtUserRating")
@@ -632,6 +638,10 @@ class MainWindow(object):
                     self.section = i["section"][0]["en"]
                     self.maintainer_name = i["maintainer"][0]["name"]
                     self.maintainer_mail = i["maintainer"][0]["mail"]
+                    self.maintainer_web = i["maintainer"][0]["website"]
+                    self.category = i["category"][0]["en"].capitalize()
+                    self.license = i["license"]
+                    self.codenames = ", ".join(c["name"] for c in i["codename"])
 
             if self.description.count("\n") > 5:
                 self.s_description = "\n".join(self.description.splitlines()[0:5])
@@ -644,14 +654,31 @@ class MainWindow(object):
             self.dName.set_markup("<span font='23'><b>" + prettyname + "</b></span>")
             self.dSection.set_markup("<i>" + self.section + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
-
+            self.dCategory.set_markup(self.category)
+            self.dLicense.set_markup(self.license)
+            self.dCodename.set_markup(self.codenames)
+            self.dMail.set_markup(
+                "<a title='{}' href='mailto:{}'>{}</a>".format(self.maintainer_mail, self.maintainer_mail, "E-Mail"))
+            self.dWeb.set_markup(
+                "<a title='{}' href='{}'>{}</a>".format(self.maintainer_web, self.maintainer_web, "Website"))
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
                 self.dActionButton.set_sensitive(True)
-                self.dVersion.set_markup(self.Package.version(self.appname))
-                self.dSize.set_markup(self.Package.size(self.appname))
-                self.dComponent.set_markup(self.Package.component(self.appname))
+
+                version = self.Package.version(self.appname)
+                size = self.Package.size(self.appname)
+                component = self.Package.component(self.appname)
+                if component == "non-free":
+                    type = "Non-Free"
+                else:
+                    type = "Open Source"
+
+                self.dVersion.set_markup(version)
+                self.dSize.set_markup(size)
+                self.dComponent.set_markup(component)
+                self.dType.set_markup(type)
+
                 if isinstalled:
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
                         self.dActionButton.get_style_context().remove_class("suggested-action")
