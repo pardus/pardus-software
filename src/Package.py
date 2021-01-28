@@ -129,6 +129,7 @@ class Package(object):
         return desc
 
     def summary(self, packagename):
+        # Return the short description (one line summary)
         package = self.cache[packagename]
         try:
             summ = package.candidate.summary
@@ -138,3 +139,43 @@ class Package(object):
             except:
                 summ = "Summary is not found"
         return summ
+
+    def version(self, packagename):
+        package = self.cache[packagename]
+        try:
+            version = package.candidate.version
+        except:
+            try:
+                version = package.versions[0].version
+            except:
+                version = "not found"
+        return version
+
+    def size(self, packagename):
+        package = self.cache[packagename]
+        try:
+            size = package.candidate.size
+        except:
+            try:
+                size = package.versions[0].size
+            except:
+                size = "not found"
+        if type(size) is int:
+            size = size / 1024
+            print(size)
+            if size > 1024:
+                size = "{:.2f} MB".format(float(size / 1024))
+            else:
+                size = "{:.2f} KB".format(float(size))
+        return size
+
+    def component(self, packagename):
+        package = self.cache[packagename]
+        try:
+            component = package.candidate.origins[0].component
+        except:
+            try:
+                component = package.versions[0].origins[0].component
+            except:
+                component = "not found"
+        return component

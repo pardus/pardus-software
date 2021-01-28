@@ -382,7 +382,7 @@
                         <property name="can_focus">False</property>
                         <property name="margin_top">10</property>
                         <property name="margin_bottom">10</property>
-                        <property name="label" translatable="yes">Kategoriler</property>
+                        <property name="label" translatable="yes">Categories</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -447,7 +447,7 @@
                         <property name="halign">center</property>
                         <property name="margin_bottom">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Editörün Seçtikleri</property>
+                        <property name="label" translatable="yes">Editor's Picks</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -1251,7 +1251,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dVersion">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
@@ -1286,7 +1286,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dSize">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
@@ -1449,7 +1449,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dComponent">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
@@ -2020,7 +2020,7 @@
                     <property name="column_spacing">13</property>
                     <child>
                       <object class="GtkButton" id="topbutton1">
-                        <property name="label" translatable="yes">Pardus Vitrin</property>
+                        <property name="label" translatable="yes">Pardus</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -2033,7 +2033,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="topbutton2">
-                        <property name="label" translatable="yes">Depo</property>
+                        <property name="label" translatable="yes">Repo</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>

@@ -93,6 +93,9 @@ class MainWindow(object):
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
         self.dSection = self.GtkBuilder.get_object("dSection")
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
+        self.dVersion = self.GtkBuilder.get_object("dVersion")
+        self.dSize = self.GtkBuilder.get_object("dSize")
+        self.dComponent = self.GtkBuilder.get_object("dComponent")
         self.dtDownload = self.GtkBuilder.get_object("dtDownload")
         self.dtTotalRating = self.GtkBuilder.get_object("dtTotalRating")
         self.dtUserRating = self.GtkBuilder.get_object("dtUserRating")
@@ -646,6 +649,9 @@ class MainWindow(object):
 
             if isinstalled is not None:
                 self.dActionButton.set_sensitive(True)
+                self.dVersion.set_markup(self.Package.version(self.appname))
+                self.dSize.set_markup(self.Package.size(self.appname))
+                self.dComponent.set_markup(self.Package.component(self.appname))
                 if isinstalled:
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
                         self.dActionButton.get_style_context().remove_class("suggested-action")
@@ -709,7 +715,7 @@ class MainWindow(object):
                 "{} {}".format(response["details"]["rate"]["count"], "Ratings"))
 
             self.dtAverageRating.set_markup(
-                "<big>{:.2}</big>".format(float(response["details"]["rate"]["average"])))
+                "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
 
             if response["details"]["rate"]["individual"] == 0:
                 self.dtUserRating.set_markup(
