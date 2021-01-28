@@ -820,7 +820,8 @@ class MainWindow(object):
         # we are resizing app images when PardusAppsDetail size changed
 
         # self.resizeAppImage()
-        pass
+
+        self.resizePopImage()
 
     def resizeAppImage(self):
         allocation = self.MainWindow.get_allocation()
@@ -841,6 +842,19 @@ class MainWindow(object):
             pixbuf = self.pixbuf2.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
             self.dImage2.set_from_pixbuf(pixbuf)
 
+            poppixbuf = self.pixbuf2.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
+            self.pop2Image.set_from_pixbuf(poppixbuf)
+
+    def resizePopImage(self):
+        # we are resizing only popup images because there is a bug others
+        allocation = self.MainWindow.get_allocation()
+        pw = allocation.width / 1.3  # this is for popup Image
+        ph = allocation.height / 1.3  # this is for popup Image
+
+        if self.pixbuf1:
+            poppixbuf = self.pixbuf1.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
+            self.pop1Image.set_from_pixbuf(poppixbuf)
+        if self.pixbuf2:
             poppixbuf = self.pixbuf2.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
             self.pop2Image.set_from_pixbuf(poppixbuf)
 
