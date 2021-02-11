@@ -1961,7 +1961,7 @@
                                                             <property name="valign">center</property>
                                                             <property name="spacing">13</property>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dPardusRating">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="halign">center</property>
@@ -2058,7 +2058,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dPardusBar5">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2071,7 +2071,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dPardusBarLabel5">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">50</property>
@@ -2168,7 +2168,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dPardusBar4">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2181,7 +2181,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dPardusBarLabel4">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">30</property>
@@ -2278,7 +2278,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dPardusBar3">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2291,7 +2291,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dPardusBarLabel3">
                                                             <property name="width_request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
@@ -2389,7 +2389,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dPardusBar2">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2402,7 +2402,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dPardusBarLabel2">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">10</property>
@@ -2499,7 +2499,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dPardusBar1">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2511,7 +2511,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dPardusBarLabel1">
                                                             <property name="width_request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
@@ -2578,7 +2578,7 @@
                                                             <property name="valign">center</property>
                                                             <property name="spacing">13</property>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dGnomeRating">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="halign">center</property>
@@ -2675,7 +2675,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dGnomeBar5">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2688,7 +2688,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dGnomeBarLabel5">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">50</property>
@@ -2785,7 +2785,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dGnomeBar4">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2798,7 +2798,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dGnomeBarLabel4">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">30</property>
@@ -2895,7 +2895,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dGnomeBar3">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -2908,7 +2908,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dGnomeBarLabel3">
                                                             <property name="width_request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
@@ -3006,7 +3006,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dGnomeBar2">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -3019,7 +3019,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dGnomeBarLabel2">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="label" translatable="yes">10</property>
@@ -3116,7 +3116,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkProgressBar">
+                                                            <object class="GtkProgressBar" id="dGnomeBar1">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="valign">center</property>
@@ -3128,7 +3128,7 @@
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dGnomeBarLabel1">
                                                             <property name="width_request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
@@ -3207,12 +3207,6 @@
                                         <property name="left_attach">0</property>
                                         <property name="top_attach">7</property>
                                       </packing>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
                                     </child>
                                     <child>
                                       <placeholder/>

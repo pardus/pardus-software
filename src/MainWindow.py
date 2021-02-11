@@ -113,6 +113,30 @@ class MainWindow(object):
         self.dtStar4 = self.GtkBuilder.get_object("dtStar4")
         self.dtStar5 = self.GtkBuilder.get_object("dtStar5")
 
+        self.dPardusRating = self.GtkBuilder.get_object("dPardusRating")
+        self.dPardusBar1 = self.GtkBuilder.get_object("dPardusBar1")
+        self.dPardusBar2 = self.GtkBuilder.get_object("dPardusBar2")
+        self.dPardusBar3 = self.GtkBuilder.get_object("dPardusBar3")
+        self.dPardusBar4 = self.GtkBuilder.get_object("dPardusBar4")
+        self.dPardusBar5 = self.GtkBuilder.get_object("dPardusBar5")
+        self.dPardusBarLabel1 = self.GtkBuilder.get_object("dPardusBarLabel1")
+        self.dPardusBarLabel2 = self.GtkBuilder.get_object("dPardusBarLabel2")
+        self.dPardusBarLabel3 = self.GtkBuilder.get_object("dPardusBarLabel3")
+        self.dPardusBarLabel4 = self.GtkBuilder.get_object("dPardusBarLabel4")
+        self.dPardusBarLabel5 = self.GtkBuilder.get_object("dPardusBarLabel5")
+
+        self.dGnomeRating = self.GtkBuilder.get_object("dGnomeRating")
+        self.dGnomeBar1 = self.GtkBuilder.get_object("dGnomeBar1")
+        self.dGnomeBar2 = self.GtkBuilder.get_object("dGnomeBar2")
+        self.dGnomeBar3 = self.GtkBuilder.get_object("dGnomeBar3")
+        self.dGnomeBar4 = self.GtkBuilder.get_object("dGnomeBar4")
+        self.dGnomeBar5 = self.GtkBuilder.get_object("dGnomeBar5")
+        self.dGnomeBarLabel1 = self.GtkBuilder.get_object("dGnomeBarLabel1")
+        self.dGnomeBarLabel2 = self.GtkBuilder.get_object("dGnomeBarLabel2")
+        self.dGnomeBarLabel3 = self.GtkBuilder.get_object("dGnomeBarLabel3")
+        self.dGnomeBarLabel4 = self.GtkBuilder.get_object("dGnomeBarLabel4")
+        self.dGnomeBarLabel5 = self.GtkBuilder.get_object("dGnomeBarLabel5")
+
         self.raction = self.GtkBuilder.get_object("raction")
         self.rtitle = self.GtkBuilder.get_object("rtitle")
         self.rdetail = self.GtkBuilder.get_object("rdetail")
@@ -753,6 +777,11 @@ class MainWindow(object):
 
             self.setAppStar(response["details"]["rate"]["average"])
 
+            self.setPardusRatings(response["details"]["rate"]["count"], float(response["details"]["rate"]["average"]),
+                                  response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
+                                  response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
+                                  response["details"]["rate"]["rates"]["5"])
+
     def setAppStar(self, average):
         average = int(average)
 
@@ -794,6 +823,27 @@ class MainWindow(object):
             self.dtStar5.set_from_pixbuf(self.staron)
         else:
             print("star error")
+
+    def setPardusRatings(self, tr, r, r1, r2, r3, r4, r5):
+        self.dPardusRating.set_markup("<span font='21'><big><b>{:.1f}</b></big></span>".format(r))
+        self.dPardusBarLabel1.set_markup("{}".format(r1))
+        self.dPardusBarLabel2.set_markup("{}".format(r2))
+        self.dPardusBarLabel3.set_markup("{}".format(r3))
+        self.dPardusBarLabel4.set_markup("{}".format(r4))
+        self.dPardusBarLabel5.set_markup("{}".format(r5))
+
+        if tr != 0:
+            self.dPardusBar1.set_fraction(r1 / tr)
+            self.dPardusBar2.set_fraction(r2 / tr)
+            self.dPardusBar3.set_fraction(r3 / tr)
+            self.dPardusBar4.set_fraction(r4 / tr)
+            self.dPardusBar5.set_fraction(r5 / tr)
+        else:
+            self.dPardusBar1.set_fraction(0)
+            self.dPardusBar2.set_fraction(0)
+            self.dPardusBar3.set_fraction(0)
+            self.dPardusBar4.set_fraction(0)
+            self.dPardusBar5.set_fraction(0)
 
     def on_test(self, widget, event):
         print("test")
