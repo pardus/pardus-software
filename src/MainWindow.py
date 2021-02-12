@@ -303,6 +303,7 @@ class MainWindow(object):
         self.setRepoCategories()
         self.setRepoApps()
         self.server()
+        self.gnomeRatings()
         self.setPardusCategories()
         self.setPardusApps()
         self.normalpage()
@@ -458,6 +459,12 @@ class MainWindow(object):
         self.splashlabel.set_markup("<b>Getting applications from server</b>")
         self.Server = Server()
         print("{} {}".format("server connection", self.Server.connection))
+
+    def gnomeRatings(self):
+        self.splashlabel.set_markup("<b>Getting ratings from gnome odrs</b>")
+        self.gnomeratings = self.Server.getGnomeRatings()
+        if self.gnomeratings is not False:
+            print("gnomeratings successful")
 
     def setPardusApps(self):
         if self.Server.connection:
@@ -666,6 +673,16 @@ class MainWindow(object):
                     self.category = i["category"][0]["en"].capitalize()
                     self.license = i["license"]
                     self.codenames = ", ".join(c["name"] for c in i["codename"])
+                    self.gnomename = i["gnomename"]
+
+            if self.gnomename != "" and self.gnomename is not None:
+                try:
+                    self.setGnomeRatings(self.gnomeratings[self.gnomename])
+                except:
+                    self.setGnomeRatings("")
+                    print("{} {}".format(self.gnomename, "not found in gnomeratings"))
+            else:
+                self.setGnomeRatings("")
 
             if self.description.count("\n") > 5:
                 self.s_description = "\n".join(self.description.splitlines()[0:5])
@@ -777,7 +794,7 @@ class MainWindow(object):
 
             self.setAppStar(response["details"]["rate"]["average"])
 
-            self.setPardusRatings(response["details"]["rate"]["count"], float(response["details"]["rate"]["average"]),
+            self.setPardusRatings(response["details"]["rate"]["count"], response["details"]["rate"]["average"],
                                   response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
                                   response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
                                   response["details"]["rate"]["rates"]["5"])
@@ -825,7 +842,7 @@ class MainWindow(object):
             print("star error")
 
     def setPardusRatings(self, tr, r, r1, r2, r3, r4, r5):
-        self.dPardusRating.set_markup("<span font='21'><big><b>{:.1f}</b></big></span>".format(r))
+        self.dPardusRating.set_markup("<span font='21'><big><b>{:.1f}</b></big></span>".format(float(r)))
         self.dPardusBarLabel1.set_markup("{}".format(r1))
         self.dPardusBarLabel2.set_markup("{}".format(r2))
         self.dPardusBarLabel3.set_markup("{}".format(r3))
@@ -844,6 +861,45 @@ class MainWindow(object):
             self.dPardusBar3.set_fraction(0)
             self.dPardusBar4.set_fraction(0)
             self.dPardusBar5.set_fraction(0)
+
+    def setGnomeRatings(self, gr):
+        if gr != "":
+            print(gr)
+
+            average = (gr["star1"] * 1 + gr["star2"] * 2 + gr["star3"] * 3 + gr["star4"] * 4 + gr["star5"] * 5) / gr[
+                "total"]
+
+            self.dGnomeRating.set_markup("<span font='21'><big><b>{:.1f}</b></big></span>".format(float(average)))
+            self.dGnomeBarLabel1.set_markup("{}".format(gr["star1"]))
+            self.dGnomeBarLabel2.set_markup("{}".format(gr["star2"]))
+            self.dGnomeBarLabel3.set_markup("{}".format(gr["star3"]))
+            self.dGnomeBarLabel4.set_markup("{}".format(gr["star4"]))
+            self.dGnomeBarLabel5.set_markup("{}".format(gr["star5"]))
+
+            if gr["total"] != 0:
+                self.dGnomeBar1.set_fraction(gr["star1"] / gr["total"])
+                self.dGnomeBar2.set_fraction(gr["star2"] / gr["total"])
+                self.dGnomeBar3.set_fraction(gr["star3"] / gr["total"])
+                self.dGnomeBar4.set_fraction(gr["star4"] / gr["total"])
+                self.dGnomeBar5.set_fraction(gr["star5"] / gr["total"])
+            else:
+                self.dGnomeBar1.set_fraction(0)
+                self.dGnomeBar2.set_fraction(0)
+                self.dGnomeBar3.set_fraction(0)
+                self.dGnomeBar4.set_fraction(0)
+                self.dGnomeBar5.set_fraction(0)
+        else:
+            self.dGnomeRating.set_markup("<span font='21'><big><b>{}</b></big></span>".format(0.0))
+            self.dGnomeBarLabel1.set_markup("{}".format(0))
+            self.dGnomeBarLabel2.set_markup("{}".format(0))
+            self.dGnomeBarLabel3.set_markup("{}".format(0))
+            self.dGnomeBarLabel4.set_markup("{}".format(0))
+            self.dGnomeBarLabel5.set_markup("{}".format(0))
+            self.dGnomeBar1.set_fraction(0)
+            self.dGnomeBar2.set_fraction(0)
+            self.dGnomeBar3.set_fraction(0)
+            self.dGnomeBar4.set_fraction(0)
+            self.dGnomeBar5.set_fraction(0)
 
     def on_test(self, widget, event):
         print("test")

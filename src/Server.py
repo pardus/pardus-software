@@ -33,6 +33,9 @@ class Server(object):
         self.applist = []
         self.catlist = []
 
+        self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
+        self.gnomeconnection = True
+
         try:
             request_app = requests.get(self.serverurl + self.serverapps)
         except Exception as e:
@@ -150,3 +153,17 @@ class Server(object):
         else:
             print(dir + " folder not exists")
             return False
+
+    def getGnomeRatings(self):
+        try:
+            request_gnome = requests.get(self.gnomeratingserver)
+        except Exception as e:
+            print(e)
+            print("Connection problem on gnome odrs / ratings")
+            self.gnomeconnection = False
+
+        if self.gnomeconnection:
+            if request_gnome.status_code == 200:
+                return request_gnome.json()
+            return False
+        return False
