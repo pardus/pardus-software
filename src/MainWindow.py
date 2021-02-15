@@ -84,6 +84,8 @@ class MainWindow(object):
         self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
         self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
 
+        self.pardusicb = self.GtkBuilder.get_object("pardusicb")
+
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
         self.searchstack = self.GtkBuilder.get_object("searchstack")
@@ -1020,20 +1022,33 @@ class MainWindow(object):
         categorynumber = int(model[iteration][2])
         category = model[iteration][4]
         appname = model[iteration][1]
-        showall = True
-        # print(category + " " + self.PardusCurrentCategoryString)
+        showinstalled = self.pardusicb.get_active()
+
         if self.isPardusSearching:
             self.HomeCategoryFlowBox.unselect_all()
             if search_entry_text in appname:
-                return True
-        else:
-
-            if showall and self.PardusCurrentCategoryString == "all":
-                return True
-            else:
-                # return category == self.PardusCurrentCategoryString
-                if self.PardusCurrentCategoryString in category:
+                if self.pardusicb.get_active():
+                    if self.Package.isinstalled(appname):
+                        return True
+                else:
                     return True
+        else:
+            if self.PardusCurrentCategoryString == "all":
+                if self.pardusicb.get_active():
+                    if self.Package.isinstalled(appname):
+                        return True
+                else:
+                    return True
+            else:
+                if self.PardusCurrentCategoryString in category:
+                    if self.pardusicb.get_active():
+                        if self.Package.isinstalled(appname):
+                            return True
+                    else:
+                        return True
+
+    def on_pardusicb_toggled(self, button):
+        self.PardusCategoryFilter.refilter()
 
     # def RepoCategoryFilterFunction(self, model, iteration, data):
     #     search_entry_text = self.reposearchbar.get_text()

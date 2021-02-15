@@ -733,12 +733,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton">
+                          <object class="GtkCheckButton" id="pardusicb">
                             <property name="label" translatable="yes">Show installed apps</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="draw_indicator">True</property>
+                            <signal name="toggled" handler="on_pardusicb_toggled" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">2</property>
