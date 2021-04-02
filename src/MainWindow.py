@@ -173,12 +173,17 @@ class MainWindow(object):
         self.HeaderBarMenu = self.GtkBuilder.get_object("HeaderBarMenu")
         self.menu1 = self.GtkBuilder.get_object("menu1")
         self.menu1.set_use_stock(False)
-        self.menu1.set_label("Menu 1")
-        self.menu1.set_image(Gtk.Image.new_from_icon_name('gtk-dialog-question', Gtk.IconSize.BUTTON))
+        self.menu1.set_label("Preferences")
+        self.menu1.set_image(Gtk.Image.new_from_icon_name('preferences-other-symbolic', Gtk.IconSize.BUTTON))
         self.menu2 = self.GtkBuilder.get_object("menu2")
         self.menu2.set_use_stock(False)
         self.menu2.set_label("Menu 2")
         self.menu2.set_image(Gtk.Image.new_from_icon_name('gtk-dialog-question', Gtk.IconSize.BUTTON))
+
+        self.dialogpref = self.GtkBuilder.get_object("dialogpref")
+        self.dpApply = self.GtkBuilder.get_object("dpApply")
+        self.switchUSI = self.GtkBuilder.get_object("switchUSI")
+        self.switchEA = self.GtkBuilder.get_object("switchEA")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
         self.menubackbutton.set_sensitive(False)
@@ -1294,6 +1299,28 @@ class MainWindow(object):
                 self.reposearchbar.grab_focus()
         else:
             self.toprevealer.set_reveal_child(False)
+
+    def on_menu1_select(self, menu_item):
+        self.dialogpref.run()
+        self.dialogpref.hide()
+
+    def on_dpApply_clicked(self, button):
+        print("USI : {}".format(self.switchUSI.get_state()))
+        print("EA : {}".format(self.switchEA.get_state()))
+        self.dpApply.set_sensitive(False)
+        self.dpApply.set_label("Applied")
+        print("preferences applied")
+
+    def on_switchUSI_state_set(self, switch, state):
+        self.dpApply.set_sensitive(True)
+        self.dpApply.set_label("Apply")
+        self.dpApply.set_image(Gtk.Image.new_from_stock("gtk-apply", Gtk.IconSize.BUTTON))
+
+
+    def on_switchEA_state_set(self, switch, state):
+        self.dpApply.set_sensitive(True)
+        self.dpApply.set_label("Apply")
+        self.dpApply.set_image(Gtk.Image.new_from_stock("gtk-apply", Gtk.IconSize.BUTTON))
 
     def actionPackage(self):
 
