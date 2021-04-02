@@ -84,6 +84,11 @@
     <property name="icon_name">go-next-rtl-symbolic</property>
     <property name="icon_size">3</property>
   </object>
+  <object class="GtkImage" id="searchimage">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">edit-find-symbolic</property>
+  </object>
   <object class="GtkWindow" id="MainWindow">
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
@@ -124,7 +129,17 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkToggleButton" id="topsearchbutton">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="image">searchimage</property>
+            <signal name="toggled" handler="on_topsearchbutton_toggled" swapped="no"/>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+            <property name="position">2</property>
+          </packing>
         </child>
       </object>
     </child>
@@ -3271,7 +3286,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -3377,11 +3392,35 @@
                   </packing>
                 </child>
                 <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRevealer" id="toprevealer">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_top">13</property>
+                <child>
                   <object class="GtkStack" id="searchstack">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">center</property>
                     <property name="hexpand">True</property>
+                    <property name="transition_type">slide-up</property>
                     <child>
                       <object class="GtkSearchEntry" id="pardussearchbar">
                         <property name="width_request">200</property>
@@ -3486,19 +3525,6 @@
                       </packing>
                     </child>
                   </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
               <packing>

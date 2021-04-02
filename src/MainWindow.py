@@ -83,6 +83,8 @@ class MainWindow(object):
         self.searchbar = self.GtkBuilder.get_object("searchbar")
         self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
         self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
+        self.topsearchbutton = self.GtkBuilder.get_object("topsearchbutton")
+        self.toprevealer = self.GtkBuilder.get_object("toprevealer")
 
         self.pardusicb = self.GtkBuilder.get_object("pardusicb")
 
@@ -1281,6 +1283,16 @@ class MainWindow(object):
         self.rdetail.set_text(self.Package.description(value, False))
 
         print(value)
+
+    def on_topsearchbutton_toggled(self, button):
+        if self.topsearchbutton.get_active():
+            self.toprevealer.set_reveal_child(True)
+            if self.searchstack.get_visible_child_name() == "page0":
+                self.pardussearchbar.grab_focus()
+            elif self.searchstack.get_visible_child_name() == "page1":
+                self.reposearchbar.grab_focus()
+        else:
+            self.toprevealer.set_reveal_child(False)
 
     def actionPackage(self):
 
