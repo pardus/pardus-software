@@ -678,6 +678,7 @@ class MainWindow(object):
                     self.license = i["license"]
                     self.codenames = ", ".join(c["name"] for c in i["codename"])
                     self.gnomename = i["gnomename"]
+                    self.screenshots = i["screenshots"]
 
             if self.gnomename != "" and self.gnomename is not None:
                 try:
@@ -749,23 +750,23 @@ class MainWindow(object):
             self.pixbuf1 = None
             self.pixbuf2 = None
 
-            if self.appname + "#1" in self.AppImage.imgcache:
+            if self.screenshots[0] + "#1" in self.AppImage.imgcache:
                 print("image1 in cache")
-                self.pixbuf1 = self.AppImage.imgcache[self.appname + "#1"]
+                self.pixbuf1 = self.AppImage.imgcache[self.screenshots[0] + "#1"]
                 self.resizeAppImage()
             else:
+                self.pixbuf1 = None
                 print("image1 not in cache")
-                self.AppImage.fetch(self.appname, "1")
+                self.AppImage.fetch(self.Server.serverurl, self.screenshots[0], "#1")
 
-            if self.appname + "#2" in self.AppImage.imgcache:
+            if self.screenshots[1] + "#2" in self.AppImage.imgcache:
                 print("image2 in cache")
-                self.pixbuf2 = self.AppImage.imgcache[self.appname + "#2"]
+                self.pixbuf2 = self.AppImage.imgcache[self.screenshots[1] + "#2"]
                 self.resizeAppImage()
             else:
                 print("image2 not in cache")
-                self.pixbuf1 = None
                 self.pixbuf2 = None
-                self.AppImage.fetch(self.appname, "2")
+                self.AppImage.fetch(self.Server.serverurl, self.screenshots[1], "#2")
 
             dic = {"mac": self.mac, "app": self.appname}
             self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)

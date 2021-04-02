@@ -18,12 +18,12 @@ class AppImage(object):
 
         self.imgcache = {}
 
-    def fetch(self, appname, i):
-        url = "http://localhost:8000/files/screenshots/" + appname + "/" + appname + "-" + i + ".png"
+    def fetch(self, uri, fileuri, i):
+        url = uri + fileuri
         img_file = Gio.File.new_for_uri(url)
-        img_file.read_async(GLib.PRIORITY_LOW, None, self._open_stream, appname + "#" + i)
+        img_file.read_async(GLib.PRIORITY_LOW, None, self._open_stream, fileuri + i)
 
-    def _open_stream(self, img_file, result, appname):
+    def _open_stream(self, img_file, result, fileuri):
         try:
             stream = img_file.read_finish(result)
         except GLib.Error as error:
@@ -31,7 +31,7 @@ class AppImage(object):
             self.Pixbuf(False, None, None)  # Send to MainWindow
             return False
 
-        GdkPixbuf.Pixbuf.new_from_stream_async(stream, None, self._pixbuf_loaded, appname)
+        GdkPixbuf.Pixbuf.new_from_stream_async(stream, None, self._pixbuf_loaded, fileuri)
 
     def _pixbuf_loaded(self, stream, result, data):
         try:
