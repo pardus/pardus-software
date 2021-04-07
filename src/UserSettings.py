@@ -40,9 +40,14 @@ class UserSettings(object):
             self.config_usi = True
             self.config_anim = True
 
-    def writeConfig(self):
-        pass
-
+    def writeConfig(self, sysicons, anims):
+        self.config['DEFAULT'] = {'UseSystemIcons': sysicons,
+                                  'Animations': anims}
+        if self.createDir(self.configdir):
+            with open(self.configdir + self.configfile, "w") as cf:
+                self.config.write(cf)
+                return True
+        return False
 
     def createDir(self, dir):
         try:

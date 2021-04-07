@@ -1301,15 +1301,24 @@ class MainWindow(object):
             self.toprevealer.set_reveal_child(False)
 
     def on_menu1_select(self, menu_item):
+        self.UserSettings.readConfig()
+        self.switchUSI.set_state(self.UserSettings.config_usi)
+        self.switchEA.set_state(self.UserSettings.config_anim)
         self.dialogpref.run()
         self.dialogpref.hide()
 
     def on_dpApply_clicked(self, button):
-        print("USI : {}".format(self.switchUSI.get_state()))
-        print("EA : {}".format(self.switchEA.get_state()))
-        self.dpApply.set_sensitive(False)
-        self.dpApply.set_label("Applied")
-        print("preferences applied")
+        usi = self.switchUSI.get_state()
+        ea = self.switchEA.get_state()
+        print("USI : {}".format(usi))
+        print("EA : {}".format(ea))
+
+        if self.UserSettings.writeConfig(usi, ea):
+            self.dpApply.set_sensitive(False)
+            self.dpApply.set_label("Applied")
+        else:
+            self.dpApply.set_label("Error")
+
 
     def on_switchUSI_state_set(self, switch, state):
         self.dpApply.set_sensitive(True)
