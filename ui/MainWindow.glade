@@ -625,7 +625,7 @@
                         <property name="item_orientation">horizontal</property>
                         <property name="model">EditorListStore</property>
                         <property name="item_width">150</property>
-                        <signal name="selection-changed" handler="on_EditorAppsIconView_selection_changed" swapped="no"/>
+                        <signal name="selection-changed" handler="on_PardusAppsIconView_selection_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -3569,15 +3569,6 @@
                     <property name="left_attach">2</property>
                     <property name="top_attach">0</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
                 <child>
                   <placeholder/>

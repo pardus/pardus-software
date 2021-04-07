@@ -196,31 +196,6 @@ class MainWindow(object):
         self.NavCategoryImage = self.GtkBuilder.get_object("NavCategoryImage")
         self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
 
-        # self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
-        #                    {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
-        #                    {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
-        #
-        # for ediapp in self.editorapps:
-        #     try:
-        #         edipixbuf = Gtk.IconTheme.get_default().load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
-        #         # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
-        #     except:
-        #         # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
-        #         try:
-        #             edipixbuf = self.parduspixbuf.load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
-        #         except:
-        #             try:
-        #                 edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
-        #                                                                   Gtk.IconLookupFlags(16))
-        #             except:
-        #                 edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
-        #
-        #     ediappname = ediapp['name']
-        #     ediprettyname = ediapp['prettyname']
-        #     edicategory = ediapp['category']
-        #     edicategorynumber = self.get_category_number(ediapp['category'])
-        #     self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
-
         self.PardusCurrentCategory = -1
         self.PardusCurrentCategoryString = "all"
         self.RepoCurrentCategory = "all"
@@ -315,6 +290,7 @@ class MainWindow(object):
         self.gnomeRatings()
         self.setPardusCategories()
         self.setPardusApps()
+        self.setEditorApps()
         self.normalpage()
 
     def normalpage(self):
@@ -553,6 +529,33 @@ class MainWindow(object):
 
             self.HomeCategoryFlowBox.show_all()
 
+    def setEditorApps(self):
+        if self.Server.connection:
+            self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
+                               {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
+                               {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
+
+            for ediapp in self.editorapps:
+                try:
+                    edipixbuf = Gtk.IconTheme.get_default().load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
+                    # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
+                except:
+                    # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
+                    try:
+                        edipixbuf = self.parduspixbuf.load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
+                    except:
+                        try:
+                            edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
+                                                                              Gtk.IconLookupFlags(16))
+                        except:
+                            edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
+
+                ediappname = ediapp['name']
+                ediprettyname = ediapp['prettyname']
+                edicategory = ediapp['category']
+                edicategorynumber = self.get_category_number(ediapp['category'])
+                self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
+
     def getSystemCatIcon(self, cat, size=48):
         try:
             caticon = Gtk.IconTheme.get_default().load_icon("applications-" + cat, size, Gtk.IconLookupFlags(16))
@@ -644,21 +647,40 @@ class MainWindow(object):
             self.EditorAppsIconView.unselect_all()
             self.menubackbutton.set_sensitive(False)
         elif self.homestack.get_visible_child_name() == "pardusappsdetail":
-            self.homestack.set_visible_child_name("pardusapps")
-            self.PardusAppsIconView.unselect_all()
+            if self.fromeditorapps:
+                self.homestack.set_visible_child_name("pardushome")
+                self.HomeCategoryFlowBox.unselect_all()
+                self.EditorAppsIconView.unselect_all()
+                self.menubackbutton.set_sensitive(False)
+            else:
+                self.homestack.set_visible_child_name("pardusapps")
+                self.PardusAppsIconView.unselect_all()
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
+        mode = 0
+        try:
+            # detection of IconViews (PardusAppsIconView or EditorAppsIconView)
+            iconview.get_model().get_name()
+            self.fromeditorapps = True
+        except:
+            self.fromeditorapps = False
+            # PardusAppsIconView TreeModelFilter has no attribute 'get_name'
+            mode = 1
 
         self.menubackbutton.set_sensitive(True)
-
         self.descSw.set_state(False)
 
         selected_items = iconview.get_selected_items()
 
         if len(selected_items) == 1:
-            treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
-            self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
-            prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
+            if mode == 1:
+                treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
+                self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
+                prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
+            else:
+                treeiter = self.EditorListStore.get_iter(selected_items[0])
+                self.appname = self.EditorListStore.get(treeiter, 1)[0]
+                prettyname = self.EditorListStore.get(treeiter, 3)[0]
             print(selected_items[0])
             print(self.appname)
 
