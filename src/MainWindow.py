@@ -231,6 +231,9 @@ class MainWindow(object):
         self.MainWindow.set_application(application)
         self.mainstack.set_visible_child_name("page0")
 
+        self.queue = []
+        self.inprogress = False
+
         cssProvider = Gtk.CssProvider()
         cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
         screen = Gdk.Screen.get_default()
@@ -764,6 +767,16 @@ class MainWindow(object):
                     self.dActionButton.get_style_context().add_class("suggested-action")
                     self.dActionButton.set_label(" Install")
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+                if len(self.queue) > 0:
+                    for qa in self.queue:
+                        if self.appname == qa:
+                            if isinstalled:
+                                self.dActionButton.set_label(" Removing")
+                            else:
+                                self.dActionButton.set_label(" Installing")
+                            self.dActionButton.set_sensitive(False)
+
             else:
                 self.dActionButton.set_sensitive(False)
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
@@ -1173,8 +1186,15 @@ class MainWindow(object):
         # print("category selected")
 
     def on_dActionButton_clicked(self, button):
-        self.actionPackage()
-        print("action " + self.appname)
+
+        self.dActionButton.set_sensitive(False)
+
+        self.queue.append(self.appname)
+
+        if not self.inprogress:
+            self.actionPackage(self.appname)
+            self.inprogress = True
+            print("action " + self.appname)
 
     def on_topbutton1_clicked(self, button):
         if self.Server.connection and self.Server.app_scode == 200 and self.Server.cat_scode == 200:
@@ -1353,7 +1373,9 @@ class MainWindow(object):
         self.dpApply.set_label("Apply")
         self.dpApply.set_image(Gtk.Image.new_from_stock("gtk-apply", Gtk.IconSize.BUTTON))
 
-    def actionPackage(self):
+    def actionPackage(self, appname):
+
+        self.inprogress = True
 
         self.topspinner.start()
 
@@ -1361,7 +1383,7 @@ class MainWindow(object):
 
         self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
 
-        self.actionedappname = self.appname
+        self.actionedappname = appname
 
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
 
@@ -1436,6 +1458,11 @@ class MainWindow(object):
         self.topspinner.stop()
         print(status)
 
+        self.inprogress = False
+        self.queue.pop(0)
+        if len(self.queue) > 0:
+            self.actionPackage(self.queue[0])
+
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()
         print("selected_items " + str(selected_items))
@@ -1445,22 +1472,22 @@ class MainWindow(object):
             prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
             print("in controlView " + appname)
             if appname == self.actionedappname:
-                try:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
-                except:
-                    try:
-                        pixbuf = self.parduspixbuf.load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
-                    except:
-                        try:
-                            pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
-                                                                           Gtk.IconLookupFlags(16))
-                        except:
-                            pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
-                                                                           Gtk.IconLookupFlags(16))
-
-                self.dIcon.set_from_pixbuf(pixbuf)
-
-                self.dName.set_markup("<b> " + prettyname + "</b>")
+                # try:
+                #     pixbuf = Gtk.IconTheme.get_default().load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
+                # except:
+                #     try:
+                #         pixbuf = self.parduspixbuf.load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
+                #     except:
+                #         try:
+                #             pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
+                #                                                            Gtk.IconLookupFlags(16))
+                #         except:
+                #             pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
+                #                                                            Gtk.IconLookupFlags(16))
+                #
+                # self.dIcon.set_from_pixbuf(pixbuf)
+                #
+                # self.dName.set_markup("<b> " + prettyname + "</b>")
 
                 if self.Package.isinstalled(self.actionedappname):
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
