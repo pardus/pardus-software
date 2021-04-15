@@ -1066,10 +1066,22 @@ class MainWindow(object):
         category = model[iteration][4]
         appname = model[iteration][1]
         showinstalled = self.pardusicb.get_active()
+        pn_en = ""
+        pn_tr = ""
+        desc_en = ""
+        desc_tr = ""
 
         if self.isPardusSearching:
+            for i in self.Server.applist:
+                if i["name"] == appname:
+                    pn_en = i["prettyname"]["en"]
+                    pn_tr = i["prettyname"]["tr"]
+                    desc_en = i["description"]["en"]
+                    desc_tr = i["description"]["tr"]
             self.HomeCategoryFlowBox.unselect_all()
-            if search_entry_text in appname:
+            if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
+                    or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en \
+                    or search_entry_text.lower() in desc_tr:
                 if self.pardusicb.get_active():
                     if self.Package.isinstalled(appname):
                         return True
