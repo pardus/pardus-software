@@ -184,6 +184,7 @@ class MainWindow(object):
         self.dpApply = self.GtkBuilder.get_object("dpApply")
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
+        self.preflabel = self.GtkBuilder.get_object("preflabel")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
         self.menubackbutton.set_sensitive(False)
@@ -551,7 +552,8 @@ class MainWindow(object):
                             edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
                                                                               Gtk.IconLookupFlags(16))
                         except:
-                            edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64, Gtk.IconLookupFlags(16))
+                            edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64,
+                                                                              Gtk.IconLookupFlags(16))
 
                 ediappname = ediapp['name']
                 ediprettyname = ediapp['prettyname']
@@ -1355,35 +1357,33 @@ class MainWindow(object):
             self.toprevealer.set_reveal_child(False)
 
     def on_menu1_select(self, menu_item):
+        self.homestack.set_visible_child_name("preferences")
         self.UserSettings.readConfig()
         self.switchUSI.set_state(self.UserSettings.config_usi)
         self.switchEA.set_state(self.UserSettings.config_anim)
-        self.dialogpref.run()
-        self.dialogpref.hide()
+        self.topbutton2.get_style_context().remove_class("suggested-action")
+        self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.preflabel.set_text("")
 
-    def on_dpApply_clicked(self, button):
-        usi = self.switchUSI.get_state()
+    def on_switchUSI_state_set(self, switch, state):
+        usi = state
         ea = self.switchEA.get_state()
         print("USI : {}".format(usi))
         print("EA : {}".format(ea))
-
         if self.UserSettings.writeConfig(usi, ea):
-            self.dpApply.set_sensitive(False)
-            self.dpApply.set_label("Applied")
+            self.preflabel.set_text("Applied")
         else:
-            self.dpApply.set_label("Error")
-
-
-    def on_switchUSI_state_set(self, switch, state):
-        self.dpApply.set_sensitive(True)
-        self.dpApply.set_label("Apply")
-        self.dpApply.set_image(Gtk.Image.new_from_stock("gtk-apply", Gtk.IconSize.BUTTON))
-
+            self.preflabel.set_text("Error")
 
     def on_switchEA_state_set(self, switch, state):
-        self.dpApply.set_sensitive(True)
-        self.dpApply.set_label("Apply")
-        self.dpApply.set_image(Gtk.Image.new_from_stock("gtk-apply", Gtk.IconSize.BUTTON))
+        usi = self.switchUSI.get_state()
+        ea = state
+        print("USI : {}".format(usi))
+        print("EA : {}".format(ea))
+        if self.UserSettings.writeConfig(usi, ea):
+            self.preflabel.set_text("Applied")
+        else:
+            self.preflabel.set_text("Error")
 
     def actionPackage(self, appname):
 
