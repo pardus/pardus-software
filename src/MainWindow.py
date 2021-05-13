@@ -56,6 +56,11 @@ class MainWindow(object):
         self.staroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 24, 24)
 
+        self.cstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
+        self.cstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
+
         self.isPardusSearching = False
         self.isRepoSearching = False
 
@@ -242,6 +247,21 @@ class MainWindow(object):
         styleContext.add_provider_for_screen(screen, cssProvider,
                                              Gtk.STYLE_PROVIDER_PRIORITY_USER)
         # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
+
+        self.comments = [{"author": "Fatih Altun",
+                          "comment": "Güzel uygulama, arayüz olarak kullanıcı dostu gözüküyor. Kullanımı basit ve anlaşılır.",
+                          "rate": 5},
+                         {"author": "Yusuf Düzgün", "comment": "Güzel uygulama ama biraz daha geliştirilmesi gerekiyor",
+                          "rate": 4},
+                         {"author": "Emin Fedar", "comment": "Kullanışlı uygulama", "rate": 5},
+                         {"author": "Cihangir Aktürk", "comment": "İdare eder.", "rate": 3},
+                         {"author": "Yavuz Çalış", "comment": "İyi gibi ama biraz daha geliştirilmesi gerekiyor.",
+                          "rate": 3},
+                         {"author": "Şenol Aldıbaş", "comment": "Uygulama yüklemeyi kolaylaştıran bir uygulama.",
+                          "rate": 2},
+                         {"author": "İzzet Aydın", "comment": "İhtiyaçları karşılayan bir uygulama", "rate": 1},
+                         ]
+        self.CommentViewPort = self.GtkBuilder.get_object("CommentViewPort")
 
         self.MainWindow.show_all()
 
@@ -812,6 +832,84 @@ class MainWindow(object):
 
             dic = {"mac": self.mac, "app": self.appname}
             self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)
+
+            self.CommentFlowBox = Gtk.FlowBox.new()
+            self.CommentFlowBox.set_selection_mode(Gtk.SelectionMode.NONE)
+            self.CommentFlowBox.set_max_children_per_line(1)
+            for comment in self.comments:
+                self.setCommentStar(comment["rate"])
+                label1 = Gtk.Label.new()
+                label1.set_markup("<b>" + comment["author"] + "</b>")
+                labeldate = Gtk.Label.new()
+                labeldate.set_markup("01-01-2021")
+                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box1.pack_start(self.cs1, False, True, 0)
+                box1.pack_start(self.cs2, False, True, 0)
+                box1.pack_start(self.cs3, False, True, 0)
+                box1.pack_start(self.cs4, False, True, 0)
+                box1.pack_start(self.cs5, False, True, 0)
+                box1.pack_start(label1, False, True, 10)
+                box1.pack_end(labeldate, False, True, 0)
+                label2 = Gtk.Label.new()
+                label2.set_text(comment["comment"])
+                label2.set_selectable(True)
+                box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box2.pack_start(label2, False, True, 0)
+                hsep = Gtk.HSeparator.new()
+                self.box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
+                self.box.pack_start(box1, False, True, 5)
+                self.box.pack_start(box2, False, True, 5)
+                self.box.pack_start(hsep, False, True, 0)
+
+                self.CommentFlowBox.add(self.box)
+
+            self.CommentFlowBox.show_all()
+            self.CommentViewPort.add(self.CommentFlowBox)
+
+    def setCommentStar(self, rate):
+        self.cs1 = Gtk.Image.new()
+        self.cs2 = Gtk.Image.new()
+        self.cs3 = Gtk.Image.new()
+        self.cs4 = Gtk.Image.new()
+        self.cs5 = Gtk.Image.new()
+        if rate == 0:
+            self.cs1.set_from_pixbuf(self.cstaroff)
+            self.cs2.set_from_pixbuf(self.cstaroff)
+            self.cs3.set_from_pixbuf(self.cstaroff)
+            self.cs4.set_from_pixbuf(self.cstaroff)
+            self.cs5.set_from_pixbuf(self.cstaroff)
+        elif rate == 1:
+            self.cs1.set_from_pixbuf(self.cstaron)
+            self.cs2.set_from_pixbuf(self.cstaroff)
+            self.cs3.set_from_pixbuf(self.cstaroff)
+            self.cs4.set_from_pixbuf(self.cstaroff)
+            self.cs5.set_from_pixbuf(self.cstaroff)
+        elif rate == 2:
+            self.cs1.set_from_pixbuf(self.cstaron)
+            self.cs2.set_from_pixbuf(self.cstaron)
+            self.cs3.set_from_pixbuf(self.cstaroff)
+            self.cs4.set_from_pixbuf(self.cstaroff)
+            self.cs5.set_from_pixbuf(self.cstaroff)
+        elif rate == 3:
+            self.cs1.set_from_pixbuf(self.cstaron)
+            self.cs2.set_from_pixbuf(self.cstaron)
+            self.cs3.set_from_pixbuf(self.cstaron)
+            self.cs4.set_from_pixbuf(self.cstaroff)
+            self.cs5.set_from_pixbuf(self.cstaroff)
+        elif rate == 4:
+            self.cs1.set_from_pixbuf(self.cstaron)
+            self.cs2.set_from_pixbuf(self.cstaron)
+            self.cs3.set_from_pixbuf(self.cstaron)
+            self.cs4.set_from_pixbuf(self.cstaron)
+            self.cs5.set_from_pixbuf(self.cstaroff)
+        elif rate == 5:
+            self.cs1.set_from_pixbuf(self.cstaron)
+            self.cs2.set_from_pixbuf(self.cstaron)
+            self.cs3.set_from_pixbuf(self.cstaron)
+            self.cs4.set_from_pixbuf(self.cstaron)
+            self.cs5.set_from_pixbuf(self.cstaron)
+        else:
+            print("comment star error")
 
     def on_descSw_state_set(self, switch, state):
         print("switched {}".format(state))
