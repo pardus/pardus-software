@@ -10,7 +10,7 @@ import os
 import threading
 import netifaces
 import psutil
-
+from datetime import datetime
 import gi
 
 gi.require_version("GLib", "2.0")
@@ -25,6 +25,7 @@ from Server import Server
 
 from AppImage import AppImage
 from AppDetail import AppDetail
+from GnomeComment import GnomeComment
 
 from UserSettings import UserSettings
 
@@ -59,6 +60,11 @@ class MainWindow(object):
         self.cstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
         self.cstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
+
+        self.gcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
+        self.gcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
 
         self.isPardusSearching = False
@@ -249,6 +255,7 @@ class MainWindow(object):
         # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
 
         self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
+        self.GnomeCommentListBox = self.GtkBuilder.get_object("GnomeCommentListBox")
 
         self.MainWindow.show_all()
 
@@ -299,6 +306,7 @@ class MainWindow(object):
         self.setRepoApps()
         self.server()
         self.gnomeRatings()
+        self.gnomeComments()
         self.setPardusCategories()
         self.setPardusApps()
         self.setEditorApps()
@@ -344,6 +352,11 @@ class MainWindow(object):
         self.AppDetail = AppDetail()
         self.AppDetail.Detail = self.Detail
         print("appdetail completed")
+
+    def gnomeComments(self):
+        self.GnomeComment = GnomeComment()
+        self.GnomeComment.gComment = self.gComment
+        print("gnome comments completed")
 
     def on_dEventBox1_button_press_event(self, widget, event):
         print("here")
@@ -820,9 +833,11 @@ class MainWindow(object):
             dic = {"mac": self.mac, "app": self.appname}
             self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)
 
+            gdic = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "tr",
+                    "distro": "Pardus", "version": "unknown", "limit": -1}
+            self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic)
 
-
-    def setCommentStar(self, rate):
+    def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
         self.cs2 = Gtk.Image.new()
         self.cs3 = Gtk.Image.new()
@@ -867,14 +882,59 @@ class MainWindow(object):
         else:
             print("comment star error")
 
-    def setComments(self, comments):
+    def setGnomeCommentStar(self, rate):
+        self.gcs1 = Gtk.Image.new()
+        self.gcs2 = Gtk.Image.new()
+        self.gcs3 = Gtk.Image.new()
+        self.gcs4 = Gtk.Image.new()
+        self.gcs5 = Gtk.Image.new()
+        if rate == 0:
+            self.gcs1.set_from_pixbuf(self.gcstaroff)
+            self.gcs2.set_from_pixbuf(self.gcstaroff)
+            self.gcs3.set_from_pixbuf(self.gcstaroff)
+            self.gcs4.set_from_pixbuf(self.gcstaroff)
+            self.gcs5.set_from_pixbuf(self.gcstaroff)
+        elif rate == 1:
+            self.gcs1.set_from_pixbuf(self.gcstaron)
+            self.gcs2.set_from_pixbuf(self.gcstaroff)
+            self.gcs3.set_from_pixbuf(self.gcstaroff)
+            self.gcs4.set_from_pixbuf(self.gcstaroff)
+            self.gcs5.set_from_pixbuf(self.gcstaroff)
+        elif rate == 2:
+            self.gcs1.set_from_pixbuf(self.gcstaron)
+            self.gcs2.set_from_pixbuf(self.gcstaron)
+            self.gcs3.set_from_pixbuf(self.gcstaroff)
+            self.gcs4.set_from_pixbuf(self.gcstaroff)
+            self.gcs5.set_from_pixbuf(self.gcstaroff)
+        elif rate == 3:
+            self.gcs1.set_from_pixbuf(self.gcstaron)
+            self.gcs2.set_from_pixbuf(self.gcstaron)
+            self.gcs3.set_from_pixbuf(self.gcstaron)
+            self.gcs4.set_from_pixbuf(self.gcstaroff)
+            self.gcs5.set_from_pixbuf(self.gcstaroff)
+        elif rate == 4:
+            self.gcs1.set_from_pixbuf(self.gcstaron)
+            self.gcs2.set_from_pixbuf(self.gcstaron)
+            self.gcs3.set_from_pixbuf(self.gcstaron)
+            self.gcs4.set_from_pixbuf(self.gcstaron)
+            self.gcs5.set_from_pixbuf(self.gcstaroff)
+        elif rate == 5:
+            self.gcs1.set_from_pixbuf(self.gcstaron)
+            self.gcs2.set_from_pixbuf(self.gcstaron)
+            self.gcs3.set_from_pixbuf(self.gcstaron)
+            self.gcs4.set_from_pixbuf(self.gcstaron)
+            self.gcs5.set_from_pixbuf(self.gcstaron)
+        else:
+            print("comment star error")
+
+    def setPardusComments(self, comments):
 
         for row in self.PardusCommentListBox:
             self.PardusCommentListBox.remove(row)
 
         if comments:
             for comment in comments:
-                self.setCommentStar(comment["value"])
+                self.setPardusCommentStar(comment["value"])
                 label1 = Gtk.Label.new()
                 label1.set_markup("<b>" + comment["author"] + "</b>")
                 labeldate = Gtk.Label.new()
@@ -935,6 +995,14 @@ class MainWindow(object):
                                   response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
                                   response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
                                   response["details"]["rate"]["rates"]["5"])
+
+            self.setPardusComments(response["details"]["comment"])
+
+    def gComment(self, status, response):
+        if status:
+            self.setGnomeComments(response)
+        else:
+            self.setGnomeComments(None)
 
     def setAppStar(self, average):
         average = int(average)
@@ -1037,6 +1105,43 @@ class MainWindow(object):
             self.dGnomeBar3.set_fraction(0)
             self.dGnomeBar4.set_fraction(0)
             self.dGnomeBar5.set_fraction(0)
+
+    def setGnomeComments(self, comments):
+
+        for row in self.GnomeCommentListBox:
+            self.GnomeCommentListBox.remove(row)
+
+        if comments:
+            for comment in comments:
+                if "rating" and "user_display" and "date_created" and "summary" and "description" in comment:
+                    self.setGnomeCommentStar(comment["rating"] / 20)
+                    label1 = Gtk.Label.new()
+                    label1.set_markup("<b>" + comment["user_display"] + "</b>")
+                    labeldate = Gtk.Label.new()
+                    labeldate.set_markup(str(datetime.fromtimestamp(comment["date_created"])))
+                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                    box1.pack_start(self.gcs1, False, True, 0)
+                    box1.pack_start(self.gcs2, False, True, 0)
+                    box1.pack_start(self.gcs3, False, True, 0)
+                    box1.pack_start(self.gcs4, False, True, 0)
+                    box1.pack_start(self.gcs5, False, True, 0)
+                    box1.pack_start(label1, False, True, 10)
+                    box1.pack_end(labeldate, False, True, 0)
+                    label2 = Gtk.Label.new()
+                    label2.set_markup(comment["summary"] + "\n" + comment["description"])
+                    label2.set_selectable(True)
+                    label2.set_line_wrap(True)
+                    box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                    box2.pack_start(label2, False, True, 0)
+                    hsep = Gtk.HSeparator.new()
+                    box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
+                    box.pack_start(box1, False, True, 5)
+                    box.pack_start(box2, False, True, 5)
+                    box.pack_start(hsep, False, True, 0)
+
+                    self.GnomeCommentListBox.add(box)
+
+        self.GnomeCommentListBox.show_all()
 
     def on_test(self, widget, event):
         print("test")

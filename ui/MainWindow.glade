@@ -3230,6 +3230,7 @@
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">True</property>
                                                         <property name="shadow_type">in</property>
+                                                        <property name="min_content_height">225</property>
                                                         <child>
                                                           <object class="GtkViewport">
                                                             <property name="visible">True</property>
@@ -3260,13 +3261,23 @@
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">True</property>
                                                         <property name="shadow_type">in</property>
-                                                        <property name="min_content_height">215</property>
+                                                        <property name="min_content_height">225</property>
                                                         <child>
                                                           <object class="GtkViewport">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <child>
-                                                            <placeholder/>
+                                                            <object class="GtkViewport">
+                                                            <property name="visible">True</property>
+                                                            <property name="can_focus">False</property>
+                                                            <child>
+                                                            <object class="GtkListBox" id="GnomeCommentListBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can_focus">False</property>
+                                                            <property name="selection_mode">none</property>
+                                                            </object>
+                                                            </child>
+                                                            </object>
                                                             </child>
                                                           </object>
                                                         </child>

@@ -34,6 +34,7 @@ class Server(object):
         self.catlist = []
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
+        self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
         self.gnomeconnection = True
 
         try:
