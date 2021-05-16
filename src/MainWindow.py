@@ -67,6 +67,11 @@ class MainWindow(object):
         self.gcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
 
+        self.wpcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 38, 38)
+        self.wpcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 38, 38)
+
         self.isPardusSearching = False
         self.isRepoSearching = False
 
@@ -151,6 +156,16 @@ class MainWindow(object):
         self.dGnomeBarLabel3 = self.GtkBuilder.get_object("dGnomeBarLabel3")
         self.dGnomeBarLabel4 = self.GtkBuilder.get_object("dGnomeBarLabel4")
         self.dGnomeBarLabel5 = self.GtkBuilder.get_object("dGnomeBarLabel5")
+
+        self.wpcStar1 = self.GtkBuilder.get_object("wpcStar1")
+        self.wpcStar2 = self.GtkBuilder.get_object("wpcStar2")
+        self.wpcStar3 = self.GtkBuilder.get_object("wpcStar3")
+        self.wpcStar4 = self.GtkBuilder.get_object("wpcStar4")
+        self.wpcStar5 = self.GtkBuilder.get_object("wpcStar5")
+        self.wpcStarLabel = self.GtkBuilder.get_object("wpcStarLabel")
+        self.wpcComment = self.GtkBuilder.get_object("wpcComment")
+        self.wpcAuthor = self.GtkBuilder.get_object("wpcAuthor")
+        self.wpcSendButton = self.GtkBuilder.get_object("wpcSendButton")
 
         self.raction = self.GtkBuilder.get_object("raction")
         self.rtitle = self.GtkBuilder.get_object("rtitle")
@@ -694,6 +709,7 @@ class MainWindow(object):
 
         self.menubackbutton.set_sensitive(True)
         self.descSw.set_state(False)
+        self.setWpcStar(0)
 
         selected_items = iconview.get_selected_items()
 
@@ -1205,6 +1221,68 @@ class MainWindow(object):
         if self.pixbuf2:
             poppixbuf = self.pixbuf2.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
             self.pop2Image.set_from_pixbuf(poppixbuf)
+
+    def on_wpcStarE1_button_press_event(self, widget, event):
+        self.setWpcStar(1)
+    def on_wpcStarE2_button_press_event(self, widget, event):
+        self.setWpcStar(2)
+    def on_wpcStarE3_button_press_event(self, widget, event):
+        self.setWpcStar(3)
+    def on_wpcStarE4_button_press_event(self, widget, event):
+        self.setWpcStar(4)
+    def on_wpcStarE5_button_press_event(self, widget, event):
+        self.setWpcStar(5)
+
+    def on_wpcSendButton_clicked(self, button):
+        print("on_wpcSendButton_clicked")
+
+    def setWpcStar(self, rate):
+
+        if rate == 0:
+            self.wpcStar1.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar2.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStarLabel.set_markup("Choose star rating level")
+        elif rate == 1:
+            self.wpcStar1.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar2.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStarLabel.set_markup("<b>1</b>")
+        elif rate == 2:
+            self.wpcStar1.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar2.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStarLabel.set_markup("<b>2</b>")
+        elif rate == 3:
+            self.wpcStar1.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar2.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar3.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStarLabel.set_markup("<b>3</b>")
+        elif rate == 4:
+            self.wpcStar1.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar2.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar3.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar4.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
+            self.wpcStarLabel.set_markup("<b>4</b>")
+
+        elif rate == 5:
+            self.wpcStar1.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar2.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar3.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar4.set_from_pixbuf(self.wpcstaron)
+            self.wpcStar5.set_from_pixbuf(self.wpcstaron)
+            self.wpcStarLabel.set_markup("<b>5</b>")
+        else:
+            print("wpc star error")
 
     def on_EditorAppsIconView_selection_changed(self, iconview):
 
