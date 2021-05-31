@@ -16,6 +16,7 @@ class Server(object):
         self.serverurl = "http://localhost:8000"
         self.serverapps = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
+        self.serverhomepage = "/api/v2/homepage"
         self.serverfiles = "/files/"
         self.serverappicons = "appicons"
         self.servercaticons = "categoryicons"
@@ -32,6 +33,7 @@ class Server(object):
         self.cat_scode = 0
         self.applist = []
         self.catlist = []
+        self.ediapplist = []
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
@@ -51,14 +53,23 @@ class Server(object):
             print("Connection problem on servercats")
             self.connection = False
 
+        try:
+            request_home = requests.get(self.serverurl + self.serverhomepage)
+        except Exception as e:
+            print(e)
+            print("Connection problem on servercats")
+            self.connection = False
+
         if self.connection:
             self.app_scode = request_app.status_code
             self.cat_scode = request_cat.status_code
-            if self.app_scode == 200 and self.cat_scode == 200:
+            self.home_scode = request_home.status_code
+            if self.app_scode == 200 and self.cat_scode == 200 and self.home_scode == 200:
                 print("Connection successful")
                 self.applist = request_app.json()["app-list"]
                 self.applist = sorted(self.applist, key=lambda x: x["name"])
                 self.catlist = request_cat.json()["cat-list"]
+                self.ediapplist = request_home.json()["editor-apps"]
             else:
                 self.connection = False
 

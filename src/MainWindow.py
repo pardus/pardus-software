@@ -570,31 +570,28 @@ class MainWindow(object):
 
     def setEditorApps(self):
         if self.Server.connection:
-            self.editorapps = [{'name': '0ad', 'category': 'games', 'prettyname': '0 A.D.'},
-                               {'name': 'akis', 'category': 'other', 'prettyname': 'Akis'},
-                               {'name': 'alien-arena', 'category': 'games', 'prettyname': 'Alien Arena'}]
-
-            for ediapp in self.editorapps:
-                try:
-                    edipixbuf = Gtk.IconTheme.get_default().load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
-                    # pixbuf = self.appiconpixbuf.load_icon(app['name'], 64, 0)
-                except:
-                    # pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64, 0)
-                    try:
-                        edipixbuf = self.parduspixbuf.load_icon(ediapp['name'], 64, Gtk.IconLookupFlags(16))
-                    except:
-                        try:
-                            edipixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 64,
-                                                                              Gtk.IconLookupFlags(16))
-                        except:
-                            edipixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 64,
-                                                                              Gtk.IconLookupFlags(16))
-
-                ediappname = ediapp['name']
-                ediprettyname = ediapp['prettyname']
-                edicategory = ediapp['category']
-                edicategorynumber = self.get_category_number(ediapp['category'])
-                self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
+            if self.UserSettings.config_usi:
+                for ediapp in self.Server.ediapplist:
+                    edipixbuf = self.getSystemAppIcon(ediapp['name'])
+                    ediappname = ediapp["name"]
+                    ediprettyname = ediapp["prettyname"]["en"]
+                    edicategory = ""
+                    for i in ediapp['category']:
+                        edicategory += i["en"] + ","
+                    edicategory = edicategory.rstrip(",")
+                    edicategorynumber = self.get_category_number(edicategory)
+                    self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
+            else:
+                for ediapp in self.Server.ediapplist:
+                    edipixbuf = self.getServerCatIcon(ediapp['name'])
+                    ediappname = ediapp['name']
+                    ediprettyname = ediapp['prettyname']["en"]
+                    edicategory = ""
+                    for i in ediapp['category']:
+                        edicategory += i["en"] + ","
+                    edicategory = edicategory.rstrip(",")
+                    edicategorynumber = self.get_category_number(edicategory)
+                    self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
 
     def getSystemCatIcon(self, cat, size=48):
         try:
@@ -1224,12 +1221,16 @@ class MainWindow(object):
 
     def on_wpcStarE1_button_press_event(self, widget, event):
         self.setWpcStar(1)
+
     def on_wpcStarE2_button_press_event(self, widget, event):
         self.setWpcStar(2)
+
     def on_wpcStarE3_button_press_event(self, widget, event):
         self.setWpcStar(3)
+
     def on_wpcStarE4_button_press_event(self, widget, event):
         self.setWpcStar(4)
+
     def on_wpcStarE5_button_press_event(self, widget, event):
         self.setWpcStar(5)
 
