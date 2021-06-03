@@ -197,14 +197,22 @@ class MainWindow(object):
         self.RepoAppListStore = self.GtkBuilder.get_object("RepoAppListStore")
 
         self.HeaderBarMenu = self.GtkBuilder.get_object("HeaderBarMenu")
+
         self.menu1 = self.GtkBuilder.get_object("menu1")
         self.menu1.set_use_stock(False)
         self.menu1.set_label("Preferences")
         self.menu1.set_image(Gtk.Image.new_from_icon_name('preferences-other-symbolic', Gtk.IconSize.BUTTON))
+
         self.menu2 = self.GtkBuilder.get_object("menu2")
         self.menu2.set_use_stock(False)
-        self.menu2.set_label("Menu 2")
-        self.menu2.set_image(Gtk.Image.new_from_icon_name('gtk-dialog-question', Gtk.IconSize.BUTTON))
+        self.menu2.set_label("My Applications")
+        self.menu2.set_image(Gtk.Image.new_from_icon_name('dialog-question-symbolic', Gtk.IconSize.BUTTON))
+        self.menu2.set_sensitive(False)
+
+        self.menu3 = self.GtkBuilder.get_object("menu3")
+        self.menu3.set_use_stock(False)
+        self.menu3.set_label("About")
+        self.menu3.set_image(Gtk.Image.new_from_icon_name('dialog-information-symbolic', Gtk.IconSize.BUTTON))
 
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
