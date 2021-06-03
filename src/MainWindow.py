@@ -314,6 +314,7 @@ class MainWindow(object):
 
     def worker(self):
         self.usersettings()
+        self.setAnimations()
         self.package()
         self.appimage()
         self.appdetail()
@@ -675,6 +676,35 @@ class MainWindow(object):
 
     def onDestroy(self, widget):
         self.MainWindow.destroy()
+
+    def setAnimations(self):
+        print("ANİMATİONS ::: {}".format(self.UserSettings.config_anim))
+        if self.UserSettings.config_anim:
+            self.mainstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.mainstack.set_transition_duration(200)
+
+            self.homestack.set_transition_type(Gtk.StackTransitionType.OVER_UP_DOWN)
+            self.homestack.set_transition_duration(200)
+
+            self.searchstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
+            self.searchstack.set_transition_duration(200)
+
+            self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.rbotstack.set_transition_duration(200)
+
+        else:
+            self.mainstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.mainstack.set_transition_duration(0)
+
+            self.homestack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.homestack.set_transition_duration(0)
+
+            self.searchstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.searchstack.set_transition_duration(0)
+
+            self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.rbotstack.set_transition_duration(0)
+
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
@@ -1129,9 +1159,9 @@ class MainWindow(object):
                 if "rating" and "user_display" and "date_created" and "summary" and "description" in comment:
                     self.setGnomeCommentStar(comment["rating"] / 20)
                     label1 = Gtk.Label.new()
-                    label1.set_markup("<b>" + comment["user_display"] + "</b>")
+                    label1.set_markup("<b>" + str(comment["user_display"]) + "</b>")
                     labeldate = Gtk.Label.new()
-                    labeldate.set_markup(str(datetime.fromtimestamp(comment["date_created"])))
+                    labeldate.set_text(str(datetime.fromtimestamp(comment["date_created"])))
                     box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                     box1.pack_start(self.gcs1, False, True, 0)
                     box1.pack_start(self.gcs2, False, True, 0)
@@ -1141,7 +1171,8 @@ class MainWindow(object):
                     box1.pack_start(label1, False, True, 10)
                     box1.pack_end(labeldate, False, True, 0)
                     label2 = Gtk.Label.new()
-                    label2.set_markup(comment["summary"] + "\n" + comment["description"])
+                    label2.set_text(str(comment["summary"]) + "\n" + str(comment["description"]))
+                    print(comment["description"])
                     label2.set_selectable(True)
                     label2.set_line_wrap(True)
                     box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
@@ -1639,25 +1670,33 @@ class MainWindow(object):
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
 
-    def on_switchUSI_state_set(self, switch, state):
-        usi = state
+
+    def on_prefbutton_clicked(self, button):
+        print("on_prefbutton_clicked")
+        usi = self.switchUSI.get_state()
         ea = self.switchEA.get_state()
         print("USI : {}".format(usi))
         print("EA : {}".format(ea))
-        if self.UserSettings.writeConfig(usi, ea):
-            self.preflabel.set_text("Applied")
-        else:
-            self.preflabel.set_text("Error")
 
-    def on_switchEA_state_set(self, switch, state):
-        usi = self.switchUSI.get_state()
-        ea = state
-        print("USI : {}".format(usi))
-        print("EA : {}".format(ea))
-        if self.UserSettings.writeConfig(usi, ea):
-            self.preflabel.set_text("Applied")
-        else:
-            self.preflabel.set_text("Error")
+        user_config_anim = self.UserSettings.config_anim
+        user_config_usi = self.UserSettings.config_usi
+
+        self.UserSettings.writeConfig(usi, ea)
+        self.usersettings()
+
+        if user_config_anim != ea:
+            print("Updating user animation state")
+            self.setAnimations()
+
+        if user_config_usi != usi:
+            print("Updating user icon state")
+            self.PardusAppListStore.clear()
+            self.EditorListStore.clear()
+            for row in self.HomeCategoryFlowBox:
+                self.HomeCategoryFlowBox.remove(row)
+            self.setPardusApps()
+            self.setPardusCategories()
+            self.setEditorApps()
 
     def actionPackage(self, appname):
 
