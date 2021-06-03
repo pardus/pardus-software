@@ -583,7 +583,7 @@ class MainWindow(object):
                     self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
             else:
                 for ediapp in self.Server.ediapplist:
-                    edipixbuf = self.getServerCatIcon(ediapp['name'])
+                    edipixbuf = self.getServerAppIcon(ediapp['name'])
                     ediappname = ediapp['name']
                     ediprettyname = ediapp['prettyname']["en"]
                     edicategory = ""
@@ -611,7 +611,7 @@ class MainWindow(object):
     def getServerCatIcon(self, cat, size=48):
         try:
             caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                self.Server.cachedir + "categoryicons/applications-" + cat + ".svg", size, size)
+                self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size)
         except:
             print("{} {}".format(cat, "category icon not found in server icons"))
             try:
