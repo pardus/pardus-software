@@ -9,6 +9,7 @@ Created on Fri Sep 18 14:53:00 2020
 import requests
 from pathlib import Path
 import tarfile
+from shutil import rmtree
 
 
 class Server(object):
@@ -179,3 +180,11 @@ class Server(object):
                 return request_gnome.json()
             return False
         return False
+
+    def deleteCache(self):
+        try:
+            rmtree(self.cachedir)
+            return True, ""
+        except Exception as e:
+            print(str(e))
+            return False, str(e)

@@ -206,11 +206,11 @@ class MainWindow(object):
         self.menu2.set_label("Menu 2")
         self.menu2.set_image(Gtk.Image.new_from_icon_name('gtk-dialog-question', Gtk.IconSize.BUTTON))
 
-        self.dialogpref = self.GtkBuilder.get_object("dialogpref")
-        self.dpApply = self.GtkBuilder.get_object("dpApply")
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
+        self.prefapplybutton = self.GtkBuilder.get_object("prefapplybutton")
+        self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
         self.menubackbutton.set_sensitive(False)
@@ -598,11 +598,22 @@ class MainWindow(object):
         try:
             caticon = Gtk.IconTheme.get_default().load_icon("applications-" + cat, size, Gtk.IconLookupFlags(16))
         except:
-            if cat == "education":
-                caticon = Gtk.IconTheme.get_default().load_icon("applications-science", size, Gtk.IconLookupFlags(16))
-            elif cat == "all":
-                caticon = Gtk.IconTheme.get_default().load_icon("applications-other", size, Gtk.IconLookupFlags(16))
-            else:
+            print("{} {}".format(cat, "category icon not found in system icons"))
+            try:
+                if cat == "education":
+                    caticon = Gtk.IconTheme.get_default().load_icon("applications-science", size,
+                                                                    Gtk.IconLookupFlags(16))
+                elif cat == "all":
+                    caticon = Gtk.IconTheme.get_default().load_icon("applications-other", size, Gtk.IconLookupFlags(16))
+                elif cat == "pardus":
+                    caticon = Gtk.IconTheme.get_default().load_icon("emblem-pardus", size, Gtk.IconLookupFlags(16))
+                else:
+                    try:
+                        caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                        Gtk.IconLookupFlags(16))
+                    except:
+                        caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+            except:
                 try:
                     caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
                 except:
@@ -704,7 +715,6 @@ class MainWindow(object):
 
             self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.rbotstack.set_transition_duration(0)
-
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
@@ -1172,7 +1182,6 @@ class MainWindow(object):
                     box1.pack_end(labeldate, False, True, 0)
                     label2 = Gtk.Label.new()
                     label2.set_text(str(comment["summary"]) + "\n" + str(comment["description"]))
-                    print(comment["description"])
                     label2.set_selectable(True)
                     label2.set_line_wrap(True)
                     box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
@@ -1669,9 +1678,12 @@ class MainWindow(object):
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
+        self.prefcachebutton.set_sensitive(True)
+        self.prefcachebutton.set_label("Clear")
+        self.prefapplybutton.set_sensitive(False)
+        self.prefapplybutton.set_label("Apply")
 
-
-    def on_prefbutton_clicked(self, button):
+    def on_prefapplybutton_clicked(self, button):
         print("on_prefbutton_clicked")
         usi = self.switchUSI.get_state()
         ea = self.switchEA.get_state()
@@ -1681,22 +1693,47 @@ class MainWindow(object):
         user_config_anim = self.UserSettings.config_anim
         user_config_usi = self.UserSettings.config_usi
 
-        self.UserSettings.writeConfig(usi, ea)
-        self.usersettings()
+        try:
+            self.UserSettings.writeConfig(usi, ea)
+            self.usersettings()
 
-        if user_config_anim != ea:
-            print("Updating user animation state")
-            self.setAnimations()
+            if user_config_anim != ea:
+                print("Updating user animation state")
+                self.setAnimations()
 
-        if user_config_usi != usi:
-            print("Updating user icon state")
-            self.PardusAppListStore.clear()
-            self.EditorListStore.clear()
-            for row in self.HomeCategoryFlowBox:
-                self.HomeCategoryFlowBox.remove(row)
-            self.setPardusApps()
-            self.setPardusCategories()
-            self.setEditorApps()
+            if user_config_usi != usi:
+                print("Updating user icon state")
+                self.PardusAppListStore.clear()
+                self.EditorListStore.clear()
+                for row in self.HomeCategoryFlowBox:
+                    self.HomeCategoryFlowBox.remove(row)
+                self.setPardusApps()
+                self.setPardusCategories()
+                self.setEditorApps()
+
+            self.prefapplybutton.set_sensitive(False)
+            self.prefapplybutton.set_label("Applied")
+            self.preflabel.set_text("Changes applied successfully ")
+
+        except Exception as e:
+            self.prefapplybutton.set_sensitive(True)
+            self.prefapplybutton.set_label("Error")
+            self.preflabel.set_text(str(e))
+
+    def on_prefswitch_state_set(self, switch, state):
+        self.prefapplybutton.set_sensitive(True)
+        self.prefapplybutton.set_label("Apply")
+
+    def on_prefcachebutton_clicked(self, button):
+        state, message = self.Server.deleteCache()
+        if state:
+            self.prefcachebutton.set_sensitive(False)
+            self.prefcachebutton.set_label("Cleared")
+            self.preflabel.set_text("Cache files cleared, please close and reopen the application")
+        else:
+            self.prefcachebutton.set_sensitive(True)
+            self.prefcachebutton.set_label("Error")
+            self.preflabel.set_text(message)
 
     def actionPackage(self, appname):
 
