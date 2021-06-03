@@ -21,7 +21,7 @@ class UserSettings(object):
         self.config_anim = None
 
     def createDefaultConfig(self):
-        self.config['DEFAULT'] = {'UseSystemIcons': 'yes',
+        self.config['DEFAULT'] = {'UseSystemIcons': 'no',
                                   'Animations': 'yes'}
 
         if not Path.is_file(Path(self.configdir + self.configfile)):
