@@ -107,6 +107,7 @@ class MainWindow(object):
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
         self.searchstack = self.GtkBuilder.get_object("searchstack")
+        self.queuestack = self.GtkBuilder.get_object("queuestack")
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
@@ -175,6 +176,7 @@ class MainWindow(object):
         self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
         self.topbutton1.get_style_context().add_class("suggested-action")
         self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
+        self.queuebutton = self.GtkBuilder.get_object("queuebutton")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
@@ -213,6 +215,8 @@ class MainWindow(object):
         self.menu3.set_use_stock(False)
         self.menu3.set_label("About")
         self.menu3.set_image(Gtk.Image.new_from_icon_name('dialog-information-symbolic', Gtk.IconSize.BUTTON))
+
+        self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
 
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
@@ -279,6 +283,7 @@ class MainWindow(object):
 
         self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
         self.GnomeCommentListBox = self.GtkBuilder.get_object("GnomeCommentListBox")
+        self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
         self.MainWindow.show_all()
 
@@ -1521,11 +1526,40 @@ class MainWindow(object):
         # self.RepoCategoryFilter.refilter()
         # print("category selected")
 
+    def on_QueueListBox_row_activated(self, list_box, row):
+
+        i = row.get_index()
+        if i == 0:
+            print("you can not remove because in progress")
+        if i == 1:
+            print("deleting 1")
+            print("row is " + str(i))
+            self.queue.pop(1)
+            self.QueueListBox.remove(row)
+
+    def on_clearqueuebutton_clicked(self, button):
+        if len(self.queue) > 1:
+            self.queue.pop(1)
+            self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
+
     def on_dActionButton_clicked(self, button):
 
         self.dActionButton.set_sensitive(False)
 
         self.queue.append(self.appname)
+        self.queuestack.set_visible_child_name("page1")
+        appicon = Gtk.Image.new()
+        if self.UserSettings.config_usi:
+            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
+        else:
+            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname))
+        label = Gtk.Label.new()
+        label.set_text(self.appname)
+        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+        box.pack_start(appicon, False, True, 0)
+        box.pack_start(label, False, True, 0)
+        self.QueueListBox.add(box)
+        self.QueueListBox.show_all()
 
         if not self.inprogress:
             self.actionPackage(self.appname)
@@ -1546,6 +1580,8 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(False)
         if self.topbutton2.get_style_context().has_class("suggested-action"):
             self.topbutton2.get_style_context().remove_class("suggested-action")
+        if self.queuebutton.get_style_context().has_class("suggested-action"):
+            self.queuebutton.get_style_context().remove_class("suggested-action")
         if not self.topbutton1.get_style_context().has_class("suggested-action"):
             self.topbutton1.get_style_context().add_class("suggested-action")
 
@@ -1555,8 +1591,20 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(False)
         if self.topbutton1.get_style_context().has_class("suggested-action"):
             self.topbutton1.get_style_context().remove_class("suggested-action")
+        if self.queuebutton.get_style_context().has_class("suggested-action"):
+            self.queuebutton.get_style_context().remove_class("suggested-action")
         if not self.topbutton2.get_style_context().has_class("suggested-action"):
             self.topbutton2.get_style_context().add_class("suggested-action")
+
+    def on_queuebutton_clicked(self, button):
+        self.homestack.set_visible_child_name("queue")
+        self.menubackbutton.set_sensitive(False)
+        if self.topbutton1.get_style_context().has_class("suggested-action"):
+            self.topbutton1.get_style_context().remove_class("suggested-action")
+        if self.topbutton2.get_style_context().has_class("suggested-action"):
+            self.topbutton2.get_style_context().remove_class("suggested-action")
+        if not self.queuebutton.get_style_context().has_class("suggested-action"):
+            self.queuebutton.get_style_context().add_class("suggested-action")
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
@@ -1691,6 +1739,10 @@ class MainWindow(object):
         self.prefapplybutton.set_sensitive(False)
         self.prefapplybutton.set_label("Apply")
 
+    def on_menu3_activate(self, menu_item):
+        self.aboutdialog.run()
+        self.aboutdialog.hide()
+
     def on_prefapplybutton_clicked(self, button):
         print("on_prefbutton_clicked")
         usi = self.switchUSI.get_state()
@@ -1793,14 +1845,16 @@ class MainWindow(object):
 
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
-            if self.Package.missingdeps(self.actionedappname):
-                print("Downloading dependencies " + percent + " %")
-                self.progresstextlabel.set_text(
-                    self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
-            else:
-                print("Controlling dependencies : " + percent + " %")
-                self.progresstextlabel.set_text(
-                    self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
+            # if self.Package.missingdeps(self.actionedappname):
+            #     print("Downloading dependencies " + percent + " %")
+            #     self.progresstextlabel.set_text(
+            #         self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
+            # else:
+            #     print("Controlling dependencies : " + percent + " %")
+            #     self.progresstextlabel.set_text(
+            #         self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
+            print("1/2 : " + percent + " %")
+            self.progresstextlabel.set_text(self.actionedappname + " : " + percent + " %")
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             print("Processing : " + percent)
@@ -1830,8 +1884,12 @@ class MainWindow(object):
 
         self.inprogress = False
         self.queue.pop(0)
+        self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
         if len(self.queue) > 0:
             self.actionPackage(self.queue[0])
+        else:
+            self.queuestack.set_visible_child_name("page0")
+            self.progresstextlabel.set_text("")
 
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()
@@ -1882,16 +1940,11 @@ class MainWindow(object):
             notification = Notify.Notification.new(self.actionedappname + " Removed")
         else:
             notification = Notify.Notification.new(self.actionedappname + " Installed")
-        try:
-            pixbuf = Gtk.IconTheme.get_default().load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
-        except:
-            try:
-                pixbuf = self.parduspixbuf.load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
-            except:
-                try:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96, Gtk.IconLookupFlags(16))
-                except:
-                    pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96, Gtk.IconLookupFlags(16))
+
+        if self.UserSettings.config_usi:
+            pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
+        else:
+            pixbuf = self.getServerAppIcon(self.actionedappname, 96)
 
         notification.set_icon_from_pixbuf(pixbuf)
         notification.show()
