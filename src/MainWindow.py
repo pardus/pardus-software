@@ -1597,6 +1597,30 @@ class MainWindow(object):
             self.inprogress = True
             print("action " + self.appname)
 
+    def on_raction_clicked(self, button):
+
+        self.raction.set_sensitive(False)
+
+        self.queue.append(self.appname)
+        self.queuestack.set_visible_child_name("page1")
+        appicon = Gtk.Image.new()
+        if self.UserSettings.config_usi:
+            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
+        else:
+            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname))
+        label = Gtk.Label.new()
+        label.set_text(self.appname)
+        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+        box.pack_start(appicon, False, True, 0)
+        box.pack_start(label, False, True, 0)
+        self.QueueListBox.add(box)
+        self.QueueListBox.show_all()
+
+        if not self.inprogress:
+            self.actionPackage(self.appname)
+            self.inprogress = True
+            print("action " + self.appname)
+
     def on_topbutton1_clicked(self, button):
         if self.Server.connection and self.Server.app_scode == 200 and self.Server.cat_scode == 200:
             self.searchstack.set_visible_child_name("page0")
@@ -1727,25 +1751,49 @@ class MainWindow(object):
 
         iter = self.searchstore.get_iter(path)
         value = self.searchstore.get_value(iter, 0)
+        print(value)
 
-        if self.Package.isinstalled(value):
-            if self.raction.get_style_context().has_class("suggested-action"):
-                self.raction.get_style_context().remove_class("suggested-action")
-            self.raction.get_style_context().add_class("destructive-action")
-            self.raction.set_label(" Uninstall")
-            self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+        self.repoappvalue = value
+        self.appname = value
+        isinstalled = self.Package.isinstalled(self.appname)
+
+        if isinstalled is not None:
+            self.raction.set_sensitive(True)
+            if isinstalled:
+                if self.raction.get_style_context().has_class("suggested-action"):
+                    self.raction.get_style_context().remove_class("suggested-action")
+                self.raction.get_style_context().add_class("destructive-action")
+                self.raction.set_label(" Uninstall")
+                self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+            else:
+                if self.raction.get_style_context().has_class("destructive-action"):
+                    self.raction.get_style_context().remove_class("destructive-action")
+                self.raction.get_style_context().add_class("suggested-action")
+                self.raction.set_label(" Install")
+                self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
         else:
+            self.raction.set_sensitive(False)
             if self.raction.get_style_context().has_class("destructive-action"):
                 self.raction.get_style_context().remove_class("destructive-action")
-            self.raction.get_style_context().add_class("suggested-action")
-            self.raction.set_label(" Install")
-            self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+            if self.raction.get_style_context().has_class("suggested-action"):
+                self.raction.get_style_context().remove_class("suggested-action")
+
+            self.raction.set_label(" Not Found")
+            self.raction.set_image(Gtk.Image.new_from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON))
+
+        if len(self.queue) > 0:
+            for qa in self.queue:
+                if self.appname == qa:
+                    if isinstalled:
+                        self.raction.set_label(" Removing")
+                    else:
+                        self.raction.set_label(" Installing")
+                    self.raction.set_sensitive(False)
 
         self.rbotstack.set_visible_child_name("page1")
         self.rtitle.set_text(self.Package.summary(value))
         self.rdetail.set_text(self.Package.description(value, False))
 
-        print(value)
 
     def on_topsearchbutton_toggled(self, button):
         if self.topsearchbutton.get_active():
@@ -1833,8 +1881,10 @@ class MainWindow(object):
         self.topspinner.start()
 
         self.dActionButton.set_sensitive(False)
-
         self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
+
+        self.raction.set_sensitive(False)
+        self.raction.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
 
         self.actionedappname = appname
 
@@ -1842,10 +1892,12 @@ class MainWindow(object):
 
         if self.isinstalled:
             self.dActionButton.set_label(" Removing")
+            self.raction.set_label(" Removing")
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
                        self.actionedappname]
         else:
             self.dActionButton.set_label(" Installing")
+            self.raction.set_label(" Installing")
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedappname]
 
@@ -1910,6 +1962,7 @@ class MainWindow(object):
             self.controlView()
 
         self.dActionButton.set_sensitive(True)
+        self.raction.set_sensitive(True)
         self.topspinner.stop()
         print(status)
 
@@ -1931,22 +1984,6 @@ class MainWindow(object):
             prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
             print("in controlView " + appname)
             if appname == self.actionedappname:
-                # try:
-                #     pixbuf = Gtk.IconTheme.get_default().load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
-                # except:
-                #     try:
-                #         pixbuf = self.parduspixbuf.load_icon(self.actionedappname, 96, Gtk.IconLookupFlags(16))
-                #     except:
-                #         try:
-                #             pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
-                #                                                            Gtk.IconLookupFlags(16))
-                #         except:
-                #             pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
-                #                                                            Gtk.IconLookupFlags(16))
-                #
-                # self.dIcon.set_from_pixbuf(pixbuf)
-                #
-                # self.dName.set_markup("<b> " + prettyname + "</b>")
 
                 if self.Package.isinstalled(self.actionedappname):
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
@@ -1960,6 +1997,21 @@ class MainWindow(object):
                     self.dActionButton.get_style_context().add_class("suggested-action")
                     self.dActionButton.set_label(" Install")
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+        if self.repoappvalue:
+            if self.repoappvalue == self.actionedappname:
+                if self.Package.isinstalled(self.actionedappname):
+                    if self.raction.get_style_context().has_class("suggested-action"):
+                        self.raction.get_style_context().remove_class("suggested-action")
+                    self.raction.get_style_context().add_class("destructive-action")
+                    self.raction.set_label(" Uninstall")
+                    self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+                else:
+                    if self.raction.get_style_context().has_class("destructive-action"):
+                        self.raction.get_style_context().remove_class("destructive-action")
+                    self.raction.get_style_context().add_class("suggested-action")
+                    self.raction.set_label(" Install")
+                    self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
     def notify(self):
 
