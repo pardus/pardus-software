@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Pardus Software Center
+Name[tr]=Pardus Yazılım Merkezi
+GenericName=Software Center
+GenericName[tr]=Yazılım Merkezi
+Comment=Add, remove, update applications
+Comment[tr]=Uygulamaları yükleyin, kaldırın, güncelleyin
+Exec=pardus-software
+Icon=/usr/share/pardus/pardus-software/images/icon.svg
+Terminal=false
+Type=Application
+Categories=GTK;System;PackageManager;
+StartupNotify=true
+Keywords=install;uninstall;package;application;update;upgrade;software;store;
+Keywords[tr]=yükle;kaldır;paket;uygulama;güncelleştirme;yükseltme;yazılım;mağaza;

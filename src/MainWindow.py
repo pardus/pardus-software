@@ -307,6 +307,14 @@ class MainWindow(object):
         self.GnomeCommentListBox = self.GtkBuilder.get_object("GnomeCommentListBox")
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
+        # Set version
+        # If not getted from __version__ file then accept version in MainWindow.glade file
+        try:
+            version = open(os.path.dirname(os.path.abspath(__file__)) + "/__version__").readline()
+            self.aboutdialog.set_version(version)
+        except:
+            pass
+
         self.MainWindow.show_all()
 
         p1 = threading.Thread(target=self.worker)
