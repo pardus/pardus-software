@@ -11,12 +11,12 @@ import threading
 import netifaces
 import psutil
 from datetime import datetime
-from locale import getlocale
 import requests
 import gi
 
 import locale
 from locale import gettext as _
+from locale import getlocale
 
 locale.bindtextdomain('pardus-software', '/usr/share/locale')
 locale.textdomain('pardus-software')
@@ -50,7 +50,8 @@ class MainWindow(object):
             print("Error reading GUI file: " + self.MainWindowUIFileName)
             raise
 
-        self.locale = self.getLocale()
+        # self.locale = self.getLocale()
+        self.locale = "tr"
         print(self.locale)
 
         self.parduspixbuf = Gtk.IconTheme.new()
@@ -219,18 +220,18 @@ class MainWindow(object):
 
         self.menu1 = self.GtkBuilder.get_object("menu1")
         self.menu1.set_use_stock(False)
-        self.menu1.set_label("Preferences")
+        self.menu1.set_label(_("Preferences"))
         self.menu1.set_image(Gtk.Image.new_from_icon_name('preferences-other-symbolic', Gtk.IconSize.BUTTON))
 
         self.menu2 = self.GtkBuilder.get_object("menu2")
         self.menu2.set_use_stock(False)
-        self.menu2.set_label("My Applications")
+        self.menu2.set_label(_("My Applications"))
         self.menu2.set_image(Gtk.Image.new_from_icon_name('dialog-question-symbolic', Gtk.IconSize.BUTTON))
         self.menu2.set_sensitive(False)
 
         self.menu3 = self.GtkBuilder.get_object("menu3")
         self.menu3.set_use_stock(False)
-        self.menu3.set_label("About")
+        self.menu3.set_label(_("About"))
         self.menu3.set_image(Gtk.Image.new_from_icon_name('dialog-information-symbolic', Gtk.IconSize.BUTTON))
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
@@ -465,19 +466,19 @@ class MainWindow(object):
 
         renderer_toggle = Gtk.CellRendererToggle()
         renderer_toggle.connect("toggled", self.on_cell_toggled)
-        column_toggle = Gtk.TreeViewColumn("Status", renderer_toggle, active=3)
+        column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=3)
         column_toggle.set_resizable(True)
         column_toggle.set_sort_column_id(3)
         self.RepoAppsTreeView.append_column(column_toggle)
 
         renderer = Gtk.CellRendererText()
-        column_name = Gtk.TreeViewColumn("Name", renderer, text=0)
+        column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=0)
         column_name.set_resizable(True)
         column_name.set_sort_column_id(0)
         self.RepoAppsTreeView.append_column(column_name)
 
         renderer = Gtk.CellRendererText()
-        column_cat = Gtk.TreeViewColumn("Section", renderer, text=1)
+        column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=1)
         column_cat.set_resizable(True)
         column_cat.set_sort_column_id(1)
         self.RepoAppsTreeView.append_column(column_cat)
@@ -490,7 +491,7 @@ class MainWindow(object):
         # self.RepoAppsTreeView.append_column(column_btn)
 
         renderer = Gtk.CellRendererText()
-        column_desc = Gtk.TreeViewColumn("Description", renderer, text=5)
+        column_desc = Gtk.TreeViewColumn(_("Description"), renderer, text=5)
         column_desc.set_resizable(True)
         column_desc.set_sort_column_id(5)
         self.RepoAppsTreeView.append_column(column_desc)
@@ -1088,21 +1089,21 @@ class MainWindow(object):
         if status:
             print(response)
             self.dtDownload.set_markup(
-                "{} {}".format(response["details"]["download"]["count"], "Download"))
+                "{} {}".format(response["details"]["download"]["count"], _("Download")))
 
             self.dtTotalRating.set_markup(
-                "{} {}".format(response["details"]["rate"]["count"], "Ratings"))
+                "{} {}".format(response["details"]["rate"]["count"], _("Ratings")))
 
             self.dtAverageRating.set_markup(
                 "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
 
             if response["details"]["rate"]["individual"] == 0:
-                self.dtUserRating.set_markup("{} {}".format("Your Rate", "is None"))
+                self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), _("is None")))
                 self.commentstack.set_visible_child_name("sendcomment")
                 self.wpcgetnameLabel.set_text("")
                 self.wpcgetcommentLabel.set_text("")
             else:
-                self.dtUserRating.set_markup("{} {}".format("Your Rate", response["details"]["rate"]["individual"]))
+                self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), response["details"]["rate"]["individual"]))
                 self.commentstack.set_visible_child_name("alreadysent")
                 self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
                 self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-04 18:31+0300\n"
-"PO-Revision-Date: 2021-06-04 18:51+0300\n"
+"POT-Creation-Date: 2021-06-04 19:22+0300\n"
+"PO-Revision-Date: 2021-06-04 19:24+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
 "Language: tr\n"
@@ -180,7 +180,7 @@ msgstr "Hepsini göster"
 msgid "Description ..."
 msgstr "Açıklama ..."
 
-#: ui/MainWindow.glade:1936
+#: ui/MainWindow.glade:1936 src/MainWindow.py:494
 msgid "Description"
 msgstr "Açıklama"
 
@@ -216,7 +216,7 @@ msgstr "Pardus Oylamaları"
 msgid "Gnome Software Ratings"
 msgstr "Gnome Yazılım Oylamaları"
 
-#: ui/MainWindow.glade:3253
+#: ui/MainWindow.glade:3253 src/MainWindow.py:1095
 msgid "Ratings"
 msgstr "Oylamalar"
 
@@ -288,7 +288,7 @@ msgstr "Sistem Simgelerini Kullan"
 msgid "Enable Animations"
 msgstr "Animasyonları Etkinleştir"
 
-#: ui/MainWindow.glade:3924 src/MainWindow.py:1917
+#: ui/MainWindow.glade:3924 src/MainWindow.py:1919
 msgid "Apply"
 msgstr "Uygula"
 
@@ -330,128 +330,164 @@ msgstr "Uygulama ara"
 
 #: ui/MainWindow.glade:4378
 msgid "Search an app in repo"
-msgstr "Repoda uygulama ara"
+msgstr "Depoda uygulama ara"
 
 #: ui/MainWindow.glade:4390
-msgid "Ara"
-msgstr ""
+msgid "Search"
+msgstr "Ara"
 
 #: ui/MainWindow.glade:4442 ui/MainWindow.glade:4457
 msgid "page2"
 msgstr ""
 
-#: src/MainWindow.py:384
-msgid "Could not connect to server."
-msgstr ""
+#: src/MainWindow.py:223
+msgid "Preferences"
+msgstr "Ayarlar"
 
-#: src/MainWindow.py:384
+#: src/MainWindow.py:228
+msgid "My Applications"
+msgstr "Uygulamalarım"
+
+#: src/MainWindow.py:234
+msgid "About"
+msgstr "Hakkında"
+
+#: src/MainWindow.py:385
+msgid "Could not connect to server."
+msgstr "Sunucuya bağlanılamadı."
+
+#: src/MainWindow.py:385
 msgid "Error Code (app)"
 msgstr "Hata Kodu (app)"
 
-#: src/MainWindow.py:385
+#: src/MainWindow.py:386
 msgid "Error Code (cat)"
 msgstr "Hata Kodu (cat)"
 
-#: src/MainWindow.py:394
+#: src/MainWindow.py:396
 msgid "Updating Cache"
 msgstr "Önbellek güncelleniyor"
 
-#: src/MainWindow.py:434
+#: src/MainWindow.py:436
 msgid "Setting Repo Categories"
 msgstr "Depo kategorileri ayarlanıyor"
 
-#: src/MainWindow.py:452
+#: src/MainWindow.py:454
 msgid "Setting Repo Apps"
 msgstr "Depo uygulamaları ayarlanıyor"
 
-#: src/MainWindow.py:527
+#: src/MainWindow.py:469
+msgid "Status"
+msgstr "Durum"
+
+#: src/MainWindow.py:475
+msgid "Name"
+msgstr "Paket"
+
+#: src/MainWindow.py:481
+msgid "Section"
+msgstr "Bölüm"
+
+#: src/MainWindow.py:529
 msgid "Getting applications from server"
 msgstr "Sunucudan uygulamalar alınıyor"
 
-#: src/MainWindow.py:532
+#: src/MainWindow.py:534
 msgid "Getting ratings from gnome odrs"
 msgstr "Gnome odrs sunucusundan puanlamalar alınıyor"
 
-#: src/MainWindow.py:539
+#: src/MainWindow.py:541
 msgid "Setting applications"
 msgstr "Uygulamalar ayarlanıyor"
 
-#: src/MainWindow.py:884
+#: src/MainWindow.py:886
 msgid "Non-Free"
 msgstr "Özgür Değil"
 
-#: src/MainWindow.py:886
+#: src/MainWindow.py:888
 msgid "Open Source"
 msgstr "Açık Kaynak"
 
-#: src/MainWindow.py:897 src/MainWindow.py:1463 src/MainWindow.py:1820
-#: src/MainWindow.py:2045 src/MainWindow.py:2060
+#: src/MainWindow.py:899 src/MainWindow.py:1465 src/MainWindow.py:1822
+#: src/MainWindow.py:2047 src/MainWindow.py:2062
 msgid " Uninstall"
 msgstr " Kaldır"
 
-#: src/MainWindow.py:903 src/MainWindow.py:1469 src/MainWindow.py:1826
-#: src/MainWindow.py:2051 src/MainWindow.py:2066
+#: src/MainWindow.py:905 src/MainWindow.py:1471 src/MainWindow.py:1828
+#: src/MainWindow.py:2053 src/MainWindow.py:2068
 msgid " Install"
 msgstr " Yükle"
 
-#: src/MainWindow.py:910 src/MainWindow.py:1842 src/MainWindow.py:1947
-#: src/MainWindow.py:1948
+#: src/MainWindow.py:912 src/MainWindow.py:1844 src/MainWindow.py:1949
+#: src/MainWindow.py:1950
 msgid " Removing"
 msgstr " Kaldırılıyor"
 
-#: src/MainWindow.py:912 src/MainWindow.py:1844 src/MainWindow.py:1952
-#: src/MainWindow.py:1953
+#: src/MainWindow.py:914 src/MainWindow.py:1846 src/MainWindow.py:1954
+#: src/MainWindow.py:1955
 msgid " Installing"
 msgstr " Yükleniyor"
 
-#: src/MainWindow.py:922 src/MainWindow.py:1835
+#: src/MainWindow.py:924 src/MainWindow.py:1837
 msgid " Not Found"
 msgstr " Bulunamadı"
 
-#: src/MainWindow.py:1907
+#: src/MainWindow.py:1092
+msgid "Download"
+msgstr "İndirme"
+
+#: src/MainWindow.py:1101 src/MainWindow.py:1106
+msgid "Your Rate"
+msgstr "Oyunuz"
+
+#: src/MainWindow.py:1101
+msgid "is None"
+msgstr "Yok"
+
+#: src/MainWindow.py:1909
 msgid "Applied"
 msgstr "Uygulandı"
 
-#: src/MainWindow.py:1908
+#: src/MainWindow.py:1910
 msgid "Changes applied successfully "
 msgstr "Değişiklikler başarıyla uygulandı"
 
-#: src/MainWindow.py:1912 src/MainWindow.py:1927
+#: src/MainWindow.py:1914 src/MainWindow.py:1929
 msgid "Error"
 msgstr "Hata"
 
-#: src/MainWindow.py:1923
+#: src/MainWindow.py:1925
 msgid "Cleared"
 msgstr "Temizlendi"
 
-#: src/MainWindow.py:1924
+#: src/MainWindow.py:1926
 msgid "Cache files cleared, please close and reopen the application"
 msgstr "Önbellek dosyaları temizlendi, lütfen uygulamayı kapatıp yeniden açın"
 
-#: src/MainWindow.py:1998
+#: src/MainWindow.py:2000
 msgid "Removing"
 msgstr "Kaldırılıyor"
 
-#: src/MainWindow.py:2000
+#: src/MainWindow.py:2002
 msgid "Installing"
 msgstr "Yükleniyor"
 
-#: src/MainWindow.py:2007
+#: src/MainWindow.py:2009
 msgid " | Removed : 100 %"
 msgstr " | Kaldırıldı : 100 %"
 
-#: src/MainWindow.py:2009
+#: src/MainWindow.py:2011
 msgid " | Installed : 100 %"
 msgstr " | Yüklendi : 100 %"
 
-#: src/MainWindow.py:2014
+#: src/MainWindow.py:2016
 msgid " |  Not Completed"
 msgstr " |  Tamamlanamadı"
 
-#: src/MainWindow.py:2076
+#: src/MainWindow.py:2078
 msgid " Removed"
 msgstr " Kaldırıldı"
 
-#: src/MainWindow.py:2078
+#: src/MainWindow.py:2080
 msgid " Installed"
 msgstr " Yüklendi"
