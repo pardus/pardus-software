@@ -12,6 +12,7 @@ import netifaces
 import psutil
 from datetime import datetime
 from locale import getlocale
+import requests
 import gi
 
 gi.require_version("GLib", "2.0")
@@ -112,6 +113,7 @@ class MainWindow(object):
         self.homestack = self.GtkBuilder.get_object("homestack")
         self.searchstack = self.GtkBuilder.get_object("searchstack")
         self.queuestack = self.GtkBuilder.get_object("queuestack")
+        self.commentstack = self.GtkBuilder.get_object("commentstack")
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
@@ -171,6 +173,11 @@ class MainWindow(object):
         self.wpcComment = self.GtkBuilder.get_object("wpcComment")
         self.wpcAuthor = self.GtkBuilder.get_object("wpcAuthor")
         self.wpcSendButton = self.GtkBuilder.get_object("wpcSendButton")
+        self.wpcgetnameLabel = self.GtkBuilder.get_object("wpcgetnameLabel")
+        self.wpcgetcommentLabel = self.GtkBuilder.get_object("wpcgetcommentLabel")
+        self.wpcresultLabel = self.GtkBuilder.get_object("wpcresultLabel")
+        self.wpcformcontrolLabel = self.GtkBuilder.get_object("wpcformcontrolLabel")
+        self.wpcstar = 0
 
         self.raction = self.GtkBuilder.get_object("raction")
         self.rtitle = self.GtkBuilder.get_object("rtitle")
@@ -248,6 +255,7 @@ class MainWindow(object):
             self.RepoCurrentCategory = "all"
 
         self.useDynamicListStore = False
+        self.repoappvalue = None
 
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
@@ -329,7 +337,7 @@ class MainWindow(object):
         try:
             locale = getlocale()[0].split("_")[0]
             if locale != "tr" and locale != "en":
-                locale ="en"
+                locale = "en"
         except Exception as e:
             print(str(e))
             locale = "en"
@@ -569,7 +577,7 @@ class MainWindow(object):
             else:
                 self.allcats = [{"name": "all", "icon": "all"}]
             for cat in self.Server.catlist:
-                self.allcats.append({"name": cat[self.locale], "icon":cat["en"]})
+                self.allcats.append({"name": cat[self.locale], "icon": cat["en"]})
             self.categories = sorted(self.allcats, key=lambda x: x["name"])
 
             if self.UserSettings.config_usi:
@@ -731,7 +739,6 @@ class MainWindow(object):
         self.MainWindow.destroy()
 
     def setAnimations(self):
-        print("ANİMATİONS ::: {}".format(self.UserSettings.config_anim))
         if self.UserSettings.config_anim:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.mainstack.set_transition_duration(200)
@@ -745,6 +752,9 @@ class MainWindow(object):
             self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.rbotstack.set_transition_duration(200)
 
+            self.commentstack.set_transition_type(Gtk.StackTransitionType.OVER_LEFT_RIGHT)
+            self.commentstack.set_transition_duration(200)
+
         else:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.mainstack.set_transition_duration(0)
@@ -755,8 +765,8 @@ class MainWindow(object):
             self.searchstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.searchstack.set_transition_duration(0)
 
-            self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
-            self.rbotstack.set_transition_duration(0)
+            self.commentstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.commentstack.set_transition_duration(0)
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
@@ -789,6 +799,8 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.descSw.set_state(False)
         self.setWpcStar(0)
+        self.wpcstar = 0
+        self.wpcformcontrolLabel.set_text("")
 
         selected_items = iconview.get_selected_items()
 
@@ -1080,11 +1092,15 @@ class MainWindow(object):
                 "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
 
             if response["details"]["rate"]["individual"] == 0:
-                self.dtUserRating.set_markup(
-                    "{} {}".format("Your Rate", "is None"))
+                self.dtUserRating.set_markup("{} {}".format("Your Rate", "is None"))
+                self.commentstack.set_visible_child_name("sendcomment")
+                self.wpcgetnameLabel.set_text("")
+                self.wpcgetcommentLabel.set_text("")
             else:
-                self.dtUserRating.set_markup(
-                    "{} {}".format("Your Rate", response["details"]["rate"]["individual"]))
+                self.dtUserRating.set_markup("{} {}".format("Your Rate", response["details"]["rate"]["individual"]))
+                self.commentstack.set_visible_child_name("alreadysent")
+                self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
+                self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
 
             self.setAppStar(response["details"]["rate"]["average"])
 
@@ -1305,21 +1321,54 @@ class MainWindow(object):
 
     def on_wpcStarE1_button_press_event(self, widget, event):
         self.setWpcStar(1)
+        self.wpcstar = 1
 
     def on_wpcStarE2_button_press_event(self, widget, event):
         self.setWpcStar(2)
+        self.wpcstar = 2
 
     def on_wpcStarE3_button_press_event(self, widget, event):
         self.setWpcStar(3)
+        self.wpcstar = 3
 
     def on_wpcStarE4_button_press_event(self, widget, event):
         self.setWpcStar(4)
+        self.wpcstar = 4
 
     def on_wpcStarE5_button_press_event(self, widget, event):
         self.setWpcStar(5)
+        self.wpcstar = 5
 
     def on_wpcSendButton_clicked(self, button):
         print("on_wpcSendButton_clicked")
+
+        author = self.wpcAuthor.get_text().strip()
+        comment = self.wpcComment.get_text().strip()
+        value = self.wpcstar
+        status = True
+
+        if value == 0 or comment == "" or author == "":
+            self.wpcformcontrolLabel.set_text("Cannot be null")
+        else:
+            try:
+                sendrequest = requests.post(self.Server.serverurl + self.Server.serversendrate,
+                                            json={"mac": self.mac, "author": author,
+                                                  "comment": comment, "value": value, "app": self.appname})
+            except Exception as e:
+                status = False
+                self.commentstack.set_visible_child_name("sendresult")
+                self.wpcresultLabel.set_text(str(e))
+
+            if status:
+                print(sendrequest.json())
+                self.commentstack.set_visible_child_name("sendresult")
+                if sendrequest.status_code == 200:
+                    self.wpcresultLabel.set_text(
+                        "Your comment has been sent successfully. It will be published after approval.")
+                else:
+                    self.wpcresultLabel.set_text("Error")
+            else:
+                self.wpcresultLabel.set_text("Error")
 
     def setWpcStar(self, rate):
 
@@ -1490,7 +1539,8 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
 
-        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon = self.get_category_name(self.PardusCurrentCategory)
+        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon = self.get_category_name(
+            self.PardusCurrentCategory)
         print("home category selected " + str(self.PardusCurrentCategory) + " " + self.PardusCurrentCategoryString)
 
         if self.UserSettings.config_usi:
@@ -1793,7 +1843,6 @@ class MainWindow(object):
         self.rbotstack.set_visible_child_name("page1")
         self.rtitle.set_text(self.Package.summary(value))
         self.rdetail.set_text(self.Package.description(value, False))
-
 
     def on_topsearchbutton_toggled(self, button):
         if self.topsearchbutton.get_active():

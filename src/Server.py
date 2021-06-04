@@ -18,6 +18,7 @@ class Server(object):
         self.serverapps = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
         self.serverhomepage = "/api/v2/homepage"
+        self.serversendrate = "/api/v2/rate"
         self.serverfiles = "/files/"
         self.serverappicons = "appicons"
         self.servercaticons = "categoryicons"
