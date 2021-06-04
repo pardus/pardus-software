@@ -15,6 +15,12 @@ from locale import getlocale
 import requests
 import gi
 
+import locale
+from locale import gettext as _
+
+locale.bindtextdomain('pardus-software', '/usr/share/locale')
+locale.textdomain('pardus-software')
+
 gi.require_version("GLib", "2.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Notify", "0.7")
@@ -375,8 +381,9 @@ class MainWindow(object):
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
-                "<b>{}\n{} : {}\n{} : {}</b>".format("Could not connect to server.", "Error Code (app)",
-                                                     self.Server.app_scode, "Error Code (cat)", self.Server.cat_scode))
+                "<b>{}\n{} : {}\n{} : {}</b>".format(_("Could not connect to server."), _("Error Code (app)"),
+                                                     self.Server.app_scode, _("Error Code (cat)"),
+                                                     self.Server.cat_scode))
         self.splashspinner.stop()
         self.splashbarstatus = False
         self.splashlabel.set_text("")
@@ -385,7 +392,7 @@ class MainWindow(object):
     def package(self):
         # self.splashspinner.start()
         self.splashbar.pulse()
-        self.splashlabel.set_markup("<b>Updating Cache</b>")
+        self.splashlabel.set_markup("<b>{}</b>".format(_("Updating Cache")))
         self.Package = Package()
 
         print("package completed")
@@ -414,12 +421,10 @@ class MainWindow(object):
         print("gnome comments completed")
 
     def on_dEventBox1_button_press_event(self, widget, event):
-        print("here")
         self.pop1.show_all()
         self.pop1.popup()
 
     def on_dEventBox2_button_press_event(self, widget, event):
-        print("here")
         self.pop2.show_all()
         self.pop2.popup()
 
@@ -427,7 +432,7 @@ class MainWindow(object):
         print("image press")
 
     def setRepoCategories(self):
-        self.splashlabel.set_markup("<b>Setting Repo Categories</b>")
+        self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Categories")))
         # for i in self.Package.sections:
         #     # row = Gtk.ListBoxRow.new()
         #     # self.RepoCategoryListBox.add(row)
@@ -445,7 +450,7 @@ class MainWindow(object):
         print("Repo Categories setted")
 
     def setRepoApps(self):
-        self.splashlabel.set_markup("<b>Setting Repo Apps</b>")
+        self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Apps")))
         print("Repo apps setting")
         # for app in self.Package.apps:
         #     appname = app['name']
@@ -520,19 +525,19 @@ class MainWindow(object):
 
     def server(self):
         self.splashbar.pulse()
-        self.splashlabel.set_markup("<b>Getting applications from server</b>")
+        self.splashlabel.set_markup("<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
         print("{} {}".format("server connection", self.Server.connection))
 
     def gnomeRatings(self):
-        self.splashlabel.set_markup("<b>Getting ratings from gnome odrs</b>")
+        self.splashlabel.set_markup("<b>{}</b>".format(_("Getting ratings from gnome odrs")))
         self.gnomeratings = self.Server.getGnomeRatings()
         if self.gnomeratings is not False:
             print("gnomeratings successful")
 
     def setPardusApps(self):
         if self.Server.connection:
-            self.splashlabel.set_markup("<b>Setting applications</b>")
+            self.splashlabel.set_markup("<b>{}</b>".format(_("Setting applications")))
 
             if self.UserSettings.config_usi:
                 print("User want to use system icons [app]")
@@ -877,9 +882,9 @@ class MainWindow(object):
                 size = self.Package.size(self.appname)
                 component = self.Package.component(self.appname)
                 if component == "non-free":
-                    type = "Non-Free"
+                    type = _("Non-Free")
                 else:
-                    type = "Open Source"
+                    type = _("Open Source")
 
                 self.dVersion.set_markup(version)
                 self.dSize.set_markup(size)
@@ -890,22 +895,22 @@ class MainWindow(object):
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
                         self.dActionButton.get_style_context().remove_class("suggested-action")
                     self.dActionButton.get_style_context().add_class("destructive-action")
-                    self.dActionButton.set_label(" Uninstall")
+                    self.dActionButton.set_label(_(" Uninstall"))
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
                 else:
                     if self.dActionButton.get_style_context().has_class("destructive-action"):
                         self.dActionButton.get_style_context().remove_class("destructive-action")
                     self.dActionButton.get_style_context().add_class("suggested-action")
-                    self.dActionButton.set_label(" Install")
+                    self.dActionButton.set_label(_(" Install"))
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
                 if len(self.queue) > 0:
                     for qa in self.queue:
                         if self.appname == qa:
                             if isinstalled:
-                                self.dActionButton.set_label(" Removing")
+                                self.dActionButton.set_label(_(" Removing"))
                             else:
-                                self.dActionButton.set_label(" Installing")
+                                self.dActionButton.set_label(_(" Installing"))
                             self.dActionButton.set_sensitive(False)
 
             else:
@@ -915,7 +920,7 @@ class MainWindow(object):
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
 
-                self.dActionButton.set_label(" Not Found")
+                self.dActionButton.set_label(_(" Not Found"))
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON))
 
             self.pixbuf1 = None
@@ -1456,13 +1461,13 @@ class MainWindow(object):
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
                 self.dActionButton.get_style_context().add_class("destructive-action")
-                self.dActionButton.set_label(" Uninstall")
+                self.dActionButton.set_label(_(" Uninstall"))
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
             else:
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
                     self.dActionButton.get_style_context().remove_class("destructive-action")
                 self.dActionButton.get_style_context().add_class("suggested-action")
-                self.dActionButton.set_label(" Install")
+                self.dActionButton.set_label(_(" Install"))
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
             print(self.Package.isinstalled(self.appname))
@@ -1813,13 +1818,13 @@ class MainWindow(object):
                 if self.raction.get_style_context().has_class("suggested-action"):
                     self.raction.get_style_context().remove_class("suggested-action")
                 self.raction.get_style_context().add_class("destructive-action")
-                self.raction.set_label(" Uninstall")
+                self.raction.set_label(_(" Uninstall"))
                 self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
             else:
                 if self.raction.get_style_context().has_class("destructive-action"):
                     self.raction.get_style_context().remove_class("destructive-action")
                 self.raction.get_style_context().add_class("suggested-action")
-                self.raction.set_label(" Install")
+                self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
         else:
             self.raction.set_sensitive(False)
@@ -1828,16 +1833,16 @@ class MainWindow(object):
             if self.raction.get_style_context().has_class("suggested-action"):
                 self.raction.get_style_context().remove_class("suggested-action")
 
-            self.raction.set_label(" Not Found")
+            self.raction.set_label(_(" Not Found"))
             self.raction.set_image(Gtk.Image.new_from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON))
 
         if len(self.queue) > 0:
             for qa in self.queue:
                 if self.appname == qa:
                     if isinstalled:
-                        self.raction.set_label(" Removing")
+                        self.raction.set_label(_(" Removing"))
                     else:
-                        self.raction.set_label(" Installing")
+                        self.raction.set_label(_(" Installing"))
                     self.raction.set_sensitive(False)
 
         self.rbotstack.set_visible_child_name("page1")
@@ -1900,27 +1905,27 @@ class MainWindow(object):
                 self.setEditorApps()
 
             self.prefapplybutton.set_sensitive(False)
-            self.prefapplybutton.set_label("Applied")
-            self.preflabel.set_text("Changes applied successfully ")
+            self.prefapplybutton.set_label(_("Applied"))
+            self.preflabel.set_text(_("Changes applied successfully "))
 
         except Exception as e:
             self.prefapplybutton.set_sensitive(True)
-            self.prefapplybutton.set_label("Error")
+            self.prefapplybutton.set_label(_("Error"))
             self.preflabel.set_text(str(e))
 
     def on_prefswitch_state_set(self, switch, state):
         self.prefapplybutton.set_sensitive(True)
-        self.prefapplybutton.set_label("Apply")
+        self.prefapplybutton.set_label(_("Apply"))
 
     def on_prefcachebutton_clicked(self, button):
         state, message = self.Server.deleteCache()
         if state:
             self.prefcachebutton.set_sensitive(False)
-            self.prefcachebutton.set_label("Cleared")
-            self.preflabel.set_text("Cache files cleared, please close and reopen the application")
+            self.prefcachebutton.set_label(_("Cleared"))
+            self.preflabel.set_text(_("Cache files cleared, please close and reopen the application"))
         else:
             self.prefcachebutton.set_sensitive(True)
-            self.prefcachebutton.set_label("Error")
+            self.prefcachebutton.set_label(_("Error"))
             self.preflabel.set_text(message)
 
     def actionPackage(self, appname):
@@ -1940,13 +1945,13 @@ class MainWindow(object):
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
 
         if self.isinstalled:
-            self.dActionButton.set_label(" Removing")
-            self.raction.set_label(" Removing")
+            self.dActionButton.set_label(_(" Removing"))
+            self.raction.set_label(_(" Removing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
                        self.actionedappname]
         else:
-            self.dActionButton.set_label(" Installing")
-            self.raction.set_label(" Installing")
+            self.dActionButton.set_label(_(" Installing"))
+            self.raction.set_label(_(" Installing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedappname]
 
@@ -1991,23 +1996,23 @@ class MainWindow(object):
             percent = line.split(":")[2].split(".")[0]
             print("Processing : " + percent)
             if self.isinstalled:
-                self.progresstextlabel.set_text(self.actionedappname + " | " + "Removing" + ": " + percent + " %")
+                self.progresstextlabel.set_text(self.actionedappname + " | " + _("Removing") + ": " + percent + " %")
             else:
-                self.progresstextlabel.set_text(self.actionedappname + " | " + "Installing" + ": " + percent + " %")
+                self.progresstextlabel.set_text(self.actionedappname + " | " + _("Installing") + ": " + percent + " %")
         return True
 
     def onProcessExit(self, pid, status):
         if status == 0:
 
             if self.isinstalled:
-                self.progresstextlabel.set_text(self.actionedappname + " | Removed : 100 %")
+                self.progresstextlabel.set_text(self.actionedappname + _(" | Removed : 100 %"))
             else:
-                self.progresstextlabel.set_text(self.actionedappname + " | Installed : 100 %")
+                self.progresstextlabel.set_text(self.actionedappname + _(" | Installed : 100 %"))
             self.Package.updatecache()
             self.controlView()
             self.notify()
         else:
-            self.progresstextlabel.set_text(self.actionedappname + " | " + " Not Completed")
+            self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
             self.controlView()
 
         self.dActionButton.set_sensitive(True)
@@ -2038,13 +2043,13 @@ class MainWindow(object):
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
                         self.dActionButton.get_style_context().remove_class("suggested-action")
                     self.dActionButton.get_style_context().add_class("destructive-action")
-                    self.dActionButton.set_label(" Uninstall")
+                    self.dActionButton.set_label(_(" Uninstall"))
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
                 else:
                     if self.dActionButton.get_style_context().has_class("destructive-action"):
                         self.dActionButton.get_style_context().remove_class("destructive-action")
                     self.dActionButton.get_style_context().add_class("suggested-action")
-                    self.dActionButton.set_label(" Install")
+                    self.dActionButton.set_label(_(" Install"))
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
         if self.repoappvalue:
@@ -2053,13 +2058,13 @@ class MainWindow(object):
                     if self.raction.get_style_context().has_class("suggested-action"):
                         self.raction.get_style_context().remove_class("suggested-action")
                     self.raction.get_style_context().add_class("destructive-action")
-                    self.raction.set_label(" Uninstall")
+                    self.raction.set_label(_(" Uninstall"))
                     self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
                 else:
                     if self.raction.get_style_context().has_class("destructive-action"):
                         self.raction.get_style_context().remove_class("destructive-action")
                     self.raction.get_style_context().add_class("suggested-action")
-                    self.raction.set_label(" Install")
+                    self.raction.set_label(_(" Install"))
                     self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
     def notify(self):
@@ -2069,9 +2074,9 @@ class MainWindow(object):
 
         Notify.init(self.actionedappname)
         if self.isinstalled:
-            notification = Notify.Notification.new(self.actionedappname + " Removed")
+            notification = Notify.Notification.new(self.actionedappname + _(" Removed"))
         else:
-            notification = Notify.Notification.new(self.actionedappname + " Installed")
+            notification = Notify.Notification.new(self.actionedappname + _(" Installed"))
 
         if self.UserSettings.config_usi:
             pixbuf = self.getSystemAppIcon(self.actionedappname, 96)

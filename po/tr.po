@@ -1,0 +1,457 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Fatih Altun <fatih.altun@pardus.org.tr>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-04 18:31+0300\n"
+"PO-Revision-Date: 2021-06-04 18:51+0300\n"
+"Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
+"Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Gtranslator 3.30.1\n"
+
+#: ui/MainWindow.glade:102 ui/MainWindow.glade:157
+msgid "Pardus Software Center"
+msgstr "Pardus Yazılım Merkezi"
+
+#: ui/MainWindow.glade:104
+msgid "© 2021 Pardus"
+msgstr ""
+
+#: ui/MainWindow.glade:105
+msgid "Add, remove, update applications"
+msgstr "Uygulamaları yükleyin, kaldırın, güncelleyin"
+
+#: ui/MainWindow.glade:107
+msgid "Website"
+msgstr ""
+
+#: ui/MainWindow.glade:420 ui/MainWindow.glade:636 ui/MainWindow.glade:3595
+#: ui/MainWindow.glade:3647 ui/MainWindow.glade:3677 ui/MainWindow.glade:3795
+#: ui/MainWindow.glade:4149 ui/MainWindow.glade:4227 ui/MainWindow.glade:4360
+msgid "page0"
+msgstr ""
+
+#: ui/MainWindow.glade:465
+msgid "Editor's Picks"
+msgstr "Editör'ün seçtikleri"
+
+#: ui/MainWindow.glade:509
+msgid "Categories"
+msgstr "Kategoriler"
+
+#: ui/MainWindow.glade:564
+msgid "Pardus Vitrin"
+msgstr ""
+
+#: ui/MainWindow.glade:623
+msgid "You can search for applications in repositories using search."
+msgstr "Aramayı kullanarak depolardaki uygulamaları arayabilirsiniz."
+
+#: ui/MainWindow.glade:652
+msgid "No package is selected."
+msgstr "Paket seçilmedi."
+
+#: ui/MainWindow.glade:671
+msgid "aa"
+msgstr ""
+
+#: ui/MainWindow.glade:680 ui/MainWindow.glade:895
+msgid "button"
+msgstr ""
+
+#: ui/MainWindow.glade:701 ui/MainWindow.glade:4060 ui/MainWindow.glade:4264
+#: ui/MainWindow.glade:4404
+msgid "page1"
+msgstr ""
+
+#: ui/MainWindow.glade:720
+msgid "Depo"
+msgstr ""
+
+#: ui/MainWindow.glade:771 ui/MainWindow.glade:1313 ui/MainWindow.glade:1351
+#: ui/MainWindow.glade:1389 ui/MainWindow.glade:1427 ui/MainWindow.glade:1488
+#: ui/MainWindow.glade:1527 ui/MainWindow.glade:1565
+msgid "None"
+msgstr ""
+
+#: ui/MainWindow.glade:787
+msgid "Show installed apps"
+msgstr "Yüklü uygulamaları göster"
+
+#: ui/MainWindow.glade:864
+msgid "page3"
+msgstr ""
+
+#: ui/MainWindow.glade:941
+msgid "appname"
+msgstr ""
+
+#: ui/MainWindow.glade:954
+msgid "section"
+msgstr ""
+
+#: ui/MainWindow.glade:969
+msgid "maintainer"
+msgstr ""
+
+#: ui/MainWindow.glade:1019
+msgid "0.2"
+msgstr ""
+
+#: ui/MainWindow.glade:1105
+msgid "<small>45 Ratings</small>"
+msgstr ""
+
+#: ui/MainWindow.glade:1118
+msgid "<small>|</small>"
+msgstr ""
+
+#: ui/MainWindow.glade:1131
+msgid "<small>Your Rate 3</small>"
+msgstr ""
+
+#: ui/MainWindow.glade:1169
+msgid "<small>45 Download</small>"
+msgstr ""
+
+#: ui/MainWindow.glade:1299
+msgid "Version"
+msgstr "Versiyon"
+
+#: ui/MainWindow.glade:1337
+msgid "Download Size"
+msgstr "İndirme boyutu"
+
+#: ui/MainWindow.glade:1375
+msgid "Type"
+msgstr "Tür"
+
+#: ui/MainWindow.glade:1413
+msgid "Category"
+msgstr "Kategori"
+
+#: ui/MainWindow.glade:1474
+msgid "License"
+msgstr "Lisans"
+
+#: ui/MainWindow.glade:1513
+msgid "Component"
+msgstr "Bileşen"
+
+#: ui/MainWindow.glade:1551
+msgid "Available Repositories"
+msgstr "Mevcut Depolar"
+
+#: ui/MainWindow.glade:1607
+msgid ""
+"<a title='https://www.pardus.org.tr' href='https://www.pardus.org."
+"tr'>Website</a>"
+msgstr ""
+
+#: ui/MainWindow.glade:1643
+msgid ""
+"<a title='fatih.altun@pardus.org.tr' href='mailto:fatih.altun@pardus.org."
+"tr'>E-Mail</a>"
+msgstr ""
+
+#: ui/MainWindow.glade:1702
+msgid "Details"
+msgstr "Detaylar"
+
+#: ui/MainWindow.glade:1827
+msgid "Images"
+msgstr "Resimler"
+
+#: ui/MainWindow.glade:1870
+msgid "Show all"
+msgstr "Hepsini göster"
+
+#: ui/MainWindow.glade:1907
+msgid "Description ..."
+msgstr "Açıklama ..."
+
+#: ui/MainWindow.glade:1936
+msgid "Description"
+msgstr "Açıklama"
+
+#: ui/MainWindow.glade:2022 ui/MainWindow.glade:2639
+msgid "<span font='21'><big><b>4.3</b></big></span>"
+msgstr ""
+
+#: ui/MainWindow.glade:2131 ui/MainWindow.glade:2748
+msgid "50"
+msgstr ""
+
+#: ui/MainWindow.glade:2241 ui/MainWindow.glade:2858
+msgid "30"
+msgstr ""
+
+#: ui/MainWindow.glade:2352 ui/MainWindow.glade:2969
+msgid "20"
+msgstr ""
+
+#: ui/MainWindow.glade:2462 ui/MainWindow.glade:3079
+msgid "10"
+msgstr ""
+
+#: ui/MainWindow.glade:2572 ui/MainWindow.glade:3189
+msgid "0"
+msgstr ""
+
+#: ui/MainWindow.glade:2603
+msgid "Pardus Ratings"
+msgstr "Pardus Oylamaları"
+
+#: ui/MainWindow.glade:3220
+msgid "Gnome Software Ratings"
+msgstr "Gnome Yazılım Oylamaları"
+
+#: ui/MainWindow.glade:3253
+msgid "Ratings"
+msgstr "Oylamalar"
+
+#: ui/MainWindow.glade:3311
+msgid "Pardus Comments"
+msgstr "Pardus Yorumları"
+
+#: ui/MainWindow.glade:3352
+msgid "Gnome Comments"
+msgstr "Gnome Yorumları"
+
+#: ui/MainWindow.glade:3482
+msgid "Choose star rating level"
+msgstr "Yıldız derecelendirme düzeyi seçin"
+
+#: ui/MainWindow.glade:3499
+msgid "Your Name :"
+msgstr "Adınız :"
+
+#: ui/MainWindow.glade:3513
+msgid "Write your name"
+msgstr "Adınızı yazınız"
+
+#: ui/MainWindow.glade:3537
+msgid "Your Comment :"
+msgstr "Yorumunuz :"
+
+#: ui/MainWindow.glade:3551
+msgid "Write your comment"
+msgstr "Yorumunuzu yazınız"
+
+#: ui/MainWindow.glade:3579
+msgid "Send"
+msgstr "Gönder"
+
+#: ui/MainWindow.glade:3610
+msgid "You have already posted a comment "
+msgstr "Zaten bir yorum gönderdiniz "
+
+#: ui/MainWindow.glade:3622
+msgid "Your Name"
+msgstr "Adınız"
+
+#: ui/MainWindow.glade:3635
+msgid "Your Comment"
+msgstr "Yorumunuz"
+
+#: ui/MainWindow.glade:3690
+msgid "Write Pardus Comment"
+msgstr "Pardus Yorumu Yaz"
+
+#: ui/MainWindow.glade:3716
+msgid "Comments"
+msgstr "Yorumlar"
+
+#: ui/MainWindow.glade:3764
+msgid "page4"
+msgstr ""
+
+#: ui/MainWindow.glade:3781
+msgid "Could not connect to the server"
+msgstr "Sunucuya bağlanılamadı"
+
+#: ui/MainWindow.glade:3827
+msgid "Use System Icons"
+msgstr "Sistem Simgelerini Kullan"
+
+#: ui/MainWindow.glade:3877
+msgid "Enable Animations"
+msgstr "Animasyonları Etkinleştir"
+
+#: ui/MainWindow.glade:3924 src/MainWindow.py:1917
+msgid "Apply"
+msgstr "Uygula"
+
+#: ui/MainWindow.glade:4018
+msgid "Clear Cache Files"
+msgstr "Önbellek Dosyalarını Temizle"
+
+#: ui/MainWindow.glade:4028
+msgid "Clear"
+msgstr "Temizle"
+
+#: ui/MainWindow.glade:4082
+msgid "Clear Queue"
+msgstr "Kuyruğu Temizle"
+
+#: ui/MainWindow.glade:4110
+msgid ""
+"You can delete applications from the queue by double-clicking the "
+"application in the second row of the queue or clicking clear queue button. "
+msgstr ""
+"Kuyruğun ikinci satırındaki uygulamaya çift tıklayarak veya kuyruğu temizle "
+"düğmesine tıklayarak uygulamaları kuyruktan silebilirsiniz. "
+
+#: ui/MainWindow.glade:4177
+msgid "Pardus"
+msgstr ""
+
+#: ui/MainWindow.glade:4190
+msgid "Repo"
+msgstr "Depo"
+
+#: ui/MainWindow.glade:4249
+msgid "Queue"
+msgstr "Kuyruk"
+
+#: ui/MainWindow.glade:4353
+msgid "Search an app"
+msgstr "Uygulama ara"
+
+#: ui/MainWindow.glade:4378
+msgid "Search an app in repo"
+msgstr "Repoda uygulama ara"
+
+#: ui/MainWindow.glade:4390
+msgid "Ara"
+msgstr ""
+
+#: ui/MainWindow.glade:4442 ui/MainWindow.glade:4457
+msgid "page2"
+msgstr ""
+
+#: src/MainWindow.py:384
+msgid "Could not connect to server."
+msgstr ""
+
+#: src/MainWindow.py:384
+msgid "Error Code (app)"
+msgstr "Hata Kodu (app)"
+
+#: src/MainWindow.py:385
+msgid "Error Code (cat)"
+msgstr "Hata Kodu (cat)"
+
+#: src/MainWindow.py:394
+msgid "Updating Cache"
+msgstr "Önbellek güncelleniyor"
+
+#: src/MainWindow.py:434
+msgid "Setting Repo Categories"
+msgstr "Depo kategorileri ayarlanıyor"
+
+#: src/MainWindow.py:452
+msgid "Setting Repo Apps"
+msgstr "Depo uygulamaları ayarlanıyor"
+
+#: src/MainWindow.py:527
+msgid "Getting applications from server"
+msgstr "Sunucudan uygulamalar alınıyor"
+
+#: src/MainWindow.py:532
+msgid "Getting ratings from gnome odrs"
+msgstr "Gnome odrs sunucusundan puanlamalar alınıyor"
+
+#: src/MainWindow.py:539
+msgid "Setting applications"
+msgstr "Uygulamalar ayarlanıyor"
+
+#: src/MainWindow.py:884
+msgid "Non-Free"
+msgstr "Özgür Değil"
+
+#: src/MainWindow.py:886
+msgid "Open Source"
+msgstr "Açık Kaynak"
+
+#: src/MainWindow.py:897 src/MainWindow.py:1463 src/MainWindow.py:1820
+#: src/MainWindow.py:2045 src/MainWindow.py:2060
+msgid " Uninstall"
+msgstr " Kaldır"
+
+#: src/MainWindow.py:903 src/MainWindow.py:1469 src/MainWindow.py:1826
+#: src/MainWindow.py:2051 src/MainWindow.py:2066
+msgid " Install"
+msgstr " Yükle"
+
+#: src/MainWindow.py:910 src/MainWindow.py:1842 src/MainWindow.py:1947
+#: src/MainWindow.py:1948
+msgid " Removing"
+msgstr " Kaldırılıyor"
+
+#: src/MainWindow.py:912 src/MainWindow.py:1844 src/MainWindow.py:1952
+#: src/MainWindow.py:1953
+msgid " Installing"
+msgstr " Yükleniyor"
+
+#: src/MainWindow.py:922 src/MainWindow.py:1835
+msgid " Not Found"
+msgstr " Bulunamadı"
+
+#: src/MainWindow.py:1907
+msgid "Applied"
+msgstr "Uygulandı"
+
+#: src/MainWindow.py:1908
+msgid "Changes applied successfully "
+msgstr "Değişiklikler başarıyla uygulandı"
+
+#: src/MainWindow.py:1912 src/MainWindow.py:1927
+msgid "Error"
+msgstr "Hata"
+
+#: src/MainWindow.py:1923
+msgid "Cleared"
+msgstr "Temizlendi"
+
+#: src/MainWindow.py:1924
+msgid "Cache files cleared, please close and reopen the application"
+msgstr "Önbellek dosyaları temizlendi, lütfen uygulamayı kapatıp yeniden açın"
+
+#: src/MainWindow.py:1998
+msgid "Removing"
+msgstr "Kaldırılıyor"
+
+#: src/MainWindow.py:2000
+msgid "Installing"
+msgstr "Yükleniyor"
+
+#: src/MainWindow.py:2007
+msgid " | Removed : 100 %"
+msgstr " | Kaldırıldı : 100 %"
+
+#: src/MainWindow.py:2009
+msgid " | Installed : 100 %"
+msgstr " | Yüklendi : 100 %"
+
+#: src/MainWindow.py:2014
+msgid " |  Not Completed"
+msgstr " |  Tamamlanamadı"
+
+#: src/MainWindow.py:2076
+msgid " Removed"
+msgstr " Kaldırıldı"
+
+#: src/MainWindow.py:2078
+msgid " Installed"
+msgstr " Yüklendi"
