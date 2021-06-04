@@ -14,7 +14,7 @@ class UserSettings(object):
     def __init__(self):
 
         userhome = str(Path.home())
-        self.configdir = userhome + "/.config/pardus-software-center/"
+        self.configdir = userhome + "/.config/pardus-software/"
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser()
         self.config_usi = None

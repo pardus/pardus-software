@@ -6,7 +6,7 @@
   <vendor>Pardus Developers</vendor>
   <vendor_url>https://www.pardus.org.tr</vendor_url>
 
-  <action id="tr.org.pardus.pkexec.pardus-software-center">
+  <action id="tr.org.pardus.pkexec.pardus-software">
     <description>Pardus Software Center Authentication</description>
     <message>Authentication is required for Pardus Software Center</message>
     <message xml:lang="tr">Pardus Yazılım Merkezi için yetkilendirme gerekiyor</message>
@@ -16,7 +16,7 @@
       <allow_inactive>auth_admin</allow_inactive>
       <allow_active>auth_admin_keep</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/share/pardus/pardus-software-center/src/Actions.py</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/share/pardus/pardus-software/src/Actions.py</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
 

@@ -26,8 +26,8 @@ class Server(object):
         self.settingsfile = "serversettings.ini"
 
         userhome = str(Path.home())
-        self.cachedir = userhome + "/.cache/pardus-software-center/"
-        self.configdir = userhome + "/.config/pardus-software-center/"
+        self.cachedir = userhome + "/.cache/pardus-software/"
+        self.configdir = userhome + "/.config/pardus-software/"
 
         self.connection = True
         self.app_scode = 0

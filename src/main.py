@@ -15,7 +15,7 @@ from gi.repository import Gtk
 
 class Application(Gtk.Application):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, application_id="tr.org.pardus.software-center", **kwargs)
+        super().__init__(*args, application_id="tr.org.pardus.software", **kwargs)
         self.window = None
 
     def do_activate(self):
