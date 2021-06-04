@@ -2011,6 +2011,7 @@ class MainWindow(object):
             self.Package.updatecache()
             self.controlView()
             self.notify()
+            self.sendDownloaded(self.actionedappname)
         else:
             self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
             self.controlView()
@@ -2085,3 +2086,10 @@ class MainWindow(object):
 
         notification.set_icon_from_pixbuf(pixbuf)
         notification.show()
+
+    def sendDownloaded(self, appname):
+        try:
+            sendrequest = requests.post(self.Server.serverurl + self.Server.serversenddownload,
+                                        json={"mac": self.mac, "app": appname})
+        except Exception as e:
+            print(str(e))
