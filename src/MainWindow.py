@@ -50,8 +50,7 @@ class MainWindow(object):
             print("Error reading GUI file: " + self.MainWindowUIFileName)
             raise
 
-        # self.locale = self.getLocale()
-        self.locale = "tr"
+        self.locale = self.getLocale()
         print(self.locale)
 
         self.parduspixbuf = Gtk.IconTheme.new()
@@ -1354,7 +1353,7 @@ class MainWindow(object):
         status = True
 
         if value == 0 or comment == "" or author == "":
-            self.wpcformcontrolLabel.set_text("Cannot be null")
+            self.wpcformcontrolLabel.set_text(_("Cannot be null"))
         else:
             try:
                 sendrequest = requests.post(self.Server.serverurl + self.Server.serversendrate,
@@ -1370,11 +1369,11 @@ class MainWindow(object):
                 self.commentstack.set_visible_child_name("sendresult")
                 if sendrequest.status_code == 200:
                     self.wpcresultLabel.set_text(
-                        "Your comment has been sent successfully. It will be published after approval.")
+                        _("Your comment has been sent successfully. It will be published after approval."))
                 else:
-                    self.wpcresultLabel.set_text("Error")
+                    self.wpcresultLabel.set_text(_("Error"))
             else:
-                self.wpcresultLabel.set_text("Error")
+                self.wpcresultLabel.set_text(_("Error"))
 
     def setWpcStar(self, rate):
 
@@ -1384,7 +1383,7 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
-            self.wpcStarLabel.set_markup("Choose star rating level")
+            self.wpcStarLabel.set_markup(_("Choose star rating level"))
         elif rate == 1:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
             self.wpcStar2.set_from_pixbuf(self.wpcstaroff)
@@ -1869,9 +1868,9 @@ class MainWindow(object):
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
         self.prefcachebutton.set_sensitive(True)
-        self.prefcachebutton.set_label("Clear")
+        self.prefcachebutton.set_label(_("Clear"))
         self.prefapplybutton.set_sensitive(False)
-        self.prefapplybutton.set_label("Apply")
+        self.prefapplybutton.set_label(_("Apply"))
 
     def on_menu3_activate(self, menu_item):
         self.aboutdialog.run()

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-04 19:22+0300\n"
+"POT-Creation-Date: 2021-06-04 19:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,7 +226,7 @@ msgstr ""
 msgid "Gnome Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:3482
+#: ui/MainWindow.glade:3482 src/MainWindow.py:1387
 msgid "Choose star rating level"
 msgstr ""
 
@@ -286,7 +286,7 @@ msgstr ""
 msgid "Enable Animations"
 msgstr ""
 
-#: ui/MainWindow.glade:3924 src/MainWindow.py:1919
+#: ui/MainWindow.glade:3924 src/MainWindow.py:1874 src/MainWindow.py:1919
 msgid "Apply"
 msgstr ""
 
@@ -294,7 +294,7 @@ msgstr ""
 msgid "Clear Cache Files"
 msgstr ""
 
-#: ui/MainWindow.glade:4028
+#: ui/MainWindow.glade:4028 src/MainWindow.py:1872
 msgid "Clear"
 msgstr ""
 
@@ -440,16 +440,26 @@ msgstr ""
 msgid "is None"
 msgstr ""
 
+#: src/MainWindow.py:1357
+msgid "Cannot be null"
+msgstr ""
+
+#: src/MainWindow.py:1373
+msgid ""
+"Your comment has been sent successfully. It will be published after approval."
+msgstr ""
+
+#: src/MainWindow.py:1375 src/MainWindow.py:1377 src/MainWindow.py:1914
+#: src/MainWindow.py:1929
+msgid "Error"
+msgstr ""
+
 #: src/MainWindow.py:1909
 msgid "Applied"
 msgstr ""
 
 #: src/MainWindow.py:1910
 msgid "Changes applied successfully "
-msgstr ""
-
-#: src/MainWindow.py:1914 src/MainWindow.py:1929
-msgid "Error"
 msgstr ""
 
 #: src/MainWindow.py:1925

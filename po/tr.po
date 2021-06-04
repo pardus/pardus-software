@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-04 19:22+0300\n"
-"PO-Revision-Date: 2021-06-04 19:24+0300\n"
+"POT-Creation-Date: 2021-06-04 19:28+0300\n"
+"PO-Revision-Date: 2021-06-04 19:30+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
 "Language: tr\n"
@@ -228,7 +228,7 @@ msgstr "Pardus Yorumları"
 msgid "Gnome Comments"
 msgstr "Gnome Yorumları"
 
-#: ui/MainWindow.glade:3482
+#: ui/MainWindow.glade:3482 src/MainWindow.py:1387
 msgid "Choose star rating level"
 msgstr "Yıldız derecelendirme düzeyi seçin"
 
@@ -288,7 +288,7 @@ msgstr "Sistem Simgelerini Kullan"
 msgid "Enable Animations"
 msgstr "Animasyonları Etkinleştir"
 
-#: ui/MainWindow.glade:3924 src/MainWindow.py:1919
+#: ui/MainWindow.glade:3924 src/MainWindow.py:1874 src/MainWindow.py:1919
 msgid "Apply"
 msgstr "Uygula"
 
@@ -296,7 +296,7 @@ msgstr "Uygula"
 msgid "Clear Cache Files"
 msgstr "Önbellek Dosyalarını Temizle"
 
-#: ui/MainWindow.glade:4028
+#: ui/MainWindow.glade:4028 src/MainWindow.py:1872
 msgid "Clear"
 msgstr "Temizle"
 
@@ -394,7 +394,7 @@ msgstr "Sunucudan uygulamalar alınıyor"
 
 #: src/MainWindow.py:534
 msgid "Getting ratings from gnome odrs"
-msgstr "Gnome odrs sunucusundan puanlamalar alınıyor"
+msgstr "Gnome odrs sunucusundan oylamalar alınıyor"
 
 #: src/MainWindow.py:541
 msgid "Setting applications"
@@ -444,6 +444,20 @@ msgstr "Oyunuz"
 msgid "is None"
 msgstr "Yok"
 
+#: src/MainWindow.py:1357
+msgid "Cannot be null"
+msgstr "Boş olamaz"
+
+#: src/MainWindow.py:1373
+msgid ""
+"Your comment has been sent successfully. It will be published after approval."
+msgstr "Yorumunuz başarıyla gönderildi. Onaylandıktan sonra yayınlanacaktır."
+
+#: src/MainWindow.py:1375 src/MainWindow.py:1377 src/MainWindow.py:1914
+#: src/MainWindow.py:1929
+msgid "Error"
+msgstr "Hata"
+
 #: src/MainWindow.py:1909
 msgid "Applied"
 msgstr "Uygulandı"
@@ -451,10 +465,6 @@ msgstr "Uygulandı"
 #: src/MainWindow.py:1910
 msgid "Changes applied successfully "
 msgstr "Değişiklikler başarıyla uygulandı"
-
-#: src/MainWindow.py:1914 src/MainWindow.py:1929
-msgid "Error"
-msgstr "Hata"
 
 #: src/MainWindow.py:1925
 msgid "Cleared"
