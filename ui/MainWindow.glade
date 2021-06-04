@@ -97,6 +97,7 @@
   </object>
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
+    <property name="icon">../images/icon.svg</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">Pardus Software Center</property>
     <property name="version">0.1.0~alpha1</property>
@@ -146,8 +147,9 @@
   <object class="GtkWindow" id="MainWindow">
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
-    <property name="default_width">800</property>
+    <property name="default_width">850</property>
     <property name="default_height">650</property>
+    <property name="icon">../images/icon.svg</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="headerbar1">
         <property name="visible">True</property>
@@ -192,6 +194,7 @@
           </object>
           <packing>
             <property name="pack_type">end</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
@@ -4064,7 +4067,6 @@
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="hexpand">True</property>
-                <property name="column_homogeneous">True</property>
                 <child>
                   <object class="GtkGrid">
                     <property name="visible">True</property>
