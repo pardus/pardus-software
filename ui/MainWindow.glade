@@ -146,8 +146,8 @@
   <object class="GtkWindow" id="MainWindow">
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
-    <property name="default_width">1050</property>
-    <property name="default_height">750</property>
+    <property name="default_width">800</property>
+    <property name="default_height">650</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="headerbar1">
         <property name="visible">True</property>

@@ -11,6 +11,7 @@ import threading
 import netifaces
 import psutil
 from datetime import datetime
+from locale import getlocale
 import gi
 
 gi.require_version("GLib", "2.0")
@@ -41,6 +42,9 @@ class MainWindow(object):
         except GObject.GError:
             print("Error reading GUI file: " + self.MainWindowUIFileName)
             raise
+
+        self.locale = self.getLocale()
+        print(self.locale)
 
         self.parduspixbuf = Gtk.IconTheme.new()
         self.parduspixbuf.set_custom_theme("pardus")
@@ -236,8 +240,12 @@ class MainWindow(object):
         self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
 
         self.PardusCurrentCategory = -1
-        self.PardusCurrentCategoryString = "all"
-        self.RepoCurrentCategory = "all"
+        if self.locale == "tr":
+            self.PardusCurrentCategoryString = "tümü"
+            self.RepoCurrentCategory = "tümü"
+        else:
+            self.PardusCurrentCategoryString = "all"
+            self.RepoCurrentCategory = "all"
 
         self.useDynamicListStore = False
 
@@ -316,6 +324,16 @@ class MainWindow(object):
                     continue
                 break
         return mac
+
+    def getLocale(self):
+        try:
+            locale = getlocale()[0].split("_")[0]
+            if locale != "tr" and locale != "en":
+                locale ="en"
+        except Exception as e:
+            print(str(e))
+            locale = "en"
+        return locale
 
     def getDisplay(self):
         # defwindow = Gdk.get_default_root_window()
@@ -513,10 +531,12 @@ class MainWindow(object):
                 for app in self.Server.applist:
                     appicon = self.getSystemAppIcon(app["name"])
                     appname = app['name']
-                    prettyname = app['prettyname']["en"]
+                    prettyname = app["prettyname"][self.locale]
+                    if prettyname == "" or prettyname is None:
+                        prettyname = app["prettyname"]["en"]
                     category = ""
-                    for i in app['category']:
-                        category += i["en"] + ","
+                    for i in app["category"]:
+                        category += i[self.locale] + ","
                     category = category.rstrip(",")
                     # print(appname + " : " + category)
                     categorynumber = self.get_category_number(category)
@@ -529,10 +549,12 @@ class MainWindow(object):
                     for app in self.Server.applist:
                         appicon = self.getServerAppIcon(app["name"])
                         appname = app['name']
-                        prettyname = app['prettyname']["en"]
+                        prettyname = app['prettyname'][self.locale]
+                        if prettyname == "" or prettyname is None:
+                            prettyname = app["prettyname"]["en"]
                         category = ""
                         for i in app['category']:
-                            category += i["en"] + ","
+                            category += i[self.locale] + ","
                         category = category.rstrip(",")
                         # print(appname + " : " + category)
                         categorynumber = self.get_category_number(category)
@@ -542,19 +564,22 @@ class MainWindow(object):
 
     def setPardusCategories(self):
         if self.Server.connection:
-            self.allcats = ["all"]
-            for app in self.Server.catlist:
-                self.allcats.append(app['en'])
-            self.categories = sorted(list(set(self.allcats)))
+            if self.locale == "tr":
+                self.allcats = [{"name": "tümü", "icon": "all"}]
+            else:
+                self.allcats = [{"name": "all", "icon": "all"}]
+            for cat in self.Server.catlist:
+                self.allcats.append({"name": cat[self.locale], "icon":cat["en"]})
+            self.categories = sorted(self.allcats, key=lambda x: x["name"])
 
             if self.UserSettings.config_usi:
                 print("User want to use system icons [cat]")
 
                 for cat in self.categories:
                     caticon = Gtk.Image.new()
-                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat))
+                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"]))
                     label = Gtk.Label.new()
-                    label_text = str(cat).capitalize()
+                    label_text = str(cat["name"]).capitalize()
                     label.set_text(" " + label_text)
                     box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                     box1.pack_start(caticon, False, True, 0)
@@ -568,9 +593,9 @@ class MainWindow(object):
                 if self.servercaticons:
                     for cat in self.categories:
                         caticon = Gtk.Image.new()
-                        caticon.set_from_pixbuf(self.getServerCatIcon(cat))
+                        caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
                         label = Gtk.Label.new()
-                        label_text = str(cat).capitalize()
+                        label_text = str(cat["name"]).capitalize()
                         label.set_text(" " + label_text)
                         box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                         box1.pack_start(caticon, False, True, 0)
@@ -588,10 +613,12 @@ class MainWindow(object):
                 for ediapp in self.Server.ediapplist:
                     edipixbuf = self.getSystemAppIcon(ediapp['name'])
                     ediappname = ediapp["name"]
-                    ediprettyname = ediapp["prettyname"]["en"]
+                    ediprettyname = ediapp["prettyname"][self.locale]
+                    if ediprettyname == "" or ediprettyname is None:
+                        ediprettyname = ediapp["prettyname"]["en"]
                     edicategory = ""
                     for i in ediapp['category']:
-                        edicategory += i["en"] + ","
+                        edicategory += i[self.locale] + ","
                     edicategory = edicategory.rstrip(",")
                     edicategorynumber = self.get_category_number(edicategory)
                     self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
@@ -599,10 +626,12 @@ class MainWindow(object):
                 for ediapp in self.Server.ediapplist:
                     edipixbuf = self.getServerAppIcon(ediapp['name'])
                     ediappname = ediapp['name']
-                    ediprettyname = ediapp['prettyname']["en"]
+                    ediprettyname = ediapp['prettyname'][self.locale]
+                    if ediprettyname == "" or ediprettyname is None:
+                        ediprettyname = ediapp["prettyname"]["en"]
                     edicategory = ""
                     for i in ediapp['category']:
-                        edicategory += i["en"] + ","
+                        edicategory += i[self.locale] + ","
                     edicategory = edicategory.rstrip(",")
                     edicategorynumber = self.get_category_number(edicategory)
                     self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
@@ -682,14 +711,14 @@ class MainWindow(object):
         lencat = len(self.categories)
         for i in range(0, lencat):
             for j in range(0, lenlistcat):
-                if self.categories[i] == listcat[j]:
+                if self.categories[i]["name"] == listcat[j]:
                     return i
 
     def get_category_name(self, thatnumber):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if thatnumber == i:
-                return self.categories[i]
+                return self.categories[i]["name"], self.categories[i]["icon"]
 
     def get_repo_category_number(self, thatcategory):
         repocatnumber = 404
@@ -787,12 +816,14 @@ class MainWindow(object):
             self.description = ""
             for i in self.Server.applist:
                 if i["name"] == self.appname:
-                    self.description = i["description"]["en"]
-                    self.section = i["section"][0]["en"]
+                    self.description = i["description"][self.locale]
+                    self.section = i["section"][0][self.locale]
+                    if self.section == "" or self.section is None:
+                        self.section = i["section"][0]["en"]
                     self.maintainer_name = i["maintainer"][0]["name"]
                     self.maintainer_mail = i["maintainer"][0]["mail"]
                     self.maintainer_web = i["maintainer"][0]["website"]
-                    self.category = i["category"][0]["en"].capitalize()
+                    self.category = i["category"][0][self.locale].capitalize()
                     self.license = i["license"]
                     self.codenames = ", ".join(c["name"] for c in i["codename"])
                     self.gnomename = i["gnomename"]
@@ -1417,7 +1448,7 @@ class MainWindow(object):
                 else:
                     return True
         else:
-            if self.PardusCurrentCategoryString == "all":
+            if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
                 if self.pardusicb.get_active():
                     if self.Package.isinstalled(appname):
                         return True
@@ -1459,13 +1490,13 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
 
-        self.PardusCurrentCategoryString = self.get_category_name(self.PardusCurrentCategory)
+        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon = self.get_category_name(self.PardusCurrentCategory)
         print("home category selected " + str(self.PardusCurrentCategory) + " " + self.PardusCurrentCategoryString)
 
         if self.UserSettings.config_usi:
-            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryString, 32)
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
-            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryString, 32)
+            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.capitalize())
@@ -1489,7 +1520,7 @@ class MainWindow(object):
 
         if self.useDynamicListStore:
 
-            if self.RepoCurrentCategory != "all":
+            if self.RepoCurrentCategory != "all" or self.RepoCurrentCategory != "tümü":
 
                 self.RepoAppsTreeView.set_model(self.storedict[self.RepoCurrentCategory])
                 self.RepoAppsTreeView.show_all()
@@ -1500,7 +1531,7 @@ class MainWindow(object):
 
         else:
 
-            if self.RepoCurrentCategory != "all":
+            if self.RepoCurrentCategory != "all" or self.RepoCurrentCategory != "tümü":
 
                 self.store = Gtk.ListStore(str, str, int, bool, str, str)
 
