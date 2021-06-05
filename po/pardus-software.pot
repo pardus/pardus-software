@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-05 03:33+0300\n"
+"POT-Creation-Date: 2021-06-05 04:40+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,7 +178,7 @@ msgstr ""
 msgid "Description ..."
 msgstr ""
 
-#: ui/MainWindow.glade:1951 src/MainWindow.py:508
+#: ui/MainWindow.glade:1951 src/MainWindow.py:512
 msgid "Description"
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 msgid "Gnome Software Ratings"
 msgstr ""
 
-#: ui/MainWindow.glade:3268 src/MainWindow.py:1111
+#: ui/MainWindow.glade:3268 src/MainWindow.py:1115
 msgid "Ratings"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 msgid "Gnome Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:3498 src/MainWindow.py:1403
+#: ui/MainWindow.glade:3498 src/MainWindow.py:1407
 msgid "Choose star rating level"
 msgstr ""
 
@@ -286,7 +286,7 @@ msgstr ""
 msgid "Enable Animations"
 msgstr ""
 
-#: ui/MainWindow.glade:3943 src/MainWindow.py:1890 src/MainWindow.py:1935
+#: ui/MainWindow.glade:3943 src/MainWindow.py:1894 src/MainWindow.py:1939
 msgid "Apply"
 msgstr ""
 
@@ -294,7 +294,7 @@ msgstr ""
 msgid "Clear Cache Files"
 msgstr ""
 
-#: ui/MainWindow.glade:4047 src/MainWindow.py:1888
+#: ui/MainWindow.glade:4047 src/MainWindow.py:1892
 msgid "Clear"
 msgstr ""
 
@@ -336,168 +336,180 @@ msgstr ""
 msgid "page2"
 msgstr ""
 
-#: src/MainWindow.py:222
+#: src/MainWindow.py:226
 msgid "Settings"
 msgstr ""
 
-#: src/MainWindow.py:227
+#: src/MainWindow.py:231
 msgid "My Applications"
 msgstr ""
 
-#: src/MainWindow.py:233
+#: src/MainWindow.py:237
 msgid "Updates"
 msgstr ""
 
-#: src/MainWindow.py:240
+#: src/MainWindow.py:244
 msgid "About"
 msgstr ""
 
-#: src/MainWindow.py:399
+#: src/MainWindow.py:403
 msgid "Could not connect to server."
 msgstr ""
 
-#: src/MainWindow.py:399
+#: src/MainWindow.py:403
 msgid "Error Code (app)"
 msgstr ""
 
-#: src/MainWindow.py:400
+#: src/MainWindow.py:404
 msgid "Error Code (cat)"
 msgstr ""
 
-#: src/MainWindow.py:410
+#: src/MainWindow.py:414
 msgid "Updating Cache"
 msgstr ""
 
-#: src/MainWindow.py:450
+#: src/MainWindow.py:454
 msgid "Setting Repo Categories"
 msgstr ""
 
-#: src/MainWindow.py:468
+#: src/MainWindow.py:472
 msgid "Setting Repo Apps"
 msgstr ""
 
-#: src/MainWindow.py:483
+#: src/MainWindow.py:487
 msgid "Status"
 msgstr ""
 
-#: src/MainWindow.py:489
+#: src/MainWindow.py:493
 msgid "Name"
 msgstr ""
 
-#: src/MainWindow.py:495
+#: src/MainWindow.py:499
 msgid "Section"
 msgstr ""
 
-#: src/MainWindow.py:543
+#: src/MainWindow.py:547
 msgid "Getting applications from server"
 msgstr ""
 
-#: src/MainWindow.py:548
+#: src/MainWindow.py:552
 msgid "Getting ratings from gnome odrs"
 msgstr ""
 
-#: src/MainWindow.py:555
+#: src/MainWindow.py:559
 msgid "Setting applications"
 msgstr ""
 
-#: src/MainWindow.py:902
+#: src/MainWindow.py:906
 msgid "Non-Free"
 msgstr ""
 
-#: src/MainWindow.py:904
+#: src/MainWindow.py:908
 msgid "Open Source"
 msgstr ""
 
-#: src/MainWindow.py:915 src/MainWindow.py:1481 src/MainWindow.py:1838
-#: src/MainWindow.py:2064 src/MainWindow.py:2079
+#: src/MainWindow.py:919 src/MainWindow.py:1485 src/MainWindow.py:1842
+#: src/MainWindow.py:2097 src/MainWindow.py:2117 src/MainWindow.py:2132
 msgid " Uninstall"
 msgstr ""
 
-#: src/MainWindow.py:921 src/MainWindow.py:1487 src/MainWindow.py:1844
-#: src/MainWindow.py:2070 src/MainWindow.py:2085
+#: src/MainWindow.py:925 src/MainWindow.py:1491 src/MainWindow.py:1848
+#: src/MainWindow.py:2103 src/MainWindow.py:2123 src/MainWindow.py:2138
 msgid " Install"
 msgstr ""
 
-#: src/MainWindow.py:928 src/MainWindow.py:1860 src/MainWindow.py:1965
-#: src/MainWindow.py:1966
+#: src/MainWindow.py:932 src/MainWindow.py:1864 src/MainWindow.py:1969
+#: src/MainWindow.py:1970
 msgid " Removing"
 msgstr ""
 
-#: src/MainWindow.py:930 src/MainWindow.py:1862 src/MainWindow.py:1970
-#: src/MainWindow.py:1971
+#: src/MainWindow.py:934 src/MainWindow.py:1866 src/MainWindow.py:1974
+#: src/MainWindow.py:1975
 msgid " Installing"
 msgstr ""
 
-#: src/MainWindow.py:940 src/MainWindow.py:1853
+#: src/MainWindow.py:944 src/MainWindow.py:1857
 msgid " Not Found"
 msgstr ""
 
-#: src/MainWindow.py:1108
+#: src/MainWindow.py:1112
 msgid "Download"
 msgstr ""
 
-#: src/MainWindow.py:1117 src/MainWindow.py:1122
+#: src/MainWindow.py:1121 src/MainWindow.py:1126
 msgid "Your Rate"
 msgstr ""
 
-#: src/MainWindow.py:1117
+#: src/MainWindow.py:1121
 msgid "is None"
 msgstr ""
 
-#: src/MainWindow.py:1373
+#: src/MainWindow.py:1377
 msgid "Cannot be null"
 msgstr ""
 
-#: src/MainWindow.py:1389
+#: src/MainWindow.py:1393
 msgid ""
 "Your comment has been sent successfully. It will be published after approval."
 msgstr ""
 
-#: src/MainWindow.py:1391 src/MainWindow.py:1393 src/MainWindow.py:1930
-#: src/MainWindow.py:1945
+#: src/MainWindow.py:1395 src/MainWindow.py:1397 src/MainWindow.py:1934
+#: src/MainWindow.py:1949
 msgid "Error"
 msgstr ""
 
-#: src/MainWindow.py:1925
+#: src/MainWindow.py:1929
 msgid "Applied"
 msgstr ""
 
-#: src/MainWindow.py:1926
+#: src/MainWindow.py:1930
 msgid "Changes applied successfully "
 msgstr ""
 
-#: src/MainWindow.py:1941
+#: src/MainWindow.py:1945
 msgid "Cleared"
 msgstr ""
 
-#: src/MainWindow.py:1942
+#: src/MainWindow.py:1946
 msgid "Cache files cleared, please close and reopen the application"
 msgstr ""
 
-#: src/MainWindow.py:2016
+#: src/MainWindow.py:2020
 msgid "Removing"
 msgstr ""
 
-#: src/MainWindow.py:2018
+#: src/MainWindow.py:2022
 msgid "Installing"
 msgstr ""
 
-#: src/MainWindow.py:2025
+#: src/MainWindow.py:2042
 msgid " | Removed : 100 %"
 msgstr ""
 
-#: src/MainWindow.py:2027
+#: src/MainWindow.py:2044
 msgid " | Installed : 100 %"
 msgstr ""
 
-#: src/MainWindow.py:2033
+#: src/MainWindow.py:2046
 msgid " |  Not Completed"
 msgstr ""
 
-#: src/MainWindow.py:2095
+#: src/MainWindow.py:2048
+msgid "<b><span color='red'>Connection Error !</span></b>"
+msgstr ""
+
+#: src/MainWindow.py:2050
+msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
+msgstr ""
+
+#: src/MainWindow.py:2052
+msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
+msgstr ""
+
+#: src/MainWindow.py:2148
 msgid " Removed"
 msgstr ""
 
-#: src/MainWindow.py:2097
+#: src/MainWindow.py:2150
 msgid " Installed"
 msgstr ""
