@@ -56,6 +56,10 @@ class MainWindow(object):
         self.parduspixbuf = Gtk.IconTheme.new()
         self.parduspixbuf.set_custom_theme("pardus")
 
+        self.error = False
+        self.dpkglockerror = False
+        self.dpkgconferror = False
+
         try:
             self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
                                                                         Gtk.IconLookupFlags(16))
@@ -2016,23 +2020,40 @@ class MainWindow(object):
                 self.progresstextlabel.set_text(self.actionedappname + " | " + _("Removing") + ": " + percent + " %")
             else:
                 self.progresstextlabel.set_text(self.actionedappname + " | " + _("Installing") + ": " + percent + " %")
+        elif "E:" in line and ".deb" in line:
+            print("connection error")
+            self.error = True
+        elif "E:" in line and "dpkg --configure -a" in line:
+            print("dpkg --configure -a error")
+            self.error = True
+            self.dpkgconferror = True
+        elif "E:" in line and "/var/lib/dpkg/lock-frontend" in line:
+            print("/var/lib/dpkg/lock-frontend error")
+            self.error = True
+            self.dpkglockerror = True
+
         return True
 
     def onProcessExit(self, pid, status):
-        if status == 0:
 
-            if self.isinstalled:
-                self.progresstextlabel.set_text(self.actionedappname + _(" | Removed : 100 %"))
+        if not self.error:
+            if status == 0:
+                if self.isinstalled:
+                    self.progresstextlabel.set_text(self.actionedappname + _(" | Removed : 100 %"))
+                else:
+                    self.progresstextlabel.set_text(self.actionedappname + _(" | Installed : 100 %"))
             else:
-                self.progresstextlabel.set_text(self.actionedappname + _(" | Installed : 100 %"))
-            self.Package.updatecache()
-            self.controlView()
-            self.notify()
-            self.sendDownloaded(self.actionedappname)
+                self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
         else:
-            self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
-            self.controlView()
+            errormessage = _("<b><span color='red'>Connection Error !</span></b>")
+            if self.dpkglockerror:
+                errormessage = _("<b><span color='red'>Dpkg Lock Error !</span></b>")
+            elif self.dpkgconferror:
+                errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
+            self.progresstextlabel.set_markup(errormessage)
 
+        self.Package.updatecache()
+        self.controlView()
         self.dActionButton.set_sensitive(True)
         self.raction.set_sensitive(True)
         self.topspinner.stop()
@@ -2045,15 +2066,47 @@ class MainWindow(object):
             self.actionPackage(self.queue[0])
         else:
             self.queuestack.set_visible_child_name("page0")
-            self.progresstextlabel.set_text("")
+            if not self.error:
+                self.progresstextlabel.set_text("")
+
+        if status == 0 and not self.error:
+            self.notify()
+            self.sendDownloaded(self.actionedappname)
+
+        self.error = False
+        self.dpkglockerror = False
+        self.dpkgconferror = False
 
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()
         print("selected_items " + str(selected_items))
+
+        editor_selected_items = self.EditorAppsIconView.get_selected_items()
+        print("editor_selected_items " + str(editor_selected_items))
         if len(selected_items) == 1:
             treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
             appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
             prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
+            print("in controlView " + appname)
+            if appname == self.actionedappname:
+
+                if self.Package.isinstalled(self.actionedappname):
+                    if self.dActionButton.get_style_context().has_class("suggested-action"):
+                        self.dActionButton.get_style_context().remove_class("suggested-action")
+                    self.dActionButton.get_style_context().add_class("destructive-action")
+                    self.dActionButton.set_label(_(" Uninstall"))
+                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+                else:
+                    if self.dActionButton.get_style_context().has_class("destructive-action"):
+                        self.dActionButton.get_style_context().remove_class("destructive-action")
+                    self.dActionButton.get_style_context().add_class("suggested-action")
+                    self.dActionButton.set_label(_(" Install"))
+                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+        if len(editor_selected_items) == 1:
+            treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
+            appname = self.EditorListStore.get(treeiter, 1)[0]
+            prettyname = self.EditorListStore.get(treeiter, 3)[0]
             print("in controlView " + appname)
             if appname == self.actionedappname:
 
