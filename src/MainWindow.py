@@ -11,7 +11,6 @@ import threading
 import netifaces
 import psutil
 from datetime import datetime
-import requests
 import gi
 
 import locale
@@ -33,6 +32,7 @@ from Server import Server
 
 from AppImage import AppImage
 from AppDetail import AppDetail
+from AppRequest import AppRequest
 from GnomeComment import GnomeComment
 
 from UserSettings import UserSettings
@@ -382,6 +382,7 @@ class MainWindow(object):
         self.package()
         self.appimage()
         self.appdetail()
+        self.apprequest()
         self.setRepoCategories()
         self.setRepoApps()
         self.server()
@@ -433,6 +434,11 @@ class MainWindow(object):
         self.AppDetail = AppDetail()
         self.AppDetail.Detail = self.Detail
         print("appdetail completed")
+
+    def apprequest(self):
+        self.AppRequest = AppRequest()
+        self.AppRequest.Request = self.Request
+        print("apprequest completed")
 
     def gnomeComments(self):
         self.GnomeComment = GnomeComment()
@@ -825,8 +831,10 @@ class MainWindow(object):
         self.setWpcStar(0)
         self.wpcstar = 0
         self.wpcformcontrolLabel.set_text("")
+        self.wpcresultLabel.set_text("")
         self.wpcAuthor.set_text("")
         self.wpcComment.set_text("")
+        self.wpcSendButton.set_sensitive(True)
 
         selected_items = iconview.get_selected_items()
 
@@ -1105,6 +1113,16 @@ class MainWindow(object):
         else:
             self.dDescriptionLabel.set_text(self.s_description)
 
+    def Request(self, status, response):
+        if status:
+            print(response)
+            if response["response-type"] == 10:
+                self.commentstack.set_visible_child_name("sendresult")
+                self.wpcresultLabel.set_text(
+                        _("Your comment has been sent successfully. It will be published after approval."))
+        else:
+            self.wpcresultLabel.set_text(_("Error"))
+
     def Detail(self, status, response):
         if status:
             print(response)
@@ -1372,27 +1390,19 @@ class MainWindow(object):
         comment = self.wpcComment.get_text().strip()
         value = self.wpcstar
         status = True
-
+        #fuck
         if value == 0 or comment == "" or author == "":
             self.wpcformcontrolLabel.set_text(_("Cannot be null"))
         else:
+            dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname}
             try:
-                sendrequest = requests.post(self.Server.serverurl + self.Server.serversendrate,
-                                            json={"mac": self.mac, "author": author,
-                                                  "comment": comment, "value": value, "app": self.appname})
+                self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
             except Exception as e:
                 status = False
                 self.commentstack.set_visible_child_name("sendresult")
                 self.wpcresultLabel.set_text(str(e))
-
             if status:
-                print(sendrequest.json())
-                self.commentstack.set_visible_child_name("sendresult")
-                if sendrequest.status_code == 200:
-                    self.wpcresultLabel.set_text(
-                        _("Your comment has been sent successfully. It will be published after approval."))
-                else:
-                    self.wpcresultLabel.set_text(_("Error"))
+                self.wpcSendButton.set_sensitive(False)
             else:
                 self.wpcresultLabel.set_text(_("Error"))
 
@@ -2159,7 +2169,7 @@ class MainWindow(object):
 
     def sendDownloaded(self, appname):
         try:
-            sendrequest = requests.post(self.Server.serverurl + self.Server.serversenddownload,
-                                        json={"mac": self.mac, "app": appname})
+            dic = {"mac": self.mac, "app": appname}
+            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
         except Exception as e:
             print(str(e))
