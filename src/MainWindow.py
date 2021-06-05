@@ -219,7 +219,7 @@ class MainWindow(object):
 
         self.menu1 = self.GtkBuilder.get_object("menu1")
         self.menu1.set_use_stock(False)
-        self.menu1.set_label(_("Preferences"))
+        self.menu1.set_label(_("Settings"))
         self.menu1.set_image(Gtk.Image.new_from_icon_name('preferences-other-symbolic', Gtk.IconSize.BUTTON))
 
         self.menu2 = self.GtkBuilder.get_object("menu2")
@@ -227,6 +227,13 @@ class MainWindow(object):
         self.menu2.set_label(_("My Applications"))
         self.menu2.set_image(Gtk.Image.new_from_icon_name('dialog-question-symbolic', Gtk.IconSize.BUTTON))
         self.menu2.set_sensitive(False)
+
+        self.menu_update = self.GtkBuilder.get_object("menu_update")
+        self.menu_update.set_use_stock(False)
+        self.menu_update.set_label(_("Updates"))
+        self.menu_update.set_image(
+            Gtk.Image.new_from_icon_name('software-update-available-symbolic', Gtk.IconSize.BUTTON))
+        self.menu_update.set_sensitive(False)
 
         self.menu3 = self.GtkBuilder.get_object("menu3")
         self.menu3.set_use_stock(False)
@@ -814,6 +821,8 @@ class MainWindow(object):
         self.setWpcStar(0)
         self.wpcstar = 0
         self.wpcformcontrolLabel.set_text("")
+        self.wpcAuthor.set_text("")
+        self.wpcComment.set_text("")
 
         selected_items = iconview.get_selected_items()
 

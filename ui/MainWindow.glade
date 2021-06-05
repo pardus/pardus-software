@@ -49,6 +49,21 @@
       </object>
     </child>
     <child>
+      <object class="GtkImageMenuItem" id="menu_update">
+        <property name="label">gtk-quit</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkImageMenuItem" id="menu3">
         <property name="label">gtk-quit</property>
         <property name="visible">True</property>
@@ -3365,7 +3380,8 @@
                                                           <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
-                                                            <property name="margin_top">5</property>
+                                                            <property name="margin_top">13</property>
+                                                            <property name="margin_bottom">13</property>
                                                             <property name="orientation">vertical</property>
                                                             <property name="spacing">13</property>
                                                             <child>
@@ -3653,6 +3669,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="orientation">vertical</property>
+                                                            <property name="homogeneous">True</property>
                                                             <child>
                                                             <placeholder/>
                                                             </child>
@@ -3660,6 +3677,8 @@
                                                             <object class="GtkLabel" id="wpcresultLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">center</property>
                                                             <property name="wrap">True</property>
                                                             </object>
                                                             <packing>
