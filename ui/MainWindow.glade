@@ -1031,7 +1031,7 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="margin_right">7</property>
-                                            <property name="label" translatable="yes">0.2</property>
+                                            <property name="label" translatable="yes">0.0</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1043,7 +1043,7 @@
                                           <object class="GtkImage" id="dtStar1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="pixbuf">../images/rating.svg</property>
+                                            <property name="pixbuf">../images/rating-unrated.svg</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1055,7 +1055,7 @@
                                           <object class="GtkImage" id="dtStar2">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="pixbuf">../images/rating.svg</property>
+                                            <property name="pixbuf">../images/rating-unrated.svg</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1067,7 +1067,7 @@
                                           <object class="GtkImage" id="dtStar3">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="pixbuf">../images/rating.svg</property>
+                                            <property name="pixbuf">../images/rating-unrated.svg</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1079,7 +1079,7 @@
                                           <object class="GtkImage" id="dtStar4">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="pixbuf">../images/rating.svg</property>
+                                            <property name="pixbuf">../images/rating-unrated.svg</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1117,7 +1117,7 @@
                                       <object class="GtkLabel" id="dtTotalRating">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;45 Ratings&lt;/small&gt;</property>
+                                        <property name="label" translatable="yes">&lt;small&gt;  Ratings&lt;/small&gt;</property>
                                         <property name="use_markup">True</property>
                                       </object>
                                       <packing>
@@ -1143,7 +1143,7 @@
                                       <object class="GtkLabel" id="dtUserRating">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;Your Rate 3&lt;/small&gt;</property>
+                                        <property name="label" translatable="yes">&lt;small&gt;Your Rate  &lt;/small&gt;</property>
                                         <property name="use_markup">True</property>
                                       </object>
                                       <packing>
@@ -1181,7 +1181,7 @@
                                       <object class="GtkLabel" id="dtDownload">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;45 Download&lt;/small&gt;</property>
+                                        <property name="label" translatable="yes">&lt;small&gt;   Download&lt;/small&gt;</property>
                                         <property name="use_markup">True</property>
                                       </object>
                                       <packing>
@@ -2034,7 +2034,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="label" translatable="yes">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;4.3&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
+                                                            <property name="label" translatable="yes">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
                                                             <property name="use_markup">True</property>
                                                             </object>
                                                             <packing>
@@ -2651,7 +2651,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="label" translatable="yes">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;4.3&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
+                                                            <property name="label" translatable="yes">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
                                                             <property name="use_markup">True</property>
                                                             </object>
                                                             <packing>
