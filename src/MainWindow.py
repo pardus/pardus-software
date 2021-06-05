@@ -2052,6 +2052,10 @@ class MainWindow(object):
                 errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
             self.progresstextlabel.set_markup(errormessage)
 
+        if status == 0 and not self.error:
+            self.notify()
+            self.sendDownloaded(self.actionedappname)
+
         self.Package.updatecache()
         self.controlView()
         self.dActionButton.set_sensitive(True)
@@ -2068,10 +2072,6 @@ class MainWindow(object):
             self.queuestack.set_visible_child_name("page0")
             if not self.error:
                 self.progresstextlabel.set_text("")
-
-        if status == 0 and not self.error:
-            self.notify()
-            self.sendDownloaded(self.actionedappname)
 
         self.error = False
         self.dpkglockerror = False
