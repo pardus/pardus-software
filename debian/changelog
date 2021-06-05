@@ -1,5 +1,103 @@
 pardus-software (0.1.0~alpha1) unstable; urgency=medium
 
-  * Initial Commit
+  * Update serverurl
+  * Update translations
+  * Fix connection and dpkg error on action
+  * Update translations
+  * Update menu items
+  * Add files for packaging
+  * Add sendDownload function
+  * Update translations
+  * Update translations
+  * Add localization
+  * Add sendrate functions
+  * Update name as pardus-software
+  * Add action function to repoapps
+  * Update default width and icon
+  * Add locale for get metadatas from server
+  * Update about dialog and Add queue page
+  * Add app icon
+  * Add about menu button
+  * Add clear cache to prefs and Fix some error on prefs ui
+  * Update default config
+  * Add setAnimations and Update preferences ui
+  * Fix editorapp icons
+  * Update editor apps as dynamic
+  * Add write pardus comment template
+  * Add gnome comments as dynamic
+  * Update pardus comments as dynamic
+  * Add comments template
+  * Update preferences ui
+  * Improve pardusapps search func with pname and desc
+  * Add task queue for pardus apps
+  * Update PardusHomeGrid as Box
+  * Add editorapps as static and merge selection_changed funcs with pardusapps
+  * Add writeConfig func for systemicons
+  * Add preferences dialog
+  * Update AppImage func
+  * Add top search button with revealer
+  * Add wordwrap to dLicense label
+  * Add installed check button for PardusApps
+  * Add setGnomeRatings
+  * Add setPardusRatings
+  * Add rating stats ui to Pardus Apps Detail
+  * Add resizing for pop images
+  * Add type, category, license, codename, web, mail to Pardus Apps detail page
+  * Add size, version, component to Pardus Apps detail page
+  * Fix description func
+  * Add rating, download.. to PardusAppsDetail ui
+  * Add star on/off icons
+  * Add usesystemicons control for app and cat icons
+  * Add UserSettings
+  * Update serversettings file name
+  * Add getDefaultSettings and Update some funcs
+  * Add style.css and Update homecategory style
+  * Update server address as localhost
+  * Add show all description switch button and update detail ui
+  * Add getMac func
+  * Add details view to PardusAppsDetail ui with expander
+  * Add AppDetail class
+  * Update PardusAppsDetail ui
+  * Uncomment missingdeps
+  * Fix if package is not in cache and Add get description from server
+  * Added: get app images async from server
+  * Update applist as sorted by name
+  * Add Navigation Bar to PardusAppsBox
+  * Update get server categories and number-name func
+  * Add: try to get app and category icons from server
+  * get apps and categories from server
+  * Update homestack page names
+  * Update server connection function
+  * Disable reorderable on iconview
+  * Disable showing all apps and categories in RepoApps, use only search anymore
+  * Add israw parameter to description function
+  * Add set_sort_column_id to RepoAppsTreeView columns
+  * Add package summary to RepoAppsTreeView
+  * Add CellRendererButton and Update RepoAppListStore
+  * Add selection_changed for EditorAppsIconView
+  * Disable appending all apps to RepoAppListStore
+  * Fix get cache apps in for loop
+  * Add row_activated function for Repo Apps
+  * Add GtkPaned for Repo Apps
+  * Add get package description from apt library
+  * Update get section from apt library as using candidate and versions
+  * Update icon exceptions with adding image-missing icon
+  * Disable unused RepoCategoryFilterFunction
+  * Add search button for repo apps and Update search filter func
+  * Add dict for Repo Apps
+  * Remove residual progressbar codes
+  * Remove unnecessary code blocks
+  * Add Repo apps, categories, search bar to Repo stack
+  * Add RepoCategories
+  * Add action for EditorAppsIconView
+  * Update open menu icon name
+  * Add top progress text and spinner actions
+  * Add Header Menu with ImageMenuItem and back button
+  * Update searchbar and home category icon size
+  * Add PardusAppsIconView detail page
+  * Add EditorAppsIconView
+  * Add PardusAppsIconView and Pardus searchbar
+  * Add homepage stack template
+  * Initial commit
 
- -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 20 Feb 2020 18:03:58 +0300
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sat, 05 Jun 2021 05:14:35 +0300
