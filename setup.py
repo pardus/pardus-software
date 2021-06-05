@@ -25,8 +25,9 @@ data_files = [
     ("/usr/share/pardus/pardus-software/images", ["images/icon.svg", "images/rating.svg", "images/rating-unrated.svg"]),
     ("/usr/share/pardus/pardus-software/ui", ["ui/MainWindow.glade"]),
     ("/usr/share/pardus/pardus-software/src",
-     ["src/Actions.py", "src/AppDetail.py", "src/AppImage.py", "src/CellRendererButton.py", "src/GnomeComment.py",
-      "src/main.py", "src/MainWindow.py", "src/Package.py", "src/Server.py", "src/UserSettings.py", "src/__version__"])
+     ["src/Actions.py", "src/AppDetail.py", "src/AppImage.py", "src/AppRequest.py", "src/CellRendererButton.py",
+      "src/GnomeComment.py", "src/main.py", "src/MainWindow.py", "src/Package.py", "src/Server.py",
+      "src/UserSettings.py", "src/__version__"])
 ]
 
 setup(
