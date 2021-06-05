@@ -14,7 +14,7 @@ from shutil import rmtree
 
 class Server(object):
     def __init__(self):
-        self.serverurl = "http://localhost:8000"
+        self.serverurl = "http://store.pardus.org.tr"
         self.serverapps = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
         self.serverhomepage = "/api/v2/homepage"
