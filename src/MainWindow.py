@@ -220,11 +220,15 @@ class MainWindow(object):
         self.RepoAppListStore = self.GtkBuilder.get_object("RepoAppListStore")
 
         self.HeaderBarMenu = self.GtkBuilder.get_object("HeaderBarMenu")
+        self.HeaderBarMenuButton = self.GtkBuilder.get_object("HeaderBarMenuButton")
 
-        self.menu1 = self.GtkBuilder.get_object("menu1")
-        self.menu1.set_use_stock(False)
-        self.menu1.set_label(_("Settings"))
-        self.menu1.set_image(Gtk.Image.new_from_icon_name('preferences-other-symbolic', Gtk.IconSize.BUTTON))
+        self.HeaderBarMenuButton.set_sensitive(False)
+        self.topsearchbutton.set_sensitive(False)
+
+        self.menu_settings = self.GtkBuilder.get_object("menu_settings")
+        self.menu_settings.set_use_stock(False)
+        self.menu_settings.set_label(_("Settings"))
+        self.menu_settings.set_image(Gtk.Image.new_from_icon_name('preferences-other-symbolic', Gtk.IconSize.BUTTON))
 
         self.menu2 = self.GtkBuilder.get_object("menu2")
         self.menu2.set_use_stock(False)
@@ -239,10 +243,10 @@ class MainWindow(object):
             Gtk.Image.new_from_icon_name('software-update-available-symbolic', Gtk.IconSize.BUTTON))
         self.menu_update.set_sensitive(False)
 
-        self.menu3 = self.GtkBuilder.get_object("menu3")
-        self.menu3.set_use_stock(False)
-        self.menu3.set_label(_("About"))
-        self.menu3.set_image(Gtk.Image.new_from_icon_name('dialog-information-symbolic', Gtk.IconSize.BUTTON))
+        self.menu_about = self.GtkBuilder.get_object("menu_about")
+        self.menu_about.set_use_stock(False)
+        self.menu_about.set_label(_("About"))
+        self.menu_about.set_image(Gtk.Image.new_from_icon_name('dialog-information-symbolic', Gtk.IconSize.BUTTON))
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
 
@@ -407,6 +411,10 @@ class MainWindow(object):
         self.splashspinner.stop()
         self.splashbarstatus = False
         self.splashlabel.set_text("")
+
+        self.HeaderBarMenuButton.set_sensitive(True)
+        self.topsearchbutton.set_sensitive(True)
+
         print("page setted to normal")
 
     def package(self):
@@ -1890,8 +1898,9 @@ class MainWindow(object):
         else:
             self.toprevealer.set_reveal_child(False)
 
-    def on_menu1_select(self, menu_item):
+    def on_menu_settings_activate(self, menu_item):
         self.homestack.set_visible_child_name("preferences")
+        self.menubackbutton.set_sensitive(False)
         self.UserSettings.readConfig()
         self.switchUSI.set_state(self.UserSettings.config_usi)
         self.switchEA.set_state(self.UserSettings.config_anim)
@@ -1903,7 +1912,7 @@ class MainWindow(object):
         self.prefapplybutton.set_sensitive(False)
         self.prefapplybutton.set_label(_("Apply"))
 
-    def on_menu3_activate(self, menu_item):
+    def on_menu_about_activate(self, menu_item):
         self.aboutdialog.run()
         self.aboutdialog.hide()
 
