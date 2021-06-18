@@ -960,10 +960,10 @@ class MainWindow(object):
                 self.dActionButton.set_label(_(" Not Found"))
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON))
 
-                self.dVersion.set_markup("None")
-                self.dSize.set_markup("None")
-                self.dComponent.set_markup("None")
-                self.dType.set_markup("None")
+                self.dVersion.set_markup(_("None"))
+                self.dSize.set_markup(_("None"))
+                self.dComponent.set_markup(_("None"))
+                self.dType.set_markup(_("None"))
 
             self.pixbuf1 = None
             self.pixbuf2 = None
