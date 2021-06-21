@@ -93,6 +93,8 @@ class MainWindow(object):
         self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
 
         self.HomeCategoryFlowBox = self.GtkBuilder.get_object("HomeCategoryFlowBox")
+        self.MostDownFlowBox = self.GtkBuilder.get_object("MostDownFlowBox")
+        self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
         """
         self.CategoryAllRow = Gtk.ListBoxRow.new()
         self.CategoryListBox.add(self.CategoryAllRow)
@@ -395,6 +397,7 @@ class MainWindow(object):
         self.setPardusCategories()
         self.setPardusApps()
         self.setEditorApps()
+        self.setMostApps()
         self.normalpage()
 
     def normalpage(self):
@@ -682,6 +685,112 @@ class MainWindow(object):
                     edicategorynumber = self.get_category_number(edicategory)
                     self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
 
+    def setMostApps(self):
+        if self.Server.connection:
+
+            for mda in self.Server.mostdownapplist:
+                icon = Gtk.Image.new()
+                icon.set_from_pixbuf(self.getServerAppIcon(mda["name"], 64))
+
+                label = Gtk.Label.new()
+                label.set_text(str(self.getPrettyName(mda["name"])))
+
+                label.name = mda["name"]
+
+                downicon = Gtk.Image.new()
+                downicon.set_from_pixbuf(self.getSystemAppIcon("document-save-symbolic", 16))
+
+                downlabel = Gtk.Label.new()
+                downlabel.set_markup("<small>{}</small>".format(mda["download"]))
+
+                rateicon = Gtk.Image.new()
+                rateicon.set_from_pixbuf(self.getSystemAppIcon("star-new-symbolic", 16))
+
+                ratelabel = Gtk.Label.new()
+                ratelabel.set_markup("<small>{:.1f}</small>".format(float(mda["rate"])))
+
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+                box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                box3 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+
+                box2.pack_start(downicon, False, True, 0)
+                box2.pack_start(downlabel, False, True, 0)
+
+                box3.pack_start(rateicon, False, True, 0)
+                box3.pack_start(ratelabel, False, True, 0)
+
+                box1.set_homogeneous(True)
+                box1.pack_start(box2, False, True, 0)
+                box1.pack_start(box3, False, True, 0)
+
+                box.pack_start(icon, False, True, 0)
+                box.pack_start(label, False, True, 0)
+                box.pack_start(downicon, False, True, 0)
+                box.pack_start(downlabel, False, True, 0)
+                box.pack_end(box1, False, True, 13)
+
+                frame = Gtk.Frame.new()
+                frame.add(box)
+                self.MostDownFlowBox.add(frame)
+
+            for mra in self.Server.mostrateapplist:
+                icon = Gtk.Image.new()
+                icon.set_from_pixbuf(self.getServerAppIcon(mra["name"], 64))
+
+                label = Gtk.Label.new()
+                label.set_text(str(self.getPrettyName(mra["name"])))
+                label.name = mra["name"]
+
+                downicon = Gtk.Image.new()
+                downicon.set_from_pixbuf(self.getSystemAppIcon("document-save-symbolic", 16))
+
+                downlabel = Gtk.Label.new()
+                downlabel.set_markup("<small>{}</small>".format(mra["download"]))
+
+                rateicon = Gtk.Image.new()
+                rateicon.set_from_pixbuf(self.getSystemAppIcon("star-new-symbolic", 16))
+
+                ratelabel = Gtk.Label.new()
+                ratelabel.set_markup("<small>{:.1f}</small>".format(float(mra["rate"])))
+
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+                box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                box3 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+
+                box2.pack_start(rateicon, False, True, 0)
+                box2.pack_start(ratelabel, False, True, 0)
+
+                box3.pack_start(downicon, False, True, 0)
+                box3.pack_start(downlabel, False, True, 0)
+
+                box1.set_homogeneous(True)
+                box1.pack_start(box2, False, True, 0)
+                box1.pack_start(box3, False, True, 0)
+
+                box.pack_start(icon, False, True, 0)
+                box.pack_start(label, False, True, 0)
+                box.pack_start(downicon, False, True, 0)
+                box.pack_start(downlabel, False, True, 0)
+                box.pack_end(box1, False, True, 13)
+
+                frame = Gtk.Frame.new()
+                frame.add(box)
+                self.MostRateFlowBox.add(frame)
+
+        self.MostDownFlowBox.show_all()
+        self.MostRateFlowBox.show_all()
+
+    def getPrettyName(self, name):
+        prettyname = ""
+        for i in self.Server.applist:
+            if i["name"] == name:
+                prettyname = i["prettyname"][self.locale]
+                if prettyname == "" or prettyname is None:
+                    prettyname = i["prettyname"]["en"]
+        return prettyname
+
     def getSystemCatIcon(self, cat, size=48):
         try:
             caticon = Gtk.IconTheme.get_default().load_icon("applications-" + cat, size, Gtk.IconLookupFlags(16))
@@ -814,10 +923,12 @@ class MainWindow(object):
             self.EditorAppsIconView.unselect_all()
             self.menubackbutton.set_sensitive(False)
         elif self.homestack.get_visible_child_name() == "pardusappsdetail":
-            if self.fromeditorapps:
+            if self.fromeditorapps or self.frommostapps:
                 self.homestack.set_visible_child_name("pardushome")
                 self.HomeCategoryFlowBox.unselect_all()
                 self.EditorAppsIconView.unselect_all()
+                self.MostRateFlowBox.unselect_all()
+                self.MostDownFlowBox.unselect_all()
                 self.menubackbutton.set_sensitive(False)
             else:
                 self.homestack.set_visible_child_name("pardusapps")
@@ -844,19 +955,28 @@ class MainWindow(object):
         self.wpcComment.set_text("")
         self.wpcSendButton.set_sensitive(True)
 
-        selected_items = iconview.get_selected_items()
+        try:
+            selected_items = iconview.get_selected_items()
+            lensel = len(selected_items)
+            self.frommostapps = False
+        except:
+            self.frommostapps = True
+            lensel = 1
 
-        if len(selected_items) == 1:
-            if mode == 1:
-                treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
-                self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
-                prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
+        if lensel == 1:
+            if not self.frommostapps:
+                if mode == 1:
+                    treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
+                    self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
+                    # prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
+                else:
+                    treeiter = self.EditorListStore.get_iter(selected_items[0])
+                    self.appname = self.EditorListStore.get(treeiter, 1)[0]
+                    # prettyname = self.EditorListStore.get(treeiter, 3)[0]
+                print(selected_items[0])
+                print(self.appname)
             else:
-                treeiter = self.EditorListStore.get_iter(selected_items[0])
-                self.appname = self.EditorListStore.get(treeiter, 1)[0]
-                prettyname = self.EditorListStore.get(treeiter, 3)[0]
-            print(selected_items[0])
-            print(self.appname)
+                self.appname = iconview
 
             self.homestack.set_visible_child_name("pardusappsdetail")
 
@@ -867,7 +987,6 @@ class MainWindow(object):
 
             self.dIcon.set_from_pixbuf(pixbuf)
 
-            self.description = ""
             for i in self.Server.applist:
                 if i["name"] == self.appname:
                     self.description = i["description"][self.locale]
@@ -882,6 +1001,9 @@ class MainWindow(object):
                     self.codenames = ", ".join(c["name"] for c in i["codename"])
                     self.gnomename = i["gnomename"]
                     self.screenshots = i["screenshots"]
+                    prettyname = i["prettyname"][self.locale]
+                    if prettyname == "" or prettyname is None:
+                        prettyname = i["prettyname"][self.locale]
 
             if self.gnomename != "" and self.gnomename is not None:
                 try:
@@ -1132,7 +1254,7 @@ class MainWindow(object):
             if response["response-type"] == 10:
                 self.commentstack.set_visible_child_name("sendresult")
                 self.wpcresultLabel.set_text(
-                        _("Your comment has been sent successfully. It will be published after approval."))
+                    _("Your comment has been sent successfully. It will be published after approval."))
         else:
             self.wpcresultLabel.set_text(_("Error"))
 
@@ -1403,7 +1525,6 @@ class MainWindow(object):
         comment = self.wpcComment.get_text().strip()
         value = self.wpcstar
         status = True
-        #fuck
         if value == 0 or comment == "" or author == "":
             self.wpcformcontrolLabel.set_text(_("Cannot be null"))
         else:
@@ -1581,6 +1702,15 @@ class MainWindow(object):
     #         else:
     #             return category == self.RepoCurrentCategory
 
+    def on_MostFlowBox_child_activated(self, flow_box, child):
+
+        name = child.get_children()[0].get_children()[0].get_children()[1].name
+
+        self.on_PardusAppsIconView_selection_changed(name)
+
+        self.MostDownFlowBox.unselect_all()
+        self.MostRateFlowBox.unselect_all()
+
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         self.isPardusSearching = False
         self.mainstack.set_visible_child_name("page2")
@@ -1727,6 +1857,8 @@ class MainWindow(object):
             self.HomeCategoryFlowBox.unselect_all()
             self.EditorAppsIconView.unselect_all()
             self.PardusAppsIconView.unselect_all()
+            self.MostDownFlowBox.unselect_all()
+            self.MostRateFlowBox.unselect_all()
         else:
             self.searchstack.set_visible_child_name("page2")
             self.homestack.set_visible_child_name("noserver")

@@ -37,6 +37,8 @@ class Server(object):
         self.applist = []
         self.catlist = []
         self.ediapplist = []
+        self.mostdownapplist = []
+        self.mostrateapplist = []
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
@@ -73,6 +75,8 @@ class Server(object):
                 self.applist = sorted(self.applist, key=lambda x: x["name"])
                 self.catlist = request_cat.json()["cat-list"]
                 self.ediapplist = request_home.json()["editor-apps"]
+                self.mostdownapplist = request_home.json()["mostdown-apps"]
+                self.mostrateapplist = request_home.json()["mostrate-apps"]
             else:
                 self.connection = False
 
