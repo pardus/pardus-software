@@ -307,7 +307,7 @@ class MainWindow(object):
 
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
-        self.mainstack.set_visible_child_name("page0")
+        self.mainstack.set_visible_child_name("splash")
 
         self.queue = []
         self.inprogress = False
