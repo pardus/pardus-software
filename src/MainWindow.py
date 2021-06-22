@@ -694,7 +694,8 @@ class MainWindow(object):
 
                 label = Gtk.Label.new()
                 label.set_text(str(self.getPrettyName(mda["name"])))
-
+                label.set_line_wrap(True)
+                label.set_max_width_chars(10)
                 label.name = mda["name"]
 
                 downicon = Gtk.Image.new()
@@ -709,7 +710,7 @@ class MainWindow(object):
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mda["rate"])))
 
-                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
                 box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
                 box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
                 box3 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
@@ -724,11 +725,9 @@ class MainWindow(object):
                 box1.pack_start(box2, False, True, 0)
                 box1.pack_start(box3, False, True, 0)
 
-                box.pack_start(icon, False, True, 0)
-                box.pack_start(label, False, True, 0)
-                box.pack_start(downicon, False, True, 0)
-                box.pack_start(downlabel, False, True, 0)
-                box.pack_end(box1, False, True, 13)
+                box.pack_start(icon, False, True, 10)
+                box.pack_start(label, False, True, 10)
+                box.pack_end(box1, False, True, 10)
 
                 frame = Gtk.Frame.new()
                 frame.add(box)
@@ -740,6 +739,8 @@ class MainWindow(object):
 
                 label = Gtk.Label.new()
                 label.set_text(str(self.getPrettyName(mra["name"])))
+                label.set_line_wrap(True)
+                label.set_max_width_chars(10)
                 label.name = mra["name"]
 
                 downicon = Gtk.Image.new()
@@ -754,7 +755,7 @@ class MainWindow(object):
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mra["rate"])))
 
-                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
                 box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
                 box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
                 box3 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
@@ -769,11 +770,9 @@ class MainWindow(object):
                 box1.pack_start(box2, False, True, 0)
                 box1.pack_start(box3, False, True, 0)
 
-                box.pack_start(icon, False, True, 0)
-                box.pack_start(label, False, True, 0)
-                box.pack_start(downicon, False, True, 0)
-                box.pack_start(downlabel, False, True, 0)
-                box.pack_end(box1, False, True, 13)
+                box.pack_start(icon, False, True, 10)
+                box.pack_start(label, False, True, 10)
+                box.pack_end(box1, False, True, 10)
 
                 frame = Gtk.Frame.new()
                 frame.add(box)
