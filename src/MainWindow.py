@@ -205,7 +205,7 @@ class MainWindow(object):
         self.splashbar = self.GtkBuilder.get_object("splashbar")
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
         self.splashbarstatus = True
-        GLib.timeout_add(200, self.on_timeout, None)
+        # GLib.timeout_add(200, self.on_timeout, None)
 
         self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
         self.PardusAppsIconView.set_pixbuf_column(0)
@@ -335,6 +335,7 @@ class MainWindow(object):
         self.MainWindow.show_all()
 
         p1 = threading.Thread(target=self.worker)
+        p1.daemon = True
         p1.start()
         print("start done")
 
@@ -390,7 +391,7 @@ class MainWindow(object):
         self.appdetail()
         self.apprequest()
         self.setRepoCategories()
-        self.setRepoApps()
+        GLib.idle_add(self.setRepoApps)
         self.server()
         self.gnomeRatings()
         self.gnomeComments()
@@ -398,7 +399,7 @@ class MainWindow(object):
         self.setPardusApps()
         self.setEditorApps()
         self.setMostApps()
-        self.normalpage()
+        GLib.idle_add(self.normalpage)
 
     def normalpage(self):
         # self.mainstack.set_visible_child_name("page1")
@@ -412,7 +413,7 @@ class MainWindow(object):
                                                      self.Server.app_scode, _("Error Code (cat)"),
                                                      self.Server.cat_scode))
         self.splashspinner.stop()
-        self.splashbarstatus = False
+        # self.splashbarstatus = False
         self.splashlabel.set_text("")
 
         self.HeaderBarMenuButton.set_sensitive(True)
@@ -422,7 +423,7 @@ class MainWindow(object):
 
     def package(self):
         # self.splashspinner.start()
-        self.splashbar.pulse()
+        # self.splashbar.pulse()
         self.splashlabel.set_markup("<b>{}</b>".format(_("Updating Cache")))
         self.Package = Package()
 
@@ -560,7 +561,7 @@ class MainWindow(object):
         print("cell clicked")
 
     def server(self):
-        self.splashbar.pulse()
+        # self.splashbar.pulse()
         self.splashlabel.set_markup("<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
         print("{} {}".format("server connection", self.Server.connection))
@@ -589,7 +590,7 @@ class MainWindow(object):
                     category = category.rstrip(",")
                     # print(appname + " : " + category)
                     categorynumber = self.get_category_number(category)
-                    self.PardusAppListStore.append([appicon, appname, categorynumber, prettyname, category])
+                    GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
             else:
                 print("User want to use server icons [app]")
                 self.serverappicons = self.Server.getAppIcons()
@@ -607,9 +608,12 @@ class MainWindow(object):
                         category = category.rstrip(",")
                         # print(appname + " : " + category)
                         categorynumber = self.get_category_number(category)
-                        self.PardusAppListStore.append([appicon, appname, categorynumber, prettyname, category])
+                        GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
                 else:
                     print("user want to use server icons [app]; but serverappicons return as false")
+
+    def addToPardusApps(self, list):
+        self.PardusAppListStore.append(list)
 
     def setPardusCategories(self):
         if self.Server.connection:
@@ -634,7 +638,7 @@ class MainWindow(object):
                     box1.pack_start(caticon, False, True, 0)
                     box1.pack_start(label, False, True, 0)
                     box1.set_name("homecats")
-                    self.HomeCategoryFlowBox.add(box1)
+                    GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
             else:
                 print("User want to use server icons [cat]")
                 self.servercaticons = self.Server.getCategoryIcons()
@@ -650,11 +654,11 @@ class MainWindow(object):
                         box1.pack_start(caticon, False, True, 0)
                         box1.pack_start(label, False, True, 0)
                         box1.set_name("homecats")
-                        self.HomeCategoryFlowBox.add(box1)
+                        GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
                 else:
                     print("user want to use server icons [cat]; but servercaticons return as false")
 
-            self.HomeCategoryFlowBox.show_all()
+            GLib.idle_add(self.HomeCategoryFlowBox.show_all)
 
     def setEditorApps(self):
         if self.Server.connection:
@@ -670,7 +674,7 @@ class MainWindow(object):
                         edicategory += i[self.locale] + ","
                     edicategory = edicategory.rstrip(",")
                     edicategorynumber = self.get_category_number(edicategory)
-                    self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
+                    GLib.idle_add(self.addToEditorApps, [edipixbuf, ediappname, edicategorynumber, ediprettyname])
             else:
                 for ediapp in self.Server.ediapplist:
                     edipixbuf = self.getServerAppIcon(ediapp['name'])
@@ -683,7 +687,10 @@ class MainWindow(object):
                         edicategory += i[self.locale] + ","
                     edicategory = edicategory.rstrip(",")
                     edicategorynumber = self.get_category_number(edicategory)
-                    self.EditorListStore.append([edipixbuf, ediappname, edicategorynumber, ediprettyname])
+                    GLib.idle_add(self.addToEditorApps, [edipixbuf, ediappname, edicategorynumber, ediprettyname])
+
+    def addToEditorApps(self, list):
+        self.EditorListStore.append(list)
 
     def setMostApps(self):
         if self.Server.connection:
@@ -726,12 +733,12 @@ class MainWindow(object):
                 box1.pack_start(box3, False, True, 0)
 
                 box.pack_start(icon, False, True, 10)
-                box.pack_start(label, False, True, 10)
+                box.pack_start(label, False, True, 0)
                 box.pack_end(box1, False, True, 10)
 
                 frame = Gtk.Frame.new()
                 frame.add(box)
-                self.MostDownFlowBox.add(frame)
+                GLib.idle_add(self.MostDownFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
 
             for mra in self.Server.mostrateapplist:
                 icon = Gtk.Image.new()
@@ -771,15 +778,15 @@ class MainWindow(object):
                 box1.pack_start(box3, False, True, 0)
 
                 box.pack_start(icon, False, True, 10)
-                box.pack_start(label, False, True, 10)
+                box.pack_start(label, False, True, 0)
                 box.pack_end(box1, False, True, 10)
 
                 frame = Gtk.Frame.new()
                 frame.add(box)
-                self.MostRateFlowBox.add(frame)
+                GLib.idle_add(self.MostRateFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
 
-        self.MostDownFlowBox.show_all()
-        self.MostRateFlowBox.show_all()
+        GLib.idle_add(self.MostDownFlowBox.show_all)
+        GLib.idle_add(self.MostRateFlowBox.show_all)
 
     def getPrettyName(self, name):
         prettyname = ""
@@ -852,12 +859,12 @@ class MainWindow(object):
                 appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return appicon
 
-    def on_timeout(self, user_data):
-        if self.splashbarstatus:
-            self.splashbar.pulse()
-        else:
-            self.splashbar.set_fraction(0)
-        return True
+    # def on_timeout(self, user_data):
+    #     if self.splashbarstatus:
+    #         self.splashbar.pulse()
+    #     else:
+    #         self.splashbar.set_fraction(0)
+    #     return True
 
     def get_category_number(self, thatcategory):
         listcat = list(thatcategory.split(","))
