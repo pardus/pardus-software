@@ -28,6 +28,7 @@ from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk
 
 from Package import Package
 from Server import Server
+from GnomeRatingServer import GnomeRatingServer
 # from CellRendererButton import CellRendererButton
 
 from AppImage import AppImage
@@ -95,6 +96,9 @@ class MainWindow(object):
         self.HomeCategoryFlowBox = self.GtkBuilder.get_object("HomeCategoryFlowBox")
         self.MostDownFlowBox = self.GtkBuilder.get_object("MostDownFlowBox")
         self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
+
+        self.hometotaldc = self.GtkBuilder.get_object("hometotaldc")
+        self.hometotalrc = self.GtkBuilder.get_object("hometotalrc")
         """
         self.CategoryAllRow = Gtk.ListBoxRow.new()
         self.CategoryListBox.add(self.CategoryAllRow)
@@ -312,13 +316,16 @@ class MainWindow(object):
         self.queue = []
         self.inprogress = False
 
-        cssProvider = Gtk.CssProvider()
-        cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
-        screen = Gdk.Screen.get_default()
-        styleContext = Gtk.StyleContext()
-        styleContext.add_provider_for_screen(screen, cssProvider,
-                                             Gtk.STYLE_PROVIDER_PRIORITY_USER)
-        # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
+        self.serverappicons = False
+        self.servercaticons = False
+
+        # cssProvider = Gtk.CssProvider()
+        # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
+        # screen = Gdk.Screen.get_default()
+        # styleContext = Gtk.StyleContext()
+        # styleContext.add_provider_for_screen(screen, cssProvider,
+        #                                      Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        # # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
 
         self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
         self.GnomeCommentListBox = self.GtkBuilder.get_object("GnomeCommentListBox")
@@ -391,15 +398,16 @@ class MainWindow(object):
         self.appdetail()
         self.apprequest()
         self.setRepoCategories()
-        GLib.idle_add(self.setRepoApps)
         self.server()
-        self.gnomeRatings()
-        self.gnomeComments()
-        self.setPardusCategories()
-        self.setPardusApps()
-        self.setEditorApps()
-        self.setMostApps()
-        GLib.idle_add(self.normalpage)
+        self.getIcons()
+        self.normalpage()
+        GLib.idle_add(self.gnomeComments)
+        GLib.idle_add(self.setPardusCategories)
+        GLib.idle_add(self.setPardusApps)
+        GLib.idle_add(self.setEditorApps)
+        GLib.idle_add(self.setMostApps)
+        GLib.idle_add(self.setRepoApps)
+        GLib.idle_add(self.gnomeRatings)
 
     def normalpage(self):
         # self.mainstack.set_visible_child_name("page1")
@@ -469,7 +477,7 @@ class MainWindow(object):
         print("image press")
 
     def setRepoCategories(self):
-        self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Categories")))
+        # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Categories")))
         # for i in self.Package.sections:
         #     # row = Gtk.ListBoxRow.new()
         #     # self.RepoCategoryListBox.add(row)
@@ -487,7 +495,7 @@ class MainWindow(object):
         print("Repo Categories setted")
 
     def setRepoApps(self):
-        self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Apps")))
+        # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Apps")))
         print("Repo apps setting")
         # for app in self.Package.apps:
         #     appname = app['name']
@@ -562,19 +570,49 @@ class MainWindow(object):
 
     def server(self):
         # self.splashbar.pulse()
+        print("Getting applications from server")
         self.splashlabel.set_markup("<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
+        # self.serverappicons = self.Server.getAppIcons()
+        # self.servercaticons = self.Server.getCategoryIcons()
         print("{} {}".format("server connection", self.Server.connection))
 
+    def getIcons(self):
+        if self.Server.connection:
+            # self.splashbar.pulse()
+            print("Getting icons from server")
+            self.splashlabel.set_markup("<b>{}</b>".format(_("Getting icons from server")))
+            self.serverappicons = self.Server.getAppIcons()
+            self.servercaticons = self.Server.getCategoryIcons()
+        else:
+            print("icons cannot downloading because server connection is {}".format(self.Server.connection))
+
     def gnomeRatings(self):
-        self.splashlabel.set_markup("<b>{}</b>".format(_("Getting ratings from gnome odrs")))
-        self.gnomeratings = self.Server.getGnomeRatings()
-        if self.gnomeratings is not False:
+        print("Getting ratings from gnome odrs")
+        # self.splashlabel.set_markup("<b>{}</b>".format(_("Getting ratings from gnome odrs")))
+        # self.GnomeServer = GnomeServer()
+        # self.gnomeratings = self.GnomeServer.getGnomeRatings()
+        # if self.gnomeratings is not False:
+        #     print("gnomeratings successful")
+        # else:
+        #     print("gnomeratings none")
+
+        self.GnomeRatingServer = GnomeRatingServer()
+        self.GnomeRatingServer.gRatingServer = self.gRatingServer
+        self.GnomeRatingServer.get()
+
+    def gRatingServer(self, status, response):
+        if status:
             print("gnomeratings successful")
+            self.gnomeratings = response
+            # GLib.idle_add(self.setGnomeRatings, self.gnomeratings[self.gnomename])
+        else:
+            self.gnomeratings = []
+            print("gnomeratings not successful")
 
     def setPardusApps(self):
         if self.Server.connection:
-            self.splashlabel.set_markup("<b>{}</b>".format(_("Setting applications")))
+            # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting applications")))
 
             if self.UserSettings.config_usi:
                 print("User want to use system icons [app]")
@@ -593,24 +631,20 @@ class MainWindow(object):
                     GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
             else:
                 print("User want to use server icons [app]")
-                self.serverappicons = self.Server.getAppIcons()
                 print("{} : {}".format("serverappicons", self.serverappicons))
-                if self.serverappicons:
-                    for app in self.Server.applist:
-                        appicon = self.getServerAppIcon(app["name"])
-                        appname = app['name']
-                        prettyname = app['prettyname'][self.locale]
-                        if prettyname == "" or prettyname is None:
-                            prettyname = app["prettyname"]["en"]
-                        category = ""
-                        for i in app['category']:
-                            category += i[self.locale] + ","
-                        category = category.rstrip(",")
-                        # print(appname + " : " + category)
-                        categorynumber = self.get_category_number(category)
-                        GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
-                else:
-                    print("user want to use server icons [app]; but serverappicons return as false")
+                for app in self.Server.applist:
+                    appicon = self.getServerAppIcon(app["name"])
+                    appname = app['name']
+                    prettyname = app['prettyname'][self.locale]
+                    if prettyname == "" or prettyname is None:
+                        prettyname = app["prettyname"]["en"]
+                    category = ""
+                    for i in app['category']:
+                        category += i[self.locale] + ","
+                    category = category.rstrip(",")
+                    # print(appname + " : " + category)
+                    categorynumber = self.get_category_number(category)
+                    GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
 
     def addToPardusApps(self, list):
         self.PardusAppListStore.append(list)
@@ -641,63 +675,50 @@ class MainWindow(object):
                     GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
             else:
                 print("User want to use server icons [cat]")
-                self.servercaticons = self.Server.getCategoryIcons()
                 print("{} : {}".format("servercaticons", self.servercaticons))
-                if self.servercaticons:
-                    for cat in self.categories:
-                        caticon = Gtk.Image.new()
-                        caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
-                        label = Gtk.Label.new()
-                        label_text = str(cat["name"]).capitalize()
-                        label.set_text(" " + label_text)
-                        box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                        box1.pack_start(caticon, False, True, 0)
-                        box1.pack_start(label, False, True, 0)
-                        box1.set_name("homecats")
-                        GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
-                else:
-                    print("user want to use server icons [cat]; but servercaticons return as false")
+                for cat in self.categories:
+                    caticon = Gtk.Image.new()
+                    caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
+                    label = Gtk.Label.new()
+                    label_text = str(cat["name"]).capitalize()
+                    label.set_text(" " + label_text)
+                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                    box1.pack_start(caticon, False, True, 0)
+                    box1.pack_start(label, False, True, 0)
+                    box1.set_name("homecats")
+                    GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
 
             GLib.idle_add(self.HomeCategoryFlowBox.show_all)
 
     def setEditorApps(self):
         if self.Server.connection:
-            if self.UserSettings.config_usi:
-                for ediapp in self.Server.ediapplist:
+            for ediapp in self.Server.ediapplist:
+                if self.UserSettings.config_usi:
                     edipixbuf = self.getSystemAppIcon(ediapp['name'])
-                    ediappname = ediapp["name"]
-                    ediprettyname = ediapp["prettyname"][self.locale]
-                    if ediprettyname == "" or ediprettyname is None:
-                        ediprettyname = ediapp["prettyname"]["en"]
-                    edicategory = ""
-                    for i in ediapp['category']:
-                        edicategory += i[self.locale] + ","
-                    edicategory = edicategory.rstrip(",")
-                    edicategorynumber = self.get_category_number(edicategory)
-                    GLib.idle_add(self.addToEditorApps, [edipixbuf, ediappname, edicategorynumber, ediprettyname])
-            else:
-                for ediapp in self.Server.ediapplist:
+                else:
                     edipixbuf = self.getServerAppIcon(ediapp['name'])
-                    ediappname = ediapp['name']
-                    ediprettyname = ediapp['prettyname'][self.locale]
-                    if ediprettyname == "" or ediprettyname is None:
-                        ediprettyname = ediapp["prettyname"]["en"]
-                    edicategory = ""
-                    for i in ediapp['category']:
-                        edicategory += i[self.locale] + ","
-                    edicategory = edicategory.rstrip(",")
-                    edicategorynumber = self.get_category_number(edicategory)
-                    GLib.idle_add(self.addToEditorApps, [edipixbuf, ediappname, edicategorynumber, ediprettyname])
+                ediappname = ediapp["name"]
+                ediprettyname = ediapp["prettyname"][self.locale]
+                if ediprettyname == "" or ediprettyname is None:
+                    ediprettyname = ediapp["prettyname"]["en"]
+                edicategory = ""
+                for i in ediapp['category']:
+                    edicategory += i[self.locale] + ","
+                edicategory = edicategory.rstrip(",")
+                edicategorynumber = self.get_category_number(edicategory)
+                GLib.idle_add(self.addToEditorApps, [edipixbuf, ediappname, edicategorynumber, ediprettyname])
 
     def addToEditorApps(self, list):
         self.EditorListStore.append(list)
 
     def setMostApps(self):
         if self.Server.connection:
-
             for mda in self.Server.mostdownapplist:
                 icon = Gtk.Image.new()
-                icon.set_from_pixbuf(self.getServerAppIcon(mda["name"], 64))
+                if self.UserSettings.config_usi:
+                    icon.set_from_pixbuf(self.getSystemAppIcon(mda["name"], 64))
+                else:
+                    icon.set_from_pixbuf(self.getServerAppIcon(mda["name"], 64))
 
                 label = Gtk.Label.new()
                 label.set_text(str(self.getPrettyName(mda["name"])))
@@ -742,7 +763,10 @@ class MainWindow(object):
 
             for mra in self.Server.mostrateapplist:
                 icon = Gtk.Image.new()
-                icon.set_from_pixbuf(self.getServerAppIcon(mra["name"], 64))
+                if self.UserSettings.config_usi:
+                    icon.set_from_pixbuf(self.getSystemAppIcon(mra["name"], 64))
+                else:
+                    icon.set_from_pixbuf(self.getServerAppIcon(mra["name"], 64))
 
                 label = Gtk.Label.new()
                 label.set_text(str(self.getPrettyName(mra["name"])))
@@ -784,6 +808,9 @@ class MainWindow(object):
                 frame = Gtk.Frame.new()
                 frame.add(box)
                 GLib.idle_add(self.MostRateFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+
+            self.hometotaldc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["downcount"]))
+            self.hometotalrc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["ratecount"]))
 
         GLib.idle_add(self.MostDownFlowBox.show_all)
         GLib.idle_add(self.MostRateFlowBox.show_all)
@@ -2083,9 +2110,17 @@ class MainWindow(object):
                 self.EditorListStore.clear()
                 for row in self.HomeCategoryFlowBox:
                     self.HomeCategoryFlowBox.remove(row)
+                for row in self.MostDownFlowBox:
+                    self.MostDownFlowBox.remove(row)
+                for row in self.MostRateFlowBox:
+                    self.MostRateFlowBox.remove(row)
+                if not usi:
+                    self.serverappicons = self.Server.getAppIcons()
+                    self.servercaticons = self.Server.getCategoryIcons()
                 self.setPardusApps()
                 self.setPardusCategories()
                 self.setEditorApps()
+                self.setMostApps()
 
             self.prefapplybutton.set_sensitive(False)
             self.prefapplybutton.set_label(_("Applied"))

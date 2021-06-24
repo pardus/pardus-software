@@ -39,6 +39,7 @@ class Server(object):
         self.ediapplist = []
         self.mostdownapplist = []
         self.mostrateapplist = []
+        self.totalstatistics = []
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
@@ -77,6 +78,7 @@ class Server(object):
                 self.ediapplist = request_home.json()["editor-apps"]
                 self.mostdownapplist = request_home.json()["mostdown-apps"]
                 self.mostrateapplist = request_home.json()["mostrate-apps"]
+                self.totalstatistics = request_home.json()["total"]
             else:
                 self.connection = False
 
