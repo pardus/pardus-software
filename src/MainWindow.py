@@ -1036,7 +1036,7 @@ class MainWindow(object):
                     self.screenshots = i["screenshots"]
                     prettyname = i["prettyname"][self.locale]
                     if prettyname == "" or prettyname is None:
-                        prettyname = i["prettyname"][self.locale]
+                        prettyname = i["prettyname"]["en"]
 
             if self.gnomename != "" and self.gnomename is not None:
                 try:
