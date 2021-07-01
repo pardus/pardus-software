@@ -920,10 +920,10 @@ class MainWindow(object):
 
     def setAnimations(self):
         if self.UserSettings.config_anim:
-            self.mainstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.mainstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
             self.mainstack.set_transition_duration(200)
 
-            self.homestack.set_transition_type(Gtk.StackTransitionType.OVER_UP_DOWN)
+            self.homestack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
             self.homestack.set_transition_duration(200)
 
             self.searchstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
@@ -932,7 +932,7 @@ class MainWindow(object):
             self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.rbotstack.set_transition_duration(200)
 
-            self.commentstack.set_transition_type(Gtk.StackTransitionType.OVER_LEFT_RIGHT)
+            self.commentstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.commentstack.set_transition_duration(200)
 
         else:
