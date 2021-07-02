@@ -1,3 +1,12 @@
+pardus-software (0.1.0~beta1) unstable; urgency=medium
+
+  * Update ratings scrollview min-height value
+  * Update ratings scrollview
+  * Update TransitionTypes
+  * Disable getDisplay func
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 02 Jul 2021 19:32:47 +0300
+
 pardus-software (0.1.0~alpha4) unstable; urgency=medium
 
   * Add most rated and most downloaded apps to homepage
