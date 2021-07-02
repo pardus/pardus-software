@@ -300,7 +300,7 @@ class MainWindow(object):
         self.pop2Image = self.GtkBuilder.get_object("pop2Image")
         self.pixbuf1 = None
         self.pixbuf2 = None
-        self.getDisplay()
+        # self.getDisplay()
 
         self.mac = self.getMac()
 
