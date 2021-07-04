@@ -824,7 +824,7 @@ class MainWindow(object):
                 prettyname = i["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
                     prettyname = i["prettyname"]["en"]
-        if len(prettyname.split(" ")) > 3 :
+        if len(prettyname.split(" ")) > 3:
             prettyname = " ".join(prettyname.split(" ")[:3]) + " ..."
         return prettyname
 
@@ -2150,30 +2150,46 @@ class MainWindow(object):
             self.prefcachebutton.set_label(_("Error"))
             self.preflabel.set_text(message)
 
+    def getActiveAppOnUI(self):
+        ui_appname = ""
+        selected_items = self.PardusAppsIconView.get_selected_items()
+        editor_selected_items = self.EditorAppsIconView.get_selected_items()
+        if len(selected_items) == 1:
+            treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
+            ui_appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
+        if len(editor_selected_items) == 1:
+            treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
+            ui_appname = self.EditorListStore.get(treeiter, 1)[0]
+        if self.frommostapps:
+            ui_appname = self.mostappname
+        return ui_appname
+
     def actionPackage(self, appname):
 
         self.inprogress = True
-
         self.topspinner.start()
 
-        self.dActionButton.set_sensitive(False)
-        self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
+        ui_appname = self.getActiveAppOnUI()
 
-        self.raction.set_sensitive(False)
-        self.raction.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
+        if ui_appname == appname:
+            self.dActionButton.set_sensitive(False)
+            self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
+            self.raction.set_sensitive(False)
+            self.raction.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
 
         self.actionedappname = appname
-
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
 
         if self.isinstalled:
-            self.dActionButton.set_label(_(" Removing"))
-            self.raction.set_label(_(" Removing"))
+            if ui_appname == appname:
+                self.dActionButton.set_label(_(" Removing"))
+                self.raction.set_label(_(" Removing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
                        self.actionedappname]
         else:
-            self.dActionButton.set_label(_(" Installing"))
-            self.raction.set_label(_(" Installing"))
+            if ui_appname == appname:
+                self.dActionButton.set_label(_(" Installing"))
+                self.raction.set_label(_(" Installing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedappname]
 
@@ -2191,7 +2207,7 @@ class MainWindow(object):
         if condition == GLib.IO_HUP:
             return False
 
-        print(source.readline())
+        source.readline()
         return True
 
     def onProcessStderr(self, source, condition):
@@ -2200,7 +2216,7 @@ class MainWindow(object):
 
         line = source.readline()
 
-        print("error: " + line)
+        # print("error: " + line)
 
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
@@ -2212,11 +2228,11 @@ class MainWindow(object):
             #     print("Controlling dependencies : " + percent + " %")
             #     self.progresstextlabel.set_text(
             #         self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
-            print("1/2 : " + percent + " %")
+            # print("1/2 : " + percent + " %")
             self.progresstextlabel.set_text(self.actionedappname + " : " + percent + " %")
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
-            print("Processing : " + percent)
+            # print("Processing : " + percent)
             if self.isinstalled:
                 self.progresstextlabel.set_text(self.actionedappname + " | " + _("Removing") + ": " + percent + " %")
             else:
@@ -2259,8 +2275,12 @@ class MainWindow(object):
 
         self.Package.updatecache()
         self.controlView()
-        self.dActionButton.set_sensitive(True)
-        self.raction.set_sensitive(True)
+
+        ui_appname = self.getActiveAppOnUI()
+        if ui_appname == self.actionedappname:
+            self.dActionButton.set_sensitive(True)
+            self.raction.set_sensitive(True)
+
         self.topspinner.stop()
         print(status)
 
@@ -2291,7 +2311,6 @@ class MainWindow(object):
             if appname == self.actionedappname:
                 self.updateActionButtons(1)
 
-
         if len(editor_selected_items) == 1:
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             appname = self.EditorListStore.get(treeiter, 1)[0]
@@ -2309,7 +2328,7 @@ class MainWindow(object):
                 self.updateActionButtons(2)
 
     def updateActionButtons(self, repo):
-        if repo == 1: # pardus apps
+        if repo == 1:  # pardus apps
             if self.Package.isinstalled(self.actionedappname):
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
@@ -2322,7 +2341,7 @@ class MainWindow(object):
                 self.dActionButton.get_style_context().add_class("suggested-action")
                 self.dActionButton.set_label(_(" Install"))
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
-        if repo == 2: # repo apps
+        if repo == 2:  # repo apps
             if self.Package.isinstalled(self.actionedappname):
                 if self.raction.get_style_context().has_class("suggested-action"):
                     self.raction.get_style_context().remove_class("suggested-action")
