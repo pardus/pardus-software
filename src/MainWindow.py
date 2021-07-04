@@ -282,7 +282,7 @@ class MainWindow(object):
             self.RepoCurrentCategory = "all"
 
         self.useDynamicListStore = False
-        self.repoappvalue = None
+        self.repoappname = False
 
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
@@ -320,6 +320,7 @@ class MainWindow(object):
         self.servercaticons = False
 
         self.frommostapps = False
+        self.fromrepoapps = False
 
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
@@ -972,6 +973,7 @@ class MainWindow(object):
                 self.PardusAppsIconView.unselect_all()
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
+        self.fromrepoapps = False
         mode = 0
         try:
             # detection of IconViews (PardusAppsIconView or EditorAppsIconView)
@@ -2017,11 +2019,13 @@ class MainWindow(object):
         #             value = self.RepoAppListStore.get_value(iter, 0)
         # else:
 
+        self.fromrepoapps = True
+
         iter = self.searchstore.get_iter(path)
         value = self.searchstore.get_value(iter, 0)
         print(value)
 
-        self.repoappvalue = value
+        self.repoappname = value
         self.appname = value
         isinstalled = self.Package.isinstalled(self.appname)
 
@@ -2162,6 +2166,9 @@ class MainWindow(object):
             ui_appname = self.EditorListStore.get(treeiter, 1)[0]
         if self.frommostapps:
             ui_appname = self.mostappname
+        if self.fromrepoapps:
+            ui_appname = self.repoappname
+        print("UI APP = " + ui_appname)
         return ui_appname
 
     def actionPackage(self, appname):
@@ -2323,8 +2330,8 @@ class MainWindow(object):
             if self.mostappname == self.actionedappname:
                 self.updateActionButtons(1)
 
-        if self.repoappvalue:
-            if self.repoappvalue == self.actionedappname:
+        if self.fromrepoapps:
+            if self.repoappname == self.actionedappname:
                 self.updateActionButtons(2)
 
     def updateActionButtons(self, repo):
