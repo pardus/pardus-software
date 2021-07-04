@@ -255,6 +255,7 @@ class MainWindow(object):
         self.menu_about.set_image(Gtk.Image.new_from_icon_name('dialog-information-symbolic', Gtk.IconSize.BUTTON))
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
+        self.aboutdialog.set_program_name(_("Pardus Software Center"))
 
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
