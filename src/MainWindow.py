@@ -319,6 +319,8 @@ class MainWindow(object):
         self.serverappicons = False
         self.servercaticons = False
 
+        self.frommostapps = False
+
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
         # screen = Gdk.Screen.get_default()
@@ -1739,9 +1741,9 @@ class MainWindow(object):
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
-        name = child.get_children()[0].get_children()[0].get_children()[1].name
+        self.mostappname = child.get_children()[0].get_children()[0].get_children()[1].name
 
-        self.on_PardusAppsIconView_selection_changed(name)
+        self.on_PardusAppsIconView_selection_changed(self.mostappname)
 
         self.MostDownFlowBox.unselect_all()
         self.MostRateFlowBox.unselect_all()
@@ -2285,57 +2287,54 @@ class MainWindow(object):
         if len(selected_items) == 1:
             treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
             appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
-            prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
             print("in controlView " + appname)
             if appname == self.actionedappname:
+                self.updateActionButtons(1)
 
-                if self.Package.isinstalled(self.actionedappname):
-                    if self.dActionButton.get_style_context().has_class("suggested-action"):
-                        self.dActionButton.get_style_context().remove_class("suggested-action")
-                    self.dActionButton.get_style_context().add_class("destructive-action")
-                    self.dActionButton.set_label(_(" Uninstall"))
-                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
-                else:
-                    if self.dActionButton.get_style_context().has_class("destructive-action"):
-                        self.dActionButton.get_style_context().remove_class("destructive-action")
-                    self.dActionButton.get_style_context().add_class("suggested-action")
-                    self.dActionButton.set_label(_(" Install"))
-                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
         if len(editor_selected_items) == 1:
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             appname = self.EditorListStore.get(treeiter, 1)[0]
-            prettyname = self.EditorListStore.get(treeiter, 3)[0]
             print("in controlView " + appname)
             if appname == self.actionedappname:
+                self.updateActionButtons(1)
 
-                if self.Package.isinstalled(self.actionedappname):
-                    if self.dActionButton.get_style_context().has_class("suggested-action"):
-                        self.dActionButton.get_style_context().remove_class("suggested-action")
-                    self.dActionButton.get_style_context().add_class("destructive-action")
-                    self.dActionButton.set_label(_(" Uninstall"))
-                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
-                else:
-                    if self.dActionButton.get_style_context().has_class("destructive-action"):
-                        self.dActionButton.get_style_context().remove_class("destructive-action")
-                    self.dActionButton.get_style_context().add_class("suggested-action")
-                    self.dActionButton.set_label(_(" Install"))
-                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+        if self.frommostapps:
+            print("self.frommostapps" + str(self.frommostapps))
+            if self.mostappname == self.actionedappname:
+                self.updateActionButtons(1)
 
         if self.repoappvalue:
             if self.repoappvalue == self.actionedappname:
-                if self.Package.isinstalled(self.actionedappname):
-                    if self.raction.get_style_context().has_class("suggested-action"):
-                        self.raction.get_style_context().remove_class("suggested-action")
-                    self.raction.get_style_context().add_class("destructive-action")
-                    self.raction.set_label(_(" Uninstall"))
-                    self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
-                else:
-                    if self.raction.get_style_context().has_class("destructive-action"):
-                        self.raction.get_style_context().remove_class("destructive-action")
-                    self.raction.get_style_context().add_class("suggested-action")
-                    self.raction.set_label(_(" Install"))
-                    self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+                self.updateActionButtons(2)
+
+    def updateActionButtons(self, repo):
+        if repo == 1: # pardus apps
+            if self.Package.isinstalled(self.actionedappname):
+                if self.dActionButton.get_style_context().has_class("suggested-action"):
+                    self.dActionButton.get_style_context().remove_class("suggested-action")
+                self.dActionButton.get_style_context().add_class("destructive-action")
+                self.dActionButton.set_label(_(" Uninstall"))
+                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+            else:
+                if self.dActionButton.get_style_context().has_class("destructive-action"):
+                    self.dActionButton.get_style_context().remove_class("destructive-action")
+                self.dActionButton.get_style_context().add_class("suggested-action")
+                self.dActionButton.set_label(_(" Install"))
+                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+        if repo == 2: # repo apps
+            if self.Package.isinstalled(self.actionedappname):
+                if self.raction.get_style_context().has_class("suggested-action"):
+                    self.raction.get_style_context().remove_class("suggested-action")
+                self.raction.get_style_context().add_class("destructive-action")
+                self.raction.set_label(_(" Uninstall"))
+                self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+            else:
+                if self.raction.get_style_context().has_class("destructive-action"):
+                    self.raction.get_style_context().remove_class("destructive-action")
+                self.raction.get_style_context().add_class("suggested-action")
+                self.raction.set_label(_(" Install"))
+                self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
     def notify(self):
 
