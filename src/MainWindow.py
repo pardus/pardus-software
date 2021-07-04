@@ -283,7 +283,8 @@ class MainWindow(object):
             self.RepoCurrentCategory = "all"
 
         self.useDynamicListStore = False
-        self.repoappname = False
+        self.repoappname = ""
+        self.repoappclicked = False
 
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
@@ -1922,6 +1923,19 @@ class MainWindow(object):
         if not self.topbutton2.get_style_context().has_class("suggested-action"):
             self.topbutton2.get_style_context().add_class("suggested-action")
 
+        # control for active actioned app
+
+        if self.repoappclicked:
+            self.RepoAppsTreeView.row_activated(self.activerepopath, self.RepoAppsTreeView.get_column(0))
+
+            # Updating status tick of repo apps
+            try:
+                for row in self.searchstore:
+                    installstatus = self.Package.isinstalled(row[0])
+                    row[3] = installstatus
+            except:
+                pass
+
     def on_queuebutton_clicked(self, button):
         self.homestack.set_visible_child_name("queue")
         self.menubackbutton.set_sensitive(False)
@@ -2019,8 +2033,9 @@ class MainWindow(object):
         #             iter = self.RepoAppListStore.get_iter(path)
         #             value = self.RepoAppListStore.get_value(iter, 0)
         # else:
-
+        self.repoappclicked = True
         self.fromrepoapps = True
+        self.activerepopath = path
 
         iter = self.searchstore.get_iter(path)
         value = self.searchstore.get_value(iter, 0)
@@ -2334,6 +2349,15 @@ class MainWindow(object):
         if self.fromrepoapps:
             if self.repoappname == self.actionedappname:
                 self.updateActionButtons(2)
+
+            # Updating status tick of actioned repo app
+            try:
+                for row in self.searchstore:
+                    if row[0] == self.actionedappname:
+                        installstatus = self.Package.isinstalled(self.actionedappname)
+                        row[3] = installstatus
+            except:
+                pass
 
     def updateActionButtons(self, repo):
         if repo == 1:  # pardus apps
