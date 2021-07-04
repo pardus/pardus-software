@@ -822,6 +822,8 @@ class MainWindow(object):
                 prettyname = i["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
                     prettyname = i["prettyname"]["en"]
+        if len(prettyname.split(" ")) > 3 :
+            prettyname = " ".join(prettyname.split(" ")[:3]) + " ..."
         return prettyname
 
     def getSystemCatIcon(self, cat, size=48):
