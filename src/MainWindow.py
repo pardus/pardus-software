@@ -206,6 +206,9 @@ class MainWindow(object):
         self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
         self.queuebutton = self.GtkBuilder.get_object("queuebutton")
 
+        self.topbutton1.set_sensitive(False)
+        self.topbutton2.set_sensitive(False)
+
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
@@ -432,6 +435,8 @@ class MainWindow(object):
 
         self.HeaderBarMenuButton.set_sensitive(True)
         self.topsearchbutton.set_sensitive(True)
+        self.topbutton1.set_sensitive(True)
+        self.topbutton2.set_sensitive(True)
 
         print("page setted to normal")
 
