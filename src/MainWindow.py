@@ -122,6 +122,7 @@ class MainWindow(object):
         self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
         self.topsearchbutton = self.GtkBuilder.get_object("topsearchbutton")
         self.toprevealer = self.GtkBuilder.get_object("toprevealer")
+        self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")
 
         self.pardusicb = self.GtkBuilder.get_object("pardusicb")
 
@@ -1849,6 +1850,9 @@ class MainWindow(object):
 
         self.queue.append(self.appname)
         self.queuestack.set_visible_child_name("page1")
+
+        self.bottomrevealer.set_reveal_child(True)
+
         appicon = Gtk.Image.new()
         if self.UserSettings.config_usi:
             appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
@@ -1873,6 +1877,9 @@ class MainWindow(object):
 
         self.queue.append(self.appname)
         self.queuestack.set_visible_child_name("page1")
+
+        self.bottomrevealer.set_reveal_child(True)
+
         appicon = Gtk.Image.new()
         if self.UserSettings.config_usi:
             appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
@@ -2314,6 +2321,7 @@ class MainWindow(object):
             self.actionPackage(self.queue[0])
         else:
             self.queuestack.set_visible_child_name("page0")
+            self.bottomrevealer.set_reveal_child(False)
             if not self.error:
                 self.progresstextlabel.set_text("")
 
