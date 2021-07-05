@@ -4108,6 +4108,8 @@
                                                           <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
+                                                            <property name="margin-start">13</property>
+                                                            <property name="margin-end">13</property>
                                                             <property name="margin-top">13</property>
                                                             <property name="margin-bottom">13</property>
                                                             <property name="orientation">vertical</property>
@@ -4607,11 +4609,9 @@
                   <object class="GtkBox" id="PreferencesBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="margin-top">33</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">33</property>
-                    <child>
-                      <placeholder/>
-                    </child>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
