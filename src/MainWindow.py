@@ -2350,12 +2350,11 @@ class MainWindow(object):
             if self.repoappname == self.actionedappname:
                 self.updateActionButtons(2)
 
-            # Updating status tick of actioned repo app
+            # Updating status tick of repo apps
             try:
                 for row in self.searchstore:
-                    if row[0] == self.actionedappname:
-                        installstatus = self.Package.isinstalled(self.actionedappname)
-                        row[3] = installstatus
+                    installstatus = self.Package.isinstalled(row[0])
+                    row[3] = installstatus
             except:
                 pass
 
