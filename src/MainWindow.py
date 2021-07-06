@@ -328,6 +328,8 @@ class MainWindow(object):
         self.frommostapps = False
         self.fromrepoapps = False
 
+        self.statusoftopsearch = self.topsearchbutton.get_active()
+
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
         # screen = Gdk.Screen.get_default()
@@ -1872,6 +1874,9 @@ class MainWindow(object):
         if not self.topbutton1.get_style_context().has_class("suggested-action"):
             self.topbutton1.get_style_context().add_class("suggested-action")
 
+        self.topsearchbutton.set_active(self.statusoftopsearch)
+        self.topsearchbutton.set_sensitive(True)
+
     def on_topbutton2_clicked(self, button):
         self.searchstack.set_visible_child_name("page1")
         self.homestack.set_visible_child_name("repohome")
@@ -1895,6 +1900,12 @@ class MainWindow(object):
                     row[3] = installstatus
             except:
                 pass
+
+        self.statusoftopsearch = self.topsearchbutton.get_active()
+        self.topsearchbutton.set_active(True)
+        self.reposearchbar.grab_focus()
+
+        self.topsearchbutton.set_sensitive(True)
 
     def on_queuebutton_clicked(self, button):
         self.homestack.set_visible_child_name("queue")
@@ -1935,6 +1946,11 @@ class MainWindow(object):
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text("All")
+        if self.locale == "tr":
+            self.PardusCurrentCategoryString = "tümü"
+        else:
+            self.PardusCurrentCategoryString = "all"
+
         self.PardusCategoryFilter.refilter()
 
     def on_reposearchbar_search_changed(self, entry_search):
@@ -2047,12 +2063,19 @@ class MainWindow(object):
             self.toprevealer.set_reveal_child(True)
             if self.searchstack.get_visible_child_name() == "page0":
                 self.pardussearchbar.grab_focus()
+                print("in grab focus")
             elif self.searchstack.get_visible_child_name() == "page1":
                 self.reposearchbar.grab_focus()
         else:
             self.toprevealer.set_reveal_child(False)
+            self.statusoftopsearch = False
+
+    def on_HeaderBarMenuButton_toggled(self, button):
+        self.HeaderBarMenuButton.grab_focus()
 
     def on_menu_settings_activate(self, menu_item):
+        self.topsearchbutton.set_active(False)
+        self.topsearchbutton.set_sensitive(False)
         self.homestack.set_visible_child_name("preferences")
         self.menubackbutton.set_sensitive(False)
         self.UserSettings.readConfig()
