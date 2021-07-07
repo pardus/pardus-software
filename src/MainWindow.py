@@ -408,7 +408,7 @@ class MainWindow(object):
         self.appimage()
         self.appdetail()
         self.apprequest()
-        self.setRepoCategories()
+        # self.setRepoCategories()
         self.server()
         self.getIcons()
         self.normalpage()
@@ -446,6 +446,10 @@ class MainWindow(object):
         # self.splashbar.pulse()
         self.splashlabel.set_markup("<b>{}</b>".format(_("Updating Cache")))
         self.Package = Package()
+        if self.Package.updatecache():
+            self.Package.getApps()
+        else:
+            print("Error while updating Cache")
 
         print("package completed")
 
@@ -554,7 +558,6 @@ class MainWindow(object):
 
         self.RepoAppsTreeView.show_all()
 
-        self.repoapps = self.Package.repoapps
 
         # if self.useDynamicListStore:
         #

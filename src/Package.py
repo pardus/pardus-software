@@ -11,34 +11,45 @@ import apt
 
 class Package(object):
     def __init__(self):
-        # self.updatecache()
 
-        """
-        self.MainWindowUIFileName = "SplashScreen.glade"
-        try:
-            self.GtkBuilder = Gtk.Builder.new_from_file(self.MainWindowUIFileName)
-            self.GtkBuilder.connect_signals(self)
-        except GObject.GError:
-            print(_("Error reading GUI file: ") + self.MainWindowUIFileName)
-            raise
 
-        self.splashwindow = self.GtkBuilder.get_object("splashwindow")
-
-        self.splashwindow.set_auto_startup_notification(False)
-        
-        p = threading.Thread(target=self.updatecache)
-        p.start()
-        p.join()
-        
-        self.splashwindow.show_all()
-        """
-        self.cache = apt.Cache()
-        self.cache.open()
-        print("cache updated")
+        self.updatecache()
 
         self.apps = []
         self.secs = []
         self.sections = []
+
+        # self.uniqsections = sorted(list(set(self.secs)))
+        #
+        # lencat = len(self.uniqsections)
+        #
+        # self.sections.append({"name": "all", "number": 0})
+        # for i in range(0, lencat):
+        #     self.sections.append({"name": self.uniqsections[i], "number": i + 1})
+        #
+        # self.repoapps = {}
+        #
+        # lenuniqsec = len(self.uniqsections)
+        # lenapss = len(self.apps)
+        #
+        # for i in range(0, lenuniqsec):
+        #     temp = []
+        #     for j in range(0, lenapss):
+        #         if self.uniqsections[i] == self.apps[j]["category"]:
+        #             temp.append({"name": self.apps[j]["name"], "category": self.apps[j]["category"]})
+        #     self.repoapps[self.uniqsections[i]] = temp
+
+    def updatecache(self):
+        try:
+            self.cache = apt.Cache()
+            self.cache.open()
+        except:
+            return False
+        if self.cache.broken_count > 0:
+            return False
+        return True
+
+    def getApps(self):
         for mypkg in self.cache:
             name = mypkg.name
             try:
@@ -47,49 +58,6 @@ class Package(object):
                 section = mypkg.versions[0].section.lower()
             self.apps.append({"name": name, "category": section})
             self.secs.append(section)
-
-        self.uniqsections = sorted(list(set(self.secs)))
-
-        lencat = len(self.uniqsections)
-
-        self.sections.append({"name": "all", "number": 0})
-        for i in range(0, lencat):
-            self.sections.append({"name": self.uniqsections[i], "number": i + 1})
-
-        self.repoapps = {}
-
-        lenuniqsec = len(self.uniqsections)
-        lenapss = len(self.apps)
-
-        for i in range(0, lenuniqsec):
-            temp = []
-            for j in range(0, lenapss):
-                if self.uniqsections[i] == self.apps[j]["category"]:
-                    temp.append({"name": self.apps[j]["name"], "category": self.apps[j]["category"]})
-            self.repoapps[self.uniqsections[i]] = temp
-
-        # p = threading.Thread(target=self.updatecache)
-        # p.start()
-
-    """
-    def updatecache(self):
-        self.cache = apt.Cache()
-        self.cache.open()
-        time.sleep(1)
-        print("cache updated")
-        # self.splashwindow.close()
-    """
-
-    """
-    def onDestroy(self, widget):
-        print("splashwindow destroyed")
-        self.splashwindow.destroy()
-    """
-
-    def updatecache(self):
-        self.cache = apt.Cache()
-        self.cache.open()
-        print("cache re-updated")
 
     def isinstalled(self, packagename):
         try:
