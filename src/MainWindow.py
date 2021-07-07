@@ -2199,8 +2199,8 @@ class MainWindow(object):
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedappname]
 
-        pid = self.startProcess(command)
-        print(pid)
+        self.pid = self.startProcess(command)
+        print("PID : {}".format(self.pid))
 
     def startProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
@@ -2208,6 +2208,8 @@ class MainWindow(object):
         GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onProcessStdout)
         GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onProcessStderr)
         GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onProcessExit)
+
+        return pid
 
     def onProcessStdout(self, source, condition):
         if condition == GLib.IO_HUP:
@@ -2288,7 +2290,7 @@ class MainWindow(object):
             self.raction.set_sensitive(True)
 
         self.topspinner.stop()
-        print(status)
+        print("Exit Code : {}".format(status))
 
         self.inprogress = False
         self.queue.pop(0)
@@ -2304,6 +2306,9 @@ class MainWindow(object):
         self.error = False
         self.dpkglockerror = False
         self.dpkgconferror = False
+
+        if status == 256:
+            print("dpkg lock error")
 
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()
