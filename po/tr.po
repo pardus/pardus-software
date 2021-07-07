@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-07 18:37+0300\n"
-"PO-Revision-Date: 2021-07-07 18:43+0300\n"
+"PO-Revision-Date: 2021-07-07 19:42+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
 "Language: tr\n"
@@ -91,7 +91,7 @@ msgstr "En Çok İndirilen Uygulamalar "
 
 #: ui/MainWindow.glade:795
 msgid "Most Rated Apps"
-msgstr "Oylaması En Yüksek Uygulamalaar"
+msgstr "Oylaması En Yüksek Uygulamalar"
 
 #: ui/MainWindow.glade:880
 msgid "<small>Total App Download Count :</small>"
