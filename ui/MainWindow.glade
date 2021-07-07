@@ -322,48 +322,57 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="margin-start">40</property>
+                    <property name="margin-end">40</property>
                     <property name="margin-top">5</property>
                     <property name="margin-bottom">5</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkStack" id="bottomstack">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="margin-start">40</property>
-                        <property name="margin-end">40</property>
                         <child>
-                          <object class="GtkStack" id="queuestack">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkButton" id="queuebutton">
+                                <property name="label" translatable="yes">Queue</property>
                                 <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <placeholder/>
-                                </child>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <signal name="clicked" handler="on_queuebutton_clicked" swapped="no"/>
                               </object>
                               <packing>
-                                <property name="name">page0</property>
-                                <property name="title" translatable="yes">page0</property>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="spacing">13</property>
+                                <property name="halign">end</property>
+                                <property name="spacing">7</property>
                                 <child>
-                                  <placeholder/>
+                                  <object class="GtkLabel" id="progresstextlabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="hexpand">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="queuebutton">
-                                    <property name="label" translatable="yes">Queue</property>
+                                  <object class="GtkSpinner" id="topspinner">
+                                    <property name="width-request">35</property>
+                                    <property name="height-request">35</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <signal name="clicked" handler="on_queuebutton_clicked" swapped="no"/>
+                                    <property name="can-focus">False</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -373,32 +382,26 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="name">page1</property>
-                                <property name="title" translatable="yes">page1</property>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="pack-type">end</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
+                            <property name="name">queue</property>
                           </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
                         </child>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="spacing">7</property>
                             <child>
-                              <object class="GtkLabel" id="progresstextlabel">
+                              <object class="GtkLabel" id="bottomerrorlabel">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">label</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -407,24 +410,24 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSpinner" id="topspinner">
-                                <property name="width-request">35</property>
-                                <property name="height-request">35</property>
+                              <object class="GtkButton" id="bottomerrorbutton">
+                                <property name="label" translatable="yes">OK</property>
                                 <property name="visible">True</property>
-                                <property name="can-focus">False</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <signal name="clicked" handler="on_bottomerrorbutton_clicked" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
+                                <property name="pack-type">end</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="pack-type">end</property>
-                            <property name="position">2</property>
+                            <property name="name">error</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
@@ -433,9 +436,6 @@
                         <property name="fill">True</property>
                         <property name="position">0</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                   </object>
                 </child>

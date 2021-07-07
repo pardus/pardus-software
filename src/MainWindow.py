@@ -124,12 +124,15 @@ class MainWindow(object):
         self.toprevealer = self.GtkBuilder.get_object("toprevealer")
         self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")
 
+        self.bottomerrorlabel = self.GtkBuilder.get_object("bottomerrorlabel")
+        self.bottomerrorbutton = self.GtkBuilder.get_object("bottomerrorbutton")
+
         self.pardusicb = self.GtkBuilder.get_object("pardusicb")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
         self.searchstack = self.GtkBuilder.get_object("searchstack")
-        self.queuestack = self.GtkBuilder.get_object("queuestack")
+        self.bottomstack = self.GtkBuilder.get_object("bottomstack")
         self.commentstack = self.GtkBuilder.get_object("commentstack")
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
@@ -329,6 +332,8 @@ class MainWindow(object):
         self.fromrepoapps = False
 
         self.statusoftopsearch = self.topsearchbutton.get_active()
+
+        self.errormessage = ""
 
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
@@ -557,7 +562,6 @@ class MainWindow(object):
         self.RepoAppsTreeView.append_column(column_desc)
 
         self.RepoAppsTreeView.show_all()
-
 
         # if self.useDynamicListStore:
         #
@@ -1807,7 +1811,7 @@ class MainWindow(object):
         self.dActionButton.set_sensitive(False)
 
         self.queue.append(self.appname)
-        self.queuestack.set_visible_child_name("page1")
+        self.bottomstack.set_visible_child_name("queue")
 
         self.bottomrevealer.set_reveal_child(True)
 
@@ -1834,7 +1838,7 @@ class MainWindow(object):
         self.raction.set_sensitive(False)
 
         self.queue.append(self.appname)
-        self.queuestack.set_visible_child_name("page1")
+        self.bottomstack.set_visible_child_name("queue")
 
         self.bottomrevealer.set_reveal_child(True)
 
@@ -2156,6 +2160,9 @@ class MainWindow(object):
             self.prefcachebutton.set_label(_("Error"))
             self.preflabel.set_text(message)
 
+    def on_bottomerrorbutton_clicked(self, button):
+        self.bottomrevealer.set_reveal_child(False)
+
     def getActiveAppOnUI(self):
         ui_appname = ""
         selected_items = self.PardusAppsIconView.get_selected_items()
@@ -2273,12 +2280,11 @@ class MainWindow(object):
             else:
                 self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
         else:
-            errormessage = _("<b><span color='red'>Connection Error !</span></b>")
+            self.errormessage = _("<b><span color='red'>Connection Error !</span></b>")
             if self.dpkglockerror:
-                errormessage = _("<b><span color='red'>Dpkg Lock Error !</span></b>")
+                self.errormessage = _("<b><span color='red'>Dpkg Lock Error !</span></b>")
             elif self.dpkgconferror:
-                errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
-            self.progresstextlabel.set_markup(errormessage)
+                self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
 
         if status == 0 and not self.error:
             self.notify()
@@ -2301,17 +2307,25 @@ class MainWindow(object):
         if len(self.queue) > 0:
             self.actionPackage(self.queue[0])
         else:
-            self.queuestack.set_visible_child_name("page0")
             self.bottomrevealer.set_reveal_child(False)
             if not self.error:
                 self.progresstextlabel.set_text("")
+
+        if self.error:
+            self.bottomrevealer.set_reveal_child(True)
+            self.bottomstack.set_visible_child_name("error")
+            self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
 
         self.error = False
         self.dpkglockerror = False
         self.dpkgconferror = False
 
         if status == 256:
-            print("dpkg lock error")
+            self.errormessage = _("Only one software management tool is allowed to run at the same time.\n"
+                                  "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first.")
+            self.bottomrevealer.set_reveal_child(True)
+            self.bottomstack.set_visible_child_name("error")
+            self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
 
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()
