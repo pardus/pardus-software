@@ -1,3 +1,27 @@
+pardus-software (0.1.0~beta2) unstable; urgency=medium
+
+  * Add max prettyname len control to most apps
+  * Add most apps to controlView
+  * Fix status button label of actioned app with active app on ui
+  * Add control for fromrepoapps
+  * Update aboutdialog prefs and Add enter key action to reposearch
+  * Add control for repo apps status tick and actions
+  * Update HomeGrid
+  * Fix control of repo apps status
+  * Update UI: Mv Pardus, Repo icons to headerbar and Add revealer to action bar
+  * Update top buttons default sensitive
+  * Update some margins on ui
+  * Update some names and margins on ui
+  * Add show search button automatically on repo clicked and Fix search controls
+  * Add apt lock control
+  * Update Package funcs
+  * Update bottomrevealer ui for better showing of errors
+  * Update translations
+  * Fix Turkish translation typo
+  * Update remove command
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 08 Jul 2021 15:11:41 +0300
+
 pardus-software (0.1.0~beta1) unstable; urgency=medium
 
   * Update ratings scrollview min-height value
