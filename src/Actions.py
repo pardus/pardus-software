@@ -31,7 +31,7 @@ def main():
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def remove(packagename):
-        subprocess.call(["apt", "purge", packagename, "-yq", "-o", "APT::Status-Fd=2"],
+        subprocess.call(["apt", "remove", "--purge", packagename, "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def downgrade(packagename):
