@@ -12,7 +12,6 @@ import apt
 class Package(object):
     def __init__(self):
 
-
         self.updatecache()
 
         self.apps = []
@@ -147,3 +146,24 @@ class Package(object):
             except:
                 component = "not found"
         return component
+
+    def residual(self):
+        residual = []
+        for pkg in self.cache:
+            if self.cache[pkg.name].has_config_files and not self.cache[pkg.name].is_installed:
+                residual.append(pkg.name)
+        return residual
+
+    def autoremovable(self):
+        autoremovable = []
+        for pkg in self.cache:
+            if self.cache[pkg.name].is_auto_removable:
+                autoremovable.append(pkg.name)
+        return autoremovable
+
+    def upgradable(self):
+        upgradable = []
+        for pkg in self.cache:
+            if self.cache[pkg.name].is_upgradable:
+                upgradable.append(pkg.name)
+        return upgradable

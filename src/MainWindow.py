@@ -7,6 +7,7 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import os
+import subprocess
 import threading
 import netifaces
 import psutil
@@ -254,7 +255,7 @@ class MainWindow(object):
         self.menu_update.set_label(_("Updates"))
         self.menu_update.set_image(
             Gtk.Image.new_from_icon_name('software-update-available-symbolic', Gtk.IconSize.BUTTON))
-        self.menu_update.set_sensitive(False)
+        self.menu_update.set_sensitive(True)
 
         self.menu_about = self.GtkBuilder.get_object("menu_about")
         self.menu_about.set_use_stock(False)
@@ -272,6 +273,25 @@ class MainWindow(object):
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
         self.menubackbutton.set_sensitive(False)
+
+        self.updatecontrolbutton = self.GtkBuilder.get_object("updatecontrolbutton")
+        self.updatetextview = self.GtkBuilder.get_object("updatetextview")
+        self.updatespinner = self.GtkBuilder.get_object("updatespinner")
+
+        self.residualtextview = self.GtkBuilder.get_object("residualtextview")
+        self.removabletextview = self.GtkBuilder.get_object("removabletextview")
+        self.upgradabletextview = self.GtkBuilder.get_object("upgradabletextview")
+
+        self.updatestack = self.GtkBuilder.get_object("updatestack")
+        self.updatestack.set_visible_child_name("empty")
+
+        self.upgradebutton = self.GtkBuilder.get_object("upgradebutton")
+        self.autoremovebutton = self.GtkBuilder.get_object("autoremovebutton")
+        self.residualbutton = self.GtkBuilder.get_object("residualbutton")
+
+        self.upgradablebox = self.GtkBuilder.get_object("upgradablebox")
+        self.removablebox = self.GtkBuilder.get_object("removablebox")
+        self.residualbox = self.GtkBuilder.get_object("residualbox")
 
         self.progresstextlabel = self.GtkBuilder.get_object("progresstextlabel")
         self.topspinner = self.GtkBuilder.get_object("topspinner")
@@ -334,6 +354,8 @@ class MainWindow(object):
         self.statusoftopsearch = self.topsearchbutton.get_active()
 
         self.errormessage = ""
+
+        self.updateclicked = False
 
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
@@ -2096,6 +2118,14 @@ class MainWindow(object):
         self.prefapplybutton.set_sensitive(False)
         self.prefapplybutton.set_label(_("Apply"))
 
+    def on_menu_update_activate(self, menu_item):
+        self.topsearchbutton.set_active(False)
+        self.topsearchbutton.set_sensitive(False)
+        self.homestack.set_visible_child_name("updates")
+        self.menubackbutton.set_sensitive(False)
+        self.topbutton2.get_style_context().remove_class("suggested-action")
+        self.topbutton1.get_style_context().remove_class("suggested-action")
+
     def on_menu_about_activate(self, menu_item):
         self.aboutdialog.run()
         self.aboutdialog.hide()
@@ -2163,6 +2193,49 @@ class MainWindow(object):
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
 
+    def on_updatecontrolbutton_clicked(self, button):
+        print("on_updatecontrolbutton_clicked")
+
+        if len(self.queue) == 0:
+            self.updateclicked = True
+            self.updatecontrolbutton.set_sensitive(False)
+            self.updatespinner.start()
+            self.updatestack.set_visible_child_name("output")
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "update"]
+            self.pid = self.startProcess(command)
+            print("PID : {}".format(self.pid))
+        else:
+            print("wait for the queue to finish")
+
+    def on_upgradebutton_clicked(self, button):
+        subprocess.Popen(["gpk-update-viewer"])
+
+    def on_autoremovebutton_clicked(self, button):
+        if len(self.queue) == 0:
+            self.updateclicked = True
+            self.updatecontrolbutton.set_sensitive(False)
+            self.updatespinner.start()
+            self.updatestack.set_visible_child_name("output")
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "removeauto"]
+            self.pid = self.startProcess(command)
+            print("PID : {}".format(self.pid))
+        else:
+            print("wait for the queue to finish")
+
+    def on_residualbutton_clicked(self, button):
+        if len(self.queue) == 0:
+            self.updateclicked = True
+            self.updatecontrolbutton.set_sensitive(False)
+            self.updatespinner.start()
+            self.updatestack.set_visible_child_name("output")
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "removeresidual",
+                       " ".join(self.Package.residual())]
+            print(command)
+            self.pid = self.startProcess(command)
+            print("PID : {}".format(self.pid))
+        else:
+            print("wait for the queue to finish")
+
     def getActiveAppOnUI(self):
         ui_appname = ""
         selected_items = self.PardusAppsIconView.get_selected_items()
@@ -2225,7 +2298,11 @@ class MainWindow(object):
         if condition == GLib.IO_HUP:
             return False
 
-        source.readline()
+        line = source.readline()
+        print(line)
+        if self.updateclicked:
+            self.updatetextview.get_buffer().insert(self.updatetextview.get_buffer().get_end_iter(), line)
+            self.updatetextview.scroll_to_iter(self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0)
         return True
 
     def onProcessStderr(self, source, condition):
@@ -2234,98 +2311,142 @@ class MainWindow(object):
 
         line = source.readline()
 
-        # print("error: " + line)
+        print("error: " + line)
 
-        if "dlstatus" in line:
-            percent = line.split(":")[2].split(".")[0]
-            # if self.Package.missingdeps(self.actionedappname):
-            #     print("Downloading dependencies " + percent + " %")
-            #     self.progresstextlabel.set_text(
-            #         self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
-            # else:
-            #     print("Controlling dependencies : " + percent + " %")
-            #     self.progresstextlabel.set_text(
-            #         self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
-            # print("1/2 : " + percent + " %")
-            self.progresstextlabel.set_text(self.actionedappname + " : " + percent + " %")
-        elif "pmstatus" in line:
-            percent = line.split(":")[2].split(".")[0]
-            # print("Processing : " + percent)
-            if self.isinstalled:
-                self.progresstextlabel.set_text(self.actionedappname + " | " + _("Removing") + ": " + percent + " %")
-            else:
-                self.progresstextlabel.set_text(self.actionedappname + " | " + _("Installing") + ": " + percent + " %")
-        elif "E:" in line and ".deb" in line:
-            print("connection error")
-            self.error = True
-        elif "E:" in line and "dpkg --configure -a" in line:
-            print("dpkg --configure -a error")
-            self.error = True
-            self.dpkgconferror = True
-        elif "E:" in line and "/var/lib/dpkg/lock-frontend" in line:
-            print("/var/lib/dpkg/lock-frontend error")
-            self.error = True
-            self.dpkglockerror = True
+        if not self.updateclicked:
+            if "dlstatus" in line:
+                percent = line.split(":")[2].split(".")[0]
+                # if self.Package.missingdeps(self.actionedappname):
+                #     print("Downloading dependencies " + percent + " %")
+                #     self.progresstextlabel.set_text(
+                #         self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
+                # else:
+                #     print("Controlling dependencies : " + percent + " %")
+                #     self.progresstextlabel.set_text(
+                #         self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
+                # print("1/2 : " + percent + " %")
+                self.progresstextlabel.set_text(self.actionedappname + " : " + percent + " %")
+            elif "pmstatus" in line:
+                percent = line.split(":")[2].split(".")[0]
+                # print("Processing : " + percent)
+                if self.isinstalled:
+                    self.progresstextlabel.set_text(
+                        self.actionedappname + " | " + _("Removing") + ": " + percent + " %")
+                else:
+                    self.progresstextlabel.set_text(
+                        self.actionedappname + " | " + _("Installing") + ": " + percent + " %")
+            elif "E:" in line and ".deb" in line:
+                print("connection error")
+                self.error = True
+            elif "E:" in line and "dpkg --configure -a" in line:
+                print("dpkg --configure -a error")
+                self.error = True
+                self.dpkgconferror = True
+            elif "E:" in line and "/var/lib/dpkg/lock-frontend" in line:
+                print("/var/lib/dpkg/lock-frontend error")
+                self.error = True
+                self.dpkglockerror = True
+
+        else:  # in apt update
+            if "dlstatus" in line:
+                percent = line.split(":")[2].split(".")[0]
 
         return True
 
     def onProcessExit(self, pid, status):
 
-        if not self.error:
-            if status == 0:
-                if self.isinstalled:
-                    self.progresstextlabel.set_text(self.actionedappname + _(" | Removed : 100 %"))
-                else:
-                    self.progresstextlabel.set_text(self.actionedappname + _(" | Installed : 100 %"))
-            else:
-                self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
-        else:
-            self.errormessage = _("<b><span color='red'>Connection Error !</span></b>")
-            if self.dpkglockerror:
-                self.errormessage = _("<b><span color='red'>Dpkg Lock Error !</span></b>")
-            elif self.dpkgconferror:
-                self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
+        if not self.updateclicked:
 
-        if status == 0 and not self.error:
-            self.notify()
-            self.sendDownloaded(self.actionedappname)
-
-        self.Package.updatecache()
-        self.controlView()
-
-        ui_appname = self.getActiveAppOnUI()
-        if ui_appname == self.actionedappname:
-            self.dActionButton.set_sensitive(True)
-            self.raction.set_sensitive(True)
-
-        self.topspinner.stop()
-        print("Exit Code : {}".format(status))
-
-        self.inprogress = False
-        self.queue.pop(0)
-        self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
-        if len(self.queue) > 0:
-            self.actionPackage(self.queue[0])
-        else:
-            self.bottomrevealer.set_reveal_child(False)
             if not self.error:
-                self.progresstextlabel.set_text("")
+                if status == 0:
+                    if self.isinstalled:
+                        self.progresstextlabel.set_text(self.actionedappname + _(" | Removed : 100 %"))
+                    else:
+                        self.progresstextlabel.set_text(self.actionedappname + _(" | Installed : 100 %"))
+                else:
+                    self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
+            else:
+                self.errormessage = _("<b><span color='red'>Connection Error !</span></b>")
+                if self.dpkglockerror:
+                    self.errormessage = _("<b><span color='red'>Dpkg Lock Error !</span></b>")
+                elif self.dpkgconferror:
+                    self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
 
-        if self.error:
-            self.bottomrevealer.set_reveal_child(True)
-            self.bottomstack.set_visible_child_name("error")
-            self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
+            if status == 0 and not self.error:
+                self.notify()
+                self.sendDownloaded(self.actionedappname)
 
-        self.error = False
-        self.dpkglockerror = False
-        self.dpkgconferror = False
+            self.Package.updatecache()
+            self.controlView()
 
-        if status == 256:
-            self.errormessage = _("Only one software management tool is allowed to run at the same time.\n"
-                                  "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first.")
-            self.bottomrevealer.set_reveal_child(True)
-            self.bottomstack.set_visible_child_name("error")
-            self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
+            ui_appname = self.getActiveAppOnUI()
+            if ui_appname == self.actionedappname:
+                self.dActionButton.set_sensitive(True)
+                self.raction.set_sensitive(True)
+
+            self.topspinner.stop()
+            print("Exit Code : {}".format(status))
+
+            self.inprogress = False
+            self.queue.pop(0)
+            self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
+            if len(self.queue) > 0:
+                self.actionPackage(self.queue[0])
+            else:
+                self.bottomrevealer.set_reveal_child(False)
+                if not self.error:
+                    self.progresstextlabel.set_text("")
+
+            if self.error:
+                self.bottomrevealer.set_reveal_child(True)
+                self.bottomstack.set_visible_child_name("error")
+                self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
+
+            self.error = False
+            self.dpkglockerror = False
+            self.dpkgconferror = False
+
+            if status == 256:
+                self.errormessage = _("Only one software management tool is allowed to run at the same time.\n"
+                                      "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first.")
+                self.bottomrevealer.set_reveal_child(True)
+                self.bottomstack.set_visible_child_name("error")
+                self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
+
+        else:
+            self.updateclicked = False
+            self.updatecontrolbutton.set_sensitive(True)
+            self.updatespinner.stop()
+            self.updatetextview.scroll_to_iter(self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0)
+            if status == 0:
+                self.Package.updatecache()
+
+                residual = self.Package.residual()
+                removable = self.Package.autoremovable()
+                upgradable = self.Package.upgradable()
+
+                if len(residual) == 0:
+                    self.residualtextview.get_buffer().set_text("OK")
+                    self.residualbutton.set_sensitive(False)
+                else:
+                    self.residualtextview.get_buffer().set_text("\n".join(self.Package.residual()))
+                    self.residualbutton.set_sensitive(True)
+                if len(removable) == 0:
+                    self.removabletextview.get_buffer().set_text("OK")
+                    self.autoremovebutton.set_sensitive(False)
+                else:
+                    self.removabletextview.get_buffer().set_text("\n".join(self.Package.autoremovable()))
+                    self.autoremovebutton.set_sensitive(True)
+                if len(upgradable) == 0:
+                    self.upgradabletextview.get_buffer().set_text("OK")
+                    self.upgradebutton.set_sensitive(False)
+                else:
+                    self.upgradabletextview.get_buffer().set_text("\n".join(self.Package.upgradable()))
+                    self.upgradebutton.set_sensitive(True)
+
+                self.updatestack.set_visible_child_name("list")
+            else:
+                self.updatestack.set_visible_child_name("output")
 
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()

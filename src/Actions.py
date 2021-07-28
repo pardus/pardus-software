@@ -38,6 +38,19 @@ def main():
         subprocess.call(["apt", "install", "--allow-downgrades", packagename, "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
+    def update():
+        subprocess.call(["apt", "update", "-o", "APT::Status-Fd=2"],
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
+    def removeresidual(packages):
+        packagelist = packages.split(" ")
+        subprocess.call(["apt", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
+    def removeauto():
+        subprocess.call(["apt", "autoremove", "-yq", "-o", "APT::Status-Fd=2"],
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
     if len(sys.argv) > 1:
         if control_lock():
             if sys.argv[1] == "install":
@@ -48,6 +61,13 @@ def main():
                 reinstall(sys.argv[2])
             elif sys.argv[1] == "downgrade":
                 downgrade(sys.argv[2])
+            elif sys.argv[1] == "update":
+                update()
+            elif sys.argv[1] == "removeresidual":
+                print(sys.argv[2])
+                removeresidual(sys.argv[2])
+            elif sys.argv[1] == "removeauto":
+                removeauto()
         else:
             print("lock error")
             sys.exit(1)
