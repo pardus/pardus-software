@@ -138,6 +138,8 @@ class MainWindow(object):
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
+        self.dOpenButton = self.GtkBuilder.get_object("dOpenButton")
+        # self.dOpenButton.get_style_context().add_class("circular")
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
         self.dSection = self.GtkBuilder.get_object("dSection")
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
@@ -1078,6 +1080,7 @@ class MainWindow(object):
                     self.codenames = ", ".join(c["name"] for c in i["codename"])
                     self.gnomename = i["gnomename"]
                     self.screenshots = i["screenshots"]
+                    self.desktop_file = i["desktop"]
                     prettyname = i["prettyname"][self.locale]
                     if prettyname == "" or prettyname is None:
                         prettyname = i["prettyname"]["en"]
@@ -1133,12 +1136,20 @@ class MainWindow(object):
                     self.dActionButton.get_style_context().add_class("destructive-action")
                     self.dActionButton.set_label(_(" Uninstall"))
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+
+                    if self.desktop_file != "" and self.desktop_file is not None:
+                        self.dOpenButton.set_visible(True)
+                    else:
+                        self.dOpenButton.set_visible(False)
+
                 else:
                     if self.dActionButton.get_style_context().has_class("destructive-action"):
                         self.dActionButton.get_style_context().remove_class("destructive-action")
                     self.dActionButton.get_style_context().add_class("suggested-action")
                     self.dActionButton.set_label(_(" Install"))
                     self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+                    self.dOpenButton.set_visible(False)
 
                 if len(self.queue) > 0:
                     for qa in self.queue:
@@ -1163,6 +1174,8 @@ class MainWindow(object):
                 self.dSize.set_markup(_("None"))
                 self.dComponent.set_markup(_("None"))
                 self.dType.set_markup(_("None"))
+
+                self.dOpenButton.set_visible(False)
 
             self.pixbuf1 = None
             self.pixbuf2 = None
@@ -1828,6 +1841,10 @@ class MainWindow(object):
             self.queue.pop(1)
             self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
 
+    def on_dOpenButton_clicked(self, button):
+
+        subprocess.Popen(["gtk-launch", self.desktop_file])
+
     def on_dActionButton_clicked(self, button):
 
         self.dActionButton.set_sensitive(False)
@@ -2267,6 +2284,7 @@ class MainWindow(object):
             self.raction.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
 
         self.actionedappname = appname
+        self.actionedappdesktop = self.desktop_file
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
 
         if self.isinstalled:
@@ -2299,7 +2317,7 @@ class MainWindow(object):
             return False
 
         line = source.readline()
-        print(line)
+        # print(line)
         if self.updateclicked:
             self.updatetextview.get_buffer().insert(self.updatetextview.get_buffer().get_end_iter(), line)
             self.updatetextview.scroll_to_iter(self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0)
@@ -2311,7 +2329,7 @@ class MainWindow(object):
 
         line = source.readline()
 
-        print("error: " + line)
+        # print("error: " + line)
 
         if not self.updateclicked:
             if "dlstatus" in line:
@@ -2493,12 +2511,19 @@ class MainWindow(object):
                 self.dActionButton.get_style_context().add_class("destructive-action")
                 self.dActionButton.set_label(_(" Uninstall"))
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+
+                if self.actionedappdesktop != "" and self.actionedappdesktop is not None:
+                    self.dOpenButton.set_visible(True)
+
             else:
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
                     self.dActionButton.get_style_context().remove_class("destructive-action")
                 self.dActionButton.get_style_context().add_class("suggested-action")
                 self.dActionButton.set_label(_(" Install"))
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+
+                self.dOpenButton.set_visible(False)
+
         if repo == 2:  # repo apps
             if self.Package.isinstalled(self.actionedappname):
                 if self.raction.get_style_context().has_class("suggested-action"):
