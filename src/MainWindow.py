@@ -1101,8 +1101,9 @@ class MainWindow(object):
             else:
                 self.descSwBox.set_visible(False)
                 self.dDescriptionLabel.set_text(self.description)
-
-            self.dName.set_markup("<span font='23'><b>" + prettyname + "</b></span>")
+            if len(prettyname.split(" ")) > 3:
+                prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" + " ".join(prettyname.split(" ")[3:])
+            self.dName.set_markup("<span font='21'><b>" + prettyname + "</b></span>")
             self.dSection.set_markup("<i>" + self.section + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
             self.dCategory.set_markup(self.category)
