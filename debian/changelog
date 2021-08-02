@@ -1,3 +1,18 @@
+pardus-software (0.1.0~beta3) unstable; urgency=medium
+
+  * Add Updates page
+  * Add open button to pardus apps detail page
+  * Add len control for prettyname on pardus app detail
+  * Add python3-requests to depends
+  * Update button labels on update pages
+  * Fix mostapps icon's symbolic views
+  * Add tooltip to update page buttons
+  * Update translations
+  * Add info label to update page for show if apt is busy
+  * Update translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 02 Aug 2021 19:28:48 +0300
+
 pardus-software (0.1.0~beta2) unstable; urgency=medium
 
   * Add max prettyname len control to most apps
