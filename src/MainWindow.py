@@ -280,6 +280,8 @@ class MainWindow(object):
         self.updatetextview = self.GtkBuilder.get_object("updatetextview")
         self.updatespinner = self.GtkBuilder.get_object("updatespinner")
 
+        self.updateerrorlabel = self.GtkBuilder.get_object("updateerrorlabel")
+
         self.residualtextview = self.GtkBuilder.get_object("residualtextview")
         self.removabletextview = self.GtkBuilder.get_object("removabletextview")
         self.upgradabletextview = self.GtkBuilder.get_object("upgradabletextview")
@@ -2140,6 +2142,7 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(False)
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.updateerrorlabel.set_text("")
 
     def on_menu_about_activate(self, menu_item):
         self.aboutdialog.run()
@@ -2212,6 +2215,7 @@ class MainWindow(object):
         print("on_updatecontrolbutton_clicked")
 
         if len(self.queue) == 0:
+            self.updateerrorlabel.set_text("")
             self.updateclicked = True
             self.updatecontrolbutton.set_sensitive(False)
             self.updatespinner.start()
@@ -2221,12 +2225,14 @@ class MainWindow(object):
             print("PID : {}".format(self.pid))
         else:
             print("wait for the queue to finish")
+            self.updateerrorlabel.set_text(_("Package manager is busy"))
 
     def on_upgradebutton_clicked(self, button):
         subprocess.Popen(["gpk-update-viewer"])
 
     def on_autoremovebutton_clicked(self, button):
         if len(self.queue) == 0:
+            self.updateerrorlabel.set_text("")
             self.updateclicked = True
             self.updatecontrolbutton.set_sensitive(False)
             self.updatespinner.start()
@@ -2236,9 +2242,11 @@ class MainWindow(object):
             print("PID : {}".format(self.pid))
         else:
             print("wait for the queue to finish")
+            self.updateerrorlabel.set_text(_("Package manager is busy"))
 
     def on_residualbutton_clicked(self, button):
         if len(self.queue) == 0:
+            self.updateerrorlabel.set_text("")
             self.updateclicked = True
             self.updatecontrolbutton.set_sensitive(False)
             self.updatespinner.start()
@@ -2250,6 +2258,7 @@ class MainWindow(object):
             print("PID : {}".format(self.pid))
         else:
             print("wait for the queue to finish")
+            self.updateerrorlabel.set_text(_("Package manager is busy"))
 
     def getActiveAppOnUI(self):
         ui_appname = ""
