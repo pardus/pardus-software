@@ -4952,7 +4952,7 @@
                         <property name="spacing">13</property>
                         <child>
                           <object class="GtkButton" id="updatecontrolbutton">
-                            <property name="label" translatable="yes">Control Updates</property>
+                            <property name="label" translatable="yes">Update Package Cache</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>

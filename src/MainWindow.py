@@ -2445,19 +2445,19 @@ class MainWindow(object):
                 upgradable = self.Package.upgradable()
 
                 if len(residual) == 0:
-                    self.residualtextview.get_buffer().set_text("OK")
+                    self.residualtextview.get_buffer().set_text(_("No action required"))
                     self.residualbutton.set_sensitive(False)
                 else:
                     self.residualtextview.get_buffer().set_text("\n".join(self.Package.residual()))
                     self.residualbutton.set_sensitive(True)
                 if len(removable) == 0:
-                    self.removabletextview.get_buffer().set_text("OK")
+                    self.removabletextview.get_buffer().set_text(_("No action required"))
                     self.autoremovebutton.set_sensitive(False)
                 else:
                     self.removabletextview.get_buffer().set_text("\n".join(self.Package.autoremovable()))
                     self.autoremovebutton.set_sensitive(True)
                 if len(upgradable) == 0:
-                    self.upgradabletextview.get_buffer().set_text("OK")
+                    self.upgradabletextview.get_buffer().set_text(_("All packages are up to date"))
                     self.upgradebutton.set_sensitive(False)
                 else:
                     self.upgradabletextview.get_buffer().set_text("\n".join(self.Package.upgradable()))
