@@ -5061,6 +5061,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
+                                                <property name="tooltip-text" translatable="yes">List of upgradable packages</property>
                                                 <property name="label" translatable="yes">Upgradable Packages</property>
                                               </object>
                                               <packing>
@@ -5126,6 +5127,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
+                                                <property name="tooltip-text" translatable="yes">List of automatically removable all unused packages</property>
                                                 <property name="label" translatable="yes">Autoremovable Packages</property>
                                               </object>
                                               <packing>
@@ -5191,6 +5193,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
+                                                <property name="tooltip-text" translatable="yes">List of unnecessary packages with residual config files</property>
                                                 <property name="label" translatable="yes">Residual Packages</property>
                                               </object>
                                               <packing>
