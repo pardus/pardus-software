@@ -769,14 +769,13 @@ class MainWindow(object):
                 label.set_max_width_chars(10)
                 label.name = mda["name"]
 
-                downicon = Gtk.Image.new()
-                downicon.set_from_pixbuf(self.getSystemAppIcon("document-save-symbolic", 16))
+
+                downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(mda["download"]))
 
-                rateicon = Gtk.Image.new()
-                rateicon.set_from_pixbuf(self.getSystemAppIcon("star-new-symbolic", 16))
+                rateicon = Gtk.Image.new_from_icon_name("star-new-symbolic", Gtk.IconSize.BUTTON)
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mda["rate"])))
@@ -817,14 +816,12 @@ class MainWindow(object):
                 label.set_max_width_chars(10)
                 label.name = mra["name"]
 
-                downicon = Gtk.Image.new()
-                downicon.set_from_pixbuf(self.getSystemAppIcon("document-save-symbolic", 16))
+                downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(mra["download"]))
 
-                rateicon = Gtk.Image.new()
-                rateicon.set_from_pixbuf(self.getSystemAppIcon("star-new-symbolic", 16))
+                rateicon = Gtk.Image.new_from_icon_name("star-new-symbolic", Gtk.IconSize.BUTTON)
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mra["rate"])))
