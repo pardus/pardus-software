@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-02 18:54+0300\n"
-"PO-Revision-Date: 2021-08-02 19:08+0300\n"
+"POT-Creation-Date: 2021-08-02 19:24+0300\n"
+"PO-Revision-Date: 2021-08-02 19:25+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
 "Language: tr\n"
@@ -57,7 +57,7 @@ msgstr "Uygulama ara"
 
 #: ui/MainWindow.glade:481 ui/MainWindow.glade:1094 ui/MainWindow.glade:4318
 #: ui/MainWindow.glade:4370 ui/MainWindow.glade:4403 ui/MainWindow.glade:4581
-#: ui/MainWindow.glade:4933 ui/MainWindow.glade:5292
+#: ui/MainWindow.glade:4933 ui/MainWindow.glade:5305
 msgid "page0"
 msgstr ""
 
@@ -127,8 +127,8 @@ msgstr ""
 
 #: ui/MainWindow.glade:1274 ui/MainWindow.glade:1856 ui/MainWindow.glade:1916
 #: ui/MainWindow.glade:1976 ui/MainWindow.glade:2036 ui/MainWindow.glade:2119
-#: ui/MainWindow.glade:2180 ui/MainWindow.glade:2240 src/MainWindow.py:1171
-#: src/MainWindow.py:1172 src/MainWindow.py:1173 src/MainWindow.py:1174
+#: ui/MainWindow.glade:2180 ui/MainWindow.glade:2240 src/MainWindow.py:1173
+#: src/MainWindow.py:1174 src/MainWindow.py:1175 src/MainWindow.py:1176
 msgid "None"
 msgstr "Yok"
 
@@ -232,7 +232,7 @@ msgstr "Hepsini göster"
 msgid "Description ..."
 msgstr "Açıklama ..."
 
-#: ui/MainWindow.glade:2654 src/MainWindow.py:583
+#: ui/MainWindow.glade:2654 src/MainWindow.py:585
 msgid "Description"
 msgstr "Açıklama"
 
@@ -268,7 +268,7 @@ msgstr "Pardus Oylamaları"
 msgid "Gnome Software Ratings"
 msgstr "Gnome Yazılım Oylamaları"
 
-#: ui/MainWindow.glade:3973 src/MainWindow.py:1356
+#: ui/MainWindow.glade:3973 src/MainWindow.py:1358
 msgid "Ratings"
 msgstr "Oylamalar"
 
@@ -280,7 +280,7 @@ msgstr "Pardus Yorumları"
 msgid "Gnome Comments"
 msgstr "Gnome Yorumları"
 
-#: ui/MainWindow.glade:4205 src/MainWindow.py:1639
+#: ui/MainWindow.glade:4205 src/MainWindow.py:1641
 msgid "Choose star rating level"
 msgstr "Yıldız derecelendirme düzeyi seçin"
 
@@ -340,7 +340,7 @@ msgstr "Sistem Simgelerini Kullan"
 msgid "Enable Animations"
 msgstr "Animasyonları Etkinleştir"
 
-#: ui/MainWindow.glade:4708 src/MainWindow.py:2134 src/MainWindow.py:2195
+#: ui/MainWindow.glade:4708 src/MainWindow.py:2136 src/MainWindow.py:2198
 msgid "Apply"
 msgstr "Uygula"
 
@@ -348,7 +348,7 @@ msgstr "Uygula"
 msgid "Clear Cache Files"
 msgstr "Önbellek Dosyalarını Temizle"
 
-#: ui/MainWindow.glade:4812 src/MainWindow.py:2132
+#: ui/MainWindow.glade:4812 src/MainWindow.py:2134
 msgid "Clear"
 msgstr "Temizle"
 
@@ -400,19 +400,19 @@ msgstr "Kalmış yapılandırma dosyaları içeren gereksiz paketlerin listesi"
 msgid "Residual Packages"
 msgstr "Artık Dosyaları Kalan Paketler"
 
-#: ui/MainWindow.glade:5306
+#: ui/MainWindow.glade:5319
 msgid "home page"
 msgstr ""
 
-#: ui/MainWindow.glade:5316 src/MainWindow.py:268
+#: ui/MainWindow.glade:5329 src/MainWindow.py:268
 msgid "Pardus Software Center"
 msgstr "Pardus Yazılım Merkezi"
 
-#: ui/MainWindow.glade:5363
+#: ui/MainWindow.glade:5376
 msgid "Pardus"
 msgstr ""
 
-#: ui/MainWindow.glade:5375
+#: ui/MainWindow.glade:5388
 msgid "Repo"
 msgstr "Depo"
 
@@ -432,149 +432,153 @@ msgstr "Güncellemeler"
 msgid "About"
 msgstr "Hakkında"
 
-#: src/MainWindow.py:459
+#: src/MainWindow.py:461
 msgid "Could not connect to server."
 msgstr "Sunucuya bağlanılamadı."
 
-#: src/MainWindow.py:459
+#: src/MainWindow.py:461
 msgid "Error Code (app)"
 msgstr "Hata Kodu (app)"
 
-#: src/MainWindow.py:460
+#: src/MainWindow.py:462
 msgid "Error Code (cat)"
 msgstr "Hata Kodu (cat)"
 
-#: src/MainWindow.py:476
+#: src/MainWindow.py:478
 msgid "Updating Cache"
 msgstr "Önbellek güncelleniyor"
 
-#: src/MainWindow.py:558
+#: src/MainWindow.py:560
 msgid "Status"
 msgstr "Durum"
 
-#: src/MainWindow.py:564
+#: src/MainWindow.py:566
 msgid "Name"
 msgstr "Paket"
 
-#: src/MainWindow.py:570
+#: src/MainWindow.py:572
 msgid "Section"
 msgstr "Bölüm"
 
-#: src/MainWindow.py:617
+#: src/MainWindow.py:619
 msgid "Getting applications from server"
 msgstr "Sunucudan uygulamalar alınıyor"
 
-#: src/MainWindow.py:627
+#: src/MainWindow.py:629
 msgid "Getting icons from server"
 msgstr "Sunucudan ikonlar alınıyor"
 
-#: src/MainWindow.py:1122
+#: src/MainWindow.py:1124
 msgid "Non-Free"
 msgstr "Özgür Değil"
 
-#: src/MainWindow.py:1124
+#: src/MainWindow.py:1126
 msgid "Open Source"
 msgstr "Açık Kaynak"
 
-#: src/MainWindow.py:1135 src/MainWindow.py:2074 src/MainWindow.py:2510
-#: src/MainWindow.py:2530
+#: src/MainWindow.py:1137 src/MainWindow.py:2076 src/MainWindow.py:2519
+#: src/MainWindow.py:2539
 msgid " Uninstall"
 msgstr " Kaldır"
 
-#: src/MainWindow.py:1147 src/MainWindow.py:2080 src/MainWindow.py:2520
-#: src/MainWindow.py:2536
+#: src/MainWindow.py:1149 src/MainWindow.py:2082 src/MainWindow.py:2529
+#: src/MainWindow.py:2545
 msgid " Install"
 msgstr " Yükle"
 
-#: src/MainWindow.py:1156 src/MainWindow.py:2096 src/MainWindow.py:2290
-#: src/MainWindow.py:2291
+#: src/MainWindow.py:1158 src/MainWindow.py:2098 src/MainWindow.py:2299
+#: src/MainWindow.py:2300
 msgid " Removing"
 msgstr " Kaldırılıyor"
 
-#: src/MainWindow.py:1158 src/MainWindow.py:2098 src/MainWindow.py:2296
-#: src/MainWindow.py:2297
+#: src/MainWindow.py:1160 src/MainWindow.py:2100 src/MainWindow.py:2305
+#: src/MainWindow.py:2306
 msgid " Installing"
 msgstr " Yükleniyor"
 
-#: src/MainWindow.py:1168 src/MainWindow.py:2089
+#: src/MainWindow.py:1170 src/MainWindow.py:2091
 msgid " Not Found"
 msgstr " Bulunamadı"
 
-#: src/MainWindow.py:1345
+#: src/MainWindow.py:1347
 msgid ""
 "Your comment has been sent successfully. It will be published after approval."
 msgstr "Yorumunuz başarıyla gönderildi. Onaylandıktan sonra yayınlanacaktır."
 
-#: src/MainWindow.py:1347 src/MainWindow.py:1629 src/MainWindow.py:2190
-#: src/MainWindow.py:2205
+#: src/MainWindow.py:1349 src/MainWindow.py:1631 src/MainWindow.py:2193
+#: src/MainWindow.py:2208
 msgid "Error"
 msgstr "Hata"
 
-#: src/MainWindow.py:1353
+#: src/MainWindow.py:1355
 msgid "Download"
 msgstr "İndirme"
 
-#: src/MainWindow.py:1362 src/MainWindow.py:1367
+#: src/MainWindow.py:1364 src/MainWindow.py:1369
 msgid "Your Rate"
 msgstr "Oyunuz"
 
-#: src/MainWindow.py:1362
+#: src/MainWindow.py:1364
 msgid "is None"
 msgstr "Yok"
 
-#: src/MainWindow.py:1617
+#: src/MainWindow.py:1619
 msgid "Cannot be null"
 msgstr "Boş olamaz"
 
-#: src/MainWindow.py:2185
+#: src/MainWindow.py:2188
 msgid "Applied"
 msgstr "Uygulandı"
 
-#: src/MainWindow.py:2186
+#: src/MainWindow.py:2189
 msgid "Changes applied successfully "
 msgstr "Değişiklikler başarıyla uygulandı"
 
-#: src/MainWindow.py:2201
+#: src/MainWindow.py:2204
 msgid "Cleared"
 msgstr "Temizlendi"
 
-#: src/MainWindow.py:2202
+#: src/MainWindow.py:2205
 msgid "Cache files cleared, please close and reopen the application"
 msgstr "Önbellek dosyaları temizlendi, lütfen uygulamayı kapatıp yeniden açın"
 
-#: src/MainWindow.py:2350
+#: src/MainWindow.py:2228 src/MainWindow.py:2245 src/MainWindow.py:2261
+msgid "Package manager is busy"
+msgstr "Paket yöneticisi meşgul"
+
+#: src/MainWindow.py:2359
 msgid "Removing"
 msgstr "Kaldırılıyor"
 
-#: src/MainWindow.py:2353
+#: src/MainWindow.py:2362
 msgid "Installing"
 msgstr "Yükleniyor"
 
-#: src/MainWindow.py:2379
+#: src/MainWindow.py:2388
 msgid " | Removed : 100 %"
 msgstr " | Kaldırıldı : 100 %"
 
-#: src/MainWindow.py:2381
+#: src/MainWindow.py:2390
 msgid " | Installed : 100 %"
 msgstr " | Yüklendi : 100 %"
 
-#: src/MainWindow.py:2383
+#: src/MainWindow.py:2392
 msgid " |  Not Completed"
 msgstr " |  Tamamlanamadı"
 
-#: src/MainWindow.py:2385
+#: src/MainWindow.py:2394
 msgid "<b><span color='red'>Connection Error !</span></b>"
 msgstr "<b><span color='red'>Bağlantı Hatası !</span></b>"
 
-#: src/MainWindow.py:2387
+#: src/MainWindow.py:2396
 msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
 msgstr "<b><span color='red'>Dpkg Kilitleme Hatası !</span></b>"
 
-#: src/MainWindow.py:2389
+#: src/MainWindow.py:2398
 msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
 msgstr "<b><span color='red'>Dpkg Kesinti Hatası !</span></b>"
 
-#: src/MainWindow.py:2426
+#: src/MainWindow.py:2435
 msgid ""
 "Only one software management tool is allowed to run at the same time.\n"
 "Please close the other application e.g. 'Update Manager', 'aptitude' or "
@@ -584,19 +588,19 @@ msgstr ""
 "Lütfen önce diğer uygulamayı, ör. 'Güncelleştirme Yöneticisi', 'aptitude' ya "
 "da 'Synaptic'i kapatın."
 
-#: src/MainWindow.py:2445 src/MainWindow.py:2451
+#: src/MainWindow.py:2454 src/MainWindow.py:2460
 msgid "No action required"
 msgstr "İşlem gerekmiyor"
 
-#: src/MainWindow.py:2457
+#: src/MainWindow.py:2466
 msgid "All packages are up to date"
 msgstr "Tüm paketler güncel"
 
-#: src/MainWindow.py:2546
+#: src/MainWindow.py:2555
 msgid " Removed"
 msgstr " Kaldırıldı"
 
-#: src/MainWindow.py:2548
+#: src/MainWindow.py:2557
 msgid " Installed"
 msgstr " Yüklendi"
 
