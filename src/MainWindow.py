@@ -129,6 +129,7 @@ class MainWindow(object):
         self.bottomerrorbutton = self.GtkBuilder.get_object("bottomerrorbutton")
 
         self.pardusicb = self.GtkBuilder.get_object("pardusicb")
+        self.cb_sortdownload = self.GtkBuilder.get_object("cb_sortdownload")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
@@ -1703,6 +1704,16 @@ class MainWindow(object):
 
     def on_pardusicb_toggled(self, button):
         self.PardusCategoryFilter.refilter()
+
+    def on_cb_sortdownload_toggled(self, button):
+        if self.cb_sortdownload.get_active():
+            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["download"], reverse=True)
+            self.PardusAppListStore.clear()
+            self.setPardusApps()
+        else:
+            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["name"])
+            self.PardusAppListStore.clear()
+            self.setPardusApps()
 
     # def RepoCategoryFilterFunction(self, model, iteration, data):
     #     search_entry_text = self.reposearchbar.get_text()
