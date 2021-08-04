@@ -212,9 +212,6 @@ class MainWindow(object):
         self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
         self.queuebutton = self.GtkBuilder.get_object("queuebutton")
 
-        self.topbutton1.set_sensitive(False)
-        self.topbutton2.set_sensitive(False)
-
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
@@ -235,34 +232,8 @@ class MainWindow(object):
         self.EditorListStore = self.GtkBuilder.get_object("EditorListStore")
         self.RepoAppListStore = self.GtkBuilder.get_object("RepoAppListStore")
 
-        self.HeaderBarMenu = self.GtkBuilder.get_object("HeaderBarMenu")
         self.HeaderBarMenuButton = self.GtkBuilder.get_object("HeaderBarMenuButton")
-
-        self.HeaderBarMenuButton.set_sensitive(False)
-        self.topsearchbutton.set_sensitive(False)
-
-        self.menu_settings = self.GtkBuilder.get_object("menu_settings")
-        self.menu_settings.set_use_stock(False)
-        self.menu_settings.set_label(_("Settings"))
-        self.menu_settings.set_image(Gtk.Image.new_from_icon_name('preferences-other-symbolic', Gtk.IconSize.BUTTON))
-
-        self.menu2 = self.GtkBuilder.get_object("menu2")
-        self.menu2.set_use_stock(False)
-        self.menu2.set_label(_("My Applications"))
-        self.menu2.set_image(Gtk.Image.new_from_icon_name('dialog-question-symbolic', Gtk.IconSize.BUTTON))
-        self.menu2.set_sensitive(False)
-
-        self.menu_update = self.GtkBuilder.get_object("menu_update")
-        self.menu_update.set_use_stock(False)
-        self.menu_update.set_label(_("Updates"))
-        self.menu_update.set_image(
-            Gtk.Image.new_from_icon_name('software-update-available-symbolic', Gtk.IconSize.BUTTON))
-        self.menu_update.set_sensitive(True)
-
-        self.menu_about = self.GtkBuilder.get_object("menu_about")
-        self.menu_about.set_use_stock(False)
-        self.menu_about.set_label(_("About"))
-        self.menu_about.set_image(Gtk.Image.new_from_icon_name('dialog-information-symbolic', Gtk.IconSize.BUTTON))
+        self.PopoverMenu = self.GtkBuilder.get_object("PopoverMenu")
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
         self.aboutdialog.set_program_name(_("Pardus Software Center"))
@@ -274,7 +245,6 @@ class MainWindow(object):
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
-        self.menubackbutton.set_sensitive(False)
 
         self.updatecontrolbutton = self.GtkBuilder.get_object("updatecontrolbutton")
         self.updatetextview = self.GtkBuilder.get_object("updatetextview")
@@ -339,12 +309,18 @@ class MainWindow(object):
 
         self.descSwBox = self.GtkBuilder.get_object("descSwBox")
         self.descSwBox.set_visible(False)
-
         self.descSw = self.GtkBuilder.get_object("descSw")
 
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
+
         self.mainstack.set_visible_child_name("splash")
+
+        self.HeaderBarMenuButton.set_sensitive(False)
+        self.menubackbutton.set_sensitive(False)
+        self.topbutton1.set_sensitive(False)
+        self.topbutton2.set_sensitive(False)
+        self.topsearchbutton.set_sensitive(False)
 
         self.queue = []
         self.inprogress = False
@@ -465,10 +441,16 @@ class MainWindow(object):
         # self.splashbarstatus = False
         self.splashlabel.set_text("")
 
-        self.HeaderBarMenuButton.set_sensitive(True)
-        self.topsearchbutton.set_sensitive(True)
-        self.topbutton1.set_sensitive(True)
-        self.topbutton2.set_sensitive(True)
+        # self.HeaderBarMenuButton.set_visible(True)
+        # self.menubackbutton.set_visible(True)
+        # self.topbutton1.set_visible(True)
+        # self.topbutton2.set_visible(True)
+        # self.topsearchbutton.set_visible(True)
+
+        GLib.idle_add(self.HeaderBarMenuButton.set_sensitive, True)
+        GLib.idle_add(self.topbutton1.set_sensitive, True)
+        GLib.idle_add(self.topbutton2.set_sensitive, True)
+        GLib.idle_add(self.topsearchbutton.set_sensitive, True)
 
         print("page setted to normal")
 
@@ -770,7 +752,6 @@ class MainWindow(object):
                 label.set_line_wrap(True)
                 label.set_max_width_chars(10)
                 label.name = mda["name"]
-
 
                 downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
 
@@ -2116,10 +2097,11 @@ class MainWindow(object):
             self.toprevealer.set_reveal_child(False)
             self.statusoftopsearch = False
 
-    def on_HeaderBarMenuButton_toggled(self, button):
-        self.HeaderBarMenuButton.grab_focus()
+    # def on_HeaderBarMenuButton_toggled(self, button):
+    #     self.HeaderBarMenuButton.grab_focus()
 
-    def on_menu_settings_activate(self, menu_item):
+    def on_menu_settings_clicked(self, button):
+        self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
         self.homestack.set_visible_child_name("preferences")
@@ -2135,7 +2117,8 @@ class MainWindow(object):
         self.prefapplybutton.set_sensitive(False)
         self.prefapplybutton.set_label(_("Apply"))
 
-    def on_menu_update_activate(self, menu_item):
+    def on_menu_updates_clicked(self, button):
+        self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
         self.homestack.set_visible_child_name("updates")
@@ -2144,9 +2127,13 @@ class MainWindow(object):
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.updateerrorlabel.set_text("")
 
-    def on_menu_about_activate(self, menu_item):
+    def on_menu_about_clicked(self, button):
+        self.PopoverMenu.popdown()
         self.aboutdialog.run()
         self.aboutdialog.hide()
+
+    def on_menu_suggestapp_clicked(self, button):
+        self.PopoverMenu.popdown()
 
     def on_prefapplybutton_clicked(self, button):
         print("on_prefbutton_clicked")
