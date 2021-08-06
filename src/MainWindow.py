@@ -276,6 +276,8 @@ class MainWindow(object):
         self.NavCategoryImage = self.GtkBuilder.get_object("NavCategoryImage")
         self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
 
+        self.menu_suggestapp = self.GtkBuilder.get_object("menu_suggestapp")
+
         self.SuggestAppName = self.GtkBuilder.get_object("SuggestAppName")
         self.SuggestCat = self.GtkBuilder.get_object("SuggestCat")
         self.SuggestDescTR = self.GtkBuilder.get_object("SuggestDescTR")
@@ -291,6 +293,11 @@ class MainWindow(object):
 
         self.SuggestInfoLabel = self.GtkBuilder.get_object("SuggestInfoLabel")
         self.SuggestSend = self.GtkBuilder.get_object("SuggestSend")
+
+        self.SuggestStack = self.GtkBuilder.get_object("SuggestStack")
+
+        self.SuggestScroll = self.GtkBuilder.get_object("SuggestScroll")
+        self.PardusAppDetailScroll = self.GtkBuilder.get_object("PardusAppDetailScroll")
 
         self.PardusCurrentCategory = -1
         if self.locale == "tr":
@@ -353,6 +360,8 @@ class MainWindow(object):
         self.errormessage = ""
 
         self.updateclicked = False
+
+        self.desktop_file = ""
 
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
@@ -468,6 +477,9 @@ class MainWindow(object):
         GLib.idle_add(self.topbutton1.set_sensitive, True)
         GLib.idle_add(self.topbutton2.set_sensitive, True)
         GLib.idle_add(self.topsearchbutton.set_sensitive, True)
+
+        if not self.Server.connection:
+            GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
 
         print("page setted to normal")
 
@@ -1031,6 +1043,8 @@ class MainWindow(object):
         self.wpcComment.set_text("")
         self.wpcSendButton.set_sensitive(True)
 
+        self.PardusAppDetailScroll.set_vadjustment(Gtk.Adjustment())
+
         try:
             selected_items = iconview.get_selected_items()
             lensel = len(selected_items)
@@ -1344,7 +1358,16 @@ class MainWindow(object):
                 self.wpcresultLabel.set_text(
                     _("Your comment has been sent successfully. It will be published after approval."))
             if response["response-type"] == 12:
-                self.SuggestInfoLabel.set_text(_("Successful"))
+                if response["suggestapp"]["status"]:
+                    self.SuggestInfoLabel.set_text("")
+                    self.SuggestStack.set_visible_child_name("success")
+                    self.SuggestScroll.set_vadjustment(Gtk.Adjustment())
+                    self.resetSuggestAppForm()
+                else:
+                    if response["suggestapp"]["flood"]:
+                        self.SuggestInfoLabel.set_text(_("Flood"))
+                    else:
+                        self.SuggestInfoLabel.set_text(_("Error"))
         else:
             self.wpcresultLabel.set_text(_("Error"))
 
@@ -2174,6 +2197,7 @@ class MainWindow(object):
         for cat in self.categories:
             self.SuggestCat.append_text(cat["name"])
         self.homestack.set_visible_child_name("suggestapp")
+        self.SuggestStack.set_visible_child_name("suggest")
 
     def on_SuggestSend_clicked(self, button):
         self.sug_appname = self.SuggestAppName.get_text()
@@ -2285,6 +2309,21 @@ class MainWindow(object):
             return False, "Icon file must be svg"
 
         return True, "ok"
+
+    def resetSuggestAppForm(self):
+        self.SuggestAppName.set_text("")
+        self.SuggestDescTR.get_buffer().delete(self.SuggestDescTR.get_buffer().get_start_iter(),
+                                               self.SuggestDescTR.get_buffer().get_end_iter())
+        self.SuggestDescEN.get_buffer().delete(self.SuggestDescEN.get_buffer().get_start_iter(),
+                                               self.SuggestDescEN.get_buffer().get_end_iter())
+        self.SuggestLicense.set_text("")
+        self.SuggestCopyright.get_buffer().delete(self.SuggestCopyright.get_buffer().get_start_iter(),
+                                                  self.SuggestCopyright.get_buffer().get_end_iter())
+        self.SuggestWeb.set_text("")
+        self.SuggestName.set_text("")
+        self.SuggestMail.set_text("")
+        self.SuggestInRepo.set_active(False)
+        self.SuggestIconChooser.unselect_all()
 
     def on_prefapplybutton_clicked(self, button):
         print("on_prefbutton_clicked")
