@@ -1358,6 +1358,7 @@ class MainWindow(object):
                 self.wpcresultLabel.set_text(
                     _("Your comment has been sent successfully. It will be published after approval."))
             if response["response-type"] == 12:
+                self.SuggestSend.set_sensitive(True)
                 if response["suggestapp"]["status"]:
                     self.SuggestInfoLabel.set_text("")
                     self.SuggestStack.set_visible_child_name("success")
@@ -1365,7 +1366,7 @@ class MainWindow(object):
                     self.resetSuggestAppForm()
                 else:
                     if response["suggestapp"]["flood"]:
-                        self.SuggestInfoLabel.set_text(_("Flood"))
+                        self.SuggestInfoLabel.set_text(_("Please try again soon"))
                     else:
                         self.SuggestInfoLabel.set_text(_("Error"))
         else:
@@ -1641,7 +1642,11 @@ class MainWindow(object):
         if value == 0 or comment == "" or author == "":
             self.wpcformcontrolLabel.set_text(_("Cannot be null"))
         else:
-            dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname}
+            installed = self.Package.isinstalled(self.appname)
+            if installed is None:
+                installed = False
+            dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
+                   "installed": installed}
             try:
                 self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
             except Exception as e:
@@ -2198,6 +2203,7 @@ class MainWindow(object):
             self.SuggestCat.append_text(cat["name"])
         self.homestack.set_visible_child_name("suggestapp")
         self.SuggestStack.set_visible_child_name("suggest")
+        self.SuggestSend.set_sensitive(True)
 
     def on_SuggestSend_clicked(self, button):
         self.sug_appname = self.SuggestAppName.get_text()
@@ -2231,6 +2237,7 @@ class MainWindow(object):
             self.SuggestInfoLabel.set_text("")
             img_valid, img_message = self.controlSuggestIcon()
             if img_valid:
+                self.SuggestSend.set_sensitive(False)
                 self.SuggestInfoLabel.set_text("")
                 dic = {"appname": self.controlText(self.sug_appname), "category": self.controlText(self.sug_category),
                        "desc_tr": self.controlText(self.sug_desc_tr), "desc_en": self.controlText(self.sug_desc_en),
@@ -2574,11 +2581,12 @@ class MainWindow(object):
                 elif self.dpkgconferror:
                     self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
 
+            self.Package.updatecache()
+
             if status == 0 and not self.error:
                 self.notify()
                 self.sendDownloaded(self.actionedappname)
 
-            self.Package.updatecache()
             self.controlView()
 
             ui_appname = self.getActiveAppOnUI()
@@ -2743,7 +2751,10 @@ class MainWindow(object):
 
     def sendDownloaded(self, appname):
         try:
-            dic = {"mac": self.mac, "app": appname}
+            installed = self.Package.isinstalled(appname)
+            if installed is None:
+                installed = False
+            dic = {"mac": self.mac, "app": appname, "installed": installed}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
         except Exception as e:
             print(str(e))
