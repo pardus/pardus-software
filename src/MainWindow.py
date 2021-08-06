@@ -2199,8 +2199,12 @@ class MainWindow(object):
         self.SuggestCat.remove_all()
         self.SuggestCat.append_text(_("Select Category"))
         self.SuggestCat.set_active(0)
-        for cat in self.categories:
-            self.SuggestCat.append_text(cat["name"])
+        cats = []
+        for cat in self.Server.catlist:
+            cats.append(cat[self.locale])
+        cats = sorted(cats)
+        for cat in cats:
+            self.SuggestCat.append_text(cat)
         self.homestack.set_visible_child_name("suggestapp")
         self.SuggestStack.set_visible_child_name("suggest")
         self.SuggestSend.set_sensitive(True)
