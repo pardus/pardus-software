@@ -276,6 +276,22 @@ class MainWindow(object):
         self.NavCategoryImage = self.GtkBuilder.get_object("NavCategoryImage")
         self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
 
+        self.SuggestAppName = self.GtkBuilder.get_object("SuggestAppName")
+        self.SuggestCat = self.GtkBuilder.get_object("SuggestCat")
+        self.SuggestDescTR = self.GtkBuilder.get_object("SuggestDescTR")
+        self.SuggestDescEN = self.GtkBuilder.get_object("SuggestDescEN")
+        self.SuggestLicense = self.GtkBuilder.get_object("SuggestLicense")
+        self.SuggestCopyright = self.GtkBuilder.get_object("SuggestCopyright")
+        self.SuggestWeb = self.GtkBuilder.get_object("SuggestWeb")
+        self.SuggestIconChooser = self.GtkBuilder.get_object("SuggestIconChooser")
+        self.SuggestInRepo = self.GtkBuilder.get_object("SuggestInRepo")
+
+        self.SuggestName = self.GtkBuilder.get_object("SuggestName")
+        self.SuggestMail = self.GtkBuilder.get_object("SuggestMail")
+
+        self.SuggestInfoLabel = self.GtkBuilder.get_object("SuggestInfoLabel")
+        self.SuggestSend = self.GtkBuilder.get_object("SuggestSend")
+
         self.PardusCurrentCategory = -1
         if self.locale == "tr":
             self.PardusCurrentCategoryString = "tümü"
@@ -1327,6 +1343,8 @@ class MainWindow(object):
                 self.commentstack.set_visible_child_name("sendresult")
                 self.wpcresultLabel.set_text(
                     _("Your comment has been sent successfully. It will be published after approval."))
+            if response["response-type"] == 12:
+                self.SuggestInfoLabel.set_text(_("Successful"))
         else:
             self.wpcresultLabel.set_text(_("Error"))
 
@@ -2145,6 +2163,128 @@ class MainWindow(object):
 
     def on_menu_suggestapp_clicked(self, button):
         self.PopoverMenu.popdown()
+        self.topsearchbutton.set_active(False)
+        self.topsearchbutton.set_sensitive(False)
+        self.menubackbutton.set_sensitive(False)
+        self.topbutton2.get_style_context().remove_class("suggested-action")
+        self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.SuggestCat.remove_all()
+        self.SuggestCat.append_text(_("Select Category"))
+        self.SuggestCat.set_active(0)
+        for cat in self.categories:
+            self.SuggestCat.append_text(cat["name"])
+        self.homestack.set_visible_child_name("suggestapp")
+
+    def on_SuggestSend_clicked(self, button):
+        self.sug_appname = self.SuggestAppName.get_text()
+
+        self.sug_category_id = self.SuggestCat.get_active()
+        self.sug_category = self.SuggestCat.get_active_text()
+
+        desc_tr_buffer = self.SuggestDescTR.get_buffer()
+        self.sug_desc_tr = desc_tr_buffer.get_text(desc_tr_buffer.get_start_iter(), desc_tr_buffer.get_end_iter(), True)
+
+        desc_en_buffer = self.SuggestDescEN.get_buffer()
+        self.sug_desc_en = desc_en_buffer.get_text(desc_en_buffer.get_start_iter(), desc_en_buffer.get_end_iter(), True)
+
+        self.sug_license = self.SuggestLicense.get_text()
+
+        copyright_buffer = self.SuggestCopyright.get_buffer()
+        self.sug_copyright = copyright_buffer.get_text(copyright_buffer.get_start_iter(),
+                                                       copyright_buffer.get_end_iter(), True)
+
+        self.sug_website = self.SuggestWeb.get_text()
+        self.sug_icon = self.SuggestIconChooser.get_filename()
+        self.sug_inrepo = self.SuggestInRepo.get_active()
+
+        self.sug_name = self.SuggestName.get_text()
+        self.sug_mail = self.SuggestMail.get_text()
+
+        print(self.sug_desc_en.strip()[0:10])
+        valid, message = self.controlSuggest()
+
+        if valid:
+            self.SuggestInfoLabel.set_text("")
+            img_valid, img_message = self.controlSuggestIcon()
+            if img_valid:
+                self.SuggestInfoLabel.set_text("")
+                dic = {"appname": self.controlText(self.sug_appname), "category": self.controlText(self.sug_category),
+                       "desc_tr": self.controlText(self.sug_desc_tr), "desc_en": self.controlText(self.sug_desc_en),
+                       "license": self.controlText(self.sug_license), "copyright": self.controlText(self.sug_copyright),
+                       "website": self.controlText(self.sug_website), "icon": self.sug_icon_raw,
+                       "inrepo": self.sug_inrepo, "name": self.controlText(self.sug_name),
+                       "mail": self.controlText(self.sug_mail), "mac": self.mac}
+                self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendsuggestapp, dic)
+            else:
+                self.SuggestInfoLabel.set_text("{}".format(img_message))
+        else:
+            self.SuggestInfoLabel.set_text("{} : {} {}".format(_("Error"), message, _("is empty")))
+
+    def controlText(self, text):
+
+        text = str(text).strip()
+
+        if len(text) > 1000:
+            text = text[:1000]
+
+        return text
+
+    def controlSuggest(self):
+
+        if self.sug_appname.strip() == "":
+            return False, _("Application Name")
+
+        if self.sug_category_id == 0 or self.sug_category_id == -1:
+            return False, _("Category")
+
+        if self.sug_desc_tr.strip() == "":
+            return False, _("Description ( Turkish )")
+
+        if self.sug_desc_en.strip() == "":
+            return False, _("Description ( English )")
+
+        if self.sug_license.strip() == "":
+            return False, _("License")
+
+        if self.sug_copyright.strip() == "":
+            return False, _("Copyright")
+
+        if self.sug_website.strip() == "":
+            return False, _("Website")
+
+        if self.sug_icon is None:
+            return False, _("Icon")
+
+        if self.sug_name.strip() == "":
+            return False, _("Name")
+
+        if self.sug_mail.strip() == "":
+            return False, _("Mail")
+
+        return True, "ok"
+
+    def controlSuggestIcon(self):
+
+        if not os.path.isfile(self.sug_icon):
+            return False, _("Icon not found")
+
+        if os.path.getsize(self.sug_icon) > 1048576:  # Max 1 MB
+            return False, _("Icon size must be less than 1 MB")
+
+        try:
+            self.sug_icon_raw = open(self.sug_icon).read()
+        except:
+            return False, "Icon file read error"
+
+        try:
+            filename, file_extension = os.path.splitext(self.sug_icon)
+        except:
+            return False, "Icon file must be svg"
+
+        if file_extension != ".svg":
+            return False, "Icon file must be svg"
+
+        return True, "ok"
 
     def on_prefapplybutton_clicked(self, button):
         print("on_prefbutton_clicked")
