@@ -1213,15 +1213,14 @@
                       </packing>
                     </child>
                     <child>
-                      <!-- n-columns=4 n-rows=3 -->
-                      <object class="GtkGrid">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">13</property>
                         <property name="margin-end">13</property>
                         <property name="margin-top">5</property>
                         <property name="margin-bottom">5</property>
-                        <property name="column-spacing">23</property>
+                        <property name="spacing">23</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -1254,8 +1253,20 @@
                             </child>
                           </object>
                           <packing>
-                            <property name="left-attach">0</property>
-                            <property name="top-attach">1</property>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
@@ -1268,59 +1279,29 @@
                             <signal name="toggled" handler="on_pardusicb_toggled" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="left-attach">2</property>
-                            <property name="top-attach">1</property>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSeparator">
+                          <object class="GtkComboBoxText" id="sortPardusAppsCombo">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="halign">center</property>
-                            <property name="orientation">vertical</property>
+                            <property name="active">0</property>
+                            <property name="active-id">0</property>
+                            <items>
+                              <item id="0" translatable="yes">Sort by Name</item>
+                              <item id="1" translatable="yes">Sort by Download</item>
+                            </items>
+                            <signal name="changed" handler="on_sortPardusAppsCombo_changed" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="left-attach">1</property>
-                            <property name="top-attach">1</property>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="pack-type">end</property>
+                            <property name="position">3</property>
                           </packing>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="cb_sortdownload">
-                            <property name="label" translatable="yes">Sort by download</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">False</property>
-                            <property name="draw-indicator">True</property>
-                            <signal name="toggled" handler="on_cb_sortdownload_toggled" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="left-attach">3</property>
-                            <property name="top-attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
                         </child>
                       </object>
                       <packing>

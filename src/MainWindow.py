@@ -129,7 +129,7 @@ class MainWindow(object):
         self.bottomerrorbutton = self.GtkBuilder.get_object("bottomerrorbutton")
 
         self.pardusicb = self.GtkBuilder.get_object("pardusicb")
-        self.cb_sortdownload = self.GtkBuilder.get_object("cb_sortdownload")
+        self.sortPardusAppsCombo = self.GtkBuilder.get_object("sortPardusAppsCombo")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
@@ -1751,13 +1751,13 @@ class MainWindow(object):
     def on_pardusicb_toggled(self, button):
         self.PardusCategoryFilter.refilter()
 
-    def on_cb_sortdownload_toggled(self, button):
-        if self.cb_sortdownload.get_active():
-            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["download"], reverse=True)
+    def on_sortPardusAppsCombo_changed(self, combo_box):
+        if combo_box.get_active() == 0:  # sort by name
+            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["name"])
             self.PardusAppListStore.clear()
             self.setPardusApps()
-        else:
-            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["name"])
+        elif combo_box.get_active() == 1:  # sort by download
+            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["download"], reverse=True)
             self.PardusAppListStore.clear()
             self.setPardusApps()
 
