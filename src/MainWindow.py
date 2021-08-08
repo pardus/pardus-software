@@ -1354,9 +1354,16 @@ class MainWindow(object):
         if status:
             print(response)
             if response["response-type"] == 10:
-                self.commentstack.set_visible_child_name("sendresult")
-                self.wpcresultLabel.set_text(
-                    _("Your comment has been sent successfully. It will be published after approval."))
+                self.wpcSendButton.set_sensitive(True)
+                if response["rating"]["status"]:
+                    self.commentstack.set_visible_child_name("sendresult")
+                    self.wpcresultLabel.set_text(
+                        _("Your comment has been sent successfully. It will be published after approval."))
+                else:
+                    if response["rating"]["flood"]:
+                        self.wpcformcontrolLabel.set_text(_("Please try again soon"))
+                    else:
+                        self.wpcformcontrolLabel.set_text(_("Error"))
             if response["response-type"] == 12:
                 self.SuggestSend.set_sensitive(True)
                 if response["suggestapp"]["status"]:
