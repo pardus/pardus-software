@@ -96,30 +96,6 @@
     <property name="icon-name">go-next-rtl-symbolic</property>
     <property name="icon_size">3</property>
   </object>
-  <object class="GtkPopover" id="pop1">
-    <property name="can-focus">False</property>
-    <property name="position">bottom</property>
-    <child>
-      <object class="GtkImage" id="pop1Image">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="stock">gtk-missing-image</property>
-        <property name="icon_size">6</property>
-      </object>
-    </child>
-  </object>
-  <object class="GtkPopover" id="pop2">
-    <property name="can-focus">False</property>
-    <property name="position">bottom</property>
-    <child>
-      <object class="GtkImage" id="pop2Image">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="stock">gtk-missing-image</property>
-        <property name="icon_size">6</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="searchimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -6213,6 +6189,32 @@
             <property name="position">6</property>
           </packing>
         </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="pop1">
+    <property name="can-focus">False</property>
+    <property name="relative-to">headerbar</property>
+    <property name="position">bottom</property>
+    <child>
+      <object class="GtkImage" id="pop1Image">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="stock">gtk-missing-image</property>
+        <property name="icon_size">6</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="pop2">
+    <property name="can-focus">False</property>
+    <property name="relative-to">headerbar</property>
+    <property name="position">bottom</property>
+    <child>
+      <object class="GtkImage" id="pop2Image">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="stock">gtk-missing-image</property>
+        <property name="icon_size">6</property>
       </object>
     </child>
   </object>
