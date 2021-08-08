@@ -2282,7 +2282,7 @@ class MainWindow(object):
             return False, _("License")
 
         if self.sug_copyright.strip() == "":
-            return False, _("Copyright")
+            return False, _("Copyright Text")
 
         if self.sug_website.strip() == "":
             return False, _("Website")
@@ -2309,15 +2309,15 @@ class MainWindow(object):
         try:
             self.sug_icon_raw = open(self.sug_icon).read()
         except:
-            return False, "Icon file read error"
+            return False, _("Icon file read error")
 
         try:
             filename, file_extension = os.path.splitext(self.sug_icon)
         except:
-            return False, "Icon file must be svg"
+            return False, _("Icon file must be svg")
 
         if file_extension != ".svg":
-            return False, "Icon file must be svg"
+            return False, _("Icon file must be svg")
 
         return True, "ok"
 
