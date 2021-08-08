@@ -1,3 +1,18 @@
+pardus-software (0.1.0~beta4) unstable; urgency=medium
+
+  * Use Popover on HeaderBar menu
+  * Add sort by download checkbox to pardus apps
+  * Add Suggest App page
+  * Add resetSuggest func, Suggest Stack and Fix scroll positions
+  * Add installed control for download count
+  * Fix category values in suggestApp
+  * Add combobox for sorting pardus apps
+  * Update translations
+  * Update comment response control
+  * Fix popover image relative-to value
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sun, 08 Aug 2021 14:12:54 +0300
+
 pardus-software (0.1.0~beta3) unstable; urgency=medium
 
   * Add Updates page
