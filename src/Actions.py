@@ -22,8 +22,9 @@ def main():
         apt_pkg.pkgsystem_unlock()
         return True
 
-    def install(debianpackage):
-        subprocess.call(["apt", "install", debianpackage, "-yq", "-o", "APT::Status-Fd=2"],
+    def install(packages):
+        packagelist = packages.split(" ")
+        subprocess.call(["apt", "install", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def reinstall(debianpackage):

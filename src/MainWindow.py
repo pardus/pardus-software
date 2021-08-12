@@ -1093,8 +1093,14 @@ class MainWindow(object):
                     self.screenshots = i["screenshots"]
                     self.desktop_file = i["desktop"]
                     prettyname = i["prettyname"][self.locale]
-                    if prettyname == "" or prettyname is None:
+                    if prettyname is None or prettyname == "":
                         prettyname = i["prettyname"]["en"]
+
+                    command = i["command"]
+                    if command and command[self.locale].strip() != "":
+                        self.command = command[self.locale]
+                    else:
+                        self.command = i["name"]
 
             if self.gnomename != "" and self.gnomename is not None:
                 try:
@@ -1165,7 +1171,7 @@ class MainWindow(object):
 
                 if len(self.queue) > 0:
                     for qa in self.queue:
-                        if self.appname == qa:
+                        if self.appname == qa["name"]:
                             if isinstalled:
                                 self.dActionButton.set_label(_(" Removing"))
                             else:
@@ -1894,7 +1900,7 @@ class MainWindow(object):
 
         self.dActionButton.set_sensitive(False)
 
-        self.queue.append(self.appname)
+        self.queue.append({"name": self.appname, "command": self.command})
         self.bottomstack.set_visible_child_name("queue")
 
         self.bottomrevealer.set_reveal_child(True)
@@ -1913,7 +1919,7 @@ class MainWindow(object):
         self.QueueListBox.show_all()
 
         if not self.inprogress:
-            self.actionPackage(self.appname)
+            self.actionPackage(self.appname, self.command)
             self.inprogress = True
             print("action " + self.appname)
 
@@ -1921,7 +1927,7 @@ class MainWindow(object):
 
         self.raction.set_sensitive(False)
 
-        self.queue.append(self.appname)
+        self.queue.append({"name": self.appname, "command": self.appname})
         self.bottomstack.set_visible_child_name("queue")
 
         self.bottomrevealer.set_reveal_child(True)
@@ -1940,7 +1946,7 @@ class MainWindow(object):
         self.QueueListBox.show_all()
 
         if not self.inprogress:
-            self.actionPackage(self.appname)
+            self.actionPackage(self.appname, self.appname)
             self.inprogress = True
             print("action " + self.appname)
 
@@ -2138,7 +2144,7 @@ class MainWindow(object):
 
         if len(self.queue) > 0:
             for qa in self.queue:
-                if self.appname == qa:
+                if self.appname == qa["name"]:
                     if isinstalled:
                         self.raction.set_label(_(" Removing"))
                     else:
@@ -2241,12 +2247,15 @@ class MainWindow(object):
         self.sug_name = self.SuggestName.get_text()
         self.sug_mail = self.SuggestMail.get_text()
 
-        print(self.sug_desc_en.strip()[0:10])
         valid, message = self.controlSuggest()
 
         if valid:
             self.SuggestInfoLabel.set_text("")
-            img_valid, img_message = self.controlSuggestIcon()
+            img_valid = True
+            if self.sug_icon:
+                img_valid, img_message = self.controlSuggestIcon()
+            else:
+                self.sug_icon_raw = ""
             if img_valid:
                 self.SuggestSend.set_sensitive(False)
                 self.SuggestInfoLabel.set_text("")
@@ -2294,8 +2303,8 @@ class MainWindow(object):
         if self.sug_website.strip() == "":
             return False, _("Website")
 
-        if self.sug_icon is None:
-            return False, _("Icon")
+        # if self.sug_icon is None:
+        #     return False, _("Icon")
 
         if self.sug_name.strip() == "":
             return False, _("Name")
@@ -2472,7 +2481,7 @@ class MainWindow(object):
         print("UI APP = " + ui_appname)
         return ui_appname
 
-    def actionPackage(self, appname):
+    def actionPackage(self, appname, command):
 
         self.inprogress = True
         self.topspinner.start()
@@ -2486,6 +2495,7 @@ class MainWindow(object):
             self.raction.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
 
         self.actionedappname = appname
+        self.actionedcommand = command
         self.actionedappdesktop = self.desktop_file
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
 
@@ -2500,7 +2510,7 @@ class MainWindow(object):
                 self.dActionButton.set_label(_(" Installing"))
                 self.raction.set_label(_(" Installing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
-                       self.actionedappname]
+                       self.actionedcommand]
 
         self.pid = self.startProcess(command)
         print("PID : {}".format(self.pid))
@@ -2612,7 +2622,7 @@ class MainWindow(object):
             self.queue.pop(0)
             self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
             if len(self.queue) > 0:
-                self.actionPackage(self.queue[0])
+                self.actionPackage(self.queue[0]["name"], self.queue[0]["command"])
             else:
                 self.bottomrevealer.set_reveal_child(False)
                 if not self.error:
