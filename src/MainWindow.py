@@ -321,12 +321,13 @@ class MainWindow(object):
 
         self.dImage1 = self.GtkBuilder.get_object("dImage1")
         self.dImage2 = self.GtkBuilder.get_object("dImage2")
-        self.pop1 = self.GtkBuilder.get_object("pop1")
-        self.pop2 = self.GtkBuilder.get_object("pop2")
+        self.ImagePopover = self.GtkBuilder.get_object("ImagePopover")
+        self.ImagePopoverStack = self.GtkBuilder.get_object("ImagePopoverStack")
         self.pop1Image = self.GtkBuilder.get_object("pop1Image")
         self.pop2Image = self.GtkBuilder.get_object("pop2Image")
         self.pixbuf1 = None
         self.pixbuf2 = None
+        self.imgLabel = self.GtkBuilder.get_object("imgLabel")
         # self.getDisplay()
 
         self.mac = self.getMac()
@@ -524,15 +525,44 @@ class MainWindow(object):
         print("gnome comments completed")
 
     def on_dEventBox1_button_press_event(self, widget, event):
-        self.pop1.show_all()
-        self.pop1.popup()
+        self.setPopImage(1)
+        self.resizePopImage()
+        self.ImagePopover.show_all()
+        self.ImagePopover.popup()
 
     def on_dEventBox2_button_press_event(self, widget, event):
-        self.pop2.show_all()
-        self.pop2.popup()
+        self.setPopImage(2)
+        self.resizePopImage()
+        self.ImagePopover.show_all()
+        self.ImagePopover.popup()
 
-    def on_dImage2_button_press_event(self, widget, event):
-        print("image press")
+    def on_imgBackButton_clicked(self, button):
+        self.setPopImage(1)
+
+    def on_imgNextButton_clicked(self, button):
+        self.setPopImage(2)
+
+    def on_imgCloseButton_clicked(self, button):
+        self.ImagePopover.popdown()
+
+    def on_imgFullButton_clicked(self, button):
+        self.resizePopImage(True)
+
+    def on_ImagePopover_key_press_event(self, widget, event):
+        if event.keyval == Gdk.KEY_Left:
+            self.setPopImage(1)
+        elif event.keyval == Gdk.KEY_Right:
+            self.setPopImage(2)
+        elif event.keyval == Gdk.KEY_f or event.keyval == Gdk.KEY_F:
+            self.resizePopImage(True)
+
+    def setPopImage(self, image):
+        if image == 1:
+            self.imgLabel.set_text("{} 1".format(_("Image")))
+            self.ImagePopoverStack.set_visible_child_name("image1")
+        elif image == 2:
+            self.imgLabel.set_text("{} 2".format(_("Image")))
+            self.ImagePopoverStack.set_visible_child_name("image2")
 
     def setRepoCategories(self):
         # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Categories")))
@@ -1612,11 +1642,15 @@ class MainWindow(object):
             poppixbuf = self.pixbuf2.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
             self.pop2Image.set_from_pixbuf(poppixbuf)
 
-    def resizePopImage(self):
+    def resizePopImage(self, fullscreen=False):
         # we are resizing only popup images because there is a bug others
-        allocation = self.MainWindow.get_allocation()
-        pw = allocation.width / 1.3  # this is for popup Image
-        ph = allocation.height / 1.3  # this is for popup Image
+        size = self.MainWindow.get_size()
+        if not fullscreen:
+            pw = size.width - size.width / 4  # this is for popup Image
+            ph = size.height - size.height / 4  # this is for popup Image
+        else:
+            pw = size.width - 125  # this is for popup Image
+            ph = size.height - 75  # this is for popup Image
 
         if self.pixbuf1:
             poppixbuf = self.pixbuf1.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
