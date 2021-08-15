@@ -366,6 +366,9 @@ class MainWindow(object):
 
         self.desktop_file = ""
 
+        self.rate_average = 0
+        self.rate_individual = _("is None")
+
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
         # screen = Gdk.Screen.get_default()
@@ -1433,16 +1436,19 @@ class MainWindow(object):
                 "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
 
             if response["details"]["rate"]["individual"] == 0:
+                self.rate_individual = _("is None")
                 self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), _("is None")))
                 self.commentstack.set_visible_child_name("sendcomment")
                 self.wpcgetnameLabel.set_text("")
                 self.wpcgetcommentLabel.set_text("")
             else:
+                self.rate_individual = response["details"]["rate"]["individual"]
                 self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), response["details"]["rate"]["individual"]))
                 self.commentstack.set_visible_child_name("alreadysent")
                 self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
                 self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
 
+            self.rate_average = response["details"]["rate"]["average"]
             self.setAppStar(response["details"]["rate"]["average"])
 
             self.setPardusRatings(response["details"]["rate"]["count"], response["details"]["rate"]["average"],
@@ -1597,8 +1603,52 @@ class MainWindow(object):
 
         self.GnomeCommentListBox.show_all()
 
-    def on_test(self, widget, event):
-        print("test")
+    def eventStarSet(self, widget):
+        if widget == "star1":
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staroff)
+            self.dtStar3.set_from_pixbuf(self.staroff)
+            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 1))
+        elif widget == "star2":
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staroff)
+            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 2))
+        elif widget == "star3":
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staron)
+            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 3))
+        elif widget == "star4":
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staron)
+            self.dtStar4.set_from_pixbuf(self.staron)
+            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 4))
+        elif widget == "star5":
+            self.dtStar1.set_from_pixbuf(self.staron)
+            self.dtStar2.set_from_pixbuf(self.staron)
+            self.dtStar3.set_from_pixbuf(self.staron)
+            self.dtStar4.set_from_pixbuf(self.staron)
+            self.dtStar5.set_from_pixbuf(self.staron)
+            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 5))
+
+    def on_starEvent_enter_notify_event(self, widget, event):
+        self.eventStarSet(widget.get_name())
+
+    def on_starEvent_leave_notify_event(self, widget, event):
+        self.setAppStar(self.rate_average)
+        self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), self.rate_individual))
+
+    def on_starEvent_button_press_event(self, widget, event):
+        print(widget.get_name())
 
     def Pixbuf(self, status, pixbuf, i):
         if status and i:

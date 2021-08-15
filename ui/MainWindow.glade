@@ -1651,7 +1651,6 @@ so that the OS has nothing to do with the health of the application.</property>
                                   <object class="GtkEventBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <signal name="button-press-event" handler="on_test" swapped="no"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -1675,10 +1674,20 @@ so that the OS has nothing to do with the health of the application.</property>
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
                                             <child>
-                                              <object class="GtkImage" id="dtStar1">
+                                              <object class="GtkEventBox" id="star1Event">
+                                                <property name="name">star1</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                <child>
+                                                  <object class="GtkImage" id="dtStar1">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                  </object>
+                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1687,10 +1696,20 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkImage" id="dtStar2">
+                                              <object class="GtkEventBox" id="star2Event">
+                                                <property name="name">star2</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                <child>
+                                                  <object class="GtkImage" id="dtStar2">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                  </object>
+                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1699,10 +1718,20 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkImage" id="dtStar3">
+                                              <object class="GtkEventBox" id="star3Event">
+                                                <property name="name">star3</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                <child>
+                                                  <object class="GtkImage" id="dtStar3">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                  </object>
+                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1711,10 +1740,20 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkImage" id="dtStar4">
+                                              <object class="GtkEventBox" id="star4Event">
+                                                <property name="name">star4</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                <child>
+                                                  <object class="GtkImage" id="dtStar4">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                  </object>
+                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1723,10 +1762,20 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkImage" id="dtStar5">
+                                              <object class="GtkEventBox" id="star5Event">
+                                                <property name="name">star5</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                <child>
+                                                  <object class="GtkImage" id="dtStar5">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                  </object>
+                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
