@@ -141,6 +141,8 @@ class MainWindow(object):
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
         self.dOpenButton = self.GtkBuilder.get_object("dOpenButton")
         # self.dOpenButton.get_style_context().add_class("circular")
+        self.dDisclaimerButton = self.GtkBuilder.get_object("dDisclaimerButton")
+        self.DisclaimerPopover = self.GtkBuilder.get_object("DisclaimerPopover")
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
         self.dSection = self.GtkBuilder.get_object("dSection")
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
@@ -1169,8 +1171,10 @@ class MainWindow(object):
                 size = self.Package.size(self.appname)
                 component = self.Package.component(self.appname)
                 if component == "non-free":
+                    self.dDisclaimerButton.set_visible(True)
                     type = _("Non-Free")
                 else:
+                    self.dDisclaimerButton.set_visible(False)
                     type = _("Open Source")
 
                 self.dVersion.set_markup(version)
@@ -1224,6 +1228,7 @@ class MainWindow(object):
                 self.dType.set_markup(_("None"))
 
                 self.dOpenButton.set_visible(False)
+                self.dDisclaimerButton.set_visible(False)
 
             self.pixbuf1 = None
             self.pixbuf2 = None
@@ -1422,7 +1427,7 @@ class MainWindow(object):
                 "{} {}".format(response["details"]["download"]["count"], _("Download")))
 
             self.dtTotalRating.set_markup(
-                "{} {}".format(response["details"]["rate"]["count"], _("Ratings")))
+                "( {} )".format(response["details"]["rate"]["count"]))
 
             self.dtAverageRating.set_markup(
                 "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
@@ -1925,6 +1930,9 @@ class MainWindow(object):
         if len(self.queue) > 1:
             self.queue.pop(1)
             self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
+
+    def on_dDisclaimerButton_clicked(self, button):
+        self.DisclaimerPopover.popup()
 
     def on_dOpenButton_clicked(self, button):
 

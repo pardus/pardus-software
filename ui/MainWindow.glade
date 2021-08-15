@@ -125,6 +125,26 @@
     <property name="can-focus">False</property>
     <property name="icon-name">mail-send-symbolic</property>
   </object>
+  <object class="GtkPopover" id="DisclaimerPopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">dDisclaimerButton</property>
+    <property name="position">left</property>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">7</property>
+        <property name="margin-end">7</property>
+        <property name="margin-top">7</property>
+        <property name="margin-bottom">7</property>
+        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
+
+This application served from Pardus non-free package repositories,
+so that the OS has nothing to do with the health of the application.</property>
+        <property name="use-markup">True</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkPopover" id="ImagePopover">
     <property name="can-focus">False</property>
     <property name="relative-to">headerbar</property>
@@ -1637,11 +1657,11 @@
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">center</property>
+                                        <property name="spacing">7</property>
                                         <child>
                                           <object class="GtkLabel" id="dtAverageRating">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="margin-end">7</property>
                                             <property name="label" translatable="yes">0.0</property>
                                           </object>
                                           <packing>
@@ -1651,10 +1671,69 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkImage" id="dtStar1">
+                                          <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="pixbuf">../images/rating-unrated.svg</property>
+                                            <child>
+                                              <object class="GtkImage" id="dtStar1">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage" id="dtStar2">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage" id="dtStar3">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">2</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage" id="dtStar4">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">3</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage" id="dtStar5">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="pixbuf">../images/rating-unrated.svg</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">4</property>
+                                              </packing>
+                                            </child>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1663,51 +1742,16 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkImage" id="dtStar2">
+                                          <object class="GtkLabel" id="dtTotalRating">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="pixbuf">../images/rating-unrated.svg</property>
+                                            <property name="label" translatable="yes">&lt;small&gt;( 0 )&lt;/small&gt;</property>
+                                            <property name="use-markup">True</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">True</property>
                                             <property name="position">2</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkImage" id="dtStar3">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="pixbuf">../images/rating-unrated.svg</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">3</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkImage" id="dtStar4">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="pixbuf">../images/rating-unrated.svg</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">4</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkImage" id="dtStar5">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="pixbuf">../images/rating-unrated.svg</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">5</property>
                                           </packing>
                                         </child>
                                       </object>
@@ -1723,59 +1767,8 @@
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="spacing">13</property>
-                                    <child>
-                                      <object class="GtkLabel" id="dtTotalRating">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;  Ratings&lt;/small&gt;</property>
-                                        <property name="use-markup">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;|&lt;/small&gt;</property>
-                                        <property name="use-markup">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="dtUserRating">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;Your Rate  &lt;/small&gt;</property>
-                                        <property name="use-markup">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
                                     <property name="halign">center</property>
-                                    <property name="spacing">13</property>
+                                    <property name="spacing">7</property>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
@@ -1792,13 +1785,39 @@
                                       <object class="GtkLabel" id="dtDownload">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;   Download&lt;/small&gt;</property>
+                                        <property name="label" translatable="yes">&lt;small&gt;Download&lt;/small&gt;</property>
                                         <property name="use-markup">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">True</property>
                                         <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">center</property>
+                                    <property name="spacing">7</property>
+                                    <child>
+                                      <object class="GtkLabel" id="dtUserRating">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="label" translatable="yes">&lt;small&gt;Your Rate&lt;/small&gt;</property>
+                                        <property name="use-markup">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
                                       </packing>
                                     </child>
                                   </object>
@@ -1827,18 +1846,46 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">end</property>
-                            <property name="valign">center</property>
                             <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
-                            <property name="spacing">13</property>
                             <child>
-                              <object class="GtkButton" id="dOpenButton">
-                                <property name="label" translatable="yes">Open</property>
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="receives-default">True</property>
-                                <property name="halign">center</property>
-                                <signal name="clicked" handler="on_dOpenButton_clicked" swapped="no"/>
+                                <property name="can-focus">False</property>
+                                <property name="valign">center</property>
+                                <property name="vexpand">True</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">13</property>
+                                <child>
+                                  <object class="GtkButton" id="dOpenButton">
+                                    <property name="label" translatable="yes">Open</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <signal name="clicked" handler="on_dOpenButton_clicked" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="dActionButton">
+                                    <property name="label" translatable="yes">button</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <signal name="clicked" handler="on_dActionButton_clicked" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1847,13 +1894,27 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="dActionButton">
-                                <property name="label" translatable="yes">button</property>
+                              <object class="GtkButton" id="dDisclaimerButton">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
                                 <property name="halign">center</property>
-                                <signal name="clicked" handler="on_dActionButton_clicked" swapped="no"/>
+                                <property name="valign">end</property>
+                                <property name="vexpand">True</property>
+                                <property name="relief">none</property>
+                                <signal name="clicked" handler="on_dDisclaimerButton_clicked" swapped="no"/>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="tooltip-markup" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
+This application served from Pardus non-free package repositories, so that the OS has nothing to do with the health of the application.</property>
+                                    <property name="label" translatable="yes">Disclaimer</property>
+                                    <attributes>
+                                      <attribute name="weight" value="thin"/>
+                                    </attributes>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1865,7 +1926,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="position">2</property>
+                            <property name="position">3</property>
                           </packing>
                         </child>
                       </object>
@@ -1893,7 +1954,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <child>
-                                  <!-- n-columns=3 n-rows=10 -->
+                                  <!-- n-columns=1 n-rows=10 -->
                                   <object class="GtkGrid">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
@@ -4587,66 +4648,6 @@
                                         <property name="left-attach">0</property>
                                         <property name="top-attach">8</property>
                                       </packing>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
                                     </child>
                                     <child>
                                       <placeholder/>
