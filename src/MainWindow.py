@@ -369,6 +369,8 @@ class MainWindow(object):
         self.rate_average = 0
         self.rate_individual = _("is None")
 
+        self.imgfullscreen = False
+
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
         # screen = Gdk.Screen.get_default()
@@ -551,6 +553,7 @@ class MainWindow(object):
         self.ImagePopover.popdown()
 
     def on_imgFullButton_clicked(self, button):
+        self.imgfullscreen = True
         self.resizePopImage(True)
 
     def on_ImagePopover_key_press_event(self, widget, event):
@@ -568,6 +571,9 @@ class MainWindow(object):
         elif image == 2:
             self.imgLabel.set_text("{} 2".format(_("Image")))
             self.ImagePopoverStack.set_visible_child_name("image2")
+
+    def on_ImagePopover_closed(self, widget):
+        self.imgfullscreen = False
 
     def setRepoCategories(self):
         # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Categories")))
@@ -1669,19 +1675,19 @@ class MainWindow(object):
 
     def on_PardusAppDetailBox_size_allocate(self, widget, allocated):
 
-        # we are resizing app images when PardusAppsDetail size changed
-
-        # self.resizeAppImage()
-
-        self.resizePopImage()
+        self.resizeAppImage()
 
     def resizeAppImage(self):
-        allocation = self.MainWindow.get_allocation()
-        w = allocation.width / 3.3  # this is for detail Image
-        h = allocation.height / 3.3  # this is for detail Image
+        size = self.MainWindow.get_size()
+        w = size.width - size.width / 1.5  # this is for detail Image
+        h = size.height - size.height / 1.5  # this is for detail Image
 
-        pw = allocation.width / 1.3  # this is for popup Image
-        ph = allocation.height / 1.3  # this is for popup Image
+        if not self.imgfullscreen:
+            pw = size.width - size.width / 4  # this is for popup Image
+            ph = size.height - size.height / 4  # this is for popup Image
+        else:
+            pw = size.width - 125  # this is for popup Image
+            ph = size.height - 75  # this is for popup Image
 
         if self.pixbuf1:
             pixbuf = self.pixbuf1.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
@@ -1698,7 +1704,7 @@ class MainWindow(object):
             self.pop2Image.set_from_pixbuf(poppixbuf)
 
     def resizePopImage(self, fullscreen=False):
-        # we are resizing only popup images because there is a bug others
+
         size = self.MainWindow.get_size()
         if not fullscreen:
             pw = size.width - size.width / 4  # this is for popup Image
