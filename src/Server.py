@@ -29,6 +29,10 @@ class Server(object):
         self.settingsfile = "serversettings.ini"
 
         userhome = str(Path.home())
+        try:
+            self.username = userhome.split("/")[-1]
+        except:
+            self.username = ""
         self.cachedir = userhome + "/.cache/pardus-software/"
         self.configdir = userhome + "/.config/pardus-software/"
 

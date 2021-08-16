@@ -74,6 +74,11 @@ class MainWindow(object):
         self.staroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 24, 24)
 
+        self.staronhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover.svg", 24, 24)
+        self.staroffhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated-hover.svg", 24, 24)
+
         self.cstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
         self.cstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
@@ -203,6 +208,8 @@ class MainWindow(object):
         self.wpcgetcommentLabel = self.GtkBuilder.get_object("wpcgetcommentLabel")
         self.wpcresultLabel = self.GtkBuilder.get_object("wpcresultLabel")
         self.wpcformcontrolLabel = self.GtkBuilder.get_object("wpcformcontrolLabel")
+        self.editCommentButton = self.GtkBuilder.get_object("editCommentButton")
+
         self.wpcstar = 0
 
         self.raction = self.GtkBuilder.get_object("raction")
@@ -368,6 +375,8 @@ class MainWindow(object):
 
         self.rate_average = 0
         self.rate_individual = _("is None")
+        self.rate_author = ""
+        self.rate_comment = ""
 
         self.imgfullscreen = False
 
@@ -1080,7 +1089,7 @@ class MainWindow(object):
         self.wpcstar = 0
         self.wpcformcontrolLabel.set_text("")
         self.wpcresultLabel.set_text("")
-        self.wpcAuthor.set_text("")
+        self.wpcAuthor.set_text(self.Server.username)
         self.wpcComment.set_text("")
         self.wpcSendButton.set_sensitive(True)
 
@@ -1406,14 +1415,38 @@ class MainWindow(object):
             if response["response-type"] == 10:
                 self.wpcSendButton.set_sensitive(True)
                 if response["rating"]["status"]:
-                    self.commentstack.set_visible_child_name("sendresult")
-                    self.wpcresultLabel.set_text(
-                        _("Your comment has been sent successfully. It will be published after approval."))
-                else:
-                    if response["rating"]["flood"]:
-                        self.wpcformcontrolLabel.set_text(_("Please try again soon"))
+                    self.rate_average = response["rating"]["rate"]["average"]
+                    self.rate_individual = response["rating"]["rate"]["individual"]
+                    self.rate_author = response["rating"]["rate"]["author"]
+                    self.rate_comment = response["rating"]["rate"]["comment"]
+
+                    self.setAppStar(self.rate_average)
+                    self.dtAverageRating.set_markup("<big>{:.1f}</big>".format(float(self.rate_average)))
+                    self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), self.rate_individual))
+                    self.dtTotalRating.set_markup("( {} )".format(response["rating"]["rate"]["count"]))
+
+                    if response["rating"]["rate"]["recommentable"]:
+                        self.editCommentButton.set_visible(True)
                     else:
-                        self.wpcformcontrolLabel.set_text(_("Error"))
+                        self.editCommentButton.set_visible(False)
+
+                    if response["rating"]["justrate"]:
+                        self.commentstack.set_visible_child_name("alreadysent")
+                        self.wpcgetnameLabel.set_text(str(response["rating"]["rate"]["author"]))
+                        self.wpcgetcommentLabel.set_text(str(response["rating"]["rate"]["comment"]))
+                    else:
+                        self.commentstack.set_visible_child_name("sendresult")
+                        self.wpcresultLabel.set_text(
+                            _("Your comment has been sent successfully. It will be published after approval."))
+                else:
+                    if response["rating"]["justrate"]:
+                        print("justrate error")
+                    else:
+                        if response["rating"]["flood"]:
+                            self.wpcformcontrolLabel.set_text(_("Please try again soon"))
+                        else:
+                            self.wpcformcontrolLabel.set_text(_("Error"))
+
             if response["response-type"] == 12:
                 self.SuggestSend.set_sensitive(True)
                 if response["suggestapp"]["status"]:
@@ -1448,11 +1481,19 @@ class MainWindow(object):
                 self.wpcgetnameLabel.set_text("")
                 self.wpcgetcommentLabel.set_text("")
             else:
-                self.rate_individual = response["details"]["rate"]["individual"]
+                self.rate_individual = response["details"]["individual"]["rate"]
+                self.rate_author = response["details"]["individual"]["author"]
+                self.rate_comment = response["details"]["individual"]["comment"]
+
                 self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), response["details"]["rate"]["individual"]))
                 self.commentstack.set_visible_child_name("alreadysent")
                 self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
                 self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
+
+                if response["details"]["individual"]["recommentable"]:
+                    self.editCommentButton.set_visible(True)
+                else:
+                    self.editCommentButton.set_visible(False)
 
             self.rate_average = response["details"]["rate"]["average"]
             self.setAppStar(response["details"]["rate"]["average"])
@@ -1611,39 +1652,39 @@ class MainWindow(object):
 
     def eventStarSet(self, widget):
         if widget == "star1":
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staroff)
-            self.dtStar3.set_from_pixbuf(self.staroff)
-            self.dtStar4.set_from_pixbuf(self.staroff)
-            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtStar1.set_from_pixbuf(self.staronhover)
+            self.dtStar2.set_from_pixbuf(self.staroffhover)
+            self.dtStar3.set_from_pixbuf(self.staroffhover)
+            self.dtStar4.set_from_pixbuf(self.staroffhover)
+            self.dtStar5.set_from_pixbuf(self.staroffhover)
             self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 1))
         elif widget == "star2":
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staroff)
-            self.dtStar4.set_from_pixbuf(self.staroff)
-            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtStar1.set_from_pixbuf(self.staronhover)
+            self.dtStar2.set_from_pixbuf(self.staronhover)
+            self.dtStar3.set_from_pixbuf(self.staroffhover)
+            self.dtStar4.set_from_pixbuf(self.staroffhover)
+            self.dtStar5.set_from_pixbuf(self.staroffhover)
             self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 2))
         elif widget == "star3":
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.staroff)
-            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtStar1.set_from_pixbuf(self.staronhover)
+            self.dtStar2.set_from_pixbuf(self.staronhover)
+            self.dtStar3.set_from_pixbuf(self.staronhover)
+            self.dtStar4.set_from_pixbuf(self.staroffhover)
+            self.dtStar5.set_from_pixbuf(self.staroffhover)
             self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 3))
         elif widget == "star4":
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.staron)
-            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtStar1.set_from_pixbuf(self.staronhover)
+            self.dtStar2.set_from_pixbuf(self.staronhover)
+            self.dtStar3.set_from_pixbuf(self.staronhover)
+            self.dtStar4.set_from_pixbuf(self.staronhover)
+            self.dtStar5.set_from_pixbuf(self.staroffhover)
             self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 4))
         elif widget == "star5":
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.staron)
-            self.dtStar5.set_from_pixbuf(self.staron)
+            self.dtStar1.set_from_pixbuf(self.staronhover)
+            self.dtStar2.set_from_pixbuf(self.staronhover)
+            self.dtStar3.set_from_pixbuf(self.staronhover)
+            self.dtStar4.set_from_pixbuf(self.staronhover)
+            self.dtStar5.set_from_pixbuf(self.staronhover)
             self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 5))
 
     def on_starEvent_enter_notify_event(self, widget, event):
@@ -1654,7 +1695,12 @@ class MainWindow(object):
         self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), self.rate_individual))
 
     def on_starEvent_button_press_event(self, widget, event):
-        print(widget.get_name())
+        installed = self.Package.isinstalled(self.appname)
+        if installed is None:
+            installed = False
+        dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
+               "installed": installed, "comment": "", "justrate": True}
+        self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
 
     def Pixbuf(self, status, pixbuf, i):
         if status and i:
@@ -1722,23 +1768,25 @@ class MainWindow(object):
 
     def on_wpcStarE1_button_press_event(self, widget, event):
         self.setWpcStar(1)
-        self.wpcstar = 1
 
     def on_wpcStarE2_button_press_event(self, widget, event):
         self.setWpcStar(2)
-        self.wpcstar = 2
 
     def on_wpcStarE3_button_press_event(self, widget, event):
         self.setWpcStar(3)
-        self.wpcstar = 3
 
     def on_wpcStarE4_button_press_event(self, widget, event):
         self.setWpcStar(4)
-        self.wpcstar = 4
 
     def on_wpcStarE5_button_press_event(self, widget, event):
         self.setWpcStar(5)
-        self.wpcstar = 5
+
+    def on_editCommentButton_clicked(self, button):
+
+        self.setWpcStar(self.rate_individual)
+        self.wpcAuthor.set_text(self.rate_author)
+        self.wpcComment.set_text(self.rate_comment)
+        self.commentstack.set_visible_child_name("sendcomment")
 
     def on_wpcSendButton_clicked(self, button):
         print("on_wpcSendButton_clicked")
@@ -1754,7 +1802,7 @@ class MainWindow(object):
             if installed is None:
                 installed = False
             dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
-                   "installed": installed}
+                   "installed": installed, "justrate": False}
             try:
                 self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
             except Exception as e:
@@ -1782,6 +1830,7 @@ class MainWindow(object):
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
             self.wpcStarLabel.set_markup("<b>1</b>")
+            self.wpcstar = 1
         elif rate == 2:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
             self.wpcStar2.set_from_pixbuf(self.wpcstaron)
@@ -1789,6 +1838,7 @@ class MainWindow(object):
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
             self.wpcStarLabel.set_markup("<b>2</b>")
+            self.wpcstar = 2
         elif rate == 3:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
             self.wpcStar2.set_from_pixbuf(self.wpcstaron)
@@ -1796,6 +1846,7 @@ class MainWindow(object):
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
             self.wpcStarLabel.set_markup("<b>3</b>")
+            self.wpcstar = 3
         elif rate == 4:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
             self.wpcStar2.set_from_pixbuf(self.wpcstaron)
@@ -1803,6 +1854,7 @@ class MainWindow(object):
             self.wpcStar4.set_from_pixbuf(self.wpcstaron)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
             self.wpcStarLabel.set_markup("<b>4</b>")
+            self.wpcstar = 4
 
         elif rate == 5:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
@@ -1811,6 +1863,7 @@ class MainWindow(object):
             self.wpcStar4.set_from_pixbuf(self.wpcstaron)
             self.wpcStar5.set_from_pixbuf(self.wpcstaron)
             self.wpcStarLabel.set_markup("<b>5</b>")
+            self.wpcstar = 5
         else:
             print("wpc star error")
 
