@@ -1535,7 +1535,6 @@ so that the OS has nothing to do with the health of the application.</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="orientation">vertical</property>
-                    <signal name="size-allocate" handler="on_PardusAppDetailBox_size_allocate" swapped="no"/>
                     <child>
                       <object class="GtkSeparator">
                         <property name="visible">True</property>
@@ -2688,11 +2687,12 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="can-focus">False</property>
                                                 <property name="left-padding">12</property>
                                                 <child>
-                                                  <object class="GtkBox">
+                                                  <object class="GtkBox" id="PardusAppImageBox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="spacing">23</property>
                                                     <property name="homogeneous">True</property>
+                                                    <signal name="size-allocate" handler="on_PardusAppImageBox_size_allocate" swapped="no"/>
                                                     <child>
                                                       <object class="GtkPaned">
                                                         <property name="visible">True</property>
