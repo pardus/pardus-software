@@ -1221,6 +1221,9 @@ class MainWindow(object):
 
                     self.dOpenButton.set_visible(False)
 
+                    self.wpcformcontrolLabel.set_markup(
+                        "<span color='red'>{}</span>".format(_("You need to install the application")))
+
                 if len(self.queue) > 0:
                     for qa in self.queue:
                         if self.appname == qa["name"]:
@@ -1247,6 +1250,9 @@ class MainWindow(object):
 
                 self.dOpenButton.set_visible(False)
                 self.dDisclaimerButton.set_visible(False)
+
+                self.wpcformcontrolLabel.set_markup(
+                    "<span color='red'>{}</span>".format(_("You need to install the application")))
 
             self.pixbuf1 = None
             self.pixbuf2 = None
@@ -1698,9 +1704,13 @@ class MainWindow(object):
         installed = self.Package.isinstalled(self.appname)
         if installed is None:
             installed = False
-        dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
-               "installed": installed, "comment": "", "justrate": True}
-        self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
+
+        if installed:
+            dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
+                   "installed": installed, "comment": "", "justrate": True}
+            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
+        else:
+            self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
     def Pixbuf(self, status, pixbuf, i):
         if status and i:
@@ -1801,18 +1811,21 @@ class MainWindow(object):
             installed = self.Package.isinstalled(self.appname)
             if installed is None:
                 installed = False
-            dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
-                   "installed": installed, "justrate": False}
-            try:
-                self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
-            except Exception as e:
-                status = False
-                self.commentstack.set_visible_child_name("sendresult")
-                self.wpcresultLabel.set_text(str(e))
-            if status:
-                self.wpcSendButton.set_sensitive(False)
+            if installed:
+                dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
+                       "installed": installed, "justrate": False}
+                try:
+                    self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
+                except Exception as e:
+                    status = False
+                    self.commentstack.set_visible_child_name("sendresult")
+                    self.wpcresultLabel.set_text(str(e))
+                if status:
+                    self.wpcSendButton.set_sensitive(False)
+                else:
+                    self.wpcresultLabel.set_text(_("Error"))
             else:
-                self.wpcresultLabel.set_text(_("Error"))
+                self.wpcformcontrolLabel.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
     def setWpcStar(self, rate):
 
@@ -2879,6 +2892,8 @@ class MainWindow(object):
                 if self.actionedappdesktop != "" and self.actionedappdesktop is not None:
                     self.dOpenButton.set_visible(True)
 
+                self.wpcformcontrolLabel.set_markup("")
+
             else:
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
                     self.dActionButton.get_style_context().remove_class("destructive-action")
@@ -2887,6 +2902,9 @@ class MainWindow(object):
                 self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
 
                 self.dOpenButton.set_visible(False)
+
+                self.wpcformcontrolLabel.set_markup(
+                    "<span color='red'>{}</span>".format(_("You need to install the application")))
 
         if repo == 2:  # repo apps
             if self.Package.isinstalled(self.actionedappname):
