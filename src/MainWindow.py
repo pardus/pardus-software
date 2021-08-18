@@ -380,6 +380,8 @@ class MainWindow(object):
 
         self.imgfullscreen = False
 
+        self.imgfullscreen_count = 0
+
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
         # screen = Gdk.Screen.get_default()
@@ -541,12 +543,14 @@ class MainWindow(object):
         print("gnome comments completed")
 
     def on_dEventBox1_button_press_event(self, widget, event):
+        self.imgfullscreen_count = 0
         self.setPopImage(1)
         self.resizePopImage()
         self.ImagePopover.show_all()
         self.ImagePopover.popup()
 
     def on_dEventBox2_button_press_event(self, widget, event):
+        self.imgfullscreen_count = 0
         self.setPopImage(2)
         self.resizePopImage()
         self.ImagePopover.show_all()
@@ -562,16 +566,32 @@ class MainWindow(object):
         self.ImagePopover.popdown()
 
     def on_imgFullButton_clicked(self, button):
-        self.imgfullscreen = True
-        self.resizePopImage(True)
+        self.imgfullscreen_count += 1
+        if self.imgfullscreen_count % 2 == 1:
+            self.imgfullscreen = True
+            self.resizePopImage(True)
+        else:
+            self.imgfullscreen = False
+            self.resizePopImage()
 
     def on_ImagePopover_key_press_event(self, widget, event):
+
         if event.keyval == Gdk.KEY_Left:
             self.setPopImage(1)
+            return True
         elif event.keyval == Gdk.KEY_Right:
             self.setPopImage(2)
+            return True
         elif event.keyval == Gdk.KEY_f or event.keyval == Gdk.KEY_F:
-            self.resizePopImage(True)
+            self.imgfullscreen_count += 1
+            if self.imgfullscreen_count % 2 == 1:
+                self.imgfullscreen = True
+                self.resizePopImage(True)
+                return True
+            else:
+                self.imgfullscreen = False
+                self.resizePopImage()
+                return True
 
     def setPopImage(self, image):
         if image == 1:
@@ -1825,7 +1845,8 @@ class MainWindow(object):
                 else:
                     self.wpcresultLabel.set_text(_("Error"))
             else:
-                self.wpcformcontrolLabel.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
+                self.wpcformcontrolLabel.set_markup(
+                    "<span color='red'>{}</span>".format(_("You need to install the application")))
 
     def setWpcStar(self, rate):
 
