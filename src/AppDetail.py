@@ -18,7 +18,7 @@ class AppDetail(object):
         self.session = Soup.Session(user_agent="application/json")
 
     def get(self, method, uri, dic):
-        print("{} : {} {}".format(method, uri, dic))
+        # print("{} : {} {}".format(method, uri, dic))
         message = Soup.Message.new(method, uri)
 
         if method == "POST":
@@ -36,7 +36,7 @@ class AppDetail(object):
             return False
 
         status_code = message.status_code
-        print(status_code)
+        # print(status_code)
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)

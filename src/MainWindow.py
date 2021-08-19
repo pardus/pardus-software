@@ -1286,20 +1286,20 @@ class MainWindow(object):
             self.pixbuf2 = None
 
             if self.screenshots[0] + "#1" in self.AppImage.imgcache:
-                print("image1 in cache")
+                # print("image1 in cache")
                 self.pixbuf1 = self.AppImage.imgcache[self.screenshots[0] + "#1"]
                 self.resizeAppImage()
             else:
                 self.pixbuf1 = None
-                print("image1 not in cache")
+                # print("image1 not in cache")
                 self.AppImage.fetch(self.Server.serverurl, self.screenshots[0], "#1")
 
             if self.screenshots[1] + "#2" in self.AppImage.imgcache:
-                print("image2 in cache")
+                # print("image2 in cache")
                 self.pixbuf2 = self.AppImage.imgcache[self.screenshots[1] + "#2"]
                 self.resizeAppImage()
             else:
-                print("image2 not in cache")
+                # print("image2 not in cache")
                 self.pixbuf2 = None
                 self.AppImage.fetch(self.Server.serverurl, self.screenshots[1], "#2")
 
@@ -1445,7 +1445,7 @@ class MainWindow(object):
 
     def Request(self, status, response):
         if status:
-            print(response)
+            # print(response)
             if response["response-type"] == 10:
                 self.wpcSendButton.set_sensitive(True)
                 if response["rating"]["status"]:
@@ -1498,7 +1498,7 @@ class MainWindow(object):
 
     def Detail(self, status, response):
         if status:
-            print(response)
+            # print(response)
             self.dtDownload.set_markup(
                 "{} {}".format(response["details"]["download"]["count"], _("Download")))
 
@@ -1610,7 +1610,7 @@ class MainWindow(object):
 
     def setGnomeRatings(self, gr):
         if gr != "":
-            print(gr)
+            # print(gr)
 
             average = (gr["star1"] * 1 + gr["star2"] * 2 + gr["star3"] * 3 + gr["star4"] * 4 + gr["star5"] * 5) / gr[
                 "total"]
@@ -1750,7 +1750,7 @@ class MainWindow(object):
                 self.pixbuf2 = pixbuf
                 self.resizeAppImage()
         else:
-            print("image not in cache")
+            # print("image not in cache")
             self.dImage1.set_from_pixbuf(self.missing_pixbuf)
             self.dImage2.set_from_pixbuf(self.missing_pixbuf)
 
@@ -2025,7 +2025,7 @@ class MainWindow(object):
         self.isRepoSearching = False
         # self.RepoCurrentCategory = row.get_index()
         self.RepoCurrentCategory = row.get_child().get_text().lower().strip()
-        print(row.get_child().get_text().lower().strip())
+        # print(row.get_child().get_text().lower().strip())
 
         if self.useDynamicListStore:
 
@@ -2243,29 +2243,10 @@ class MainWindow(object):
 
         self.PardusCategoryFilter.refilter()
 
-    def on_reposearchbar_search_changed(self, entry_search):
-        print(entry_search.get_text())
-
-        # searchstore = Gtk.ListStore(str, str)
-        # for i in self.Package.apps:
-        #     if entry_search.get_text() in i["name"]:
-        #         searchstore.append([i["name"], i["category"]])
-        #
-        # self.RepoAppsTreeView.set_model(searchstore)
-        # self.RepoAppsTreeView.show_all()
-
-    def on_reposearchbar_button_press_event(self, widget, click):
-        print("on_reposearchbar_button_press_event")
-
-    def on_reposearchbar_focus_in_event(self, widget, click):
-        print("on_reposearchbar_focus_in_event")
-        # if self.reposearchbar.get_text() != "":
-        #     self.RepoCategoryFilter.refilter()
-
     def on_reposearchbutton_clicked(self, button):
         # self.RepoCategoryListBox.unselect_all()
         self.isRepoSearching = True
-        print("on_reposearchbutton_clicked")
+        # print("on_reposearchbutton_clicked")
 
         self.searchstore = Gtk.ListStore(str, str, int, bool, str, str)
         for i in self.Package.apps:
@@ -2305,7 +2286,7 @@ class MainWindow(object):
 
         iter = self.searchstore.get_iter(path)
         value = self.searchstore.get_value(iter, 0)
-        print(value)
+        # print(value)
 
         self.repoappname = value
         self.appname = value
@@ -2650,7 +2631,7 @@ class MainWindow(object):
             self.updatestack.set_visible_child_name("output")
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "removeresidual",
                        " ".join(self.Package.residual())]
-            print(command)
+            # print(command)
             self.pid = self.startProcess(command)
             print("PID : {}".format(self.pid))
         else:
@@ -2874,7 +2855,7 @@ class MainWindow(object):
 
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()
-        print("selected_items " + str(selected_items))
+        # print("selected_items " + str(selected_items))
 
         editor_selected_items = self.EditorAppsIconView.get_selected_items()
         print("editor_selected_items " + str(editor_selected_items))
@@ -2893,7 +2874,7 @@ class MainWindow(object):
                 self.updateActionButtons(1)
 
         if self.frommostapps:
-            print("self.frommostapps" + str(self.frommostapps))
+            # print("self.frommostapps" + str(self.frommostapps))
             if self.mostappname == self.actionedappname:
                 self.updateActionButtons(1)
 

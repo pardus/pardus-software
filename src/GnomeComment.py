@@ -16,7 +16,7 @@ class GnomeComment(object):
         self.session = Soup.Session(user_agent="application/json")
 
     def get(self, method, uri, dic):
-        print("{} : {} {}".format(method, uri, dic))
+        # print("{} : {} {}".format(method, uri, dic))
         message = Soup.Message.new(method, uri)
 
         if method == "POST":

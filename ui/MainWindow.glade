@@ -651,9 +651,6 @@ so that the OS has nothing to do with the health of the application.</property>
                             <property name="primary-icon-sensitive">False</property>
                             <property name="placeholder-text" translatable="yes">Search an app in repo</property>
                             <signal name="activate" handler="on_reposearchbutton_clicked" swapped="no"/>
-                            <signal name="button-press-event" handler="on_reposearchbar_button_press_event" swapped="no"/>
-                            <signal name="focus-in-event" handler="on_reposearchbar_focus_in_event" swapped="no"/>
-                            <signal name="search-changed" handler="on_reposearchbar_search_changed" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
