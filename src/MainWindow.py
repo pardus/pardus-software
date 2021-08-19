@@ -1162,6 +1162,7 @@ class MainWindow(object):
                     self.gnomename = i["gnomename"]
                     self.screenshots = i["screenshots"]
                     self.desktop_file = i["desktop"]
+                    self.component = i["component"]["name"]
                     prettyname = i["prettyname"][self.locale]
                     if prettyname is None or prettyname == "":
                         prettyname = i["prettyname"]["en"]
@@ -1207,8 +1208,15 @@ class MainWindow(object):
 
                 version = self.Package.version(self.appname)
                 size = self.Package.size(self.appname)
-                component = self.Package.component(self.appname)
-                if component == "non-free":
+                origins = self.Package.origins(self.appname)
+
+                component = ""
+                origin = ""
+                if origins:
+                    component = origins.component
+                    origin = origins.origin
+
+                if component == "non-free" or self.component == "non-free":
                     self.dDisclaimerButton.set_visible(True)
                     type = _("Non-Free")
                 else:
@@ -1217,7 +1225,7 @@ class MainWindow(object):
 
                 self.dVersion.set_markup(version)
                 self.dSize.set_markup(size)
-                self.dComponent.set_markup(component)
+                self.dComponent.set_markup("{} {}".format(origin, component))
                 self.dType.set_markup(type)
 
                 if isinstalled:

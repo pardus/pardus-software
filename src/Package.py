@@ -136,15 +136,15 @@ class Package(object):
                 size = "{:.2f} KB".format(float(size))
         return size
 
-    def component(self, packagename):
+    def origins(self, packagename):
         package = self.cache[packagename]
         try:
-            component = package.candidate.origins[0].component
+            component = package.candidate.origins[0]
         except:
             try:
-                component = package.versions[0].origins[0].component
+                component = package.versions[0].origins[0]
             except:
-                component = "not found"
+                component = None
         return component
 
     def residual(self):
