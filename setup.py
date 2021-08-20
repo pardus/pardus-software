@@ -23,13 +23,14 @@ data_files = [
     ("/usr/share/polkit-1/actions", ["tr.org.pardus.pkexec.pardus-software.policy"]),
     ("/usr/share/pardus/pardus-software/css", ["css/style.css"]),
     ("/usr/share/pardus/pardus-software/images",
-     ["images/icon.svg", "images/rating.svg", "images/rating-unrated.svg", "images/rating-hover.svg",
+     ["images/rating.svg", "images/rating-unrated.svg", "images/rating-hover.svg",
       "images/rating-unrated-hover.svg"]),
     ("/usr/share/pardus/pardus-software/ui", ["ui/MainWindow.glade"]),
     ("/usr/share/pardus/pardus-software/src",
      ["src/Actions.py", "src/AppDetail.py", "src/AppImage.py", "src/AppRequest.py", "src/CellRendererButton.py",
       "src/GnomeComment.py", "src/GnomeRatingServer.py", "src/main.py", "src/MainWindow.py", "src/Package.py",
-      "src/Server.py", "src/UserSettings.py", "src/__version__"])
+      "src/Server.py", "src/UserSettings.py", "src/__version__"]),
+    ("/usr/share/icons/hicolor/scalable/apps/", ["images/pardus-software.svg"])
 ]
 
 setup(
