@@ -1,3 +1,25 @@
+pardus-software (0.1.0~beta5) unstable; urgency=medium
+
+  * Update install pardus package as list and Disable icon control on suggestapp
+  * Update back icon
+  * Add image carousel to Pardus Apps detail images
+  * Add disclaimer button to pardus apps detail page
+  * Add eventbox to pardus apps detail stars
+  * Fix dynamically app image resizing problem
+  * Add rating hover icons
+  * Add actions to rating eventbox and Update comment funcs
+  * Fix scroll problem on pardusappsdetail page
+  * Add installed control for rating
+  * Add exit-fullscreen ability also to imagepopover fullscreen button
+  * Update component as package origins
+  * Disable some print funcs
+  * Add rating hover icons to setup.py
+  * Update translations
+  * Update icon
+  * Update icon on setup.py
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 20 Aug 2021 03:05:57 +0300
+
 pardus-software (0.1.0~beta4) unstable; urgency=medium
 
   * Use Popover on HeaderBar menu
