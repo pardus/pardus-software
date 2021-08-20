@@ -66,7 +66,7 @@
     <property name="website">https://www.pardus.org.tr</property>
     <property name="website-label" translatable="yes">Website</property>
     <property name="authors">Fatih Altun</property>
-    <property name="logo">../images/icon.svg</property>
+    <property name="logo-icon-name">pardus-software</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox">
@@ -314,7 +314,7 @@ so that the OS has nothing to do with the health of the application.</property>
     <property name="window-position">center</property>
     <property name="default-width">857</property>
     <property name="default-height">657</property>
-    <property name="icon">../images/icon.svg</property>
+    <property name="icon-name">pardus-software</property>
     <child>
       <object class="GtkStack" id="mainstack">
         <property name="visible">True</property>
