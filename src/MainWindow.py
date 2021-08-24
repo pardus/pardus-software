@@ -12,7 +12,7 @@ import threading
 import netifaces
 import psutil
 from datetime import datetime
-import gi
+import gi, sys
 
 import locale
 from locale import gettext as _
@@ -471,6 +471,14 @@ class MainWindow(object):
         GLib.idle_add(self.setMostApps)
         GLib.idle_add(self.setRepoApps)
         GLib.idle_add(self.gnomeRatings)
+        GLib.idle_add(self.controlArgs)
+
+    def controlArgs(self):
+        if "detail" in self.Application.args.keys():
+            app = self.Application.args["detail"]
+            for apps in self.Server.applist:
+                if app == apps["name"]:
+                    self.on_PardusAppsIconView_selection_changed(app)
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
