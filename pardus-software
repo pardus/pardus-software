@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/usr/bin/python3 /usr/share/pardus/pardus-software/src/main.py
+/usr/bin/python3 /usr/share/pardus/pardus-software/src/main.py "$@"
