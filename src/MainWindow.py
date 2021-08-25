@@ -476,9 +476,13 @@ class MainWindow(object):
     def controlArgs(self):
         if "detail" in self.Application.args.keys():
             app = self.Application.args["detail"]
-            for apps in self.Server.applist:
-                if app == apps["name"]:
-                    self.on_PardusAppsIconView_selection_changed(app)
+            try:
+                for apps in self.Server.applist:
+                    if app == apps["name"] or app == apps["desktop"].split(".desktop")[0]:
+                        app = apps["name"] # if the name is coming from desktop then set it to app name
+                        self.on_PardusAppsIconView_selection_changed(app)
+            except Exception as e:
+                print(str(e))
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
