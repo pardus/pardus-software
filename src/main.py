@@ -20,11 +20,11 @@ class Application(Gtk.Application):
         self.window = None
 
         self.add_main_option(
-            "detail",
+            "details",
             ord("d"),
             GLib.OptionFlags(0),
             GLib.OptionArg(1),
-            "Detail page of application",
+            "Details page of application",
             None,
         )
 

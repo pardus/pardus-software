@@ -474,8 +474,8 @@ class MainWindow(object):
         GLib.idle_add(self.controlArgs)
 
     def controlArgs(self):
-        if "detail" in self.Application.args.keys():
-            app = self.Application.args["detail"]
+        if "details" in self.Application.args.keys():
+            app = self.Application.args["details"]
             try:
                 for apps in self.Server.applist:
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0]:
