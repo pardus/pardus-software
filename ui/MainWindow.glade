@@ -2092,6 +2092,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="wrap">True</property>
+                                                            <property name="wrap-mode">char</property>
+                                                            <property name="ellipsize">end</property>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>
@@ -2355,7 +2359,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
+                                                            <property name="justify">center</property>
                                                             <property name="wrap">True</property>
+                                                            <property name="wrap-mode">char</property>
+                                                            <property name="ellipsize">end</property>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>
