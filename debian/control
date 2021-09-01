@@ -7,7 +7,7 @@ Standards-Version: 4.3.0
 Homepage: http://pardus.org.tr
 
 Package: pardus-software
-Architecture: amd64
+Architecture: all
 Depends: ${misc:Depends},
          ${python3:Depends},
          gir1.2-glib-2.0,
