@@ -467,6 +467,7 @@ class MainWindow(object):
         # self.setRepoCategories()
         self.server()
         self.getIcons()
+        self.controlIcons()
         self.normalpage()
         GLib.idle_add(self.gnomeComments)
         GLib.idle_add(self.setPardusCategories)
@@ -734,6 +735,13 @@ class MainWindow(object):
         else:
             print("icons cannot downloading because server connection is {}".format(self.Server.connection))
 
+    def controlIcons(self):
+        if self.Server.connection:
+            print("Controlling icons")
+            self.splashlabel.set_markup("<b>{}</b>".format(_("Controlling icons")))
+            self.Server.controlIcons()
+        else:
+            print("icons cannot controlling because server connection is {}".format(self.Server.connection))
     def gnomeRatings(self):
         print("Getting ratings from gnome odrs")
         # self.splashlabel.set_markup("<b>{}</b>".format(_("Getting ratings from gnome odrs")))

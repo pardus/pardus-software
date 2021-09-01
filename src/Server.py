@@ -10,7 +10,7 @@ import requests
 from pathlib import Path
 import tarfile
 from shutil import rmtree
-
+from hashlib import md5
 
 class Server(object):
     def __init__(self):
@@ -45,6 +45,7 @@ class Server(object):
         self.mostdownapplist = []
         self.mostrateapplist = []
         self.totalstatistics = []
+        self.servermd5 = []
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
@@ -84,11 +85,12 @@ class Server(object):
                 self.mostdownapplist = request_home.json()["mostdown-apps"]
                 self.mostrateapplist = request_home.json()["mostrate-apps"]
                 self.totalstatistics = request_home.json()["total"]
+                self.servermd5 = request_home.json()["md5"]
             else:
                 self.connection = False
 
-    def getAppIcons(self):
-        if not self.isExists(self.cachedir + self.serverappicons):
+    def getAppIcons(self, force_download=False):
+        if not self.isExists(self.cachedir + self.serverappicons) or force_download:
             print("trying to downlad " + self.serverappicons)
             try:
                 response = requests.get(self.serverurl + self.serverfiles + self.serverappicons + self.serverarchive)
@@ -110,8 +112,8 @@ class Server(object):
         else:
             return True
 
-    def getCategoryIcons(self):
-        if not self.isExists(self.cachedir + self.servercaticons):
+    def getCategoryIcons(self, force_download=False):
+        if not self.isExists(self.cachedir + self.servercaticons) or force_download:
             print("trying to downlad " + self.servercaticons)
             try:
                 response = requests.get(self.serverurl + self.serverfiles + self.servercaticons + self.serverarchive)
@@ -132,6 +134,21 @@ class Server(object):
                 return False
         else:
             return True
+
+    def controlIcons(self):
+        if self.isExists(self.cachedir + self.serverappicons + self.serverarchive):
+            localiconmd5 = md5(open(self.cachedir + self.serverappicons + self.serverarchive, "rb").read()).hexdigest()
+            if self.servermd5["appicon"]:
+                if localiconmd5 != self.servermd5["appicon"]:
+                    print("md5 value of app icon is different so trying download new app icons from server")
+                    self.getAppIcons(True)
+
+        if self.isExists(self.cachedir + self.servercaticons + self.serverarchive):
+            localiconmd5 = md5(open(self.cachedir + self.servercaticons + self.serverarchive, "rb").read()).hexdigest()
+            if self.servermd5["caticon"]:
+                if localiconmd5 != self.servermd5["caticon"]:
+                    print("md5 value of cat icon is different so trying download new cat icons from server")
+                    self.getCategoryIcons(True)
 
     def getDefaultSettings(self):
         if not self.isExists(self.configdir):
@@ -161,16 +178,15 @@ class Server(object):
             return False
 
     def extractArchive(self, archive, type):
-        if not Path(self.cachedir + type).exists():
-            try:
-                tar = tarfile.open(archive)
-                tar.extractall(path=self.cachedir)
-                tar.close()
-                return True
-            except:
-                print("tarfile error")
-                return False
-        return True
+        try:
+            tar = tarfile.open(archive)
+            tar.extractall(path=self.cachedir)
+            tar.close()
+            return True
+        except:
+            print("tarfile error")
+            return False
+
 
     def isExists(self, dir):
         if Path(dir).exists():
