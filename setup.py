@@ -18,7 +18,7 @@ if os.path.exists(changelog):
 
 data_files = [
     ("/usr/bin", ["pardus-software"]),
-    ("/usr/share/applications", ["tr.org.pardus.software.desktop"]),
+    ("/usr/share/applications", ["tr.org.pardus.software.desktop", "tr.org.pardus.software-open.desktop"]),
     ("/usr/share/locale/tr/LC_MESSAGES", ["po/tr/LC_MESSAGES/pardus-software.mo"]),
     ("/usr/share/polkit-1/actions", ["tr.org.pardus.pkexec.pardus-software.policy"]),
     ("/usr/share/pardus/pardus-software/css", ["css/style.css"]),
@@ -30,7 +30,8 @@ data_files = [
      ["src/Actions.py", "src/AppDetail.py", "src/AppImage.py", "src/AppRequest.py", "src/CellRendererButton.py",
       "src/GnomeComment.py", "src/GnomeRatingServer.py", "src/main.py", "src/MainWindow.py", "src/Package.py",
       "src/Server.py", "src/UserSettings.py", "src/__version__"]),
-    ("/usr/share/icons/hicolor/scalable/apps/", ["images/pardus-software.svg"])
+    ("/usr/share/icons/hicolor/scalable/apps/", ["images/pardus-software.svg"]),
+    ("/usr/share/mime/packages/", ["pardus-software.xml"])
 ]
 
 setup(

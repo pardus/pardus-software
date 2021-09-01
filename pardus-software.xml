@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+	<mime-type type="application/pardus-software-app">
+		<comment>Pardus Software App</comment>
+		<glob pattern="*.pardusapp"/>
+		<icon name="pardus-software"/>
+	</mime-type>
+</mime-info>

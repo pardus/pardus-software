@@ -1,0 +1,7 @@
+#!/bin/bash
+
+update-mime-database /usr/share/mime || true
+
+update-desktop-database || true
+
+exit 0

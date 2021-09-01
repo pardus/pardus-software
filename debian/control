@@ -18,5 +18,7 @@ Depends: ${misc:Depends},
          python3-netifaces,
          python3-psutil,
          python3-requests
+Recommends: shared-mime-info,
+            desktop-file-utils
 Description: Pardus Software Center
  Add, remove, update applications

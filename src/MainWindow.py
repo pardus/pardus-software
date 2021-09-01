@@ -480,8 +480,9 @@ class MainWindow(object):
                 app = app.split("/")[-1].split(".pardusapp")[0]
             try:
                 for apps in self.Server.applist:
-                    if app == apps["name"] or app == apps["desktop"].split(".desktop")[0]:
-                        app = apps["name"] # if the name is coming from desktop then set it to app name
+                    if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or app == \
+                            apps["gnomename"].split(".desktop")[0]:
+                        app = apps["name"]  # if the name is coming from desktop then set it to app name
                         self.on_PardusAppsIconView_selection_changed(app)
             except Exception as e:
                 print(str(e))
