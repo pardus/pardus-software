@@ -489,7 +489,7 @@ class MainWindow(object):
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
                         self.fromdetails = True
                         self.detailsappname = app
-                        self.on_PardusAppsIconView_selection_changed(app)
+                        GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
             except Exception as e:
                 print(str(e))
 
