@@ -476,6 +476,8 @@ class MainWindow(object):
     def controlArgs(self):
         if "details" in self.Application.args.keys():
             app = self.Application.args["details"]
+            if app.endswith(".pardusapp"):
+                app = app.split("/")[-1].split(".pardusapp")[0]
             try:
                 for apps in self.Server.applist:
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0]:
