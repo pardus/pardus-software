@@ -1,3 +1,22 @@
+pardus-software (0.1.0~beta6) unstable; urgency=medium
+
+  * Fix about page icon
+  * Add do_command_line to Application
+  * Update controlArgs func for check desktop file name too
+  * Fix args
+  * Update detail parameter as details
+  * Update controlArgs for opening details from file too
+  * Add mimetype and Update controlArgs
+  * Fix mostappname and detailsappname controls
+  * Fix typo
+  * Add Glib.idle to controlargs
+  * Update Architecture as all
+  * Add controlIcons function
+  * Fix wrap mode of license and version on pardusappsdetail page
+  * Update translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Wed, 01 Sep 2021 17:59:31 +0300
+
 pardus-software (0.1.0~beta5) unstable; urgency=medium
 
   * Update install pardus package as list and Disable icon control on suggestapp
