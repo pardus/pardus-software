@@ -364,6 +364,10 @@ class MainWindow(object):
 
         self.frommostapps = False
         self.fromrepoapps = False
+        self.fromdetails = False
+
+        self.mostappname = None
+        self.detailsappname = None
 
         self.statusoftopsearch = self.topsearchbutton.get_active()
 
@@ -483,6 +487,8 @@ class MainWindow(object):
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or app == \
                             apps["gnomename"].split(".desktop")[0]:
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
+                        self.fromdetails = True
+                        self.detailsappname = app
                         self.on_PardusAppsIconView_selection_changed(app)
             except Exception as e:
                 print(str(e))
@@ -2664,7 +2670,10 @@ class MainWindow(object):
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             ui_appname = self.EditorListStore.get(treeiter, 1)[0]
         if self.frommostapps:
-            ui_appname = self.mostappname
+            if self.mostappname:
+                ui_appname = self.mostappname
+            else:
+                ui_appname = self.detailsappname
         if self.fromrepoapps:
             ui_appname = self.repoappname
         print("UI APP = " + ui_appname)
@@ -2890,8 +2899,12 @@ class MainWindow(object):
 
         if self.frommostapps:
             # print("self.frommostapps" + str(self.frommostapps))
-            if self.mostappname == self.actionedappname:
-                self.updateActionButtons(1)
+            if self.mostappname:
+                if self.mostappname == self.actionedappname:
+                    self.updateActionButtons(1)
+            else:
+                if self.detailsappname == self.actionedappname:
+                    self.updateActionButtons(1)
 
         if self.fromrepoapps:
             if self.repoappname == self.actionedappname:
