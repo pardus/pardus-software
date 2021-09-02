@@ -481,8 +481,13 @@ class MainWindow(object):
     def controlArgs(self):
         if "details" in self.Application.args.keys():
             app = self.Application.args["details"]
-            if app.endswith(".pardusapp"):
-                app = app.split("/")[-1].split(".pardusapp")[0]
+            try:
+                if app.endswith(".pardusapp"):
+                    if os.path.isfile(app):
+                        appfile = open(app, "r")
+                        app = appfile.read().strip()
+            except Exception as e:
+                print(str(e))
             try:
                 for apps in self.Server.applist:
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or app == \
@@ -742,6 +747,7 @@ class MainWindow(object):
             self.Server.controlIcons()
         else:
             print("icons cannot controlling because server connection is {}".format(self.Server.connection))
+
     def gnomeRatings(self):
         print("Getting ratings from gnome odrs")
         # self.splashlabel.set_markup("<b>{}</b>".format(_("Getting ratings from gnome odrs")))
