@@ -972,15 +972,16 @@ class MainWindow(object):
         GLib.idle_add(self.MostDownFlowBox.show_all)
         GLib.idle_add(self.MostRateFlowBox.show_all)
 
-    def getPrettyName(self, name):
+    def getPrettyName(self, name, split=True):
         prettyname = ""
         for i in self.Server.applist:
             if i["name"] == name:
                 prettyname = i["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
                     prettyname = i["prettyname"]["en"]
-        if len(prettyname.split(" ")) > 3:
-            prettyname = " ".join(prettyname.split(" ")[:3]) + " ..."
+        if split:
+            if len(prettyname.split(" ")) > 3:
+                prettyname = " ".join(prettyname.split(" ")[:3]) + " ..."
         return prettyname
 
     def getSystemCatIcon(self, cat, size=48):
@@ -2133,18 +2134,7 @@ class MainWindow(object):
 
         self.bottomrevealer.set_reveal_child(True)
 
-        appicon = Gtk.Image.new()
-        if self.UserSettings.config_usi:
-            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
-        else:
-            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname))
-        label = Gtk.Label.new()
-        label.set_text(self.appname)
-        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-        box.pack_start(appicon, False, True, 0)
-        box.pack_start(label, False, True, 0)
-        self.QueueListBox.add(box)
-        self.QueueListBox.show_all()
+        self.addtoQueue(self.appname)
 
         if not self.inprogress:
             self.actionPackage(self.appname, self.command)
@@ -2160,18 +2150,7 @@ class MainWindow(object):
 
         self.bottomrevealer.set_reveal_child(True)
 
-        appicon = Gtk.Image.new()
-        if self.UserSettings.config_usi:
-            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
-        else:
-            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname))
-        label = Gtk.Label.new()
-        label.set_text(self.appname)
-        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-        box.pack_start(appicon, False, True, 0)
-        box.pack_start(label, False, True, 0)
-        self.QueueListBox.add(box)
-        self.QueueListBox.show_all()
+        self.addtoQueue(self.appname)
 
         if not self.inprogress:
             self.actionPackage(self.appname, self.appname)
@@ -2241,6 +2220,43 @@ class MainWindow(object):
             self.topbutton2.get_style_context().remove_class("suggested-action")
         if not self.queuebutton.get_style_context().has_class("suggested-action"):
             self.queuebutton.get_style_context().add_class("suggested-action")
+
+    def addtoQueue(self, appname):
+
+        appicon = Gtk.Image.new()
+        if self.UserSettings.config_usi:
+            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
+        else:
+            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname))
+        label = Gtk.Label.new()
+        label.set_text(self.getPrettyName(self.appname, split=False))
+        actlabel = Gtk.Label.new()
+        if self.Package.isinstalled(self.appname):
+            actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Will be removed")))
+        else:
+            actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Will be installed")))
+
+        button = Gtk.Button.new()
+        button.set_label("X")
+        button.name = self.appname
+        button.connect("clicked", self.remove_from_queue_clicked)
+        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+        box.pack_start(appicon, False, True, 0)
+        box.pack_start(label, False, True, 0)
+        box.pack_end(button, False, True, 13)
+        box.pack_end(actlabel, False, True, 13)
+        box.name = self.appname
+        self.QueueListBox.add(box)
+        self.QueueListBox.show_all()
+
+    def remove_from_queue_clicked(self, button):
+        for row in self.QueueListBox:
+            if row.get_children()[0].name == button.name:
+                if row.get_index() != 0:
+                    self.QueueListBox.remove(row)
+                    # removing from queue list too
+                    index = next((index for (index, app) in enumerate(self.queue) if app["name"] == button.name), None)
+                    self.queue.pop(index)
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
