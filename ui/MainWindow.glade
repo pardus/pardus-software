@@ -5050,59 +5050,8 @@ This application served from Pardus non-free package repositories, so that the O
                   <object class="GtkBox" id="QueueBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-top">13</property>
-                    <property name="margin-bottom">13</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">13</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="clearqueuebutton">
-                            <property name="label" translatable="yes">Clear Queue</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">True</property>
-                            <property name="halign">center</property>
-                            <signal name="clicked" handler="on_clearqueuebutton_clicked" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="margin-start">3</property>
-                        <property name="margin-end">3</property>
-                        <property name="label" translatable="yes">You can delete applications from the queue by double-clicking the application in the second row of the queue or clicking clear queue button. </property>
-                        <property name="wrap">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
@@ -5117,8 +5066,8 @@ This application served from Pardus non-free package repositories, so that the O
                               <object class="GtkListBox" id="QueueListBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
+                                <property name="selection-mode">none</property>
                                 <property name="activate-on-single-click">False</property>
-                                <signal name="row-activated" handler="on_QueueListBox_row_activated" swapped="no"/>
                               </object>
                             </child>
                           </object>

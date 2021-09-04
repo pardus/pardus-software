@@ -973,7 +973,7 @@ class MainWindow(object):
         GLib.idle_add(self.MostRateFlowBox.show_all)
 
     def getPrettyName(self, name, split=True):
-        prettyname = ""
+        prettyname = name
         for i in self.Server.applist:
             if i["name"] == name:
                 prettyname = i["prettyname"][self.locale]
@@ -2102,21 +2102,21 @@ class MainWindow(object):
         # self.RepoCategoryFilter.refilter()
         # print("category selected")
 
-    def on_QueueListBox_row_activated(self, list_box, row):
+    # def on_QueueListBox_row_activated(self, list_box, row):
+    #
+    #     i = row.get_index()
+    #     if i == 0:
+    #         print("you can not remove because in progress")
+    #     if i == 1:
+    #         print("deleting 1")
+    #         print("row is " + str(i))
+    #         self.queue.pop(1)
+    #         self.QueueListBox.remove(row)
 
-        i = row.get_index()
-        if i == 0:
-            print("you can not remove because in progress")
-        if i == 1:
-            print("deleting 1")
-            print("row is " + str(i))
-            self.queue.pop(1)
-            self.QueueListBox.remove(row)
-
-    def on_clearqueuebutton_clicked(self, button):
-        if len(self.queue) > 1:
-            self.queue.pop(1)
-            self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
+    # def on_clearqueuebutton_clicked(self, button):
+    #     if len(self.queue) > 1:
+    #         self.queue.pop(1)
+    #         self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
 
     def on_dDisclaimerButton_clicked(self, button):
         self.DisclaimerPopover.popup()
@@ -2231,16 +2231,32 @@ class MainWindow(object):
         label = Gtk.Label.new()
         label.set_text(self.getPrettyName(self.appname, split=False))
         actlabel = Gtk.Label.new()
-        if self.Package.isinstalled(self.appname):
+
+        isinstalled = self.Package.isinstalled(self.appname)
+        if isinstalled:
             actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Will be removed")))
         else:
             actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Will be installed")))
 
         button = Gtk.Button.new()
-        button.set_label("X")
         button.name = self.appname
         button.connect("clicked", self.remove_from_queue_clicked)
+        button.props.valign = Gtk.Align.CENTER
+        button.props.halign = Gtk.Align.CENTER
+        button.props.always_show_image = True
+        button.set_image(Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON))
+        if len(self.queue) == 1:
+            button.set_sensitive(False)
+            button.set_tooltip_text(_("You cannot cancel because the application is in progress."))
+            if isinstalled:
+                actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
+            else:
+                actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
         box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+        box.set_margin_top(5)
+        box.set_margin_bottom(5)
+        box.set_margin_start(5)
+        box.set_margin_end(5)
         box.pack_start(appicon, False, True, 0)
         box.pack_start(label, False, True, 0)
         box.pack_end(button, False, True, 13)
@@ -2851,6 +2867,15 @@ class MainWindow(object):
             self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
             if len(self.queue) > 0:
                 self.actionPackage(self.queue[0]["name"], self.queue[0]["command"])
+                # Update QueueListBox's first element too
+                queuecancelbutton = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[3]
+                queuecancelbutton.set_sensitive(False)
+                queuecancelbutton.set_tooltip_text(_("You cannot cancel because the application is in progress."))
+                queueactlabel = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[2]
+                if self.Package.isinstalled(self.actionedappname):
+                    queueactlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
+                else:
+                    queueactlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
             else:
                 self.bottomrevealer.set_reveal_child(False)
                 if not self.error:
