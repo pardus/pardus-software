@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 17:53+0300\n"
-"PO-Revision-Date: 2021-09-01 17:54+0300\n"
+"POT-Creation-Date: 2021-09-06 18:55+0300\n"
+"PO-Revision-Date: 2021-09-06 18:58+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
 "Language: tr\n"
@@ -27,7 +27,7 @@ msgstr ""
 msgid "Add, remove, update applications"
 msgstr "Uygulamaları yükleyin, kaldırın, güncelleyin"
 
-#: ui/MainWindow.glade:67 ui/MainWindow.glade:5847 src/MainWindow.py:2507
+#: ui/MainWindow.glade:67 ui/MainWindow.glade:5773 src/MainWindow.py:2545
 msgid "Website"
 msgstr "Web sitesi"
 
@@ -77,9 +77,9 @@ msgstr "Tamam"
 msgid "Search an app"
 msgstr "Uygulama ara"
 
-#: ui/MainWindow.glade:633 ui/MainWindow.glade:1243 ui/MainWindow.glade:4562
-#: ui/MainWindow.glade:4631 ui/MainWindow.glade:4664 ui/MainWindow.glade:4782
-#: ui/MainWindow.glade:5134 ui/MainWindow.glade:5506
+#: ui/MainWindow.glade:633 ui/MainWindow.glade:1243 ui/MainWindow.glade:4537
+#: ui/MainWindow.glade:4606 ui/MainWindow.glade:4639 ui/MainWindow.glade:4757
+#: ui/MainWindow.glade:5060 ui/MainWindow.glade:5432
 msgid "page0"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgstr "Depoda uygulama ara"
 msgid "Search"
 msgstr "Ara"
 
-#: ui/MainWindow.glade:676 ui/MainWindow.glade:1352 ui/MainWindow.glade:5045
+#: ui/MainWindow.glade:676 ui/MainWindow.glade:1352 ui/MainWindow.glade:5020
 msgid "page1"
 msgstr ""
 
@@ -149,8 +149,8 @@ msgstr ""
 
 #: ui/MainWindow.glade:1422 ui/MainWindow.glade:2094 ui/MainWindow.glade:2158
 #: ui/MainWindow.glade:2218 ui/MainWindow.glade:2278 ui/MainWindow.glade:2361
-#: ui/MainWindow.glade:2425 ui/MainWindow.glade:2485 src/MainWindow.py:1303
-#: src/MainWindow.py:1304 src/MainWindow.py:1305 src/MainWindow.py:1306
+#: ui/MainWindow.glade:2425 ui/MainWindow.glade:2485 src/MainWindow.py:1310
+#: src/MainWindow.py:1311 src/MainWindow.py:1312 src/MainWindow.py:1313
 msgid "None"
 msgstr "Yok"
 
@@ -231,11 +231,11 @@ msgstr "İndirme boyutu"
 msgid "Type"
 msgstr "Tür"
 
-#: ui/MainWindow.glade:2264 ui/MainWindow.glade:5599 src/MainWindow.py:2492
+#: ui/MainWindow.glade:2264 ui/MainWindow.glade:5525 src/MainWindow.py:2530
 msgid "Category"
 msgstr "Kategori"
 
-#: ui/MainWindow.glade:2347 ui/MainWindow.glade:5751 src/MainWindow.py:2501
+#: ui/MainWindow.glade:2347 ui/MainWindow.glade:5677 src/MainWindow.py:2539
 msgid "License"
 msgstr "Lisans"
 
@@ -275,453 +275,453 @@ msgstr "Hepsini göster"
 msgid "Description ..."
 msgstr "Açıklama ..."
 
-#: ui/MainWindow.glade:2900 src/MainWindow.py:688
+#: ui/MainWindow.glade:2900 src/MainWindow.py:693
 msgid "Description"
 msgstr "Açıklama"
 
-#: ui/MainWindow.glade:2986 ui/MainWindow.glade:3603
+#: ui/MainWindow.glade:2980 ui/MainWindow.glade:3597
 msgid "<span font='21'><big><b>0.0</b></big></span>"
 msgstr ""
 
-#: ui/MainWindow.glade:3095 ui/MainWindow.glade:3712
+#: ui/MainWindow.glade:3083 ui/MainWindow.glade:3700
 msgid "50"
 msgstr ""
 
-#: ui/MainWindow.glade:3205 ui/MainWindow.glade:3822
+#: ui/MainWindow.glade:3193 ui/MainWindow.glade:3810
 msgid "30"
 msgstr ""
 
-#: ui/MainWindow.glade:3316 ui/MainWindow.glade:3933
+#: ui/MainWindow.glade:3304 ui/MainWindow.glade:3921
 msgid "20"
 msgstr ""
 
-#: ui/MainWindow.glade:3426 ui/MainWindow.glade:4043
+#: ui/MainWindow.glade:3414 ui/MainWindow.glade:4031
 msgid "10"
 msgstr ""
 
-#: ui/MainWindow.glade:3536 ui/MainWindow.glade:4153
+#: ui/MainWindow.glade:3524 ui/MainWindow.glade:4141
 msgid "0"
 msgstr ""
 
-#: ui/MainWindow.glade:3567
+#: ui/MainWindow.glade:3555
 msgid "Pardus Ratings"
 msgstr "Pardus Oylamaları"
 
-#: ui/MainWindow.glade:4184
+#: ui/MainWindow.glade:4172
 msgid "Gnome Software Ratings"
 msgstr "Gnome Yazılım Oylamaları"
 
-#: ui/MainWindow.glade:4217
+#: ui/MainWindow.glade:4192
 msgid "Ratings"
 msgstr "Oylamalar"
 
-#: ui/MainWindow.glade:4275
+#: ui/MainWindow.glade:4250
 msgid "Pardus Comments"
 msgstr "Pardus Yorumları"
 
-#: ui/MainWindow.glade:4316
+#: ui/MainWindow.glade:4291
 msgid "Gnome Comments"
 msgstr "Gnome Yorumları"
 
-#: ui/MainWindow.glade:4449 src/MainWindow.py:1896
+#: ui/MainWindow.glade:4424 src/MainWindow.py:1903
 msgid "Choose star rating level"
 msgstr "Yıldız derecelendirme düzeyi seçin"
 
-#: ui/MainWindow.glade:4466
+#: ui/MainWindow.glade:4441
 msgid "Your Name :"
 msgstr "Adınız :"
 
-#: ui/MainWindow.glade:4480
+#: ui/MainWindow.glade:4455
 msgid "Write your name"
 msgstr "Adınızı yazınız"
 
-#: ui/MainWindow.glade:4504
+#: ui/MainWindow.glade:4479
 msgid "Your Comment :"
 msgstr "Yorumunuz :"
 
-#: ui/MainWindow.glade:4518
+#: ui/MainWindow.glade:4493
 msgid "Write your comment"
 msgstr "Yorumunuzu yazınız"
 
-#: ui/MainWindow.glade:4546 ui/MainWindow.glade:6046
+#: ui/MainWindow.glade:4521 ui/MainWindow.glade:5972
 msgid "Send"
 msgstr "Gönder"
 
-#: ui/MainWindow.glade:4577
+#: ui/MainWindow.glade:4552
 msgid "You have already posted a comment "
 msgstr "Zaten bir yorum gönderdiniz "
 
-#: ui/MainWindow.glade:4589 ui/MainWindow.glade:5926
+#: ui/MainWindow.glade:4564 ui/MainWindow.glade:5852
 msgid "Your Name"
 msgstr "Adınız"
 
-#: ui/MainWindow.glade:4602
+#: ui/MainWindow.glade:4577
 msgid "Your Comment"
 msgstr "Yorumunuz"
 
-#: ui/MainWindow.glade:4613
+#: ui/MainWindow.glade:4588
 msgid "Edit Your Comment"
 msgstr "Yorumunuzu Düzenleyin"
 
-#: ui/MainWindow.glade:4677
+#: ui/MainWindow.glade:4652
 msgid "Write Pardus Comment"
 msgstr "Pardus Yorumu Yaz"
 
-#: ui/MainWindow.glade:4703
+#: ui/MainWindow.glade:4678
 msgid "Comments"
 msgstr "Yorumlar"
 
-#: ui/MainWindow.glade:4751
+#: ui/MainWindow.glade:4726
 msgid "page4"
 msgstr ""
 
-#: ui/MainWindow.glade:4768
+#: ui/MainWindow.glade:4743
 msgid "Could not connect to the server"
 msgstr "Sunucuya bağlanılamadı"
 
-#: ui/MainWindow.glade:4812
+#: ui/MainWindow.glade:4787
 msgid "Use System Icons"
 msgstr "Sistem İkonlarını Kullan"
 
-#: ui/MainWindow.glade:4862
+#: ui/MainWindow.glade:4837
 msgid "Enable Animations"
 msgstr "Animasyonları Etkinleştir"
 
-#: ui/MainWindow.glade:4909 src/MainWindow.py:2391 src/MainWindow.py:2605
+#: ui/MainWindow.glade:4884 src/MainWindow.py:2429 src/MainWindow.py:2643
 msgid "Apply"
 msgstr "Uygula"
 
-#: ui/MainWindow.glade:5003
+#: ui/MainWindow.glade:4978
 msgid "Clear Cache Files"
 msgstr "Önbellek Dosyalarını Temizle"
 
-#: ui/MainWindow.glade:5013 src/MainWindow.py:2389
+#: ui/MainWindow.glade:4988 src/MainWindow.py:2427
 msgid "Clear"
 msgstr "Temizle"
 
-#: ui/MainWindow.glade:5067
-msgid "Clear Queue"
-msgstr "Kuyruğu Temizle"
-
-#: ui/MainWindow.glade:5095
-msgid ""
-"You can delete applications from the queue by double-clicking the "
-"application in the second row of the queue or clicking clear queue button. "
-msgstr ""
-"Kuyruğun ikinci satırındaki uygulamaya çift tıklayarak veya kuyruğu temizle "
-"düğmesine tıklayarak uygulamaları kuyruktan silebilirsiniz. "
-
-#: ui/MainWindow.glade:5156
+#: ui/MainWindow.glade:5082
 msgid "Update Package Cache"
 msgstr "Paket Önbelleğini Güncelle"
 
-#: ui/MainWindow.glade:5265
+#: ui/MainWindow.glade:5191
 msgid "List of upgradable packages"
 msgstr "Yükseltilebilir paketlerin listesi"
 
-#: ui/MainWindow.glade:5266
+#: ui/MainWindow.glade:5192
 msgid "Upgradable Packages"
 msgstr "Güncellenebilir Paketler"
 
-#: ui/MainWindow.glade:5302
+#: ui/MainWindow.glade:5228
 msgid "Upgrade"
 msgstr "Güncelle"
 
-#: ui/MainWindow.glade:5331
+#: ui/MainWindow.glade:5257
 msgid "List of automatically removable all unused packages"
 msgstr "Otomatik olarak kaldırılabilen tüm kullanılmayan paketlerin listesi"
 
-#: ui/MainWindow.glade:5332
+#: ui/MainWindow.glade:5258
 msgid "Autoremovable Packages"
 msgstr "Kullanılmayan Kaldırılabilir Paketler"
 
-#: ui/MainWindow.glade:5368 ui/MainWindow.glade:5434
+#: ui/MainWindow.glade:5294 ui/MainWindow.glade:5360
 msgid "Remove"
 msgstr "Kaldır"
 
-#: ui/MainWindow.glade:5397
+#: ui/MainWindow.glade:5323
 msgid "List of unnecessary packages with residual config files"
 msgstr "Kalmış yapılandırma dosyaları içeren gereksiz paketlerin listesi"
 
-#: ui/MainWindow.glade:5398
+#: ui/MainWindow.glade:5324
 msgid "Residual Packages"
 msgstr "Artık Dosyaları Kalan Paketler"
 
-#: ui/MainWindow.glade:5560 src/MainWindow.py:2489
+#: ui/MainWindow.glade:5486 src/MainWindow.py:2527
 msgid "Application Name"
 msgstr "Uygulama İsmi"
 
-#: ui/MainWindow.glade:5637 src/MainWindow.py:2495
+#: ui/MainWindow.glade:5563 src/MainWindow.py:2533
 msgid "Description ( Turkish )"
 msgstr "Açıklama ( Türkçe )"
 
-#: ui/MainWindow.glade:5694 src/MainWindow.py:2498
+#: ui/MainWindow.glade:5620 src/MainWindow.py:2536
 msgid "Description ( English )"
 msgstr "Açıklama ( İngilizce )"
 
-#: ui/MainWindow.glade:5790 src/MainWindow.py:2504
+#: ui/MainWindow.glade:5716 src/MainWindow.py:2542
 msgid "Copyright Text"
 msgstr "Telif Hakkı Metni"
 
-#: ui/MainWindow.glade:5887
+#: ui/MainWindow.glade:5813
 msgid "Icon ( svg )"
 msgstr "İkon ( svg )"
 
-#: ui/MainWindow.glade:5900
+#: ui/MainWindow.glade:5826
 msgid "Select Icon"
 msgstr "İkon seçiniz"
 
-#: ui/MainWindow.glade:5966
+#: ui/MainWindow.glade:5892
 msgid "Your E-Mail Address"
 msgstr "E-Posta adresiniz"
 
-#: ui/MainWindow.glade:6003
+#: ui/MainWindow.glade:5929
 msgid "Is the application available in Pardus repositories ?"
 msgstr "Uygulama Pardus depolarında mevcut mu ?"
 
-#: ui/MainWindow.glade:6070
+#: ui/MainWindow.glade:5996
 msgid "suggest"
 msgstr ""
 
-#: ui/MainWindow.glade:6098
+#: ui/MainWindow.glade:6024
 msgid "Your application suggestion has been successfully submitted. "
 msgstr "Uygulama öneriniz başarıyla gönderildi."
 
-#: ui/MainWindow.glade:6112
+#: ui/MainWindow.glade:6038
 msgid "success"
 msgstr ""
 
-#: ui/MainWindow.glade:6129
+#: ui/MainWindow.glade:6055
 msgid "suggestapp"
 msgstr ""
 
-#: ui/MainWindow.glade:6143
+#: ui/MainWindow.glade:6069
 msgid "home page"
 msgstr ""
 
-#: ui/MainWindow.glade:6153 src/MainWindow.py:249
+#: ui/MainWindow.glade:6079 src/MainWindow.py:249
 msgid "Pardus Software Center"
 msgstr "Pardus Yazılım Merkezi"
 
-#: ui/MainWindow.glade:6166
+#: ui/MainWindow.glade:6092
 msgid "Pardus"
 msgstr ""
 
-#: ui/MainWindow.glade:6178
+#: ui/MainWindow.glade:6104
 msgid "Repo"
 msgstr "Depo"
 
-#: ui/MainWindow.glade:6261
+#: ui/MainWindow.glade:6187
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: ui/MainWindow.glade:6317
+#: ui/MainWindow.glade:6243
 msgid "Updates"
 msgstr "Güncellemeler"
 
-#: ui/MainWindow.glade:6373
+#: ui/MainWindow.glade:6299
 msgid "Suggest App"
 msgstr "Uygulama Öner"
 
-#: ui/MainWindow.glade:6429
+#: ui/MainWindow.glade:6355
 msgid "About"
 msgstr "Hakkında"
 
-#: src/MainWindow.py:381 src/MainWindow.py:1541 src/MainWindow.py:1542
+#: src/MainWindow.py:381 src/MainWindow.py:1548 src/MainWindow.py:1549
 msgid "is None"
 msgstr "Yok"
 
-#: src/MainWindow.py:504
+#: src/MainWindow.py:509
 msgid "Could not connect to server."
 msgstr "Sunucuya bağlanılamadı."
 
-#: src/MainWindow.py:504
+#: src/MainWindow.py:509
 msgid "Error Code (app)"
 msgstr "Hata Kodu (app)"
 
-#: src/MainWindow.py:505
+#: src/MainWindow.py:510
 msgid "Error Code (cat)"
 msgstr "Hata Kodu (cat)"
 
-#: src/MainWindow.py:530
+#: src/MainWindow.py:535
 msgid "Updating Cache"
 msgstr "Önbellek güncelleniyor"
 
-#: src/MainWindow.py:620 src/MainWindow.py:623
+#: src/MainWindow.py:625 src/MainWindow.py:628
 msgid "Image"
 msgstr "Resim"
 
-#: src/MainWindow.py:663
+#: src/MainWindow.py:668
 msgid "Status"
 msgstr "Durum"
 
-#: src/MainWindow.py:669 src/MainWindow.py:2513
+#: src/MainWindow.py:674 src/MainWindow.py:2551
 msgid "Name"
 msgstr "Paket"
 
-#: src/MainWindow.py:675
+#: src/MainWindow.py:680
 msgid "Section"
 msgstr "Bölüm"
 
-#: src/MainWindow.py:722
+#: src/MainWindow.py:727
 msgid "Getting applications from server"
 msgstr "Sunucudan uygulamalar alınıyor"
 
-#: src/MainWindow.py:732
+#: src/MainWindow.py:737
 msgid "Getting icons from server"
 msgstr "Sunucudan ikonlar alınıyor"
 
-#: src/MainWindow.py:741
+#: src/MainWindow.py:746
 msgid "Controlling icons"
 msgstr "İkonlar kontrol ediliyor"
 
-#: src/MainWindow.py:1250
+#: src/MainWindow.py:1257
 msgid "Non-Free"
 msgstr "Özgür Değil"
 
-#: src/MainWindow.py:1253
+#: src/MainWindow.py:1260
 msgid "Open Source"
 msgstr "Açık Kaynak"
 
-#: src/MainWindow.py:1264 src/MainWindow.py:2330 src/MainWindow.py:2935
-#: src/MainWindow.py:2960
+#: src/MainWindow.py:1271 src/MainWindow.py:2368 src/MainWindow.py:2982
+#: src/MainWindow.py:3007
 msgid " Uninstall"
 msgstr " Kaldır"
 
-#: src/MainWindow.py:1276 src/MainWindow.py:2336 src/MainWindow.py:2947
-#: src/MainWindow.py:2966
+#: src/MainWindow.py:1283 src/MainWindow.py:2374 src/MainWindow.py:2994
+#: src/MainWindow.py:3013
 msgid " Install"
 msgstr " Yükle"
 
-#: src/MainWindow.py:1282 src/MainWindow.py:1312 src/MainWindow.py:1770
-#: src/MainWindow.py:1886 src/MainWindow.py:2953
+#: src/MainWindow.py:1289 src/MainWindow.py:1319 src/MainWindow.py:1777
+#: src/MainWindow.py:1893 src/MainWindow.py:3000
 msgid "You need to install the application"
 msgstr "Uygulamayı yüklemeniz gerekiyor"
 
-#: src/MainWindow.py:1288 src/MainWindow.py:2352 src/MainWindow.py:2710
-#: src/MainWindow.py:2711
+#: src/MainWindow.py:1295 src/MainWindow.py:2390 src/MainWindow.py:2748
+#: src/MainWindow.py:2749
 msgid " Removing"
 msgstr " Kaldırılıyor"
 
-#: src/MainWindow.py:1290 src/MainWindow.py:2354 src/MainWindow.py:2716
-#: src/MainWindow.py:2717
+#: src/MainWindow.py:1297 src/MainWindow.py:2392 src/MainWindow.py:2754
+#: src/MainWindow.py:2755
 msgid " Installing"
 msgstr " Yükleniyor"
 
-#: src/MainWindow.py:1300 src/MainWindow.py:2345
+#: src/MainWindow.py:1307 src/MainWindow.py:2383
 msgid " Not Found"
 msgstr " Bulunamadı"
 
-#: src/MainWindow.py:1488 src/MainWindow.py:1542 src/MainWindow.py:1551
-#: src/MainWindow.py:1723 src/MainWindow.py:1730 src/MainWindow.py:1737
-#: src/MainWindow.py:1744 src/MainWindow.py:1751 src/MainWindow.py:1758
+#: src/MainWindow.py:1495 src/MainWindow.py:1549 src/MainWindow.py:1558
+#: src/MainWindow.py:1730 src/MainWindow.py:1737 src/MainWindow.py:1744
+#: src/MainWindow.py:1751 src/MainWindow.py:1758 src/MainWindow.py:1765
 msgid "Your Rate"
 msgstr "Oyunuz"
 
-#: src/MainWindow.py:1503
+#: src/MainWindow.py:1510
 msgid ""
 "Your comment has been sent successfully. It will be published after approval."
 msgstr "Yorumunuz başarıyla gönderildi. Onaylandıktan sonra yayınlanacaktır."
 
-#: src/MainWindow.py:1509 src/MainWindow.py:1522
+#: src/MainWindow.py:1516 src/MainWindow.py:1529
 msgid "Please try again soon"
 msgstr "Lütfen birazdan tekrar deneyin"
 
-#: src/MainWindow.py:1511 src/MainWindow.py:1524 src/MainWindow.py:1526
-#: src/MainWindow.py:1883 src/MainWindow.py:2475 src/MainWindow.py:2600
-#: src/MainWindow.py:2615
+#: src/MainWindow.py:1518 src/MainWindow.py:1531 src/MainWindow.py:1533
+#: src/MainWindow.py:1890 src/MainWindow.py:2513 src/MainWindow.py:2638
+#: src/MainWindow.py:2653
 msgid "Error"
 msgstr "Hata"
 
-#: src/MainWindow.py:1532
+#: src/MainWindow.py:1539
 msgid "Download"
 msgstr "İndirme"
 
-#: src/MainWindow.py:1866
+#: src/MainWindow.py:1873
 msgid "Cannot be null"
 msgstr "Boş olamaz"
 
-#: src/MainWindow.py:2416
-msgid "Select Category"
-msgstr "Kategori seçiniz"
+#: src/MainWindow.py:2237
+msgid "Will be removed"
+msgstr "Kaldırılacak"
 
-#: src/MainWindow.py:2475
-msgid "is empty"
-msgstr "boş"
+#: src/MainWindow.py:2239
+msgid "Will be installed"
+msgstr "Yüklenecek"
 
-#: src/MainWindow.py:2516
-msgid "Mail"
-msgstr "E-Posta"
+#: src/MainWindow.py:2250 src/MainWindow.py:2873
+msgid "You cannot cancel because the application is in progress."
+msgstr "Uygulamanın işlemi devam ettiği için iptal edemezsiniz."
 
-#: src/MainWindow.py:2523
-msgid "Icon not found"
-msgstr "İkon bulunamadı"
-
-#: src/MainWindow.py:2526
-msgid "Icon size must be less than 1 MB"
-msgstr "İkon  boyutu 1 MB'den küçük olmalıdır"
-
-#: src/MainWindow.py:2531
-msgid "Icon file read error"
-msgstr "İkon dosyası okuma hatası"
-
-#: src/MainWindow.py:2536 src/MainWindow.py:2539
-msgid "Icon file must be svg"
-msgstr "İkon dosyası svg olmalıdır"
-
-#: src/MainWindow.py:2595
-msgid "Applied"
-msgstr "Uygulandı"
-
-#: src/MainWindow.py:2596
-msgid "Changes applied successfully "
-msgstr "Değişiklikler başarıyla uygulandı"
-
-#: src/MainWindow.py:2611
-msgid "Cleared"
-msgstr "Temizlendi"
-
-#: src/MainWindow.py:2612
-msgid "Cache files cleared, please close and reopen the application"
-msgstr "Önbellek dosyaları temizlendi, lütfen uygulamayı kapatıp yeniden açın"
-
-#: src/MainWindow.py:2635 src/MainWindow.py:2652 src/MainWindow.py:2668
-msgid "Package manager is busy"
-msgstr "Paket yöneticisi meşgul"
-
-#: src/MainWindow.py:2770
+#: src/MainWindow.py:2252 src/MainWindow.py:2808 src/MainWindow.py:2876
 msgid "Removing"
 msgstr "Kaldırılıyor"
 
-#: src/MainWindow.py:2773
+#: src/MainWindow.py:2254 src/MainWindow.py:2811 src/MainWindow.py:2878
 msgid "Installing"
 msgstr "Yükleniyor"
 
-#: src/MainWindow.py:2799
+#: src/MainWindow.py:2454
+msgid "Select Category"
+msgstr "Kategori seçiniz"
+
+#: src/MainWindow.py:2513
+msgid "is empty"
+msgstr "boş"
+
+#: src/MainWindow.py:2554
+msgid "Mail"
+msgstr "E-Posta"
+
+#: src/MainWindow.py:2561
+msgid "Icon not found"
+msgstr "İkon bulunamadı"
+
+#: src/MainWindow.py:2564
+msgid "Icon size must be less than 1 MB"
+msgstr "İkon  boyutu 1 MB'den küçük olmalıdır"
+
+#: src/MainWindow.py:2569
+msgid "Icon file read error"
+msgstr "İkon dosyası okuma hatası"
+
+#: src/MainWindow.py:2574 src/MainWindow.py:2577
+msgid "Icon file must be svg"
+msgstr "İkon dosyası svg olmalıdır"
+
+#: src/MainWindow.py:2633
+msgid "Applied"
+msgstr "Uygulandı"
+
+#: src/MainWindow.py:2634
+msgid "Changes applied successfully "
+msgstr "Değişiklikler başarıyla uygulandı"
+
+#: src/MainWindow.py:2649
+msgid "Cleared"
+msgstr "Temizlendi"
+
+#: src/MainWindow.py:2650
+msgid "Cache files cleared, please close and reopen the application"
+msgstr "Önbellek dosyaları temizlendi, lütfen uygulamayı kapatıp yeniden açın"
+
+#: src/MainWindow.py:2673 src/MainWindow.py:2690 src/MainWindow.py:2706
+msgid "Package manager is busy"
+msgstr "Paket yöneticisi meşgul"
+
+#: src/MainWindow.py:2837
 msgid " | Removed : 100 %"
 msgstr " | Kaldırıldı : 100 %"
 
-#: src/MainWindow.py:2801
+#: src/MainWindow.py:2839
 msgid " | Installed : 100 %"
 msgstr " | Yüklendi : 100 %"
 
-#: src/MainWindow.py:2803
+#: src/MainWindow.py:2841
 msgid " |  Not Completed"
 msgstr " |  Tamamlanamadı"
 
-#: src/MainWindow.py:2805
+#: src/MainWindow.py:2843
 msgid "<b><span color='red'>Connection Error !</span></b>"
 msgstr "<b><span color='red'>Bağlantı Hatası !</span></b>"
 
-#: src/MainWindow.py:2807
+#: src/MainWindow.py:2845
 msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
 msgstr "<b><span color='red'>Dpkg Kilitleme Hatası !</span></b>"
 
-#: src/MainWindow.py:2809
+#: src/MainWindow.py:2847
 msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
 msgstr "<b><span color='red'>Dpkg Kesinti Hatası !</span></b>"
 
-#: src/MainWindow.py:2847
+#: src/MainWindow.py:2894
 msgid ""
 "Only one software management tool is allowed to run at the same time.\n"
 "Please close the other application e.g. 'Update Manager', 'aptitude' or "
@@ -731,21 +731,32 @@ msgstr ""
 "Lütfen önce diğer uygulamayı, ör. 'Güncelleştirme Yöneticisi', 'aptitude' ya "
 "da 'Synaptic'i kapatın."
 
-#: src/MainWindow.py:2866 src/MainWindow.py:2872
+#: src/MainWindow.py:2913 src/MainWindow.py:2919
 msgid "No action required"
 msgstr "İşlem gerekmiyor"
 
-#: src/MainWindow.py:2878
+#: src/MainWindow.py:2925
 msgid "All packages are up to date"
 msgstr "Tüm paketler güncel"
 
-#: src/MainWindow.py:2976
+#: src/MainWindow.py:3023
 msgid " Removed"
 msgstr " Kaldırıldı"
 
-#: src/MainWindow.py:2978
+#: src/MainWindow.py:3025
 msgid " Installed"
 msgstr " Yüklendi"
+
+#~ msgid "Clear Queue"
+#~ msgstr "Kuyruğu Temizle"
+
+#~ msgid ""
+#~ "You can delete applications from the queue by double-clicking the "
+#~ "application in the second row of the queue or clicking clear queue "
+#~ "button. "
+#~ msgstr ""
+#~ "Kuyruğun ikinci satırındaki uygulamaya çift tıklayarak veya kuyruğu "
+#~ "temizle düğmesine tıklayarak uygulamaları kuyruktan silebilirsiniz. "
 
 #~ msgid "Icon"
 #~ msgstr "İkon"
