@@ -5782,7 +5782,7 @@ This application served from Pardus non-free package repositories, so that the O
                                           <object class="GtkEntry" id="SuggestWeb">
                                             <property name="visible">True</property>
                                             <property name="can-focus">True</property>
-                                            <property name="max-length">50</property>
+                                            <property name="max-length">100</property>
                                             <property name="input-purpose">url</property>
                                             <property name="input-hints">GTK_INPUT_HINT_NO_EMOJI | GTK_INPUT_HINT_NONE</property>
                                           </object>
