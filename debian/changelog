@@ -1,3 +1,13 @@
+pardus-software (0.1.0~beta8) unstable; urgency=medium
+
+  * Add action button and status text to queue listbox
+  * Update QueueListBox ui and Add status control
+  * Update ratings ui on PardusAppsDetail page
+  * Update suggestapp web label max-length as 100
+  * Update translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 06 Sep 2021 18:59:18 +0300
+
 pardus-software (0.1.0~beta7) unstable; urgency=medium
 
   * Fix get app name from pardusapp file
