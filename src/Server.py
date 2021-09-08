@@ -12,6 +12,7 @@ import tarfile
 from shutil import rmtree
 from hashlib import md5
 
+
 class Server(object):
     def __init__(self):
         self.serverurl = "https://store.pardus.org.tr"
@@ -180,13 +181,18 @@ class Server(object):
     def extractArchive(self, archive, type):
         try:
             tar = tarfile.open(archive)
-            tar.extractall(path=self.cachedir)
+            if type == self.serverappicons:
+                extractables = [member for member in tar.getmembers() if member.name.startswith("appicons/")]
+            elif type == self.servercaticons:
+                extractables = [member for member in tar.getmembers() if member.name.startswith("categoryicons/")]
+            else:
+                extractables = ""
+            tar.extractall(members=extractables, path=self.cachedir)
             tar.close()
             return True
         except:
             print("tarfile error")
             return False
-
 
     def isExists(self, dir):
         if Path(dir).exists():
