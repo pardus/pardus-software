@@ -25,6 +25,7 @@ class Server(object):
         self.serverfiles = "/files/"
         self.serverappicons = "appicons"
         self.servercaticons = "categoryicons"
+        self.servericonty = ".svg"
         self.serverarchive = ".tar.gz"
         self.serversettings = "/api/v2/settings"
         self.settingsfile = "serversettings.ini"
@@ -182,9 +183,11 @@ class Server(object):
         try:
             tar = tarfile.open(archive)
             if type == self.serverappicons:
-                extractables = [member for member in tar.getmembers() if member.name.startswith("appicons/")]
+                extractables = [member for member in tar.getmembers() if
+                                member.name.startswith(self.serverappicons) and member.name.endswith(self.servericonty)]
             elif type == self.servercaticons:
-                extractables = [member for member in tar.getmembers() if member.name.startswith("categoryicons/")]
+                extractables = [member for member in tar.getmembers() if
+                                member.name.startswith(self.servercaticons) and member.name.endswith(self.servericonty)]
             else:
                 extractables = ""
             tar.extractall(members=extractables, path=self.cachedir)
