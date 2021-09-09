@@ -3020,9 +3020,9 @@ class MainWindow(object):
 
         Notify.init(self.actionedappname)
         if self.isinstalled:
-            notification = Notify.Notification.new(self.actionedappname + _(" Removed"))
+            notification = Notify.Notification.new(self.getPrettyName(self.actionedappname, False) + _(" Removed"))
         else:
-            notification = Notify.Notification.new(self.actionedappname + _(" Installed"))
+            notification = Notify.Notification.new(self.getPrettyName(self.actionedappname, False) + _(" Installed"))
 
         if self.UserSettings.config_usi:
             pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
