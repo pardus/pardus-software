@@ -42,6 +42,7 @@ class Server(object):
         self.app_scode = 0
         self.cat_scode = 0
         self.applist = []
+        self.orgapplist = []
         self.catlist = []
         self.ediapplist = []
         self.mostdownapplist = []
@@ -82,6 +83,7 @@ class Server(object):
                 print("Connection successful")
                 self.applist = request_app.json()["app-list"]
                 self.applist = sorted(self.applist, key=lambda x: x["name"])
+                # self.orgapplist = self.applist
                 self.catlist = request_cat.json()["cat-list"]
                 self.ediapplist = request_home.json()["editor-apps"]
                 self.mostdownapplist = request_home.json()["mostdown-apps"]

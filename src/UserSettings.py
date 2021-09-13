@@ -7,42 +7,56 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 from pathlib import Path
-import configparser
+import configparser, distro
 
 
 class UserSettings(object):
     def __init__(self):
 
+        try:
+            self.usercodename = distro.codename()
+        except:
+            self.usercodename = ""
         userhome = str(Path.home())
         self.configdir = userhome + "/.config/pardus-software/"
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser()
         self.config_usi = None
-        self.config_anim = None
+        self.config_ea = None
+        self.config_saa = None
 
-    def createDefaultConfig(self):
-        self.config['DEFAULT'] = {'UseSystemIcons': 'no',
-                                  'Animations': 'yes'}
+    def createDefaultConfig(self, force=False):
+        self.config['DEFAULT'] = {'UseServerIcons': 'yes',
+                                  'Animations': 'yes',
+                                  'ShowAvailableApps': 'yes'}
 
-        if not Path.is_file(Path(self.configdir + self.configfile)):
+        if not Path.is_file(Path(self.configdir + self.configfile)) or force:
             if self.createDir(self.configdir):
                 with open(self.configdir + self.configfile, "w") as cf:
                     self.config.write(cf)
 
     def readConfig(self):
         try:
+            print("in readconfig")
             self.config.read(self.configdir + self.configfile)
-            self.config_usi = self.config.getboolean('DEFAULT', 'UseSystemIcons')
-            self.config_anim = self.config.getboolean('DEFAULT', 'Animations')
+            self.config_usi = self.config.getboolean('DEFAULT', 'UseServerIcons')
+            self.config_ea = self.config.getboolean('DEFAULT', 'Animations')
+            self.config_saa = self.config.getboolean('DEFAULT', 'ShowAvailableApps')
         except:
-            print("user config read error !")
-            # if not read; set defaults to true
+            print("user config read error ! Trying create defaults")
+            # if not read; try to create defaults
             self.config_usi = True
-            self.config_anim = True
+            self.config_ea = True
+            self.config_saa = True
+            try:
+                self.createDefaultConfig(force=True)
+            except Exception as e:
+                print("self.createDefaultConfig(force=True) : {}".format(e))
 
-    def writeConfig(self, sysicons, anims):
-        self.config['DEFAULT'] = {'UseSystemIcons': sysicons,
-                                  'Animations': anims}
+    def writeConfig(self, srvicons, anims, avaiapps):
+        self.config['DEFAULT'] = {'UseServerIcons': srvicons,
+                                  'Animations': anims,
+                                  'ShowAvailableApps': avaiapps}
         if self.createDir(self.configdir):
             with open(self.configdir + self.configfile, "w") as cf:
                 self.config.write(cf)

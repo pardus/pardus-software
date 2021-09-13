@@ -52,6 +52,8 @@ class MainWindow(object):
             print("Error reading GUI file: " + self.MainWindowUIFileName)
             raise
 
+        self.applist = []
+
         self.locale = self.getLocale()
         print(self.locale)
 
@@ -250,9 +252,14 @@ class MainWindow(object):
 
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
+        self.switchSAA = self.GtkBuilder.get_object("switchSAA")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
-        self.prefapplybutton = self.GtkBuilder.get_object("prefapplybutton")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
+        self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
+        self.prefTipLabel = self.GtkBuilder.get_object("prefTipLabel")
+        self.tip_usi = self.GtkBuilder.get_object("tip_usi")
+        self.tip_ea = self.GtkBuilder.get_object("tip_ea")
+        self.tip_soaa = self.GtkBuilder.get_object("tip_soaa")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
 
@@ -469,6 +476,7 @@ class MainWindow(object):
         self.getIcons()
         self.controlIcons()
         self.normalpage()
+        self.controlAvailableApps()
         GLib.idle_add(self.gnomeComments)
         GLib.idle_add(self.setPardusCategories)
         GLib.idle_add(self.setPardusApps)
@@ -477,6 +485,10 @@ class MainWindow(object):
         GLib.idle_add(self.setRepoApps)
         GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlArgs)
+
+    def controlAvailableApps(self):
+        if self.UserSettings.config_saa:
+            self.setAvailableApps(available=True)
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
@@ -489,7 +501,7 @@ class MainWindow(object):
             except Exception as e:
                 print(str(e))
             try:
-                for apps in self.Server.applist:
+                for apps in self.applist:
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or app == \
                             apps["gnomename"].split(".desktop")[0]:
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
@@ -547,7 +559,8 @@ class MainWindow(object):
         self.UserSettings.readConfig()
 
         print("{} {}".format("config_usi", self.UserSettings.config_usi))
-        print("{} {}".format("config_anim", self.UserSettings.config_anim))
+        print("{} {}".format("config_anim", self.UserSettings.config_ea))
+        print("{} {}".format("config_availableapps", self.UserSettings.config_saa))
 
     def appimage(self):
         self.AppImage = AppImage()
@@ -726,6 +739,7 @@ class MainWindow(object):
         print("Getting applications from server")
         self.splashlabel.set_markup("<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
+        self.applist = self.Server.applist
         # self.serverappicons = self.Server.getAppIcons()
         # self.servercaticons = self.Server.getCategoryIcons()
         print("{} {}".format("server connection", self.Server.connection))
@@ -776,9 +790,9 @@ class MainWindow(object):
             # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting applications")))
 
             if self.UserSettings.config_usi:
-                print("User want to use system icons [app]")
-                for app in self.Server.applist:
-                    appicon = self.getSystemAppIcon(app["name"])
+                print("User want to use server icons [app]")
+                for app in self.applist:
+                    appicon = self.getServerAppIcon(app["name"])
                     appname = app['name']
                     prettyname = app["prettyname"][self.locale]
                     if prettyname == "" or prettyname is None:
@@ -791,10 +805,9 @@ class MainWindow(object):
                     categorynumber = self.get_category_number(category)
                     GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
             else:
-                print("User want to use server icons [app]")
-                print("{} : {}".format("serverappicons", self.serverappicons))
-                for app in self.Server.applist:
-                    appicon = self.getServerAppIcon(app["name"])
+                print("User want to use system icons [app]")
+                for app in self.applist:
+                    appicon = self.getSystemAppIcon(app["name"])
                     appname = app['name']
                     prettyname = app['prettyname'][self.locale]
                     if prettyname == "" or prettyname is None:
@@ -821,11 +834,11 @@ class MainWindow(object):
             self.categories = sorted(self.allcats, key=lambda x: x["name"])
 
             if self.UserSettings.config_usi:
-                print("User want to use system icons [cat]")
+                print("User want to use server icons [cat]")
 
                 for cat in self.categories:
                     caticon = Gtk.Image.new()
-                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"]))
+                    caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
                     label = Gtk.Label.new()
                     label_text = str(cat["name"]).capitalize()
                     label.set_text(" " + label_text)
@@ -835,11 +848,10 @@ class MainWindow(object):
                     box1.set_name("homecats")
                     GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
             else:
-                print("User want to use server icons [cat]")
-                print("{} : {}".format("servercaticons", self.servercaticons))
+                print("User want to use system icons [cat]")
                 for cat in self.categories:
                     caticon = Gtk.Image.new()
-                    caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
+                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"]))
                     label = Gtk.Label.new()
                     label_text = str(cat["name"]).capitalize()
                     label.set_text(" " + label_text)
@@ -853,11 +865,12 @@ class MainWindow(object):
 
     def setEditorApps(self):
         if self.Server.connection:
+            print("setting editor apps")
             for ediapp in self.Server.ediapplist:
                 if self.UserSettings.config_usi:
-                    edipixbuf = self.getSystemAppIcon(ediapp['name'])
-                else:
                     edipixbuf = self.getServerAppIcon(ediapp['name'])
+                else:
+                    edipixbuf = self.getSystemAppIcon(ediapp['name'])
                 ediappname = ediapp["name"]
                 ediprettyname = ediapp["prettyname"][self.locale]
                 if ediprettyname == "" or ediprettyname is None:
@@ -874,12 +887,13 @@ class MainWindow(object):
 
     def setMostApps(self):
         if self.Server.connection:
+            print("setting mostapps")
             for mda in self.Server.mostdownapplist:
                 icon = Gtk.Image.new()
                 if self.UserSettings.config_usi:
-                    icon.set_from_pixbuf(self.getSystemAppIcon(mda["name"], 64))
-                else:
                     icon.set_from_pixbuf(self.getServerAppIcon(mda["name"], 64))
+                else:
+                    icon.set_from_pixbuf(self.getSystemAppIcon(mda["name"], 64))
 
                 label = Gtk.Label.new()
                 label.set_text(str(self.getPrettyName(mda["name"])))
@@ -923,9 +937,9 @@ class MainWindow(object):
             for mra in self.Server.mostrateapplist:
                 icon = Gtk.Image.new()
                 if self.UserSettings.config_usi:
-                    icon.set_from_pixbuf(self.getSystemAppIcon(mra["name"], 64))
-                else:
                     icon.set_from_pixbuf(self.getServerAppIcon(mra["name"], 64))
+                else:
+                    icon.set_from_pixbuf(self.getSystemAppIcon(mra["name"], 64))
 
                 label = Gtk.Label.new()
                 label.set_text(str(self.getPrettyName(mra["name"])))
@@ -974,6 +988,7 @@ class MainWindow(object):
 
     def getPrettyName(self, name, split=True):
         prettyname = name
+        # look full list of apps
         for i in self.Server.applist:
             if i["name"] == name:
                 prettyname = i["prettyname"][self.locale]
@@ -1079,7 +1094,7 @@ class MainWindow(object):
         self.MainWindow.destroy()
 
     def setAnimations(self):
-        if self.UserSettings.config_anim:
+        if self.UserSettings.config_ea:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
             self.mainstack.set_transition_duration(200)
 
@@ -1169,20 +1184,23 @@ class MainWindow(object):
                     treeiter = self.EditorListStore.get_iter(selected_items[0])
                     self.appname = self.EditorListStore.get(treeiter, 1)[0]
                     # prettyname = self.EditorListStore.get(treeiter, 3)[0]
-                print(selected_items[0])
-                print(self.appname)
             else:
                 self.appname = iconview
+
+            print("APPNAME : {}".format(self.appname))
 
             self.homestack.set_visible_child_name("pardusappsdetail")
 
             if self.UserSettings.config_usi:
-                pixbuf = self.getSystemAppIcon(self.appname, 128)
-            else:
                 pixbuf = self.getServerAppIcon(self.appname, 128)
+            else:
+                pixbuf = self.getSystemAppIcon(self.appname, 128)
 
             self.dIcon.set_from_pixbuf(pixbuf)
 
+            # We are using self.Server.applist because self.applist may be showing only available apps.
+            # If only available applications are shown and one of the homepage applications is not from this list,
+            # we still show their information.
             for i in self.Server.applist:
                 if i["name"] == self.appname:
                     self.description = i["description"][self.locale]
@@ -1957,7 +1975,7 @@ class MainWindow(object):
         desc_tr = ""
 
         if self.isPardusSearching:
-            for i in self.Server.applist:
+            for i in self.applist:
                 if i["name"] == appname:
                     pn_en = i["prettyname"]["en"]
                     pn_tr = i["prettyname"]["tr"]
@@ -1987,16 +2005,97 @@ class MainWindow(object):
                     else:
                         return True
 
+    # def isAppAvailable(self, package):
+    #     inrepo = False
+    #     incodename = False
+    #     if self.Package.isinstalled(package) is not None:
+    #         inrepo = True
+    #     for app in self.applist:
+    #         if package == app["name"]:
+    #             for code in app["codename"]:
+    #                 if code["name"] == self.UserSettings.usercodename:
+    #                     incodename = True
+    #     if inrepo or incodename:
+    #         return True
+    #     return False
+
+    # def PardusCategoryFilterFunctionWithShowAvailable(self, model, iteration, data):
+    #     search_entry_text = self.pardussearchbar.get_text()
+    #     categorynumber = int(model[iteration][2])
+    #     category = model[iteration][4]
+    #     appname = model[iteration][1]
+    #     showinstalled = self.pardusicb.get_active()
+    #     showavailable = self.UserSettings.config_saa
+    #     pn_en = ""
+    #     pn_tr = ""
+    #     desc_en = ""
+    #     desc_tr = ""
+    #
+    #     if self.isPardusSearching:
+    #         for i in self.applist:
+    #             if i["name"] == appname:
+    #                 pn_en = i["prettyname"]["en"]
+    #                 pn_tr = i["prettyname"]["tr"]
+    #                 desc_en = i["description"]["en"]
+    #                 desc_tr = i["description"]["tr"]
+    #         self.HomeCategoryFlowBox.unselect_all()
+    #         if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
+    #                 or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en \
+    #                 or search_entry_text.lower() in desc_tr:
+    #             if showinstalled:
+    #                 if self.Package.isinstalled(appname):
+    #                     if showavailable:
+    #                         if self.isAppAvailable(appname):
+    #                             return True
+    #                     else:
+    #                         return True
+    #             else:
+    #                 if showavailable:
+    #                     if self.isAppAvailable(appname):
+    #                         return True
+    #                 else:
+    #                     return True
+    #     else:
+    #         if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
+    #             if showinstalled:
+    #                 if self.Package.isinstalled(appname):
+    #                     if showavailable:
+    #                         if self.isAppAvailable(appname):
+    #                             return True
+    #                     else:
+    #                         return True
+    #             else:
+    #                 if showavailable:
+    #                     if self.isAppAvailable(appname):
+    #                         return True
+    #                 else:
+    #                     return True
+    #         else:
+    #             if self.PardusCurrentCategoryString in category:
+    #                 if showinstalled:
+    #                     if self.Package.isinstalled(appname):
+    #                         if showavailable:
+    #                             if self.isAppAvailable(appname):
+    #                                 return True
+    #                         else:
+    #                             return True
+    #                 else:
+    #                     if showavailable:
+    #                         if self.isAppAvailable(appname):
+    #                             return True
+    #                     else:
+    #                         return True
+
     def on_pardusicb_toggled(self, button):
         self.PardusCategoryFilter.refilter()
 
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
-            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["name"])
+            self.applist = sorted(self.applist, key=lambda x: x["name"])
             self.PardusAppListStore.clear()
             self.setPardusApps()
         elif combo_box.get_active() == 1:  # sort by download
-            self.Server.applist = sorted(self.Server.applist, key=lambda x: x["download"], reverse=True)
+            self.applist = sorted(self.applist, key=lambda x: x["download"], reverse=True)
             self.PardusAppListStore.clear()
             self.setPardusApps()
 
@@ -2039,9 +2138,9 @@ class MainWindow(object):
         print("home category selected " + str(self.PardusCurrentCategory) + " " + self.PardusCurrentCategoryString)
 
         if self.UserSettings.config_usi:
-            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
-        else:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
+        else:
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.capitalize())
@@ -2225,9 +2324,9 @@ class MainWindow(object):
 
         appicon = Gtk.Image.new()
         if self.UserSettings.config_usi:
-            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
-        else:
             appicon.set_from_pixbuf(self.getServerAppIcon(self.appname))
+        else:
+            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
         label = Gtk.Label.new()
         label.set_text(self.getPrettyName(self.appname, split=False))
         actlabel = Gtk.Label.new()
@@ -2297,9 +2396,9 @@ class MainWindow(object):
         self.PardusAppsIconView.unselect_all()
 
         if self.UserSettings.config_usi:
-            pixbuf = self.getSystemCatIcon("all", 32)
-        else:
             pixbuf = self.getServerCatIcon("all", 32)
+        else:
+            pixbuf = self.getSystemCatIcon("all", 32)
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text("All")
@@ -2419,14 +2518,13 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(False)
         self.UserSettings.readConfig()
         self.switchUSI.set_state(self.UserSettings.config_usi)
-        self.switchEA.set_state(self.UserSettings.config_anim)
+        self.switchEA.set_state(self.UserSettings.config_ea)
+        self.switchSAA.set_state(self.UserSettings.config_saa)
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
-        self.prefapplybutton.set_sensitive(False)
-        self.prefapplybutton.set_label(_("Apply"))
 
     def on_menu_updates_clicked(self, button):
         self.PopoverMenu.popdown()
@@ -2593,27 +2691,34 @@ class MainWindow(object):
         self.SuggestInRepo.set_active(False)
         self.SuggestIconChooser.unselect_all()
 
-    def on_prefapplybutton_clicked(self, button):
-        print("on_prefbutton_clicked")
-        usi = self.switchUSI.get_state()
-        ea = self.switchEA.get_state()
-        print("USI : {}".format(usi))
-        print("EA : {}".format(ea))
+    def on_pref_tip_clicked(self, button):
+        if button.get_name() == "tip_usi":
+            self.PopoverPrefTip.set_relative_to(self.tip_usi)
+            self.prefTipLabel.set_text("{}\n{}\n{}".format(
+                _("If you use the server icons, the application icons will be pulled from the server completely."),
+                _("If you turn this option off, application icons will be pulled from your system,"),
+                _("which may cause some application icons to appear blank.")))
+            self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_ea":
+            self.PopoverPrefTip.set_relative_to(self.tip_ea)
+            self.prefTipLabel.set_text(_("Transition animations in the application."))
+            self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_soaa":
+            self.PopoverPrefTip.set_relative_to(self.tip_soaa)
+            self.prefTipLabel.set_text("{} {} {}\n{}\n{}".format(
+                _("Show only available applications in"), self.UserSettings.usercodename, _("repository."),
+                _("If you turn this option off, all apps will be shown, but"),
+                _("'Not Found' will be displayed for apps not available in the repository.")))
+            self.PopoverPrefTip.popup()
 
-        user_config_anim = self.UserSettings.config_anim
+    def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
-
-        try:
-            self.UserSettings.writeConfig(usi, ea)
-            self.usersettings()
-
-            if user_config_anim != ea:
-                print("Updating user animation state")
-                self.setAnimations()
-
-            if user_config_usi != usi:
-                print("Updating user icon state")
-                self.PardusAppListStore.clear()
+        if state != user_config_usi:
+            print("Updating user icon state")
+            try:
+                self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa)
+                self.usersettings()
+                GLib.idle_add(self.PardusAppListStore.clear)
                 self.EditorListStore.clear()
                 for row in self.HomeCategoryFlowBox:
                     self.HomeCategoryFlowBox.remove(row)
@@ -2621,26 +2726,71 @@ class MainWindow(object):
                     self.MostDownFlowBox.remove(row)
                 for row in self.MostRateFlowBox:
                     self.MostRateFlowBox.remove(row)
-                if not usi:
+                if not state:
                     self.serverappicons = self.Server.getAppIcons()
                     self.servercaticons = self.Server.getCategoryIcons()
                 self.setPardusApps()
                 self.setPardusCategories()
                 self.setEditorApps()
                 self.setMostApps()
+            except Exception as e:
+                self.preflabel.set_text(str(e))
+                print(e)
 
-            self.prefapplybutton.set_sensitive(False)
-            self.prefapplybutton.set_label(_("Applied"))
-            self.preflabel.set_text(_("Changes applied successfully "))
+    def on_switchEA_state_set(self, switch, state):
+        user_config_ea = self.UserSettings.config_ea
+        if state != user_config_ea:
+            print("Updating user animation state")
+            try:
+                self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa)
+                self.usersettings()
+                self.setAnimations()
+            except Exception as e:
+                self.preflabel.set_text(str(e))
 
-        except Exception as e:
-            self.prefapplybutton.set_sensitive(True)
-            self.prefapplybutton.set_label(_("Error"))
-            self.preflabel.set_text(str(e))
+    def on_switchSAA_state_set(self, switch, state):
+        user_config_saa = self.UserSettings.config_saa
+        if state != user_config_saa:
+            print("Updating show available apps state")
+            try:
+                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state)
+                self.usersettings()
+                if state:
+                    self.setAvailableApps(available=True)
+                else:
+                    self.setAvailableApps(available=False)
+            except Exception as e:
+                self.preflabel.set_text(str(e))
 
-    def on_prefswitch_state_set(self, switch, state):
-        self.prefapplybutton.set_sensitive(True)
-        self.prefapplybutton.set_label(_("Apply"))
+            GLib.idle_add(self.PardusAppListStore.clear)
+            self.EditorListStore.clear()
+            for row in self.HomeCategoryFlowBox:
+                self.HomeCategoryFlowBox.remove(row)
+            for row in self.MostDownFlowBox:
+                self.MostDownFlowBox.remove(row)
+            for row in self.MostRateFlowBox:
+                self.MostRateFlowBox.remove(row)
+            self.setPardusApps()
+            self.setPardusCategories()
+            self.setEditorApps()
+            self.setMostApps()
+
+    def setAvailableApps(self, available):
+        if available:
+            newlist = []
+            for app in self.applist:
+                inrepo = False
+                incodename = False
+                if self.Package.isinstalled(app["name"]) is not None:
+                    inrepo = True
+                for code in app["codename"]:
+                    if code["name"] == self.UserSettings.usercodename:
+                        incodename = True
+                if inrepo or incodename:
+                    newlist.append(app)
+            self.applist = newlist
+        else:
+            self.applist = self.Server.applist
 
     def on_prefcachebutton_clicked(self, button):
         state, message = self.Server.deleteCache()
@@ -3025,9 +3175,9 @@ class MainWindow(object):
             notification = Notify.Notification.new(self.getPrettyName(self.actionedappname, False) + _(" Installed"))
 
         if self.UserSettings.config_usi:
-            pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
-        else:
             pixbuf = self.getServerAppIcon(self.actionedappname, 96)
+        else:
+            pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
 
         notification.set_icon_from_pixbuf(pixbuf)
         notification.show()

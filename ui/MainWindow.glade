@@ -31,6 +31,21 @@
   <object class="GtkTreeModelFilter" id="PardusCategoryFilter">
     <property name="child-model">PardusAppListStore</property>
   </object>
+  <object class="GtkPopover" id="PopoverPrefTip">
+    <property name="can-focus">False</property>
+    <property name="position">bottom</property>
+    <child>
+      <object class="GtkLabel" id="prefTipLabel">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">5</property>
+        <property name="wrap">True</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkListStore" id="RepoAppListStore">
     <columns>
       <!-- column-name AppName -->
@@ -1447,12 +1462,20 @@ so that the OS has nothing to do with the health of the application.</property>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="pardusicb">
-                            <property name="label" translatable="yes">Show installed apps</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">False</property>
+                            <property name="tooltip-text" translatable="yes">Show only installed apps</property>
                             <property name="draw-indicator">True</property>
                             <signal name="toggled" handler="on_pardusicb_toggled" swapped="no"/>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Show installed apps</property>
+                                <property name="ellipsize">end</property>
+                              </object>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -4784,7 +4807,7 @@ This application served from Pardus non-free package repositories, so that the O
                                 <property name="can-focus">False</property>
                                 <property name="halign">end</property>
                                 <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Use System Icons</property>
+                                <property name="label" translatable="yes">Use Server Icons</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -4797,12 +4820,35 @@ This application served from Pardus non-free package repositories, so that the O
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="halign">end</property>
-                                <signal name="state-set" handler="on_prefswitch_state_set" swapped="no"/>
+                                <property name="valign">center</property>
+                                <signal name="state-set" handler="on_switchUSI_state_set" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="tip_usi">
+                                <property name="name">tip_usi</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="relief">none</property>
+                                <signal name="clicked" handler="on_pref_tip_clicked" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="icon-name">dialog-information-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>
@@ -4839,20 +4885,44 @@ This application served from Pardus non-free package repositories, so that the O
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">0</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkSwitch" id="switchEA">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
+                                <property name="halign">end</property>
+                                <property name="valign">center</property>
                                 <property name="active">True</property>
-                                <signal name="state-set" handler="on_prefswitch_state_set" swapped="no"/>
+                                <signal name="state-set" handler="on_switchEA_state_set" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="tip_ea">
+                                <property name="name">tip_ea</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="relief">none</property>
+                                <signal name="clicked" handler="on_pref_tip_clicked" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="icon-name">dialog-information-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>
@@ -4877,20 +4947,56 @@ This application served from Pardus non-free package repositories, so that the O
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="halign">center</property>
                             <property name="spacing">13</property>
                             <child>
-                              <object class="GtkButton" id="prefapplybutton">
-                                <property name="label" translatable="yes">Apply</property>
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="receives-default">True</property>
-                                <signal name="clicked" handler="on_prefapplybutton_clicked" swapped="no"/>
+                                <property name="can-focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Show Only Available Applications</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSwitch" id="switchSAA">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="halign">end</property>
+                                <property name="valign">center</property>
+                                <property name="active">True</property>
+                                <signal name="state-set" handler="on_switchSAA_state_set" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="tip_soaa">
+                                <property name="name">tip_soaa</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="relief">none</property>
+                                <signal name="clicked" handler="on_pref_tip_clicked" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="icon-name">dialog-information-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>
