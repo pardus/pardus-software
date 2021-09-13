@@ -2726,7 +2726,7 @@ class MainWindow(object):
                     self.MostDownFlowBox.remove(row)
                 for row in self.MostRateFlowBox:
                     self.MostRateFlowBox.remove(row)
-                if not state:
+                if state:
                     self.serverappicons = self.Server.getAppIcons()
                     self.servercaticons = self.Server.getCategoryIcons()
                 self.setPardusApps()
