@@ -476,7 +476,7 @@ class MainWindow(object):
         self.getIcons()
         self.controlIcons()
         self.normalpage()
-        self.controlAvailableApps()
+        GLib.idle_add(self.controlAvailableApps)
         GLib.idle_add(self.gnomeComments)
         GLib.idle_add(self.setPardusCategories)
         GLib.idle_add(self.setPardusApps)
