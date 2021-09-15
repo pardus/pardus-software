@@ -2095,7 +2095,16 @@ class MainWindow(object):
             self.PardusAppListStore.clear()
             self.setPardusApps()
         elif combo_box.get_active() == 1:  # sort by download
-            self.applist = sorted(self.applist, key=lambda x: x["download"], reverse=True)
+            self.applist = sorted(self.applist, key=lambda x: (x["download"], x["rate_average"]), reverse=True)
+            self.PardusAppListStore.clear()
+            self.setPardusApps()
+        elif combo_box.get_active() == 2:  # sort by rating
+            self.applist = sorted(self.applist, key=lambda x: (x["rate_average"], x["download"]), reverse=True)
+            self.PardusAppListStore.clear()
+            self.setPardusApps()
+        elif combo_box.get_active() == 3:  # sort by last added
+            self.applist = sorted(self.applist, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"),
+                                     reverse=True)
             self.PardusAppListStore.clear()
             self.setPardusApps()
 
