@@ -2104,7 +2104,7 @@ class MainWindow(object):
             self.setPardusApps()
         elif combo_box.get_active() == 3:  # sort by last added
             self.applist = sorted(self.applist, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"),
-                                     reverse=True)
+                                  reverse=True)
             self.PardusAppListStore.clear()
             self.setPardusApps()
 
@@ -2518,6 +2518,25 @@ class MainWindow(object):
 
     # def on_HeaderBarMenuButton_toggled(self, button):
     #     self.HeaderBarMenuButton.grab_focus()
+
+    def on_main_key_press_event(self, widget, event):
+        if self.mainstack.get_visible_child_name() == "home":
+            if self.homestack.get_visible_child_name() == "pardushome" or self.homestack.get_visible_child_name() == "pardusapps":
+                if not self.topsearchbutton.get_active():
+                    if event.string.isdigit() or event.string.isalpha():
+                        self.pardussearchbar.get_buffer().delete_text(0, -1)
+                        self.pardussearchbar.grab_focus()
+                        self.topsearchbutton.set_active(True)
+                        self.toprevealer.set_reveal_child(True)
+                        self.pardussearchbar.get_buffer().insert_text(1, event.string, 1)
+                        self.pardussearchbar.set_position(2)
+                        return True
+                else:
+                    if event.keyval == Gdk.KEY_Escape:
+                        self.pardussearchbar.get_buffer().delete_text(0, -1)
+                        self.topsearchbutton.set_active(False)
+                        self.toprevealer.set_reveal_child(False)
+                        return True
 
     def on_menu_settings_clicked(self, button):
         self.PopoverMenu.popdown()

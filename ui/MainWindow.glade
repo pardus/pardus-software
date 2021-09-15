@@ -330,6 +330,7 @@ so that the OS has nothing to do with the health of the application.</property>
     <property name="default-width">857</property>
     <property name="default-height">657</property>
     <property name="icon-name">pardus-software</property>
+    <signal name="key-press-event" handler="on_main_key_press_event" swapped="no"/>
     <child>
       <object class="GtkStack" id="mainstack">
         <property name="visible">True</property>
