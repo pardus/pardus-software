@@ -2731,7 +2731,12 @@ This application served from Pardus non-free package repositories, so that the O
                                                           <placeholder/>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkEventBox" id="dEventBox1">
+                                                          <object class="GtkStack" id="appimage1stack">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="transition-type">crossfade</property>
+                                                            <child>
+                                                            <object class="GtkEventBox" id="dEventBox1">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
@@ -2745,6 +2750,22 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="can-focus">False</property>
                                                             <property name="icon-name">image-loading</property>
                                                             </object>
+                                                            </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="name">loaded</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkSpinner">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="active">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="name">loading</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
                                                             </child>
                                                           </object>
                                                           <packing>
@@ -2767,7 +2788,11 @@ This application served from Pardus non-free package repositories, so that the O
                                                           <placeholder/>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkEventBox" id="dEventBox2">
+                                                          <object class="GtkStack" id="appimage2stack">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkEventBox" id="dEventBox2">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
@@ -2781,6 +2806,22 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="can-focus">False</property>
                                                             <property name="icon-name">image-loading</property>
                                                             </object>
+                                                            </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="name">loaded</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkSpinner">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="active">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="name">loading</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
                                                             </child>
                                                           </object>
                                                           <packing>

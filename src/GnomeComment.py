@@ -29,7 +29,7 @@ class GnomeComment(object):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
-            print("AppDetail stream Error: {}, {}".format(error.domain, error.message))
+            print("GnomeComment stream Error: {}, {}".format(error.domain, error.message))
             self.gComment(False, None)  # Send to MainWindow
             return False
 

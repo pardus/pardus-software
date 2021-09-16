@@ -344,6 +344,8 @@ class MainWindow(object):
         self.pixbuf1 = None
         self.pixbuf2 = None
         self.imgLabel = self.GtkBuilder.get_object("imgLabel")
+        self.appimage1stack = self.GtkBuilder.get_object("appimage1stack")
+        self.appimage2stack = self.GtkBuilder.get_object("appimage2stack")
         # self.getDisplay()
 
         self.mac = self.getMac()
@@ -1164,6 +1166,14 @@ class MainWindow(object):
         self.wpcComment.set_text("")
         self.wpcSendButton.set_sensitive(True)
 
+        # loading screen for app images
+        self.screenshots = []
+        self.appimage1stack.set_visible_child_name("loading")
+        self.appimage2stack.set_visible_child_name("loading")
+        self.pop1Image.set_from_pixbuf(self.missing_pixbuf)
+        self.pop2Image.set_from_pixbuf(self.missing_pixbuf)
+
+        # set scroll position to top (reset)
         self.PardusAppDetailScroll.set_vadjustment(Gtk.Adjustment())
 
         try:
@@ -1343,6 +1353,7 @@ class MainWindow(object):
                 # print("image1 in cache")
                 self.pixbuf1 = self.AppImage.imgcache[self.screenshots[0] + "#1"]
                 self.resizeAppImage()
+                self.appimage1stack.set_visible_child_name("loaded")
             else:
                 self.pixbuf1 = None
                 # print("image1 not in cache")
@@ -1352,6 +1363,7 @@ class MainWindow(object):
                 # print("image2 in cache")
                 self.pixbuf2 = self.AppImage.imgcache[self.screenshots[1] + "#2"]
                 self.resizeAppImage()
+                self.appimage2stack.set_visible_child_name("loaded")
             else:
                 # print("image2 not in cache")
                 self.pixbuf2 = None
@@ -1593,6 +1605,18 @@ class MainWindow(object):
 
             self.setPardusComments(response["details"]["comment"])
 
+        else:
+            self.rate_average = 0
+            self.rate_individual = ""
+            self.rate_author = ""
+            self.rate_comment = ""
+            self.dtDownload.set_markup("")
+            self.dtTotalRating.set_markup("")
+            self.dtAverageRating.set_markup("")
+            self.setAppStar(0)
+            self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
+            self.setPardusComments(None)
+
     def gComment(self, status, response):
         if status:
             self.setGnomeComments(response)
@@ -1795,6 +1819,8 @@ class MainWindow(object):
             self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
     def Pixbuf(self, status, pixbuf, i):
+        self.appimage1stack.set_visible_child_name("loaded")
+        self.appimage2stack.set_visible_child_name("loaded")
         if status and i:
             i = i.split("#")[1]
             if i == "1":
