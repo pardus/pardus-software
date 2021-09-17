@@ -106,9 +106,16 @@ class Server(object):
                 if self.createDir(self.cachedir):
                     with open(self.cachedir + self.serverappicons + self.serverarchive, "wb") as file:
                         file.write(response.content)
-                    if self.extractArchive(self.cachedir + self.serverappicons + self.serverarchive,
-                                           self.serverappicons):
-                        return True
+                    if self.controlMD5(self.serverappicons):
+                        if self.extractArchive(self.cachedir + self.serverappicons + self.serverarchive,
+                                               self.serverappicons):
+                            return True
+                        else:
+                            print("extract error")
+                            return False
+                    else:
+                        print("md5 value is different (controlMD5)")
+                        return False
                 return False
             else:
                 print("{} : {}".format("error getting app icons, status code", response.status_code))
@@ -129,9 +136,16 @@ class Server(object):
                 if self.createDir(self.cachedir):
                     with open(self.cachedir + self.servercaticons + self.serverarchive, "wb") as file:
                         file.write(response.content)
-                    if self.extractArchive(self.cachedir + self.servercaticons + self.serverarchive,
-                                           self.servercaticons):
-                        return True
+                    if self.controlMD5(self.servercaticons):
+                        if self.extractArchive(self.cachedir + self.servercaticons + self.serverarchive,
+                                               self.servercaticons):
+                            return True
+                        else:
+                            print("extract error")
+                            return False
+                    else:
+                        print("md5 value is different (controlMD5)")
+                        return False
                 return False
             else:
                 print("{} : {}".format("error getting category icons, status code", response.status_code))
@@ -153,6 +167,21 @@ class Server(object):
                 if localiconmd5 != self.servermd5["caticon"]:
                     print("md5 value of cat icon is different so trying download new cat icons from server")
                     self.getCategoryIcons(True)
+
+    def controlMD5(self, type):
+        if type == self.serverappicons:
+            servertag = "appicon"
+        elif type == self.servercaticons:
+            servertag = "caticon"
+        else:
+            return False
+
+        if self.isExists(self.cachedir + type + self.serverarchive):
+            localiconmd5 = md5(open(self.cachedir + type + self.serverarchive, "rb").read()).hexdigest()
+            if self.servermd5[servertag]:
+                if localiconmd5 == self.servermd5[servertag]:
+                    return True
+        return False
 
     def getDefaultSettings(self):
         if not self.isExists(self.configdir):
