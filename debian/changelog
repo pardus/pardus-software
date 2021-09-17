@@ -1,3 +1,19 @@
+pardus-software (0.1.0~beta11) unstable; urgency=medium
+
+  * Add available apps control to settings and Update some funcs with settings ui
+  * Add python3-distro to Depends
+  * Update translations
+  * Fix icon switch state control
+  * Add GLib.idle to controlAvailableApps
+  * Add sort by rate and sort by last added to pardusapps
+  * Add key-press-event to pardushome and pardusapps for enabling search
+  * Update translations
+  * Update status control of pardus app details,images and Add spinner page for loading images
+  * Add extra md5 control for icons
+  * Update image animations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 17 Sep 2021 19:35:06 +0300
+
 pardus-software (0.1.0~beta10) unstable; urgency=medium
 
   * Update tar extraction control
