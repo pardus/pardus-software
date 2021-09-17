@@ -1112,6 +1112,12 @@ class MainWindow(object):
             self.commentstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.commentstack.set_transition_duration(200)
 
+            self.appimage1stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+            self.appimage1stack.set_transition_duration(200)
+
+            self.appimage2stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+            self.appimage2stack.set_transition_duration(200)
+
         else:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.mainstack.set_transition_duration(0)
@@ -1124,6 +1130,12 @@ class MainWindow(object):
 
             self.commentstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.commentstack.set_transition_duration(0)
+
+            self.appimage1stack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.appimage1stack.set_transition_duration(0)
+
+            self.appimage2stack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.appimage2stack.set_transition_duration(0)
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")

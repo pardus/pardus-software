@@ -2791,6 +2791,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                           <object class="GtkStack" id="appimage2stack">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
+                                                            <property name="transition-type">crossfade</property>
                                                             <child>
                                                             <object class="GtkEventBox" id="dEventBox2">
                                                             <property name="visible">True</property>
