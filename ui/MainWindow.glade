@@ -2,6 +2,26 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkPopover" id="DisclaimerPopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">dDisclaimerButton</property>
+    <property name="position">left</property>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">7</property>
+        <property name="margin-end">7</property>
+        <property name="margin-top">7</property>
+        <property name="margin-bottom">7</property>
+        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
+
+This application served from Pardus non-free package repositories,
+so that the OS has nothing to do with the health of the application.</property>
+        <property name="use-markup">True</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkListStore" id="EditorListStore">
     <columns>
       <!-- column-name AppIcon -->
@@ -144,26 +164,6 @@
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">mail-send-symbolic</property>
-  </object>
-  <object class="GtkPopover" id="DisclaimerPopover">
-    <property name="can-focus">False</property>
-    <property name="relative-to">dDisclaimerButton</property>
-    <property name="position">left</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">7</property>
-        <property name="margin-end">7</property>
-        <property name="margin-top">7</property>
-        <property name="margin-bottom">7</property>
-        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
-
-This application served from Pardus non-free package repositories,
-so that the OS has nothing to do with the health of the application.</property>
-        <property name="use-markup">True</property>
-      </object>
-    </child>
   </object>
   <object class="GtkPopover" id="ImagePopover">
     <property name="can-focus">False</property>
@@ -1570,29 +1570,95 @@ so that the OS has nothing to do with the health of the application.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkStack" id="activatestack">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="valign">center</property>
-                        <property name="margin-start">40</property>
-                        <property name="margin-end">40</property>
-                        <property name="margin-top">13</property>
-                        <property name="margin-bottom">13</property>
-                        <property name="vexpand">False</property>
-                        <property name="spacing">13</property>
+                        <property name="transition-type">slide-left-right</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="halign">start</property>
                             <property name="valign">center</property>
-                            <property name="hexpand">True</property>
+                            <property name="margin-start">40</property>
+                            <property name="margin-end">40</property>
+                            <property name="margin-top">13</property>
+                            <property name="margin-bottom">13</property>
+                            <property name="vexpand">False</property>
                             <property name="spacing">13</property>
                             <child>
-                              <object class="GtkImage" id="dIcon">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="icon-name">image-missing</property>
+                                <property name="halign">start</property>
+                                <property name="valign">center</property>
+                                <property name="hexpand">True</property>
+                                <property name="spacing">13</property>
+                                <child>
+                                  <object class="GtkImage" id="dIcon">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="icon-name">image-missing</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">21</property>
+                                    <child>
+                                      <object class="GtkLabel" id="dName">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">appname</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="dSection">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">section</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="dMaintainer">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="valign">end</property>
+                                        <property name="vexpand">True</property>
+                                        <property name="label" translatable="yes">maintainer</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1604,118 +1670,31 @@ so that the OS has nothing to do with the health of the application.</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">21</property>
-                                <child>
-                                  <object class="GtkLabel" id="dName">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="label" translatable="yes">appname</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="dSection">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="label" translatable="yes">section</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="dMaintainer">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="valign">end</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="label" translatable="yes">maintainer</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="halign">center</property>
-                            <property name="valign">center</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
+                                <property name="halign">center</property>
                                 <property name="valign">center</property>
                                 <property name="orientation">vertical</property>
-                                <property name="spacing">21</property>
                                 <child>
-                                  <object class="GtkEventBox">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
+                                    <property name="valign">center</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">21</property>
                                     <child>
-                                      <object class="GtkBox">
+                                      <object class="GtkEventBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="halign">center</property>
-                                        <property name="spacing">7</property>
-                                        <child>
-                                          <object class="GtkLabel" id="dtAverageRating">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">0.0</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
                                         <child>
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
+                                            <property name="halign">center</property>
+                                            <property name="spacing">7</property>
                                             <child>
-                                              <object class="GtkEventBox" id="star1Event">
-                                                <property name="name">star1</property>
+                                              <object class="GtkLabel" id="dtAverageRating">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
-                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
-                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
-                                                <child>
-                                                  <object class="GtkImage" id="dtStar1">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
-                                                  </object>
-                                                </child>
+                                                <property name="label" translatable="yes">0.0</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1724,19 +1703,118 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkEventBox" id="star2Event">
-                                                <property name="name">star2</property>
+                                              <object class="GtkBox">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
-                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
-                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
                                                 <child>
-                                                  <object class="GtkImage" id="dtStar2">
+                                                  <object class="GtkEventBox" id="star1Event">
+                                                    <property name="name">star1</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                    <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                    <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                    <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                    <child>
+                                                      <object class="GtkImage" id="dtStar1">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                      </object>
+                                                    </child>
                                                   </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkEventBox" id="star2Event">
+                                                    <property name="name">star2</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                    <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                    <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                    <child>
+                                                      <object class="GtkImage" id="dtStar2">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkEventBox" id="star3Event">
+                                                    <property name="name">star3</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                    <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                    <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                    <child>
+                                                      <object class="GtkImage" id="dtStar3">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">2</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkEventBox" id="star4Event">
+                                                    <property name="name">star4</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                    <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                    <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                    <child>
+                                                      <object class="GtkImage" id="dtStar4">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">3</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkEventBox" id="star5Event">
+                                                    <property name="name">star5</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
+                                                    <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
+                                                    <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
+                                                    <child>
+                                                      <object class="GtkImage" id="dtStar5">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="pixbuf">../images/rating-unrated.svg</property>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">4</property>
+                                                  </packing>
                                                 </child>
                                               </object>
                                               <packing>
@@ -1746,20 +1824,11 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkEventBox" id="star3Event">
-                                                <property name="name">star3</property>
+                                              <object class="GtkLabel" id="dtTotalRating">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
-                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
-                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
-                                                <child>
-                                                  <object class="GtkImage" id="dtStar3">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
-                                                  </object>
-                                                </child>
+                                                <property name="label" translatable="yes">&lt;small&gt;( 0 )&lt;/small&gt;</property>
+                                                <property name="use-markup">True</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1767,50 +1836,65 @@ so that the OS has nothing to do with the health of the application.</property>
                                                 <property name="position">2</property>
                                               </packing>
                                             </child>
-                                            <child>
-                                              <object class="GtkEventBox" id="star4Event">
-                                                <property name="name">star4</property>
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
-                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
-                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
-                                                <child>
-                                                  <object class="GtkImage" id="dtStar4">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">3</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkEventBox" id="star5Event">
-                                                <property name="name">star5</property>
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <signal name="button-press-event" handler="on_starEvent_button_press_event" swapped="no"/>
-                                                <signal name="enter-notify-event" handler="on_starEvent_enter_notify_event" swapped="no"/>
-                                                <signal name="leave-notify-event" handler="on_starEvent_leave_notify_event" swapped="no"/>
-                                                <child>
-                                                  <object class="GtkImage" id="dtStar5">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="pixbuf">../images/rating-unrated.svg</property>
-                                                  </object>
-                                                </child>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">4</property>
-                                              </packing>
-                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">center</property>
+                                        <property name="spacing">7</property>
+                                        <child>
+                                          <object class="GtkLabel" id="dtUserRating">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label" translatable="yes">&lt;small&gt;Your Rate&lt;/small&gt;</property>
+                                            <property name="use-markup">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">center</property>
+                                        <property name="spacing">7</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="icon-name">document-save-symbolic</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="dtDownload">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label" translatable="yes">&lt;small&gt;Download&lt;/small&gt;</property>
+                                            <property name="use-markup">True</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1818,20 +1902,12 @@ so that the OS has nothing to do with the health of the application.</property>
                                             <property name="position">1</property>
                                           </packing>
                                         </child>
-                                        <child>
-                                          <object class="GtkLabel" id="dtTotalRating">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">&lt;small&gt;( 0 )&lt;/small&gt;</property>
-                                            <property name="use-markup">True</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">2</property>
-                                          </packing>
-                                        </child>
                                       </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
+                                      </packing>
                                     </child>
                                   </object>
                                   <packing>
@@ -1840,18 +1916,36 @@ so that the OS has nothing to do with the health of the application.</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="halign">center</property>
-                                    <property name="spacing">7</property>
+                                    <property name="valign">center</property>
+                                    <property name="vexpand">True</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">13</property>
                                     <child>
-                                      <object class="GtkLabel" id="dtUserRating">
+                                      <object class="GtkButton" id="dOpenButton">
+                                        <property name="label" translatable="yes">Open</property>
                                         <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;Your Rate&lt;/small&gt;</property>
-                                        <property name="use-markup">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                        <property name="halign">center</property>
+                                        <signal name="clicked" handler="on_dOpenButton_clicked" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1859,37 +1953,14 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="halign">center</property>
-                                    <property name="spacing">7</property>
                                     <child>
-                                      <object class="GtkImage">
+                                      <object class="GtkButton" id="dActionButton">
+                                        <property name="label" translatable="yes">button</property>
                                         <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="icon-name">document-save-symbolic</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="dtDownload">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">&lt;small&gt;Download&lt;/small&gt;</property>
-                                        <property name="use-markup">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                        <property name="halign">center</property>
+                                        <signal name="clicked" handler="on_dActionButton_clicked" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1901,61 +1972,31 @@ so that the OS has nothing to do with the health of the application.</property>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="halign">end</property>
-                            <property name="hexpand">True</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="valign">center</property>
-                                <property name="vexpand">True</property>
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">13</property>
-                                <child>
-                                  <object class="GtkButton" id="dOpenButton">
-                                    <property name="label" translatable="yes">Open</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="halign">center</property>
-                                    <signal name="clicked" handler="on_dOpenButton_clicked" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="dActionButton">
-                                    <property name="label" translatable="yes">button</property>
+                                  <object class="GtkButton" id="dDisclaimerButton">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <property name="halign">center</property>
-                                    <signal name="clicked" handler="on_dActionButton_clicked" swapped="no"/>
+                                    <property name="valign">end</property>
+                                    <property name="vexpand">True</property>
+                                    <property name="relief">none</property>
+                                    <signal name="clicked" handler="on_dDisclaimerButton_clicked" swapped="no"/>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="tooltip-markup" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
+This application served from Pardus non-free package repositories, so that the OS has nothing to do with the health of the application.</property>
+                                        <property name="label" translatable="yes">Disclaimer</property>
+                                        <attributes>
+                                          <attribute name="weight" value="thin"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1967,31 +2008,39 @@ so that the OS has nothing to do with the health of the application.</property>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">main</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="valign">center</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">7</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">This application is available through an external repository.</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="dDisclaimerButton">
+                              <object class="GtkLabel" id="activate_repo_label">
                                 <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="receives-default">True</property>
-                                <property name="halign">center</property>
-                                <property name="valign">end</property>
-                                <property name="vexpand">True</property>
-                                <property name="relief">none</property>
-                                <signal name="clicked" handler="on_dDisclaimerButton_clicked" swapped="no"/>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="tooltip-markup" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
-This application served from Pardus non-free package repositories, so that the OS has nothing to do with the health of the application.</property>
-                                    <property name="label" translatable="yes">Disclaimer</property>
-                                    <attributes>
-                                      <attribute name="weight" value="thin"/>
-                                    </attributes>
-                                  </object>
-                                </child>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">repo address</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1999,11 +2048,130 @@ This application served from Pardus non-free package repositories, so that the O
                                 <property name="position">1</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Are you sure you want to activate this repository ?</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">center</property>
+                                <property name="spacing">23</property>
+                                <child>
+                                  <object class="GtkButton" id="activate_no_button">
+                                    <property name="label" translatable="yes">No</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="on_activate_no_button_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="destructive-action"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="activate_yes_button">
+                                    <property name="label" translatable="yes">Yes</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="on_activate_yes_button_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="suggested-action"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="activate_info_label">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">4</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">3</property>
+                            <property name="name">activate</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="valign">center</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">13</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Activating Repo</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinner" id="activating_spinner">
+                                <property name="width-request">25</property>
+                                <property name="height-request">25</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Please wait...</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">activating</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>
@@ -5049,6 +5217,80 @@ This application served from Pardus non-free package repositories, so that the O
                             <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="spacing">13</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Hide External Repo Applications</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSwitch" id="switchHERA">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="halign">end</property>
+                                <property name="valign">center</property>
+                                <property name="active">True</property>
+                                <signal name="state-set" handler="on_switchHERA_state_set" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="tip_hera">
+                                <property name="name">tip_hera</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="relief">none</property>
+                                <signal name="clicked" handler="on_pref_tip_clicked" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="icon-name">dialog-information-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">6</property>
                           </packing>
                         </child>
                       </object>

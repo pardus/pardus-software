@@ -52,6 +52,10 @@ def main():
         subprocess.call(["apt", "autoremove", "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
+    def externalrepo(keyfile, slistfile):
+        subprocess.call(["apt-key", "add", keyfile])
+        subprocess.call(["mv", slistfile, "/etc/apt/sources.list.d/"])
+
     if len(sys.argv) > 1:
         if control_lock():
             if sys.argv[1] == "install":
@@ -69,6 +73,9 @@ def main():
                 removeresidual(sys.argv[2])
             elif sys.argv[1] == "removeauto":
                 removeauto()
+            elif sys.argv[1] == "externalrepo":
+                externalrepo(sys.argv[2], sys.argv[3])
+                update()
         else:
             print("lock error")
             sys.exit(1)

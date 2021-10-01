@@ -13,6 +13,7 @@ import netifaces
 import psutil
 from datetime import datetime
 import gi, sys
+import random, string
 
 import locale
 from locale import gettext as _
@@ -53,6 +54,7 @@ class MainWindow(object):
             raise
 
         self.applist = []
+        self.catlist = []
 
         self.locale = self.getLocale()
         print(self.locale)
@@ -143,6 +145,10 @@ class MainWindow(object):
         self.searchstack = self.GtkBuilder.get_object("searchstack")
         self.bottomstack = self.GtkBuilder.get_object("bottomstack")
         self.commentstack = self.GtkBuilder.get_object("commentstack")
+        self.activatestack = self.GtkBuilder.get_object("activatestack")
+        self.activate_repo_label = self.GtkBuilder.get_object("activate_repo_label")
+        self.activate_info_label = self.GtkBuilder.get_object("activate_info_label")
+        self.activating_spinner = self.GtkBuilder.get_object("activating_spinner")
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
@@ -253,6 +259,7 @@ class MainWindow(object):
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
         self.switchSAA = self.GtkBuilder.get_object("switchSAA")
+        self.switchHERA = self.GtkBuilder.get_object("switchHERA")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
         self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
@@ -260,6 +267,7 @@ class MainWindow(object):
         self.tip_usi = self.GtkBuilder.get_object("tip_usi")
         self.tip_ea = self.GtkBuilder.get_object("tip_ea")
         self.tip_soaa = self.GtkBuilder.get_object("tip_soaa")
+        self.tip_hera = self.GtkBuilder.get_object("tip_hera")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
 
@@ -364,6 +372,10 @@ class MainWindow(object):
         self.topbutton1.set_sensitive(False)
         self.topbutton2.set_sensitive(False)
         self.topsearchbutton.set_sensitive(False)
+
+        self.fromexternal = False
+        self.externalactioned = False
+        self.isinstalled = None
 
         self.queue = []
         self.inprogress = False
@@ -490,7 +502,7 @@ class MainWindow(object):
 
     def controlAvailableApps(self):
         if self.UserSettings.config_saa:
-            self.setAvailableApps(available=True)
+            self.setAvailableApps(available=True, hideextapps=self.UserSettings.config_hera)
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
@@ -563,6 +575,7 @@ class MainWindow(object):
         print("{} {}".format("config_usi", self.UserSettings.config_usi))
         print("{} {}".format("config_anim", self.UserSettings.config_ea))
         print("{} {}".format("config_availableapps", self.UserSettings.config_saa))
+        print("{} {}".format("config_mebapps", self.UserSettings.config_hera))
 
     def appimage(self):
         self.AppImage = AppImage()
@@ -742,6 +755,7 @@ class MainWindow(object):
         self.splashlabel.set_markup("<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
         self.applist = self.Server.applist
+        self.catlist = self.Server.catlist
         # self.serverappicons = self.Server.getAppIcons()
         # self.servercaticons = self.Server.getCategoryIcons()
         print("{} {}".format("server connection", self.Server.connection))
@@ -831,7 +845,7 @@ class MainWindow(object):
                 self.allcats = [{"name": "tümü", "icon": "all"}]
             else:
                 self.allcats = [{"name": "all", "icon": "all"}]
-            for cat in self.Server.catlist:
+            for cat in self.catlist:
                 self.allcats.append({"name": cat[self.locale], "icon": cat["en"]})
             self.categories = sorted(self.allcats, key=lambda x: x["name"])
 
@@ -842,7 +856,7 @@ class MainWindow(object):
                     caticon = Gtk.Image.new()
                     caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
                     label = Gtk.Label.new()
-                    label_text = str(cat["name"]).capitalize()
+                    label_text = str(cat["name"]).title()
                     label.set_text(" " + label_text)
                     box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                     box1.pack_start(caticon, False, True, 0)
@@ -855,7 +869,7 @@ class MainWindow(object):
                     caticon = Gtk.Image.new()
                     caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"]))
                     label = Gtk.Label.new()
-                    label_text = str(cat["name"]).capitalize()
+                    label_text = str(cat["name"]).title()
                     label.set_text(" " + label_text)
                     box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                     box1.pack_start(caticon, False, True, 0)
@@ -1118,6 +1132,9 @@ class MainWindow(object):
             self.appimage2stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
             self.appimage2stack.set_transition_duration(200)
 
+            self.activatestack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.activatestack.set_transition_duration(200)
+
         else:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.mainstack.set_transition_duration(0)
@@ -1136,6 +1153,9 @@ class MainWindow(object):
 
             self.appimage2stack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.appimage2stack.set_transition_duration(0)
+
+            self.activatestack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.activatestack.set_transition_duration(0)
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
@@ -1158,6 +1178,9 @@ class MainWindow(object):
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
         self.fromrepoapps = False
+        self.external = []
+        self.fromexternal = False
+        self.activatestack.set_visible_child_name("main")
         mode = 0
         try:
             # detection of IconViews (PardusAppsIconView or EditorAppsIconView)
@@ -1232,7 +1255,7 @@ class MainWindow(object):
                     self.maintainer_name = i["maintainer"][0]["name"]
                     self.maintainer_mail = i["maintainer"][0]["mail"]
                     self.maintainer_web = i["maintainer"][0]["website"]
-                    self.category = i["category"][0][self.locale].capitalize()
+                    self.category = i["category"][0][self.locale].title()
                     self.license = i["license"]
                     self.codenames = ", ".join(c["name"] for c in i["codename"])
                     self.gnomename = i["gnomename"]
@@ -1248,6 +1271,8 @@ class MainWindow(object):
                         self.command = command[self.locale]
                     else:
                         self.command = i["name"]
+
+                    self.external = i["external"]
 
             if self.gnomename != "" and self.gnomename is not None:
                 try:
@@ -1357,6 +1382,20 @@ class MainWindow(object):
 
                 self.wpcformcontrolLabel.set_markup(
                     "<span color='red'>{}</span>".format(_("You need to install the application")))
+
+                if self.external:
+                    if self.external["externalrepo"]:
+                        self.fromexternal = True
+                        self.dActionButton.set_sensitive(True)
+                        self.dActionButton.set_label(_("Enable Repo"))
+                        self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-add", Gtk.IconSize.BUTTON))
+                        if self.component == "non-free":
+                            self.dDisclaimerButton.set_visible(True)
+                            type = _("Non-Free")
+                        else:
+                            self.dDisclaimerButton.set_visible(False)
+                            type = _("Open Source")
+                        self.dType.set_markup(type)
 
             self.pixbuf1 = None
             self.pixbuf2 = None
@@ -2004,7 +2043,8 @@ class MainWindow(object):
     def PardusCategoryFilterFunction(self, model, iteration, data):
         search_entry_text = self.pardussearchbar.get_text()
         categorynumber = int(model[iteration][2])
-        category = model[iteration][4]
+        category = list(model[iteration][4].split(","))
+        # category = model[iteration][4]
         appname = model[iteration][1]
         showinstalled = self.pardusicb.get_active()
         pn_en = ""
@@ -2190,7 +2230,7 @@ class MainWindow(object):
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
-        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.capitalize())
+        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
         self.PardusCategoryFilter.refilter()
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
@@ -2273,22 +2313,51 @@ class MainWindow(object):
 
     def on_dActionButton_clicked(self, button):
 
-        self.dActionButton.set_sensitive(False)
+        if not self.fromexternal:
+            self.bottomstack.set_visible_child_name("queue")
+            self.bottomrevealer.set_reveal_child(True)
+            self.dActionButton.set_sensitive(False)
+            self.queue.append({"name": self.appname, "command": self.command})
+            self.addtoQueue(self.appname)
+            if not self.inprogress:
+                self.actionPackage(self.appname, self.command)
+                self.inprogress = True
+                print("action " + self.appname)
+        else:
+            self.activatestack.set_visible_child_name("activate")
+            self.activate_repo_label.set_text(self.external["reposlist"])
+            self.activate_info_label.set_text("")
+            self.activate_info_label.set_visible(False)
 
-        self.queue.append({"name": self.appname, "command": self.command})
-        self.bottomstack.set_visible_child_name("queue")
+    def on_activate_yes_button_clicked(self, button):
 
-        self.bottomrevealer.set_reveal_child(True)
+        self.tmpkeyfilename = ''.join(random.choice(string.ascii_lowercase) for i in range(13))
+        tmpkeyfile = open(os.path.join("/tmp", self.tmpkeyfilename), "w")
+        tmpkeyfile.write(self.external["repokey"])
+        tmpkeyfile.flush()
+        tmpkeyfile.close()
 
-        self.addtoQueue(self.appname)
+        slistfile = open(os.path.join("/tmp", self.external["reponame"]), "w")
+        slistfile.write(self.external["reposlist"])
+        slistfile.flush()
+        slistfile.close()
 
-        if not self.inprogress:
+        if len(self.queue) == 0:
+            self.activating_spinner.start()
+            self.activatestack.set_visible_child_name("activating")
+            self.externalactioned = True
             self.actionPackage(self.appname, self.command)
-            self.inprogress = True
-            print("action " + self.appname)
+        else:
+            self.activate_info_label.set_visible(True)
+            self.activate_info_label.set_markup("<b><span color='red'>{}</span></b>".format(
+                _("Please try again after the processes in the queue are completed.")))
+
+    def on_activate_no_button_clicked(self, button):
+        self.externalactioned = False
+        self.activatestack.set_visible_child_name("main")
 
     def on_raction_clicked(self, button):
-
+        self.fromexternal = False
         self.raction.set_sensitive(False)
 
         self.queue.append({"name": self.appname, "command": self.appname})
@@ -2586,6 +2655,7 @@ class MainWindow(object):
         self.switchUSI.set_state(self.UserSettings.config_usi)
         self.switchEA.set_state(self.UserSettings.config_ea)
         self.switchSAA.set_state(self.UserSettings.config_saa)
+        self.switchHERA.set_state(self.UserSettings.config_hera)
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
@@ -2776,13 +2846,21 @@ class MainWindow(object):
                 _("If you turn this option off, all apps will be shown, but"),
                 _("'Not Found' will be displayed for apps not available in the repository.")))
             self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_hera":
+            self.PopoverPrefTip.set_relative_to(self.tip_hera)
+            self.prefTipLabel.set_text("{}\n{}".format(
+                _("Hide applications offered from external repositories (other than Official Pardus repository)."),
+                _("For example, MEB education applications of Publishing Houses in the Meb Education category.")
+            ))
+            self.PopoverPrefTip.popup()
 
     def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
         if state != user_config_usi:
             print("Updating user icon state")
             try:
-                self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa)
+                self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
+                                              self.UserSettings.config_hera)
                 self.usersettings()
                 GLib.idle_add(self.PardusAppListStore.clear)
                 self.EditorListStore.clear()
@@ -2808,7 +2886,8 @@ class MainWindow(object):
         if state != user_config_ea:
             print("Updating user animation state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa)
+                self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
+                                              self.UserSettings.config_hera)
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
@@ -2819,12 +2898,10 @@ class MainWindow(object):
         if state != user_config_saa:
             print("Updating show available apps state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state)
+                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
+                                              self.UserSettings.config_hera)
                 self.usersettings()
-                if state:
-                    self.setAvailableApps(available=True)
-                else:
-                    self.setAvailableApps(available=False)
+                self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
             except Exception as e:
                 self.preflabel.set_text(str(e))
 
@@ -2841,22 +2918,69 @@ class MainWindow(object):
             self.setEditorApps()
             self.setMostApps()
 
-    def setAvailableApps(self, available):
-        if available:
-            newlist = []
-            for app in self.applist:
-                inrepo = False
-                incodename = False
+    def on_switchHERA_state_set(self, switch, state):
+        user_config_hera = self.UserSettings.config_hera
+        if state != user_config_hera:
+            print("Updating hide external apps state")
+            try:
+                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                              self.UserSettings.config_saa, state)
+                self.usersettings()
+                self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
+            except Exception as e:
+                self.preflabel.set_text(str(e))
+
+            GLib.idle_add(self.PardusAppListStore.clear)
+            self.EditorListStore.clear()
+            for row in self.HomeCategoryFlowBox:
+                self.HomeCategoryFlowBox.remove(row)
+            for row in self.MostDownFlowBox:
+                self.MostDownFlowBox.remove(row)
+            for row in self.MostRateFlowBox:
+                self.MostRateFlowBox.remove(row)
+            self.setPardusApps()
+            self.setPardusCategories()
+            self.setEditorApps()
+            self.setMostApps()
+
+    def setAvailableApps(self, available, hideextapps):
+        newlist = []
+        for app in self.Server.applist:
+            inrepo = False
+            incodename = False
+            inexternalrepo = False
+
+            if available:
                 if self.Package.isinstalled(app["name"]) is not None:
                     inrepo = True
                 for code in app["codename"]:
                     if code["name"] == self.UserSettings.usercodename:
                         incodename = True
-                if inrepo or incodename:
-                    newlist.append(app)
-            self.applist = newlist
+            else:
+                inrepo = True
+                incodename = True
+
+            if not hideextapps and app["external"]:
+                inexternalrepo = True
+
+            if hideextapps and app["external"]:
+                inrepo = False
+                incodename = False
+                inexternalrepo = False
+
+            if inrepo or incodename or inexternalrepo:
+                newlist.append(app)
+
+        self.applist = newlist
+
+        if hideextapps: # control category list too
+            newlist = []
+            for cat in self.Server.catlist:
+                if cat["external"] is False:
+                    newlist.append(cat)
+            self.catlist = newlist
         else:
-            self.applist = self.Server.applist
+            self.catlist = self.Server.catlist
 
     def on_prefcachebutton_clicked(self, button):
         state, message = self.Server.deleteCache()
@@ -2959,18 +3083,22 @@ class MainWindow(object):
         self.actionedappdesktop = self.desktop_file
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
 
-        if self.isinstalled:
+        if self.isinstalled is True:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Removing"))
                 self.raction.set_label(_(" Removing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
                        self.actionedappname]
-        else:
+        elif self.isinstalled is False:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Installing"))
                 self.raction.set_label(_(" Installing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedcommand]
+        else:
+            self.dActionButton.set_label(_(" Activating"))
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "externalrepo",
+                       os.path.join("/tmp", self.tmpkeyfilename), os.path.join("/tmp", self.external["reponame"])]
 
         self.pid = self.startProcess(command)
         print("PID : {}".format(self.pid))
@@ -3015,7 +3143,10 @@ class MainWindow(object):
                 #     self.progresstextlabel.set_text(
                 #         self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
                 # print("1/2 : " + percent + " %")
+                # if not self.externalactioned:
                 self.progresstextlabel.set_text(self.actionedappname + " : " + percent + " %")
+                # else:
+                #     self.progresstextlabel.set_text("Updating Cache : " + percent + " %")
             elif "pmstatus" in line:
                 percent = line.split(":")[2].split(".")[0]
                 # print("Processing : " + percent)
@@ -3074,13 +3205,23 @@ class MainWindow(object):
             if ui_appname == self.actionedappname:
                 self.dActionButton.set_sensitive(True)
                 self.raction.set_sensitive(True)
+                if self.externalactioned:
+                    self.activating_spinner.stop()
+                    self.activatestack.set_visible_child_name("main")
+                    if status == 0:
+                        self.externalactioned = False
+                    else:  # if cancelled then may be retry
+                        self.externalactioned = True
+            else:
+                self.externalactioned = False
 
             self.topspinner.stop()
             print("Exit Code : {}".format(status))
 
             self.inprogress = False
-            self.queue.pop(0)
-            self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
+            if len(self.queue) > 0:
+                self.queue.pop(0)
+                self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
             if len(self.queue) > 0:
                 self.actionPackage(self.queue[0]["name"], self.queue[0]["command"])
                 # Update QueueListBox's first element too
@@ -3150,10 +3291,8 @@ class MainWindow(object):
 
     def controlView(self):
         selected_items = self.PardusAppsIconView.get_selected_items()
-        # print("selected_items " + str(selected_items))
-
         editor_selected_items = self.EditorAppsIconView.get_selected_items()
-        print("editor_selected_items " + str(editor_selected_items))
+
         if len(selected_items) == 1:
             treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
             appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
@@ -3169,7 +3308,6 @@ class MainWindow(object):
                 self.updateActionButtons(1)
 
         if self.frommostapps:
-            # print("self.frommostapps" + str(self.frommostapps))
             if self.mostappname:
                 if self.mostappname == self.actionedappname:
                     self.updateActionButtons(1)
@@ -3191,7 +3329,7 @@ class MainWindow(object):
 
     def updateActionButtons(self, repo):
         if repo == 1:  # pardus apps
-            if self.Package.isinstalled(self.actionedappname):
+            if self.Package.isinstalled(self.actionedappname) is True:
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
                 self.dActionButton.get_style_context().add_class("destructive-action")
@@ -3203,7 +3341,7 @@ class MainWindow(object):
 
                 self.wpcformcontrolLabel.set_markup("")
 
-            else:
+            elif self.Package.isinstalled(self.actionedappname) is False:
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
                     self.dActionButton.get_style_context().remove_class("destructive-action")
                 self.dActionButton.get_style_context().add_class("suggested-action")
@@ -3214,6 +3352,14 @@ class MainWindow(object):
 
                 self.wpcformcontrolLabel.set_markup(
                     "<span color='red'>{}</span>".format(_("You need to install the application")))
+
+            else:
+                if self.external:
+                    if self.external["externalrepo"]:
+                        self.fromexternal = True
+                        self.dActionButton.set_sensitive(True)
+                        self.dActionButton.set_label(_("Enable Repo"))
+                        self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-add", Gtk.IconSize.BUTTON))
 
         if repo == 2:  # repo apps
             if self.Package.isinstalled(self.actionedappname):
@@ -3235,10 +3381,12 @@ class MainWindow(object):
             Notify.uninit()
 
         Notify.init(self.actionedappname)
-        if self.isinstalled:
+        if self.isinstalled is True:
             notification = Notify.Notification.new(self.getPrettyName(self.actionedappname, False) + _(" Removed"))
-        else:
+        elif self.isinstalled is False:
             notification = Notify.Notification.new(self.getPrettyName(self.actionedappname, False) + _(" Installed"))
+        else:
+            notification = Notify.Notification.new(_(" Repo Activation Completed"))
 
         if self.UserSettings.config_usi:
             pixbuf = self.getServerAppIcon(self.actionedappname, 96)
