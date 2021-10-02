@@ -1,3 +1,13 @@
+pardus-software (0.1.0~beta12) unstable; urgency=medium
+
+  * Add external repo apps property
+  * Add correct sources.list and Add new StartSysProcess func for sys commands
+  * Update translations
+  * Add SysActions.py to setup.py
+  * Add SysActions to polkit
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sat, 02 Oct 2021 12:59:07 +0300
+
 pardus-software (0.1.0~beta11) unstable; urgency=medium
 
   * Add available apps control to settings and Update some funcs with settings ui
