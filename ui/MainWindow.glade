@@ -2,26 +2,6 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkPopover" id="DisclaimerPopover">
-    <property name="can-focus">False</property>
-    <property name="relative-to">dDisclaimerButton</property>
-    <property name="position">left</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">7</property>
-        <property name="margin-end">7</property>
-        <property name="margin-top">7</property>
-        <property name="margin-bottom">7</property>
-        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
-
-This application served from Pardus non-free package repositories,
-so that the OS has nothing to do with the health of the application.</property>
-        <property name="use-markup">True</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkListStore" id="EditorListStore">
     <columns>
       <!-- column-name AppIcon -->
@@ -164,6 +144,26 @@ so that the OS has nothing to do with the health of the application.</property>
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">mail-send-symbolic</property>
+  </object>
+  <object class="GtkPopover" id="DisclaimerPopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">dDisclaimerButton</property>
+    <property name="position">left</property>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">7</property>
+        <property name="margin-end">7</property>
+        <property name="margin-top">7</property>
+        <property name="margin-bottom">7</property>
+        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
+
+This application served from Pardus non-free package repositories,
+so that the OS has nothing to do with the health of the application.</property>
+        <property name="use-markup">True</property>
+      </object>
+    </child>
   </object>
   <object class="GtkPopover" id="ImagePopover">
     <property name="can-focus">False</property>
@@ -5325,9 +5325,7 @@ This application served from Pardus non-free package repositories, so that the O
                           <object class="GtkLabel" id="preflabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <attributes>
-                              <attribute name="weight" value="thin"/>
-                            </attributes>
+                            <property name="wrap">True</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -5347,28 +5345,54 @@ This application served from Pardus non-free package repositories, so that the O
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkStack" id="prefstack">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="valign">center</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">13</property>
-                        <child>
-                          <placeholder/>
-                        </child>
+                        <property name="transition-type">slide-left-right</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <property name="orientation">vertical</property>
                             <property name="spacing">13</property>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="halign">end</property>
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Clear Cache Files</property>
+                                <property name="spacing">13</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">end</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="label" translatable="yes">Clear Cache Files</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="prefcachebutton">
+                                    <property name="label" translatable="yes">Clear</property>
+                                    <property name="width-request">125</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_prefcachebutton_clicked" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -5377,12 +5401,116 @@ This application served from Pardus non-free package repositories, so that the O
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="prefcachebutton">
-                                <property name="label" translatable="yes">Clear</property>
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="receives-default">True</property>
-                                <signal name="clicked" handler="on_prefcachebutton_clicked" swapped="no"/>
+                                <property name="can-focus">False</property>
+                                <property name="spacing">13</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">end</property>
+                                    <property name="label" translatable="yes">Correct Package Manager Sources List</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="prefcorrectbutton">
+                                    <property name="label" translatable="yes">Correct</property>
+                                    <property name="width-request">125</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <signal name="clicked" handler="on_prefcorrectbutton_clicked" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">main</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">7</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="margin-start">23</property>
+                                <property name="margin-end">23</property>
+                                <property name="label" translatable="yes">Corrects the system sources list that used by package manager. This process will revert all the changes have been done and will use only Pardus Official Repository source addresses. Use with caution.</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">center</property>
+                                <property name="spacing">23</property>
+                                <child>
+                                  <object class="GtkButton" id="prefconfirm_cancelbutton">
+                                    <property name="label" translatable="yes">Cancel</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="on_prefconfirm_cancelbutton_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="destructive-action"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="prefconfirm_acceptbutton">
+                                    <property name="label" translatable="yes">Accept</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="on_prefconfirm_acceptbutton_clicked" swapped="no"/>
+                                    <style>
+                                      <class name="suggested-action"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -5392,19 +5520,15 @@ This application served from Pardus non-free package repositories, so that the O
                             </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
+                            <property name="name">confirm</property>
                             <property name="position">1</property>
                           </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
                         </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">4</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>

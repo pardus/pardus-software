@@ -14,7 +14,7 @@ class UserSettings(object):
     def __init__(self):
 
         try:
-            self.usercodename = distro.codename()
+            self.usercodename = distro.codename().lower()
         except:
             self.usercodename = ""
         userhome = str(Path.home())
