@@ -3334,6 +3334,7 @@ class MainWindow(object):
 
     def updateActionButtons(self, repo, actionedappname, actionedappdesktop):
         if repo == 1:  # pardus apps
+            self.fromexternal = False
             if self.Package.isinstalled(actionedappname) is True:
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
