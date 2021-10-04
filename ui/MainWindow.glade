@@ -81,6 +81,7 @@
     <property name="website">https://www.pardus.org.tr</property>
     <property name="website-label" translatable="yes">Website</property>
     <property name="authors">Fatih Altun</property>
+    <property name="translator-credits" translatable="yes">Fatih Altun</property>
     <property name="logo-icon-name">pardus-software</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
