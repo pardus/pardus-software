@@ -580,7 +580,7 @@ class MainWindow(object):
         print("{} {}".format("config_usi", self.UserSettings.config_usi))
         print("{} {}".format("config_anim", self.UserSettings.config_ea))
         print("{} {}".format("config_availableapps", self.UserSettings.config_saa))
-        print("{} {}".format("config_mebapps", self.UserSettings.config_hera))
+        print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
 
     def appimage(self):
         self.AppImage = AppImage()
@@ -1339,7 +1339,8 @@ class MainWindow(object):
                         self.dActionButton.get_style_context().remove_class("suggested-action")
                     self.dActionButton.get_style_context().add_class("destructive-action")
                     self.dActionButton.set_label(_(" Uninstall"))
-                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+                    self.dActionButton.set_image(
+                        Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
 
                     if self.desktop_file != "" and self.desktop_file is not None:
                         self.dOpenButton.set_visible(True)
@@ -1351,7 +1352,8 @@ class MainWindow(object):
                         self.dActionButton.get_style_context().remove_class("destructive-action")
                     self.dActionButton.get_style_context().add_class("suggested-action")
                     self.dActionButton.set_label(_(" Install"))
-                    self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+                    self.dActionButton.set_image(
+                        Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
                     self.dOpenButton.set_visible(False)
 
@@ -1375,7 +1377,8 @@ class MainWindow(object):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
 
                 self.dActionButton.set_label(_(" Not Found"))
-                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON))
+                self.dActionButton.set_image(
+                    Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
 
                 self.dVersion.set_markup(_("None"))
                 self.dSize.set_markup(_("None"))
@@ -1393,7 +1396,8 @@ class MainWindow(object):
                         self.fromexternal = True
                         self.dActionButton.set_sensitive(True)
                         self.dActionButton.set_label(_("Enable Repo"))
-                        self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-add", Gtk.IconSize.BUTTON))
+                        self.dActionButton.set_image(
+                            Gtk.Image.new_from_icon_name("value-increase-symbolic", Gtk.IconSize.BUTTON))
                         if self.component == "non-free":
                             self.dDisclaimerButton.set_visible(True)
                             type = _("Non-Free")
@@ -2454,7 +2458,7 @@ class MainWindow(object):
         button.props.valign = Gtk.Align.CENTER
         button.props.halign = Gtk.Align.CENTER
         button.props.always_show_image = True
-        button.set_image(Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON))
+        button.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
         if len(self.queue) == 1:
             button.set_sensitive(False)
             button.set_tooltip_text(_("You cannot cancel because the application is in progress."))
@@ -2576,13 +2580,13 @@ class MainWindow(object):
                     self.raction.get_style_context().remove_class("suggested-action")
                 self.raction.get_style_context().add_class("destructive-action")
                 self.raction.set_label(_(" Uninstall"))
-                self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+                self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
             else:
                 if self.raction.get_style_context().has_class("destructive-action"):
                     self.raction.get_style_context().remove_class("destructive-action")
                 self.raction.get_style_context().add_class("suggested-action")
                 self.raction.set_label(_(" Install"))
-                self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+                self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
         else:
             self.raction.set_sensitive(False)
             if self.raction.get_style_context().has_class("destructive-action"):
@@ -2591,7 +2595,7 @@ class MainWindow(object):
                 self.raction.get_style_context().remove_class("suggested-action")
 
             self.raction.set_label(_(" Not Found"))
-            self.raction.set_image(Gtk.Image.new_from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON))
+            self.raction.set_image(Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
 
         if len(self.queue) > 0:
             for qa in self.queue:
@@ -3084,9 +3088,9 @@ class MainWindow(object):
 
         if ui_appname == appname:
             self.dActionButton.set_sensitive(False)
-            self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
+            self.dActionButton.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
             self.raction.set_sensitive(False)
-            self.raction.set_image(Gtk.Image.new_from_stock("gtk-convert", Gtk.IconSize.BUTTON))
+            self.raction.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
 
         self.actionedappname = appname
         self.actionedcommand = command
@@ -3341,7 +3345,7 @@ class MainWindow(object):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
                 self.dActionButton.get_style_context().add_class("destructive-action")
                 self.dActionButton.set_label(_(" Uninstall"))
-                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+                self.dActionButton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
 
                 if actionedappdesktop != "" and actionedappdesktop is not None:
                     self.dOpenButton.set_visible(True)
@@ -3353,7 +3357,8 @@ class MainWindow(object):
                     self.dActionButton.get_style_context().remove_class("destructive-action")
                 self.dActionButton.get_style_context().add_class("suggested-action")
                 self.dActionButton.set_label(_(" Install"))
-                self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+                self.dActionButton.set_image(
+                    Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
                 self.dOpenButton.set_visible(False)
 
@@ -3366,7 +3371,8 @@ class MainWindow(object):
                         self.fromexternal = True
                         self.dActionButton.set_sensitive(True)
                         self.dActionButton.set_label(_("Enable Repo"))
-                        self.dActionButton.set_image(Gtk.Image.new_from_stock("gtk-add", Gtk.IconSize.BUTTON))
+                        self.dActionButton.set_image(
+                            Gtk.Image.new_from_icon_name("value-increase-symbolic", Gtk.IconSize.BUTTON))
 
         if repo == 2:  # repo apps
             if self.Package.isinstalled(actionedappname):
@@ -3374,13 +3380,13 @@ class MainWindow(object):
                     self.raction.get_style_context().remove_class("suggested-action")
                 self.raction.get_style_context().add_class("destructive-action")
                 self.raction.set_label(_(" Uninstall"))
-                self.raction.set_image(Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.BUTTON))
+                self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
             else:
                 if self.raction.get_style_context().has_class("destructive-action"):
                     self.raction.get_style_context().remove_class("destructive-action")
                 self.raction.get_style_context().add_class("suggested-action")
                 self.raction.set_label(_(" Install"))
-                self.raction.set_image(Gtk.Image.new_from_stock("gtk-save", Gtk.IconSize.BUTTON))
+                self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
     def notify(self, fromexternal=False):
         if Notify.is_initted():
