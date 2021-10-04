@@ -1528,6 +1528,7 @@ class MainWindow(object):
             self.PardusCommentListBox.remove(row)
 
         if comments:
+            comments = sorted(comments, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"), reverse=True)
             for comment in comments:
                 self.setPardusCommentStar(comment["value"])
                 label1 = Gtk.Label.new()
