@@ -1,3 +1,14 @@
+pardus-software (0.1.0~beta13) unstable; urgency=medium
+
+  * Fix fromexternal control for active app
+  * Update comment sorting as date by default
+  * Update action button icons as symbolic
+  * Add translator to about dialog
+  * Update queue delete icon
+  * Fix actioned app button icon
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 04 Oct 2021 19:09:51 +0300
+
 pardus-software (0.1.0~beta12) unstable; urgency=medium
 
   * Add external repo apps property
