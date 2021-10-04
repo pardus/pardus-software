@@ -2458,7 +2458,7 @@ class MainWindow(object):
         button.props.valign = Gtk.Align.CENTER
         button.props.halign = Gtk.Align.CENTER
         button.props.always_show_image = True
-        button.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+        button.set_image(Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON))
         if len(self.queue) == 1:
             button.set_sensitive(False)
             button.set_tooltip_text(_("You cannot cancel because the application is in progress."))
