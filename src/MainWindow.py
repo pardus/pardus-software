@@ -1367,6 +1367,8 @@ class MainWindow(object):
                                 self.dActionButton.set_label(_(" Removing"))
                             else:
                                 self.dActionButton.set_label(_(" Installing"))
+                            self.dActionButton.set_image(
+                                Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
                             self.dActionButton.set_sensitive(False)
 
             else:
