@@ -1221,9 +1221,23 @@ class MainWindow(object):
         # set scroll position to top (reset)
         self.PardusAppDetailScroll.set_vadjustment(Gtk.Adjustment())
 
+        # clear gnome comments
         self.gcMoreButtonTR.set_visible(False)
         self.gcMoreButtonEN.set_visible(False)
         self.setGnomeComments(comments=None, lang="all")
+
+        # clear pardus comments
+        self.rate_average = 0
+        self.rate_individual = ""
+        self.rate_author = ""
+        self.rate_comment = ""
+        self.dtDownload.set_markup("")
+        self.dtTotalRating.set_markup("")
+        self.dtAverageRating.set_markup("")
+        self.dtUserRating.set_markup("")
+        self.setAppStar(0)
+        self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
+        self.setPardusComments(None)
 
         try:
             selected_items = iconview.get_selected_items()
