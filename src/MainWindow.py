@@ -759,8 +759,10 @@ class MainWindow(object):
         print("Getting applications from server")
         self.splashlabel.set_markup("<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
-        self.applist = self.Server.applist
+        self.applist = sorted(self.Server.applist, key=lambda x: x["prettyname"][self.locale])
+        self.fullapplist = self.applist
         self.catlist = self.Server.catlist
+        self.Server.applist.clear()
         # self.serverappicons = self.Server.getAppIcons()
         # self.servercaticons = self.Server.getCategoryIcons()
         print("{} {}".format("server connection", self.Server.connection))
@@ -1010,7 +1012,7 @@ class MainWindow(object):
     def getPrettyName(self, name, split=True):
         prettyname = name
         # look full list of apps
-        for i in self.Server.applist:
+        for i in self.fullapplist:
             if i["name"] == name:
                 prettyname = i["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
@@ -1248,10 +1250,10 @@ class MainWindow(object):
 
             self.dIcon.set_from_pixbuf(pixbuf)
 
-            # We are using self.Server.applist because self.applist may be showing only available apps.
+            # We are using self.fullapplist because self.applist may be showing only available apps.
             # If only available applications are shown and one of the homepage applications is not from this list,
             # we still show their information.
-            for i in self.Server.applist:
+            for i in self.fullapplist:
                 if i["name"] == self.appname:
                     self.description = i["description"][self.locale]
                     self.section = i["section"][0][self.locale]
@@ -2181,7 +2183,7 @@ class MainWindow(object):
 
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
-            self.applist = sorted(self.applist, key=lambda x: x["name"])
+            self.applist = sorted(self.applist, key=lambda x: x["prettyname"][self.locale])
             self.PardusAppListStore.clear()
             self.setPardusApps()
         elif combo_box.get_active() == 1:  # sort by download
@@ -2947,7 +2949,7 @@ class MainWindow(object):
 
     def setAvailableApps(self, available, hideextapps):
         newlist = []
-        for app in self.Server.applist:
+        for app in self.fullapplist:
             inrepo = False
             incodename = False
             inexternalrepo = False

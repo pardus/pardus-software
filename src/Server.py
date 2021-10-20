@@ -82,7 +82,7 @@ class Server(object):
             if self.app_scode == 200 and self.cat_scode == 200 and self.home_scode == 200:
                 print("Connection successful")
                 self.applist = request_app.json()["app-list"]
-                self.applist = sorted(self.applist, key=lambda x: x["name"])
+                # self.applist = sorted(self.applist, key=lambda x: x["name"])
                 # self.orgapplist = self.applist
                 self.catlist = request_cat.json()["cat-list"]
                 self.ediapplist = request_home.json()["editor-apps"]
