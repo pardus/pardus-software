@@ -4442,7 +4442,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkExpander">
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
-                                        <property name="margin-bottom">23</property>
+                                        <property name="margin-bottom">40</property>
                                         <property name="expanded">True</property>
                                         <child>
                                           <object class="GtkFrame">
@@ -4463,7 +4463,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">True</property>
                                                         <property name="shadow-type">in</property>
-                                                        <property name="min-content-height">225</property>
+                                                        <property name="min-content-height">250</property>
                                                         <child>
                                                           <object class="GtkViewport">
                                                             <property name="visible">True</property>
@@ -4491,30 +4491,149 @@ This application served from Pardus non-free package repositories, so that the O
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkScrolledWindow">
+                                                      <object class="GtkBox" id="GnomeCommentsBox">
                                                         <property name="visible">True</property>
-                                                        <property name="can-focus">True</property>
-                                                        <property name="shadow-type">in</property>
-                                                        <property name="min-content-height">225</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="margin-top">7</property>
+                                                        <property name="orientation">vertical</property>
+                                                        <property name="spacing">7</property>
                                                         <child>
-                                                          <object class="GtkViewport">
+                                                          <object class="GtkStackSwitcher">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="stack">gcstack</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkStack" id="gcstack">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="transition-type">slide-left-right</property>
+                                                            <child>
+                                                            <object class="GtkScrolledWindow">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="shadow-type">in</property>
+                                                            <property name="min-content-height">250</property>
                                                             <child>
                                                             <object class="GtkViewport">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <child>
-                                                            <object class="GtkListBox" id="GnomeCommentListBox">
+                                                            <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="orientation">vertical</property>
+                                                            <child>
+                                                            <object class="GtkListBox" id="GnomeCommentListBoxTR">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="selection-mode">none</property>
                                                             <property name="activate-on-single-click">False</property>
                                                             </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkButton" id="gcMoreButtonTR">
+                                                            <property name="label" translatable="yes">Load More Comments</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">end</property>
+                                                            <property name="margin-top">7</property>
+                                                            <property name="margin-bottom">7</property>
+                                                            <signal name="clicked" handler="on_gcMoreButtonTR_clicked" swapped="no"/>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
                                                             </child>
                                                             </object>
                                                             </child>
+                                                            </object>
+                                                            </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="name">gcTurkish</property>
+                                                            <property name="title" translatable="yes">Turkish Comments</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkScrolledWindow">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="shadow-type">in</property>
+                                                            <property name="min-content-height">250</property>
+                                                            <child>
+                                                            <object class="GtkViewport">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="orientation">vertical</property>
+                                                            <child>
+                                                            <object class="GtkListBox" id="GnomeCommentListBoxEN">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="selection-mode">none</property>
+                                                            <property name="activate-on-single-click">False</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkButton" id="gcMoreButtonEN">
+                                                            <property name="label" translatable="yes">Load More Comments</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">end</property>
+                                                            <property name="margin-top">7</property>
+                                                            <property name="margin-bottom">7</property>
+                                                            <signal name="clicked" handler="on_gcMoreButtonEN_clicked" swapped="no"/>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            </object>
+                                                            </child>
+                                                            </object>
+                                                            </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="name">gcEnglish</property>
+                                                            <property name="title" translatable="yes">English Comments</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
                                                           </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
                                                         </child>
                                                       </object>
                                                       <packing>
@@ -4547,6 +4666,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="margin-bottom">13</property>
                                                             <property name="orientation">vertical</property>
                                                             <property name="spacing">13</property>
+                                                            <property name="homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>

@@ -216,6 +216,8 @@ class MainWindow(object):
         self.wpcresultLabel = self.GtkBuilder.get_object("wpcresultLabel")
         self.wpcformcontrolLabel = self.GtkBuilder.get_object("wpcformcontrolLabel")
         self.editCommentButton = self.GtkBuilder.get_object("editCommentButton")
+        self.gcMoreButtonTR = self.GtkBuilder.get_object("gcMoreButtonTR")
+        self.gcMoreButtonEN = self.GtkBuilder.get_object("gcMoreButtonEN")
 
         self.wpcstar = 0
 
@@ -421,7 +423,8 @@ class MainWindow(object):
         # # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
 
         self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
-        self.GnomeCommentListBox = self.GtkBuilder.get_object("GnomeCommentListBox")
+        self.GnomeCommentListBoxEN = self.GtkBuilder.get_object("GnomeCommentListBoxEN")
+        self.GnomeCommentListBoxTR = self.GtkBuilder.get_object("GnomeCommentListBoxTR")
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
         # Set version
@@ -1218,6 +1221,10 @@ class MainWindow(object):
         # set scroll position to top (reset)
         self.PardusAppDetailScroll.set_vadjustment(Gtk.Adjustment())
 
+        self.gcMoreButtonTR.set_visible(False)
+        self.gcMoreButtonEN.set_visible(False)
+        self.setGnomeComments(comments=None, lang="all")
+
         try:
             selected_items = iconview.get_selected_items()
             lensel = len(selected_items)
@@ -1436,9 +1443,16 @@ class MainWindow(object):
             dic = {"mac": self.mac, "app": self.appname}
             self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)
 
-            gdic = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "tr",
-                    "distro": "Pardus", "version": "unknown", "limit": -1}
-            self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic)
+            self.limit_tr = 10
+            self.limit_en = 10
+
+            gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
+                    "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
+            self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, "tr")
+
+            gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
+                    "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
+            self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
 
     def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
@@ -1682,11 +1696,11 @@ class MainWindow(object):
             self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
             self.setPardusComments(None)
 
-    def gComment(self, status, response):
+    def gComment(self, status, response, appname="", lang=""):
         if status:
-            self.setGnomeComments(response)
+            self.setGnomeComments(response, appname, lang)
         else:
-            self.setGnomeComments(None)
+            self.setGnomeComments(comments=None, lang=lang)
 
     def setAppStar(self, average):
         average = int(average)
@@ -1790,12 +1804,33 @@ class MainWindow(object):
             self.dGnomeBar4.set_fraction(0)
             self.dGnomeBar5.set_fraction(0)
 
-    def setGnomeComments(self, comments):
+    def setGnomeComments(self, comments, appname="", lang=""):
 
-        for row in self.GnomeCommentListBox:
-            self.GnomeCommentListBox.remove(row)
+        if lang == "tr":
+            for row in self.GnomeCommentListBoxTR:
+                self.GnomeCommentListBoxTR.remove(row)
+        elif lang == "en":
+            for row in self.GnomeCommentListBoxEN:
+                self.GnomeCommentListBoxEN.remove(row)
+        elif lang == "all":
+            for row in self.GnomeCommentListBoxTR:
+                self.GnomeCommentListBoxTR.remove(row)
+            for row in self.GnomeCommentListBoxEN:
+                self.GnomeCommentListBoxEN.remove(row)
 
-        if comments:
+        if comments and appname == self.getActiveAppOnUI():
+            if lang == "tr":
+                if len(comments) == self.limit_tr:
+                    self.gcMoreButtonTR.set_visible(True)
+                    self.gcMoreButtonTR.set_sensitive(True)
+                else:
+                    self.gcMoreButtonTR.set_visible(False)
+            elif lang == "en":
+                if len(comments) == self.limit_en:
+                    self.gcMoreButtonEN.set_visible(True)
+                    self.gcMoreButtonEN.set_sensitive(True)
+                else:
+                    self.gcMoreButtonEN.set_visible(False)
             for comment in comments:
                 if "rating" and "user_display" and "date_created" and "summary" and "description" in comment:
                     self.setGnomeCommentStar(comment["rating"] / 20)
@@ -1823,9 +1858,15 @@ class MainWindow(object):
                     box.pack_start(box2, False, True, 5)
                     box.pack_start(hsep, False, True, 0)
 
-                    self.GnomeCommentListBox.add(box)
+                    if lang == "tr":
+                        self.GnomeCommentListBoxTR.add(box)
+                    elif lang == "en":
+                        self.GnomeCommentListBoxEN.add(box)
 
-        self.GnomeCommentListBox.show_all()
+        if lang == "tr":
+            self.GnomeCommentListBoxTR.show_all()
+        elif lang == "en":
+            self.GnomeCommentListBoxEN.show_all()
 
     def eventStarSet(self, widget):
         if widget == "star1":
@@ -2317,6 +2358,20 @@ class MainWindow(object):
     #     if len(self.queue) > 1:
     #         self.queue.pop(1)
     #         self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
+
+    def on_gcMoreButtonTR_clicked(self, button):
+        self.gcMoreButtonTR.set_sensitive(False)
+        self.limit_tr = self.limit_tr + 10
+        gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "tr",
+                "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
+        self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, lang="tr")
+
+    def on_gcMoreButtonEN_clicked(self, button):
+        self.gcMoreButtonEN.set_sensitive(False)
+        self.limit_en = self.limit_en + 10
+        gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "en",
+                "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
+        self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, lang="en")
 
     def on_dDisclaimerButton_clicked(self, button):
         self.DisclaimerPopover.popup()

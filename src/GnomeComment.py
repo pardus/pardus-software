@@ -15,7 +15,7 @@ class GnomeComment(object):
 
         self.session = Soup.Session(user_agent="application/json")
 
-    def get(self, method, uri, dic):
+    def get(self, method, uri, dic, appname, lang):
         # print("{} : {} {}".format(method, uri, dic))
         message = Soup.Message.new(method, uri)
 
@@ -23,9 +23,9 @@ class GnomeComment(object):
             message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
 
         message.request_headers.append('Content-type', 'application/json')
-        self.session.send_async(message, None, self.on_finished, message)
+        self.session.send_async(message, None, self.on_finished, message, appname, lang)
 
-    def on_finished(self, session, result, message):
+    def on_finished(self, session, result, message, appname, lang):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
@@ -48,7 +48,7 @@ class GnomeComment(object):
                     lines.append(line)
             content = "".join(lines)
             if status_code == 200:
-                self.gComment(True, json.loads(content))
+                self.gComment(True, json.loads(content), appname, lang)
             else:
                 self.gComment(False, None)
         input_stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
