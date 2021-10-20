@@ -17,7 +17,7 @@ class AppDetail(object):
 
         self.session = Soup.Session(user_agent="application/json")
 
-    def get(self, method, uri, dic):
+    def get(self, method, uri, dic, appname=""):
         # print("{} : {} {}".format(method, uri, dic))
         message = Soup.Message.new(method, uri)
 
@@ -25,9 +25,9 @@ class AppDetail(object):
             message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
 
         message.request_headers.append('Content-type', 'application/json')
-        self.session.send_async(message, None, self.on_finished, message)
+        self.session.send_async(message, None, self.on_finished, message, appname)
 
-    def on_finished(self, session, result, message):
+    def on_finished(self, session, result, message, appname):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
@@ -42,7 +42,7 @@ class AppDetail(object):
             data_input_stream = Gio.DataInputStream.new(input_stream)
             line, length = data_input_stream.read_line_utf8()
 
-            self.Detail(True, json.loads(line))
+            self.Detail(True, json.loads(line), appname)
 
         input_stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
 

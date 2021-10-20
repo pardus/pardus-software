@@ -1455,7 +1455,7 @@ class MainWindow(object):
                 self.AppImage.fetch(self.Server.serverurl, self.screenshots[1], "#2")
 
             dic = {"mac": self.mac, "app": self.appname}
-            self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic)
+            self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic, self.appname)
 
             self.limit_tr = 10
             self.limit_en = 10
@@ -1655,8 +1655,8 @@ class MainWindow(object):
         else:
             self.wpcresultLabel.set_text(_("Error"))
 
-    def Detail(self, status, response):
-        if status:
+    def Detail(self, status, response, appname=""):
+        if status and appname == self.getActiveAppOnUI():
             # print(response)
             self.dtDownload.set_markup(
                 "{} {}".format(response["details"]["download"]["count"], _("Download")))
