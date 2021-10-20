@@ -3161,7 +3161,7 @@ class MainWindow(object):
                 self.dActionButton.set_label(_(" Removing"))
                 self.raction.set_label(_(" Removing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
-                       self.actionedappname]
+                       self.actionedcommand]
         elif self.isinstalled is False:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Installing"))
