@@ -4520,7 +4520,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="shadow-type">in</property>
-                                                            <property name="min-content-height">250</property>
+                                                            <property name="min-content-height">275</property>
                                                             <child>
                                                             <object class="GtkViewport">
                                                             <property name="visible">True</property>
@@ -4576,7 +4576,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="shadow-type">in</property>
-                                                            <property name="min-content-height">250</property>
+                                                            <property name="min-content-height">275</property>
                                                             <child>
                                                             <object class="GtkViewport">
                                                             <property name="visible">True</property>
