@@ -1,3 +1,17 @@
+pardus-software (0.1.0~beta14) unstable; urgency=medium
+
+  * Update default app sorting as prettyname
+  * Add Turkish and English tabs for Gnome Comments with Load More Comments button
+  * Fix min-height of GnomeComments
+  * Update package removal method as package list
+  * Add clear pardus rates on pardus apps details every time clicked
+  * Add control ActiveAppOnUI for app details getted from server
+  * Update translations and Turkish translations
+  * Fix PardusAppListStore clearing bug on sortPardusAppsCombo
+  * Add comments notebook view reset to pardusapps detail
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 21 Oct 2021 18:23:32 +0300
+
 pardus-software (0.1.0~beta13) unstable; urgency=medium
 
   * Fix fromexternal control for active app
