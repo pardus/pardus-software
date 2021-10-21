@@ -4668,6 +4668,18 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="spacing">13</property>
                                                             <property name="homogeneous">True</property>
                                                             <child>
+                                                            <object class="GtkLabel" id="wpcStarLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">How many stars would you give this app ?</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
@@ -4767,18 +4779,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="position">4</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkLabel" id="wpcStarLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Choose star rating level</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
