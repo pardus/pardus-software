@@ -76,12 +76,12 @@
     <property name="type-hint">dialog</property>
     <property name="program-name">Pardus Software Center</property>
     <property name="version">0.1.0~alpha1</property>
-    <property name="copyright" translatable="yes">© 2021 Pardus</property>
+    <property name="copyright">© 2021 Pardus</property>
     <property name="comments" translatable="yes">Add, remove, update applications</property>
     <property name="website">https://www.pardus.org.tr</property>
     <property name="website-label" translatable="yes">Website</property>
     <property name="authors">Fatih Altun</property>
-    <property name="translator-credits" translatable="yes">Fatih Altun</property>
+    <property name="translator-credits">Fatih Altun</property>
     <property name="logo-icon-name">pardus-software</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
@@ -475,7 +475,7 @@ so that the OS has nothing to do with the health of the application.</property>
           </object>
           <packing>
             <property name="name">splash</property>
-            <property name="title" translatable="yes">splash page</property>
+            <property name="title">splash page</property>
           </packing>
         </child>
         <child>
@@ -571,7 +571,7 @@ so that the OS has nothing to do with the health of the application.</property>
                               <object class="GtkLabel" id="bottomerrorlabel">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="label" translatable="yes">label</property>
+                                <property name="label">label</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -647,7 +647,7 @@ so that the OS has nothing to do with the health of the application.</property>
                       </object>
                       <packing>
                         <property name="name">page0</property>
-                        <property name="title" translatable="yes">page0</property>
+                        <property name="title">page0</property>
                       </packing>
                     </child>
                     <child>
@@ -690,7 +690,7 @@ so that the OS has nothing to do with the health of the application.</property>
                       </object>
                       <packing>
                         <property name="name">page1</property>
-                        <property name="title" translatable="yes">page1</property>
+                        <property name="title">page1</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -729,7 +729,7 @@ so that the OS has nothing to do with the health of the application.</property>
                       </object>
                       <packing>
                         <property name="name">page2</property>
-                        <property name="title" translatable="yes">page2</property>
+                        <property name="title">page2</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
@@ -1160,7 +1160,7 @@ so that the OS has nothing to do with the health of the application.</property>
                   </object>
                   <packing>
                     <property name="name">pardushome</property>
-                    <property name="title" translatable="yes">Pardus Vitrin</property>
+                    <property name="title">Pardus</property>
                   </packing>
                 </child>
                 <child>
@@ -1257,7 +1257,7 @@ so that the OS has nothing to do with the health of the application.</property>
                               </object>
                               <packing>
                                 <property name="name">page0</property>
-                                <property name="title" translatable="yes">page0</property>
+                                <property name="title">page0</property>
                               </packing>
                             </child>
                             <child>
@@ -1294,7 +1294,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                       <object class="GtkLabel" id="rdetail">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">aa</property>
+                                        <property name="label">aa</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1303,7 +1303,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="raction">
-                                        <property name="label" translatable="yes">button</property>
+                                        <property name="label">button</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
                                         <property name="receives-default">True</property>
@@ -1366,7 +1366,7 @@ so that the OS has nothing to do with the health of the application.</property>
                               </object>
                               <packing>
                                 <property name="name">page1</property>
-                                <property name="title" translatable="yes">page1</property>
+                                <property name="title">page1</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -1385,7 +1385,7 @@ so that the OS has nothing to do with the health of the application.</property>
                   </object>
                   <packing>
                     <property name="name">repohome</property>
-                    <property name="title" translatable="yes">Depo</property>
+                    <property name="title">Repo</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -1550,7 +1550,7 @@ so that the OS has nothing to do with the health of the application.</property>
                   </object>
                   <packing>
                     <property name="name">pardusapps</property>
-                    <property name="title" translatable="yes">page3</property>
+                    <property name="title">page3</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -1617,7 +1617,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">start</property>
-                                        <property name="label" translatable="yes">appname</property>
+                                        <property name="label">appname</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1630,7 +1630,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">start</property>
-                                        <property name="label" translatable="yes">section</property>
+                                        <property name="label">section</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1645,7 +1645,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="halign">start</property>
                                         <property name="valign">end</property>
                                         <property name="vexpand">True</property>
-                                        <property name="label" translatable="yes">maintainer</property>
+                                        <property name="label">maintainer</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1695,7 +1695,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               <object class="GtkLabel" id="dtAverageRating">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="label" translatable="yes">0.0</property>
+                                                <property name="label">0.0</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1828,7 +1828,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               <object class="GtkLabel" id="dtTotalRating">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="label" translatable="yes">&lt;small&gt;( 0 )&lt;/small&gt;</property>
+                                                <property name="label">&lt;small&gt;( 0 )&lt;/small&gt;</property>
                                                 <property name="use-markup">True</property>
                                               </object>
                                               <packing>
@@ -1956,7 +1956,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="dActionButton">
-                                        <property name="label" translatable="yes">button</property>
+                                        <property name="label">button</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
                                         <property name="receives-default">True</property>
@@ -2741,7 +2741,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dWeb">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
-                                                            <property name="label" translatable="yes">&lt;a title='https://www.pardus.org.tr' href='https://www.pardus.org.tr'&gt;Website&lt;/a&gt;</property>
+                                                            <property name="label">&lt;a title='https://www.pardus.org.tr' href='https://www.pardus.org.tr'&gt;Website&lt;/a&gt;</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -2777,7 +2777,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dMail">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
-                                                            <property name="label" translatable="yes">&lt;a title='fatih.altun@pardus.org.tr' href='mailto:fatih.altun@pardus.org.tr'&gt;E-Mail&lt;/a&gt;</property>
+                                                            <property name="label">&lt;a title='fatih.altun@pardus.org.tr' href='mailto:fatih.altun@pardus.org.tr'&gt;E-Mail&lt;/a&gt;</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3214,7 +3214,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="label" translatable="yes">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
+                                                            <property name="label">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3317,7 +3317,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dPardusBarLabel5">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">50</property>
+                                                            <property name="label">50</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3427,7 +3427,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dPardusBarLabel4">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">30</property>
+                                                            <property name="label">30</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3538,7 +3538,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="width-request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">20</property>
+                                                            <property name="label">20</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3648,7 +3648,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dPardusBarLabel2">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">10</property>
+                                                            <property name="label">10</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3758,7 +3758,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="width-request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">0</property>
+                                                            <property name="label">0</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3831,7 +3831,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="label" translatable="yes">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
+                                                            <property name="label">&lt;span font='21'&gt;&lt;big&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/big&gt;&lt;/span&gt;</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3934,7 +3934,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dGnomeBarLabel5">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">50</property>
+                                                            <property name="label">50</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -4044,7 +4044,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dGnomeBarLabel4">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">30</property>
+                                                            <property name="label">30</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -4155,7 +4155,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="width-request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">20</property>
+                                                            <property name="label">20</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -4265,7 +4265,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkLabel" id="dGnomeBarLabel2">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">10</property>
+                                                            <property name="label">10</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -4375,7 +4375,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="width-request">-1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">0</property>
+                                                            <property name="label">0</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -4891,7 +4891,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </object>
                                                           <packing>
                                                             <property name="name">sendcomment</property>
-                                                            <property name="title" translatable="yes">page0</property>
+                                                            <property name="title">page0</property>
                                                           </packing>
                                                         </child>
                                                         <child>
@@ -4960,7 +4960,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </object>
                                                           <packing>
                                                             <property name="name">alreadysent</property>
-                                                            <property name="title" translatable="yes">page0</property>
+                                                            <property name="title">page0</property>
                                                             <property name="position">1</property>
                                                           </packing>
                                                         </child>
@@ -4993,7 +4993,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </object>
                                                           <packing>
                                                             <property name="name">sendresult</property>
-                                                            <property name="title" translatable="yes">page0</property>
+                                                            <property name="title">page0</property>
                                                             <property name="position">2</property>
                                                           </packing>
                                                         </child>
@@ -5080,7 +5080,7 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">pardusappsdetail</property>
-                    <property name="title" translatable="yes">page4</property>
+                    <property name="title">page4</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -5111,7 +5111,7 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">noserver</property>
-                    <property name="title" translatable="yes">page0</property>
+                    <property name="title">page0</property>
                     <property name="position">4</property>
                   </packing>
                 </child>
@@ -5655,7 +5655,7 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">preferences</property>
-                    <property name="title" translatable="yes">page1</property>
+                    <property name="title">page1</property>
                     <property name="position">5</property>
                   </packing>
                 </child>
@@ -5695,7 +5695,7 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">queue</property>
-                    <property name="title" translatable="yes">page0</property>
+                    <property name="title">page0</property>
                     <property name="position">6</property>
                   </packing>
                 </child>
@@ -6067,7 +6067,7 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">updates</property>
-                    <property name="title" translatable="yes">page0</property>
+                    <property name="title">page0</property>
                     <property name="position">7</property>
                   </packing>
                 </child>
@@ -6631,7 +6631,7 @@ This application served from Pardus non-free package repositories, so that the O
                                   </object>
                                   <packing>
                                     <property name="name">suggest</property>
-                                    <property name="title" translatable="yes">suggest</property>
+                                    <property name="title">suggest</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -6673,7 +6673,7 @@ This application served from Pardus non-free package repositories, so that the O
                                   </object>
                                   <packing>
                                     <property name="name">success</property>
-                                    <property name="title" translatable="yes">success</property>
+                                    <property name="title">success</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
@@ -6690,7 +6690,7 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">suggestapp</property>
-                    <property name="title" translatable="yes">suggestapp</property>
+                    <property name="title">suggestapp</property>
                     <property name="position">8</property>
                   </packing>
                 </child>
@@ -6704,7 +6704,7 @@ This application served from Pardus non-free package repositories, so that the O
           </object>
           <packing>
             <property name="name">home</property>
-            <property name="title" translatable="yes">home page</property>
+            <property name="title">home page</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -6727,7 +6727,7 @@ This application served from Pardus non-free package repositories, so that the O
         </child>
         <child>
           <object class="GtkButton" id="topbutton1">
-            <property name="label" translatable="yes">Pardus</property>
+            <property name="label">Pardus</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>

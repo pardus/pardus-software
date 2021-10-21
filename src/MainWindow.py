@@ -2064,7 +2064,7 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
-            self.wpcStarLabel.set_markup(_("Choose star rating level"))
+            self.wpcStarLabel.set_markup(_("How many stars would you give this app ?"))
         elif rate == 1:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
             self.wpcStar2.set_from_pixbuf(self.wpcstaroff)
