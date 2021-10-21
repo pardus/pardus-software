@@ -2239,20 +2239,20 @@ class MainWindow(object):
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
             self.applist = sorted(self.applist, key=lambda x: x["prettyname"][self.locale])
-            self.PardusAppListStore.clear()
+            GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 1:  # sort by download
             self.applist = sorted(self.applist, key=lambda x: (x["download"], x["rate_average"]), reverse=True)
-            self.PardusAppListStore.clear()
+            GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 2:  # sort by rating
             self.applist = sorted(self.applist, key=lambda x: (x["rate_average"], x["download"]), reverse=True)
-            self.PardusAppListStore.clear()
+            GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 3:  # sort by last added
             self.applist = sorted(self.applist, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"),
                                   reverse=True)
-            self.PardusAppListStore.clear()
+            GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
 
     # def RepoCategoryFilterFunction(self, model, iteration, data):
