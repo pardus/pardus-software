@@ -218,6 +218,8 @@ class MainWindow(object):
         self.editCommentButton = self.GtkBuilder.get_object("editCommentButton")
         self.gcMoreButtonTR = self.GtkBuilder.get_object("gcMoreButtonTR")
         self.gcMoreButtonEN = self.GtkBuilder.get_object("gcMoreButtonEN")
+        self.gcStack = self.GtkBuilder.get_object("gcStack")
+        self.CommentsNotebook = self.GtkBuilder.get_object("CommentsNotebook")
 
         self.wpcstar = 0
 
@@ -1238,6 +1240,10 @@ class MainWindow(object):
         self.setAppStar(0)
         self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
         self.setPardusComments(None)
+
+        # reset comment notebook page and gnome comment page
+        self.CommentsNotebook.set_current_page(0)
+        self.gcStack.set_visible_child_name("gcTurkish")
 
         try:
             selected_items = iconview.get_selected_items()

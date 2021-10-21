@@ -4455,7 +4455,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <child>
-                                                  <object class="GtkNotebook">
+                                                  <object class="GtkNotebook" id="CommentsNotebook">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <child>
@@ -4502,7 +4502,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="stack">gcstack</property>
+                                                            <property name="stack">gcStack</property>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -4511,7 +4511,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkStack" id="gcstack">
+                                                          <object class="GtkStack" id="gcStack">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="transition-type">slide-left-right</property>
