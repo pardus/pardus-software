@@ -509,6 +509,16 @@ class MainWindow(object):
         GLib.idle_add(self.setRepoApps)
         GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlArgs)
+        GLib.idle_add(self.controlPSUpdate)
+
+    def controlPSUpdate(self):
+        if self.Server.connection and self.UserSettings.usercodename == "yirmibir":
+            user_version = self.Package.installedVersion("pardus-software")
+            server_version = self.Server.appversion
+            if user_version is not None and server_version != "":
+                version = self.Package.versionCompare(user_version, server_version)
+                if version < 0:
+                    self.notify(fromexternal=True, upgradable=True)
 
     def controlAvailableApps(self):
         if self.UserSettings.config_saa:
@@ -3467,7 +3477,7 @@ class MainWindow(object):
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
-    def notify(self, fromexternal=False):
+    def notify(self, fromexternal=False, upgradable=False):
         if Notify.is_initted():
             Notify.uninit()
         if not fromexternal:
@@ -3481,14 +3491,18 @@ class MainWindow(object):
                 pixbuf = self.getServerAppIcon(self.actionedappname, 96)
             else:
                 pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
+            notification.set_icon_from_pixbuf(pixbuf)
         else:
-            Notify.init(self.actionedenablingappname)
-            notification = Notify.Notification.new(_(" Repo Activation Completed"))
-            if self.UserSettings.config_usi:
-                pixbuf = self.getServerAppIcon("pardus-software", 96)
+            if not upgradable:
+                Notify.init(self.actionedenablingappname)
+                notification = Notify.Notification.new(_("Pardus Software Center"),
+                                                       _("Repo Activation Completed"),
+                                                       "pardus-software")
             else:
-                pixbuf = self.getSystemAppIcon("pardus-software", 96)
-        notification.set_icon_from_pixbuf(pixbuf)
+                Notify.init("upgradable")
+                notification = Notify.Notification.new(_("Pardus Software Center | New version available"),
+                                                       _("Please upgrade application using Menu/Updates"),
+                                                       "pardus-software")
         notification.show()
 
     def sendDownloaded(self, appname):

@@ -49,6 +49,7 @@ class Server(object):
         self.mostrateapplist = []
         self.totalstatistics = []
         self.servermd5 = []
+        self.appversion = ""
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
@@ -90,6 +91,7 @@ class Server(object):
                 self.mostrateapplist = request_home.json()["mostrate-apps"]
                 self.totalstatistics = request_home.json()["total"]
                 self.servermd5 = request_home.json()["md5"]
+                self.appversion = request_home.json()["version"]
             else:
                 self.connection = False
 

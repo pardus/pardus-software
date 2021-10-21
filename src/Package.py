@@ -6,7 +6,7 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import apt
+import apt, apt_pkg
 
 
 class Package(object):
@@ -118,6 +118,14 @@ class Package(object):
                 version = "not found"
         return version
 
+    def installedVersion(self, packagename):
+        package = self.cache[packagename]
+        try:
+            version = package.installed.version
+        except:
+            version = None
+        return version
+
     def size(self, packagename):
         package = self.cache[packagename]
         try:
@@ -167,3 +175,13 @@ class Package(object):
             if self.cache[pkg.name].is_upgradable:
                 upgradable.append(pkg.name)
         return upgradable
+
+    def versionCompare(self, version1, version2):
+        vc = apt_pkg.version_compare(version1, version2)
+        if vc > 0:
+            print('version1 > version2')
+        elif vc == 0:
+            print('version1 == version2')
+        elif vc < 0:
+            print('version1 < version2')
+        return vc
