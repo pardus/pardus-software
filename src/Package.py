@@ -12,7 +12,7 @@ import apt, apt_pkg
 class Package(object):
     def __init__(self):
 
-        self.updatecache()
+        # self.updatecache()
 
         self.apps = []
         self.secs = []
