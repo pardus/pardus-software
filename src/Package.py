@@ -56,7 +56,7 @@ class Package(object):
             except:
                 section = mypkg.versions[0].section.lower()
             self.apps.append({"name": name, "category": section})
-            self.secs.append(section)
+            # self.secs.append(section)
 
     def isinstalled(self, packagename):
         try:
