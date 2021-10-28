@@ -179,9 +179,9 @@ class Package(object):
     def versionCompare(self, version1, version2):
         vc = apt_pkg.version_compare(version1, version2)
         if vc > 0:
-            print('version1 > version2')
+            print("user version: {} > server version: {}".format(version1, version2))
         elif vc == 0:
-            print('version1 == version2')
+            print("user version: {} == server version: {}".format(version1, version2))
         elif vc < 0:
-            print('version1 < version2')
+            print("user version: {} < server version: {}".format(version1, version2))
         return vc

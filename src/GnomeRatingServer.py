@@ -17,7 +17,7 @@ class GnomeRatingServer(object):
 
     def __init__(self):
 
-        print("in init")
+        pass
 
     def get(self):
 

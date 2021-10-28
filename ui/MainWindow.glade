@@ -377,7 +377,6 @@ so that the OS has nothing to do with the health of the application.</property>
                       <object class="GtkSpinner" id="splashspinner">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="active">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -400,7 +399,6 @@ so that the OS has nothing to do with the health of the application.</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="valign">start</property>
-                    <property name="label" translatable="yes">loading</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>

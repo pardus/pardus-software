@@ -437,6 +437,24 @@ class MainWindow(object):
         except:
             pass
 
+        self.status_serverapps = False
+        self.status_servercats = False
+        self.status_serverhome = False
+        self.serverappicons_done = False
+        self.servercaticons_done = False
+
+        self.AppImage = AppImage()
+        self.AppImage.Pixbuf = self.Pixbuf
+
+        self.AppDetail = AppDetail()
+        self.AppDetail.Detail = self.Detail
+
+        self.AppRequest = AppRequest()
+        self.AppRequest.Request = self.Request
+
+        self.GnomeComment = GnomeComment()
+        self.GnomeComment.gComment = self.gComment
+
         self.MainWindow.show_all()
 
         p1 = threading.Thread(target=self.worker)
@@ -489,27 +507,11 @@ class MainWindow(object):
         self.s_height = geometry.height
 
     def worker(self):
+        GLib.idle_add(self.splashspinner.start)
         self.usersettings()
         self.setAnimations()
         self.package()
-        self.appimage()
-        self.appdetail()
-        self.apprequest()
-        # self.setRepoCategories()
         self.server()
-        self.controlIcons()
-        self.getIcons()
-        self.normalpage()
-        GLib.idle_add(self.controlAvailableApps)
-        GLib.idle_add(self.gnomeComments)
-        GLib.idle_add(self.setPardusCategories)
-        GLib.idle_add(self.setPardusApps)
-        GLib.idle_add(self.setEditorApps)
-        GLib.idle_add(self.setMostApps)
-        GLib.idle_add(self.setRepoApps)
-        GLib.idle_add(self.gnomeRatings)
-        GLib.idle_add(self.controlArgs)
-        GLib.idle_add(self.controlPSUpdate)
 
     def controlPSUpdate(self):
         if self.Server.connection and self.UserSettings.usercodename == "yirmibir":
@@ -521,8 +523,9 @@ class MainWindow(object):
                     self.notify(fromexternal=True, upgradable=True)
 
     def controlAvailableApps(self):
-        if self.UserSettings.config_saa:
-            self.setAvailableApps(available=True, hideextapps=self.UserSettings.config_hera)
+        if self.Server.connection:
+            if self.UserSettings.config_saa:
+                self.setAvailableApps(available=True, hideextapps=self.UserSettings.config_hera)
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
@@ -547,14 +550,12 @@ class MainWindow(object):
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
-        if self.Server.connection and self.Server.app_scode == 200 and self.Server.cat_scode == 200:
+        if self.Server.connection:
             self.homestack.set_visible_child_name("pardushome")
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
-                "<b>{}\n{} : {}\n{} : {}</b>".format(_("Could not connect to server."), _("Error Code (app)"),
-                                                     self.Server.app_scode, _("Error Code (cat)"),
-                                                     self.Server.cat_scode))
+                "<b>{}\n\n{}</b>".format(_("Could not connect to server."), self.Server.error_message))
         self.splashspinner.stop()
         # self.splashbarstatus = False
         self.splashlabel.set_text("")
@@ -578,7 +579,7 @@ class MainWindow(object):
     def package(self):
         # self.splashspinner.start()
         # self.splashbar.pulse()
-        self.splashlabel.set_markup("<b>{}</b>".format(_("Updating Cache")))
+        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
         self.Package = Package()
         if self.Package.updatecache():
             self.Package.getApps()
@@ -596,26 +597,6 @@ class MainWindow(object):
         print("{} {}".format("config_anim", self.UserSettings.config_ea))
         print("{} {}".format("config_availableapps", self.UserSettings.config_saa))
         print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
-
-    def appimage(self):
-        self.AppImage = AppImage()
-        self.AppImage.Pixbuf = self.Pixbuf
-        print("appimage completed")
-
-    def appdetail(self):
-        self.AppDetail = AppDetail()
-        self.AppDetail.Detail = self.Detail
-        print("appdetail completed")
-
-    def apprequest(self):
-        self.AppRequest = AppRequest()
-        self.AppRequest.Request = self.Request
-        print("apprequest completed")
-
-    def gnomeComments(self):
-        self.GnomeComment = GnomeComment()
-        self.GnomeComment.gComment = self.gComment
-        print("gnome comments completed")
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -699,7 +680,7 @@ class MainWindow(object):
 
     def setRepoApps(self):
         # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Apps")))
-        print("Repo apps setting")
+        # print("Repo apps setting")
         # for app in self.Package.apps:
         #     appname = app['name']
         #     category = app['category']
@@ -772,33 +753,121 @@ class MainWindow(object):
     def server(self):
         # self.splashbar.pulse()
         print("Getting applications from server")
-        self.splashlabel.set_markup("<b>{}</b>".format(_("Getting applications from server")))
+        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting applications from server")))
+        # self.splashlabel.set_markup()
         self.Server = Server()
-        self.applist = sorted(self.Server.applist, key=lambda x: x["prettyname"][self.locale])
-        self.fullapplist = self.applist
-        self.catlist = self.Server.catlist
-        self.Server.applist.clear()
+        self.Server.ServerAppsCB = self.ServerAppsCB
+        self.Server.ServerIconsCB = self.ServerIconsCB
+        self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
+        self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
+        self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
+
+        # self.applist = sorted(self.Server.applist, key=lambda x: x["prettyname"][self.locale])
+        # self.fullapplist = self.applist
+        # self.catlist = self.Server.catlist
+        # self.Server.applist.clear()
+
         # self.serverappicons = self.Server.getAppIcons()
         # self.servercaticons = self.Server.getCategoryIcons()
-        print("{} {}".format("server connection", self.Server.connection))
+        print("server func done")
+
+    def afterServers(self):
+        self.normalpage()
+        GLib.idle_add(self.controlAvailableApps)
+        GLib.idle_add(self.setPardusCategories)
+        GLib.idle_add(self.setPardusApps)
+        GLib.idle_add(self.setEditorApps)
+        GLib.idle_add(self.setMostApps)
+        GLib.idle_add(self.setRepoApps)
+        GLib.idle_add(self.gnomeRatings)
+        GLib.idle_add(self.controlArgs)
+        GLib.idle_add(self.controlPSUpdate)
+
+    def ServerAppsCB(self, success, response=None, type=None):
+        if success:
+            if type == "apps":
+                print("server apps successful")
+                self.status_serverapps = True
+                self.applist = sorted(response["app-list"], key=lambda x: x["prettyname"][self.locale])
+                self.fullapplist = self.applist
+            elif type == "cats":
+                print("server cats successful")
+                self.status_servercats = True
+                self.catlist = response["cat-list"]
+                self.fullcatlist = self.catlist
+            elif type == "home":
+                print("server home successful")
+                self.status_serverhome = True
+                self.Server.ediapplist = response["editor-apps"]
+                self.Server.mostdownapplist = response["mostdown-apps"]
+                self.Server.mostrateapplist = response["mostrate-apps"]
+                self.Server.totalstatistics = response["total"]
+                self.Server.servermd5 = response["md5"]
+                self.Server.appversion = response["version"]
+
+            if self.status_serverapps and self.status_servercats and self.status_serverhome:
+                self.Server.connection = True
+                self.getIcons()
+        else:
+            self.Server.connection = False
+            self.afterServers()
+
+    def ServerIconsCB(self, status, type, fromsettings=False):
+
+        if not fromsettings:
+            if type == self.Server.serverappicons:
+                self.serverappicons_done = True
+                if not status:
+                    self.notify(message_summary=_("Couldn't get icons"),
+                                message_body=_("Application icons could not be retrieved from the server"))
+            elif type == self.Server.servercaticons:
+                self.servercaticons_done = True
+                if not status:
+                    self.notify(message_summary=_("Couldn't get icons"),
+                                message_body=_("Category icons could not be retrieved from the server"))
+            if self.serverappicons_done and self.servercaticons_done:
+                self.afterServers()
+        else:
+            print("fromsettings, {} re-setting".format(type))
+            self.usersettings()
+            if type == self.Server.serverappicons:
+                GLib.idle_add(self.PardusAppListStore.clear)
+                self.EditorListStore.clear()
+                for row in self.MostDownFlowBox:
+                    self.MostDownFlowBox.remove(row)
+                for row in self.MostRateFlowBox:
+                    self.MostRateFlowBox.remove(row)
+                self.setPardusApps()
+                self.setEditorApps()
+                self.setMostApps()
+            elif type == self.Server.servercaticons:
+                for row in self.HomeCategoryFlowBox:
+                    self.HomeCategoryFlowBox.remove(row)
+                self.setPardusCategories()
 
     def getIcons(self):
         if self.Server.connection:
-            # self.splashbar.pulse()
             print("Getting icons from server")
-            self.splashlabel.set_markup("<b>{}</b>".format(_("Getting icons from server")))
-            self.serverappicons = self.Server.getAppIcons()
-            self.servercaticons = self.Server.getCategoryIcons()
+            GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting icons from server")))
+            redown_app_icons, redown_cat_icons = self.Server.controlIcons()
+            if redown_app_icons:
+                self.Server.getIcons(
+                    self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
+                    self.Server.serverappicons, force_download=True)
+            else:
+                self.Server.getIcons(
+                    self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
+                    self.Server.serverappicons)
+            if redown_cat_icons:
+                self.Server.getIcons(
+                    self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
+                    self.Server.servercaticons, force_download=True)
+            else:
+                self.Server.getIcons(
+                    self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
+                    self.Server.servercaticons)
         else:
             print("icons cannot downloading because server connection is {}".format(self.Server.connection))
-
-    def controlIcons(self):
-        if self.Server.connection:
-            print("Controlling icons")
-            self.splashlabel.set_markup("<b>{}</b>".format(_("Controlling icons")))
-            self.Server.controlIcons()
-        else:
-            print("icons cannot controlling because server connection is {}".format(self.Server.connection))
 
     def gnomeRatings(self):
         print("Getting ratings from gnome odrs")
@@ -818,15 +887,12 @@ class MainWindow(object):
         if status:
             print("gnomeratings successful")
             self.gnomeratings = response
-            # GLib.idle_add(self.setGnomeRatings, self.gnomeratings[self.gnomename])
         else:
             self.gnomeratings = []
             print("gnomeratings not successful")
 
     def setPardusApps(self):
         if self.Server.connection:
-            # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting applications")))
-
             if self.UserSettings.config_usi:
                 print("User want to use server icons [app]")
                 for app in self.applist:
@@ -1477,11 +1543,11 @@ class MainWindow(object):
             self.limit_en = 10
 
             gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                    "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
+                       "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
             self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, "tr")
 
             gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                    "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
+                       "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
             self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
 
     def setPardusCommentStar(self, rate):
@@ -2393,14 +2459,14 @@ class MainWindow(object):
         self.gcMoreButtonTR.set_sensitive(False)
         self.limit_tr = self.limit_tr + 10
         gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "tr",
-                "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
+                   "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
         self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, lang="tr")
 
     def on_gcMoreButtonEN_clicked(self, button):
         self.gcMoreButtonEN.set_sensitive(False)
         self.limit_en = self.limit_en + 10
         gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "en",
-                "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
+                   "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
         self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, lang="en")
 
     def on_dDisclaimerButton_clicked(self, button):
@@ -2461,7 +2527,7 @@ class MainWindow(object):
             print("action " + self.appname)
 
     def on_topbutton1_clicked(self, button):
-        if self.Server.connection and self.Server.app_scode == 200 and self.Server.cat_scode == 200:
+        if self.Server.connection:
             self.searchstack.set_visible_child_name("page0")
             self.homestack.set_visible_child_name("pardushome")
             self.HomeCategoryFlowBox.unselect_all()
@@ -2777,7 +2843,7 @@ class MainWindow(object):
         self.SuggestCat.append_text(_("Select Category"))
         self.SuggestCat.set_active(0)
         cats = []
-        for cat in self.Server.catlist:
+        for cat in self.fullcatlist:
             cats.append(cat[self.locale])
         cats = sorted(cats)
         for cat in cats:
@@ -2960,12 +3026,18 @@ class MainWindow(object):
                 for row in self.MostRateFlowBox:
                     self.MostRateFlowBox.remove(row)
                 if state:
-                    self.serverappicons = self.Server.getAppIcons()
-                    self.servercaticons = self.Server.getCategoryIcons()
-                self.setPardusApps()
-                self.setPardusCategories()
-                self.setEditorApps()
-                self.setMostApps()
+                    self.Server.getIcons(
+                        self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
+                        self.Server.serverappicons, fromsettings=True)
+
+                    self.Server.getIcons(
+                        self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
+                        self.Server.servercaticons, fromsettings=True)
+                else:
+                    self.setPardusApps()
+                    self.setPardusCategories()
+                    self.setEditorApps()
+                    self.setMostApps()
             except Exception as e:
                 self.preflabel.set_text(str(e))
                 print(e)
@@ -3064,12 +3136,12 @@ class MainWindow(object):
 
         if hideextapps:  # control category list too
             newlist = []
-            for cat in self.Server.catlist:
+            for cat in self.fullcatlist:
                 if cat["external"] is False:
                     newlist.append(cat)
             self.catlist = newlist
         else:
-            self.catlist = self.Server.catlist
+            self.catlist = self.fullcatlist
 
     def on_prefcachebutton_clicked(self, button):
         state, message = self.Server.deleteCache()
@@ -3477,32 +3549,38 @@ class MainWindow(object):
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
-    def notify(self, fromexternal=False, upgradable=False):
+    def notify(self, fromexternal=False, upgradable=False, message_summary="", message_body=""):
         if Notify.is_initted():
             Notify.uninit()
-        if not fromexternal:
-            Notify.init(self.actionedappname)
-            if self.isinstalled:
-                notification = Notify.Notification.new(self.getPrettyName(self.actionedappname, False) + _(" Removed"))
+
+        if message_summary == "" and message_body == "":
+            if not fromexternal:
+                Notify.init(self.actionedappname)
+                if self.isinstalled:
+                    notification = Notify.Notification.new(
+                        self.getPrettyName(self.actionedappname, False) + _(" Removed"))
+                else:
+                    notification = Notify.Notification.new(
+                        self.getPrettyName(self.actionedappname, False) + _(" Installed"))
+                if self.UserSettings.config_usi:
+                    pixbuf = self.getServerAppIcon(self.actionedappname, 96)
+                else:
+                    pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
+                notification.set_icon_from_pixbuf(pixbuf)
             else:
-                notification = Notify.Notification.new(
-                    self.getPrettyName(self.actionedappname, False) + _(" Installed"))
-            if self.UserSettings.config_usi:
-                pixbuf = self.getServerAppIcon(self.actionedappname, 96)
-            else:
-                pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
-            notification.set_icon_from_pixbuf(pixbuf)
+                if not upgradable:
+                    Notify.init(self.actionedenablingappname)
+                    notification = Notify.Notification.new(_("Pardus Software Center"),
+                                                           _("Repo Activation Completed"),
+                                                           "pardus-software")
+                else:
+                    Notify.init("upgradable")
+                    notification = Notify.Notification.new(_("Pardus Software Center | New version available"),
+                                                           _("Please upgrade application using Menu/Updates"),
+                                                           "pardus-software")
         else:
-            if not upgradable:
-                Notify.init(self.actionedenablingappname)
-                notification = Notify.Notification.new(_("Pardus Software Center"),
-                                                       _("Repo Activation Completed"),
-                                                       "pardus-software")
-            else:
-                Notify.init("upgradable")
-                notification = Notify.Notification.new(_("Pardus Software Center | New version available"),
-                                                       _("Please upgrade application using Menu/Updates"),
-                                                       "pardus-software")
+            Notify.init(message_summary)
+            notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
         notification.show()
 
     def sendDownloaded(self, appname):
