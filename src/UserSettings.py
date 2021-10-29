@@ -14,9 +14,22 @@ class UserSettings(object):
     def __init__(self):
 
         try:
+            self.userdistroid = distro.id().lower()
+        except:
+            self.userdistroid = ""
+        try:
             self.usercodename = distro.codename().lower()
         except:
             self.usercodename = ""
+        try:
+            self.userdistroversion = distro.major_version().lower()
+        except:
+            self.userdistroversion = ""
+        try:
+            self.userdistro = ", ".join(distro.linux_distribution())
+        except:
+            self.userdistro = ""
+
         userhome = str(Path.home())
         self.configdir = userhome + "/.config/pardus-software/"
         self.configfile = "settings.ini"

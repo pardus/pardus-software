@@ -2014,8 +2014,12 @@ class MainWindow(object):
             installed = False
 
         if installed:
+            version = self.Package.installedVersion(self.appname)
+            if version is None:
+                version = ""
             dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
-                   "installed": installed, "comment": "", "justrate": True}
+                   "installed": installed, "comment": "", "appversion": version, "distro": self.UserSettings.userdistro,
+                   "justrate": True}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
         else:
             self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
@@ -2122,8 +2126,12 @@ class MainWindow(object):
             if installed is None:
                 installed = False
             if installed:
+                version = self.Package.installedVersion(self.appname)
+                if version is None:
+                    version = ""
                 dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
-                       "installed": installed, "justrate": False}
+                       "installed": installed, "appversion": version, "distro": self.UserSettings.userdistro,
+                       "justrate": False}
                 try:
                     self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
                 except Exception as e:
@@ -3588,7 +3596,11 @@ class MainWindow(object):
             installed = self.Package.isinstalled(appname)
             if installed is None:
                 installed = False
-            dic = {"mac": self.mac, "app": appname, "installed": installed}
+            version = self.Package.installedVersion(self.appname)
+            if version is None:
+                version = ""
+            dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
+                   "distro": self.UserSettings.userdistro}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
         except Exception as e:
             print(str(e))
