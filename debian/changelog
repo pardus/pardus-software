@@ -1,3 +1,15 @@
+pardus-software (0.1.0~beta15) unstable; urgency=medium
+
+  * Fix star and description location on write pardus comment
+  * Add version control func, show notify if new version is available for pardus-software
+  * Rm unused list
+  * Rm redundant function call
+  * Update server app and icon request as async Gio
+  * Add distro and appversion to ratings and downloads
+  * Update translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 29 Oct 2021 19:41:06 +0300
+
 pardus-software (0.1.0~beta14) unstable; urgency=medium
 
   * Update default app sorting as prettyname
