@@ -3596,7 +3596,7 @@ class MainWindow(object):
             installed = self.Package.isinstalled(appname)
             if installed is None:
                 installed = False
-            version = self.Package.installedVersion(self.appname)
+            version = self.Package.installedVersion(appname)
             if version is None:
                 version = ""
             dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
