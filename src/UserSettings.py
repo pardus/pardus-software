@@ -18,13 +18,15 @@ class UserSettings(object):
         except:
             self.userdistroid = ""
         try:
-            self.usercodename = distro.codename().lower()
-        except:
-            self.usercodename = ""
-        try:
             self.userdistroversion = distro.major_version().lower()
         except:
             self.userdistroversion = ""
+        try:
+            self.usercodename = distro.codename().lower()
+            if self.usercodename == "etap":
+                self.usercodename = self.usercodename + self.userdistroversion
+        except:
+            self.usercodename = ""
         try:
             self.userdistro = ", ".join(distro.linux_distribution())
         except:
