@@ -1967,6 +1967,67 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="position">1</property>
                                       </packing>
                                     </child>
+                                    <child>
+                                      <object class="GtkButton" id="dAptUpdateButton">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                        <property name="halign">center</property>
+                                        <signal name="clicked" handler="on_dAptUpdateButton_clicked" swapped="no"/>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label" translatable="yes">Try Update Package Cache</property>
+                                            <property name="wrap">True</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox" id="dAptUpdateBox">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">center</property>
+                                        <property name="spacing">7</property>
+                                        <child>
+                                          <object class="GtkLabel" id="dAptUpdateInfoLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="valign">center</property>
+                                            <property name="wrap">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkSpinner" id="dAptUpdateSpinner">
+                                            <property name="width-request">30</property>
+                                            <property name="height-request">30</property>
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -2676,6 +2737,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="wrap">True</property>
+                                                            <property name="wrap-mode">char</property>
+                                                            <property name="ellipsize">end</property>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>

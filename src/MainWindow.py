@@ -152,6 +152,10 @@ class MainWindow(object):
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
         self.dOpenButton = self.GtkBuilder.get_object("dOpenButton")
+        self.dAptUpdateButton = self.GtkBuilder.get_object("dAptUpdateButton")
+        self.dAptUpdateInfoLabel = self.GtkBuilder.get_object("dAptUpdateInfoLabel")
+        self.dAptUpdateSpinner = self.GtkBuilder.get_object("dAptUpdateSpinner")
+        self.dAptUpdateBox = self.GtkBuilder.get_object("dAptUpdateBox")
         # self.dOpenButton.get_style_context().add_class("circular")
         self.dDisclaimerButton = self.GtkBuilder.get_object("dDisclaimerButton")
         self.DisclaimerPopover = self.GtkBuilder.get_object("DisclaimerPopover")
@@ -404,6 +408,7 @@ class MainWindow(object):
         self.errormessage = ""
 
         self.updateclicked = False
+        self.aptupdateclicked = False
 
         self.desktop_file = ""
 
@@ -1321,6 +1326,10 @@ class MainWindow(object):
         self.CommentsNotebook.set_current_page(0)
         self.gcStack.set_visible_child_name("gcTurkish")
 
+        self.dAptUpdateBox.set_visible(False)
+        self.dAptUpdateButton.set_visible(False)
+        self.dAptUpdateInfoLabel.set_visible(False)
+
         try:
             selected_items = iconview.get_selected_items()
             lensel = len(selected_items)
@@ -1512,6 +1521,10 @@ class MainWindow(object):
                             self.dDisclaimerButton.set_visible(False)
                             type = _("Open Source")
                         self.dType.set_markup(type)
+                else:
+                    self.dAptUpdateBox.set_visible(True)
+                    self.dAptUpdateButton.set_visible(True)
+                    self.dAptUpdateInfoLabel.set_visible(True)
 
             self.pixbuf1 = None
             self.pixbuf2 = None
@@ -2501,6 +2514,22 @@ class MainWindow(object):
             self.activate_repo_label.set_text(self.external["reposlist"])
             self.activate_info_label.set_text("")
             self.activate_info_label.set_visible(False)
+
+    def on_dAptUpdateButton_clicked(self, button):
+        if len(self.queue) == 0:
+            self.aptupdateclicked = True
+            self.dAptUpdateSpinner.start()
+            self.dAptUpdateBox.set_visible(True)
+            self.dAptUpdateButton.set_sensitive(False)
+            self.dAptUpdateInfoLabel.set_visible(True)
+            self.dAptUpdateInfoLabel.set_text(_("Updating"))
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "update"]
+            self.uppid = self.startSysProcess(command)
+        else:
+            self.dAptUpdateBox.set_visible(True)
+            self.dAptUpdateInfoLabel.set_visible(True)
+            self.dAptUpdateInfoLabel.set_markup(
+                "<span color='red'>{}</span>".format(_("Package manager is busy, try again later.")))
 
     def on_activate_yes_button_clicked(self, button):
 
@@ -3510,6 +3539,7 @@ class MainWindow(object):
         if repo == 1:  # pardus apps
             self.fromexternal = False
             if self.Package.isinstalled(actionedappname) is True:
+                self.dActionButton.set_sensitive(True)
                 if self.dActionButton.get_style_context().has_class("suggested-action"):
                     self.dActionButton.get_style_context().remove_class("suggested-action")
                 self.dActionButton.get_style_context().add_class("destructive-action")
@@ -3522,6 +3552,7 @@ class MainWindow(object):
                 self.wpcformcontrolLabel.set_markup("")
 
             elif self.Package.isinstalled(actionedappname) is False:
+                self.dActionButton.set_sensitive(True)
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
                     self.dActionButton.get_style_context().remove_class("destructive-action")
                 self.dActionButton.get_style_context().add_class("suggested-action")
@@ -3657,5 +3688,27 @@ class MainWindow(object):
                 _("Pardus Software Center > Menu > Updates > Update Package Cache")))
 
         self.correctsourcesclicked = False
+
+        if self.aptupdateclicked:
+            print("apt update done (detail page), status code : {}".format(status))
+            self.dAptUpdateButton.set_sensitive(True)
+            self.dAptUpdateSpinner.stop()
+            self.Package.updatecache()
+            self.controlView(self.appname, self.desktop_file)
+            if status == 0:
+                self.dAptUpdateBox.set_visible(False)
+                self.dAptUpdateButton.set_visible(False)
+                self.dAptUpdateInfoLabel.set_visible(True)
+                self.dAptUpdateInfoLabel.set_text("")
+            elif status == 32256:
+                self.dAptUpdateInfoLabel.set_visible(True)
+                self.dAptUpdateInfoLabel.set_text("")
+                print("wrong password on apt update (detail page)")
+            else:
+                self.dAptUpdateBox.set_visible(True)
+                self.dAptUpdateInfoLabel.set_visible(True)
+                self.dAptUpdateInfoLabel.set_markup("<span color='red'>{}{}</span>".format(
+                    _("An error occurred while updating the package cache. Exit Code : "), status))
+            self.aptupdateclicked = False
 
         print("SysProcess Exit Code : {}".format(status))
