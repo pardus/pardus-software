@@ -1,3 +1,13 @@
+pardus-software (0.1.0~beta16) unstable; urgency=medium
+
+  * Fix wrong appname paramater on download request
+  * Add try update apt cache button for not found applications
+  * Add codename control for etap with major version
+  * Update translations
+  * Update debian/compat to 10
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sun, 31 Oct 2021 01:48:43 +0300
+
 pardus-software (0.1.0~beta15) unstable; urgency=medium
 
   * Fix star and description location on write pardus comment
