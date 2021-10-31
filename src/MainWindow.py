@@ -1522,9 +1522,10 @@ class MainWindow(object):
                             type = _("Open Source")
                         self.dType.set_markup(type)
                 else:
-                    self.dAptUpdateBox.set_visible(True)
                     self.dAptUpdateButton.set_visible(True)
-                    self.dAptUpdateInfoLabel.set_visible(True)
+                    if self.aptupdateclicked:
+                        self.dAptUpdateBox.set_visible(True)
+                        self.dAptUpdateInfoLabel.set_visible(True)
 
             self.pixbuf1 = None
             self.pixbuf2 = None
