@@ -411,6 +411,7 @@ class MainWindow(object):
         self.aptupdateclicked = False
 
         self.desktop_file = ""
+        self.desktop_file_extras = ""
 
         self.rate_average = 0
         self.rate_individual = _("is None")
@@ -1380,6 +1381,7 @@ class MainWindow(object):
                     self.gnomename = i["gnomename"]
                     self.screenshots = i["screenshots"]
                     self.desktop_file = i["desktop"]
+                    self.desktop_file_extras = i["desktopextras"]
                     self.component = i["component"]["name"]
                     prettyname = i["prettyname"][self.locale]
                     if prettyname is None or prettyname == "":
@@ -2495,8 +2497,20 @@ class MainWindow(object):
         self.DisclaimerPopover.popup()
 
     def on_dOpenButton_clicked(self, button):
+        if not self.openDesktop(self.desktop_file):
+            if self.desktop_file_extras != "":
+                extras = self.desktop_file_extras.split(",")
+                for extra in extras:
+                    if self.openDesktop(extra):
+                        break
 
-        subprocess.Popen(["gtk-launch", self.desktop_file])
+    def openDesktop(self, desktop):
+        try:
+            subprocess.check_call(["gtk-launch", desktop])
+            return True
+        except subprocess.CalledProcessError:
+            print("error opening " + desktop)
+            return False
 
     def on_dActionButton_clicked(self, button):
 
