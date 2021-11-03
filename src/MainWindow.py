@@ -3110,15 +3110,25 @@ class MainWindow(object):
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_icons":
             self.PopoverPrefTip.set_relative_to(self.tip_icons)
-            self.prefTipLabel.set_markup("{} {}\n{} {}\n{} {}\n{} {}".format(
+            self.prefTipLabel.set_markup("{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}".format(
                 _("Default icons use Papirus icon theme."),
                 ("<a href='https://github.com/PapirusDevelopmentTeam/papirus-icon-theme'>Site</a>"),
+                _("Candy is Candy icon theme."),
+                ("<a href='https://github.com/EliverLara/candy-icons/'>Site</a>"),
                 _("Flat is Flat Remix icon theme."),
                 ("<a href='https://github.com/daniruiz/Flat-Remix'>Site</a>"),
+                _("Flatery is Flatery icon theme."),
+                ("<a href='https://github.com/cbrnix/Flatery'>Site</a>"),
+                _("Kora is Kora icon theme."),
+                ("<a href='https://github.com/bikass/kora'>Site</a>"),
                 _("Numix is Numix Circle icon theme."),
                 ("<a href='https://github.com/numixproject/numix-icon-theme-circle'>Site</a>"),
                 _("Oranchelo is Oranchelo icon theme."),
-                ("<a href='https://github.com/OrancheloTeam/oranchelo-icon-theme'>Site</a>")
+                ("<a href='https://github.com/OrancheloTeam/oranchelo-icon-theme'>Site</a>"),
+                _("Tela is Tela icon theme."),
+                ("<a href='https://github.com/vinceliuice/Tela-icon-theme'>Site</a>"),
+                _("Zafiro is Zafiro icon theme."),
+                ("<a href='https://github.com/zayronxio/Zafiro-icons'>Site</a>")
             ))
             self.PopoverPrefTip.popup()
 
