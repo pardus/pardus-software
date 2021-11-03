@@ -275,6 +275,10 @@ class MainWindow(object):
         self.tip_ea = self.GtkBuilder.get_object("tip_ea")
         self.tip_soaa = self.GtkBuilder.get_object("tip_soaa")
         self.tip_hera = self.GtkBuilder.get_object("tip_hera")
+        self.tip_icons = self.GtkBuilder.get_object("tip_icons")
+        self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
+        self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
+        self.selecticonsBoxTopSeperator = self.GtkBuilder.get_object("selecticonsBoxTopSeperator")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
 
@@ -577,6 +581,7 @@ class MainWindow(object):
         GLib.idle_add(self.topbutton2.set_sensitive, True)
         GLib.idle_add(self.topsearchbutton.set_sensitive, True)
 
+
         if not self.Server.connection:
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
 
@@ -603,6 +608,7 @@ class MainWindow(object):
         print("{} {}".format("config_anim", self.UserSettings.config_ea))
         print("{} {}".format("config_availableapps", self.UserSettings.config_saa))
         print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
+        print("{} {}".format("config_icon", self.UserSettings.config_icon))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -810,6 +816,7 @@ class MainWindow(object):
                 self.Server.totalstatistics = response["total"]
                 self.Server.servermd5 = response["md5"]
                 self.Server.appversion = response["version"]
+                self.Server.iconnames = response["iconnames"]
 
             if self.status_serverapps and self.status_servercats and self.status_serverhome:
                 self.Server.connection = True
@@ -850,6 +857,7 @@ class MainWindow(object):
                 for row in self.HomeCategoryFlowBox:
                     self.HomeCategoryFlowBox.remove(row)
                 self.setPardusCategories()
+            self.setSelectIcons()
 
     def getIcons(self):
         if self.Server.connection:
@@ -1137,14 +1145,26 @@ class MainWindow(object):
 
     def getServerCatIcon(self, cat, size=48):
         try:
+            if self.UserSettings.config_icon == "default":
+                icons = "categoryicons"
+            else:
+                icons = "categoryicons-" + self.UserSettings.config_icon
+        except Exception as e:
+            icons = "categoryicons"
+            print("{}".format(e))
+        try:
             caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size)
+                self.Server.cachedir + icons + "/" + cat + ".svg", size, size)
         except:
-            print("{} {}".format(cat, "category icon not found in server icons"))
+            # print("{} {}".format(cat, "icon not found in server cat icons"))
             try:
-                caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size)
             except:
-                caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                try:
+                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                except:
+                    caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return caticon
 
     def getSystemAppIcon(self, app, size=64):
@@ -1162,13 +1182,24 @@ class MainWindow(object):
 
     def getServerAppIcon(self, app, size=64):
         try:
-            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg", size,
-                                                             size)
+            if self.UserSettings.config_icon == "default":
+                icons = "appicons"
+            else:
+                icons = "appicons-" + self.UserSettings.config_icon
+        except Exception as e:
+            icons = "appicons"
+            print("{}".format(e))
+        try:
+            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size, size)
         except:
+            # print("{} {}".format(app, "icon not found in server app icons"))
             try:
-                appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg", size, size)
             except:
-                appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                try:
+                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                except:
+                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return appicon
 
     # def on_timeout(self, user_data):
@@ -2869,6 +2900,23 @@ class MainWindow(object):
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
 
+        self.setSelectIcons()
+
+    def setSelectIcons(self):
+        if self.UserSettings.config_usi:
+            self.selecticonsBoxTopSeperator.set_visible(True)
+            self.selecticonsBox.set_visible(True)
+            self.setServerIconCombo.remove_all()
+            iconnames = self.Server.iconnames.split(",")
+            self.setServerIconCombo.append("default", _("Default"))
+            for icon in iconnames:
+                self.setServerIconCombo.append(icon, icon.capitalize())
+            user_config_icon = self.UserSettings.config_icon
+            self.setServerIconCombo.set_active_id(user_config_icon)
+        else:
+            self.selecticonsBoxTopSeperator.set_visible(False)
+            self.selecticonsBox.set_visible(False)
+
     def on_menu_updates_clicked(self, button):
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
@@ -3060,6 +3108,19 @@ class MainWindow(object):
                 _("For example, MEB education applications of Publishing Houses in the Meb Education category.")
             ))
             self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_icons":
+            self.PopoverPrefTip.set_relative_to(self.tip_icons)
+            self.prefTipLabel.set_markup("{} {}\n{} {}\n{} {}\n{} {}".format(
+                _("Default icons use Papirus icon theme."),
+                ("<a href='https://github.com/PapirusDevelopmentTeam/papirus-icon-theme'>Site</a>"),
+                _("Flat is Flat Remix icon theme."),
+                ("<a href='https://github.com/daniruiz/Flat-Remix'>Site</a>"),
+                _("Numix is Numix Circle icon theme."),
+                ("<a href='https://github.com/numixproject/numix-icon-theme-circle'>Site</a>"),
+                _("Oranchelo is Oranchelo icon theme."),
+                ("<a href='https://github.com/OrancheloTeam/oranchelo-icon-theme'>Site</a>")
+            ))
+            self.PopoverPrefTip.popup()
 
     def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
@@ -3067,7 +3128,7 @@ class MainWindow(object):
             print("Updating user icon state")
             try:
                 self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera)
+                                              self.UserSettings.config_hera, self.UserSettings.config_icon)
                 self.usersettings()
                 GLib.idle_add(self.PardusAppListStore.clear)
                 self.EditorListStore.clear()
@@ -3090,6 +3151,7 @@ class MainWindow(object):
                     self.setPardusCategories()
                     self.setEditorApps()
                     self.setMostApps()
+                    self.setSelectIcons()
             except Exception as e:
                 self.preflabel.set_text(str(e))
                 print(e)
@@ -3100,7 +3162,7 @@ class MainWindow(object):
             print("Updating user animation state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera)
+                                              self.UserSettings.config_hera, self.UserSettings.config_icon)
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
@@ -3112,7 +3174,7 @@ class MainWindow(object):
             print("Updating show available apps state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
-                                              self.UserSettings.config_hera)
+                                              self.UserSettings.config_hera, self.UserSettings.config_icon)
                 self.usersettings()
                 self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
             except Exception as e:
@@ -3137,7 +3199,7 @@ class MainWindow(object):
             print("Updating hide external apps state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                              self.UserSettings.config_saa, state)
+                                              self.UserSettings.config_saa, state, self.UserSettings.config_icon)
                 self.usersettings()
                 self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
             except Exception as e:
@@ -3155,6 +3217,30 @@ class MainWindow(object):
             self.setPardusCategories()
             self.setEditorApps()
             self.setMostApps()
+
+    def on_setServerIconCombo_changed(self, combo_box):
+        user_config_icon = self.UserSettings.config_icon
+        active = combo_box.get_active_id()
+        if active != user_config_icon and active is not None:
+            print("changing icons to " + str(combo_box.get_active_id()))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, self.UserSettings.config_saa,
+                                              self.UserSettings.config_hera, active)
+            self.usersettings()
+            GLib.idle_add(self.clearBoxes)
+            self.setPardusApps()
+            self.setPardusCategories()
+            self.setEditorApps()
+            self.setMostApps()
+
+    def clearBoxes(self):
+        self.EditorListStore.clear()
+        self.PardusAppListStore.clear()
+        for row in self.HomeCategoryFlowBox:
+            self.HomeCategoryFlowBox.remove(row)
+        for row in self.MostDownFlowBox:
+            self.MostDownFlowBox.remove(row)
+        for row in self.MostRateFlowBox:
+            self.MostRateFlowBox.remove(row)
 
     def setAvailableApps(self, available, hideextapps):
         newlist = []

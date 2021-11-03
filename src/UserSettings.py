@@ -40,12 +40,14 @@ class UserSettings(object):
         self.config_ea = None
         self.config_saa = None
         self.config_hera = None
+        self.config_icon = None
 
     def createDefaultConfig(self, force=False):
         self.config['DEFAULT'] = {'UseServerIcons': 'yes',
                                   'Animations': 'yes',
                                   'ShowAvailableApps': 'yes',
-                                  'HideExternalRepoApps': 'yes'}
+                                  'HideExternalRepoApps': 'yes',
+                                  'IconName': 'default'}
 
         if not Path.is_file(Path(self.configdir + self.configfile)) or force:
             if self.createDir(self.configdir):
@@ -60,6 +62,7 @@ class UserSettings(object):
             self.config_ea = self.config.getboolean('DEFAULT', 'Animations')
             self.config_saa = self.config.getboolean('DEFAULT', 'ShowAvailableApps')
             self.config_hera = self.config.getboolean('DEFAULT', 'HideExternalRepoApps')
+            self.config_icon = self.config.get('DEFAULT', 'IconName')
         except:
             print("user config read error ! Trying create defaults")
             # if not read; try to create defaults
@@ -67,16 +70,18 @@ class UserSettings(object):
             self.config_ea = True
             self.config_saa = True
             self.config_hera = True
+            self.config_icon = "default"
             try:
                 self.createDefaultConfig(force=True)
             except Exception as e:
                 print("self.createDefaultConfig(force=True) : {}".format(e))
 
-    def writeConfig(self, srvicons, anims, avaiapps, extapps):
+    def writeConfig(self, srvicons, anims, avaiapps, extapps, iconname):
         self.config['DEFAULT'] = {'UseServerIcons': srvicons,
                                   'Animations': anims,
                                   'ShowAvailableApps': avaiapps,
-                                  'HideExternalRepoApps': extapps}
+                                  'HideExternalRepoApps': extapps,
+                                  'IconName': iconname}
         if self.createDir(self.configdir):
             with open(self.configdir + self.configfile, "w") as cf:
                 self.config.write(cf)
