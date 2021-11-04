@@ -1,3 +1,14 @@
+pardus-software (0.1.0~beta18) unstable; urgency=medium
+
+  * Add icon selection to settings
+  * Update translations
+  * Add new tips for new icons to settings
+  * Update notify function
+  * Add rmtree for icons before extraction
+  * Update translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 04 Nov 2021 14:59:30 +0300
+
 pardus-software (0.1.0~beta17) unstable; urgency=medium
 
   * Fix visibility of AptUpdateBox for ui
