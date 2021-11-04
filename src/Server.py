@@ -245,6 +245,12 @@ class Server(object):
             else:
                 extractables = ""
             rmtree(self.cachedir + type, ignore_errors=True)
+            try:
+                icons = self.iconnames.split(",")
+                for icon in icons:
+                    rmtree(self.cachedir + type + "-" + icon, ignore_errors=True)
+            except Exception as e:
+                print("{}".format(e))
             tar.extractall(members=extractables, path=self.cachedir)
             tar.close()
             return True
