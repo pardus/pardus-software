@@ -530,7 +530,8 @@ class MainWindow(object):
             if user_version is not None and server_version != "":
                 version = self.Package.versionCompare(user_version, server_version)
                 if version < 0:
-                    self.notify(fromexternal=True, upgradable=True)
+                    self.notify(message_summary=_("Pardus Software Center | New version available"),
+                                message_body=_("Please upgrade application using Menu/Updates"))
 
     def controlAvailableApps(self):
         if self.Server.connection:
@@ -580,7 +581,6 @@ class MainWindow(object):
         GLib.idle_add(self.topbutton1.set_sensitive, True)
         GLib.idle_add(self.topbutton2.set_sensitive, True)
         GLib.idle_add(self.topsearchbutton.set_sensitive, True)
-
 
         if not self.Server.connection:
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
@@ -1167,20 +1167,33 @@ class MainWindow(object):
                     caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return caticon
 
-    def getSystemAppIcon(self, app, size=64):
+    def getSystemAppIcon(self, app, size=64, notify=False):
         try:
             appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
         except:
             try:
                 appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
             except:
-                try:
-                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
-                except:
-                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                if notify:
+                    try:
+                        appicon = Gtk.IconTheme.get_default().load_icon("pardus-software", size,
+                                                                        Gtk.IconLookupFlags(16))
+                    except:
+                        try:
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                            Gtk.IconLookupFlags(16))
+                        except:
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                                                                            Gtk.IconLookupFlags(16))
+                else:
+                    try:
+                        appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                        Gtk.IconLookupFlags(16))
+                    except:
+                        appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return appicon
 
-    def getServerAppIcon(self, app, size=64):
+    def getServerAppIcon(self, app, size=64, notify=False):
         try:
             if self.UserSettings.config_icon == "default":
                 icons = "appicons"
@@ -1190,16 +1203,31 @@ class MainWindow(object):
             icons = "appicons"
             print("{}".format(e))
         try:
-            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size, size)
+            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
+                                                             size)
         except:
             # print("{} {}".format(app, "icon not found in server app icons"))
             try:
-                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg", size, size)
+                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg",
+                                                                 size, size)
             except:
-                try:
-                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
-                except:
-                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                if notify:
+                    try:
+                        appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                            self.Server.cachedir + "appicons/pardus-software.svg", size, size)
+                    except:
+                        try:
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                            Gtk.IconLookupFlags(16))
+                        except:
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                                                                            Gtk.IconLookupFlags(16))
+                else:
+                    try:
+                        appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                        Gtk.IconLookupFlags(16))
+                    except:
+                        appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return appicon
 
     # def on_timeout(self, user_data):
@@ -3233,8 +3261,9 @@ class MainWindow(object):
         active = combo_box.get_active_id()
         if active != user_config_icon and active is not None:
             print("changing icons to " + str(combo_box.get_active_id()))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, active)
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa,
+                                          self.UserSettings.config_hera, active)
             self.usersettings()
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
@@ -3699,35 +3728,23 @@ class MainWindow(object):
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
-    def notify(self, fromexternal=False, upgradable=False, message_summary="", message_body=""):
+    def notify(self, message_summary="", message_body=""):
         if Notify.is_initted():
             Notify.uninit()
 
         if message_summary == "" and message_body == "":
-            if not fromexternal:
-                Notify.init(self.actionedappname)
-                if self.isinstalled:
-                    notification = Notify.Notification.new(
-                        self.getPrettyName(self.actionedappname, False) + _(" Removed"))
-                else:
-                    notification = Notify.Notification.new(
-                        self.getPrettyName(self.actionedappname, False) + _(" Installed"))
-                if self.UserSettings.config_usi:
-                    pixbuf = self.getServerAppIcon(self.actionedappname, 96)
-                else:
-                    pixbuf = self.getSystemAppIcon(self.actionedappname, 96)
-                notification.set_icon_from_pixbuf(pixbuf)
+            Notify.init(self.actionedappname)
+            if self.isinstalled:
+                notification = Notify.Notification.new(
+                    self.getPrettyName(self.actionedappname, False) + _(" Removed"))
             else:
-                if not upgradable:
-                    Notify.init(self.actionedenablingappname)
-                    notification = Notify.Notification.new(_("Pardus Software Center"),
-                                                           _("Repo Activation Completed"),
-                                                           "pardus-software")
-                else:
-                    Notify.init("upgradable")
-                    notification = Notify.Notification.new(_("Pardus Software Center | New version available"),
-                                                           _("Please upgrade application using Menu/Updates"),
-                                                           "pardus-software")
+                notification = Notify.Notification.new(
+                    self.getPrettyName(self.actionedappname, False) + _(" Installed"))
+            if self.UserSettings.config_usi:
+                pixbuf = self.getServerAppIcon(self.actionedappname, 96, notify=True)
+            else:
+                pixbuf = self.getSystemAppIcon(self.actionedappname, 96, notify=True)
+            notification.set_icon_from_pixbuf(pixbuf)
         else:
             Notify.init(message_summary)
             notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
@@ -3788,7 +3805,7 @@ class MainWindow(object):
             self.Package.updatecache()
 
             if status == 0 and not self.error:
-                self.notify(fromexternal=True)
+                self.notify(message_summary=_("Pardus Software Center"), message_body=_("Repo Activation Completed"))
 
             self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop)
 
