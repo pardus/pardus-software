@@ -29,7 +29,14 @@ class Application(Gtk.Application):
         )
 
     def do_activate(self):
-        self.window = MainWindow(self)
+        # We only allow a single window and raise any existing ones
+        if not self.window:
+            # Windows are associated with the application
+            # when the last one is closed the application shuts down
+            self.window = MainWindow(self)
+        else:
+            self.window.controlArgs()
+        self.window.MainWindow.present()
 
     def do_command_line(self, command_line):
         options = command_line.get_options_dict()
