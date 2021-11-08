@@ -168,6 +168,9 @@ class MainWindow(object):
         self.dType = self.GtkBuilder.get_object("dType")
         self.dCategory = self.GtkBuilder.get_object("dCategory")
         self.dLicense = self.GtkBuilder.get_object("dLicense")
+        self.licensePopover = self.GtkBuilder.get_object("licensePopover")
+        self.licenseHeader = self.GtkBuilder.get_object("licenseHeader")
+        self.licenseBody = self.GtkBuilder.get_object("licenseBody")
         self.dCodename = self.GtkBuilder.get_object("dCodename")
         self.dWeb = self.GtkBuilder.get_object("dWeb")
         self.dMail = self.GtkBuilder.get_object("dMail")
@@ -1436,6 +1439,7 @@ class MainWindow(object):
                     self.maintainer_web = i["maintainer"][0]["website"]
                     self.category = i["category"][0][self.locale].title()
                     self.license = i["license"]
+                    self.copyright = i["copyright"]
                     self.codenames = ", ".join(c["name"] for c in i["codename"])
                     self.gnomename = i["gnomename"]
                     self.screenshots = i["screenshots"]
@@ -1476,7 +1480,14 @@ class MainWindow(object):
             self.dSection.set_markup("<i>" + self.section + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
             self.dCategory.set_markup(self.category)
-            self.dLicense.set_markup(self.license)
+            if self.copyright != "" and self.copyright is not None:
+                self.dLicense.set_markup("<a href=''>{}</a>".format(self.license))
+                self.licenseHeader.set_markup("<b>{}</b>".format(self.license))
+                self.licenseBody.set_text("{}".format(self.copyright))
+            else:
+                self.dLicense.set_text("{}".format(self.license))
+                self.licenseHeader.set_text("")
+                self.licenseBody.set_text("")
             self.dCodename.set_markup(self.codenames)
             self.dMail.set_markup(
                 "<a title='{}' href='mailto:{}'>{}</a>".format(self.maintainer_mail, self.maintainer_mail, "E-Mail"))
@@ -3347,6 +3358,9 @@ class MainWindow(object):
 
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
+
+    def on_dLicense_activate_link(self, label, url):
+        self.licensePopover.popup()
 
     def on_updatecontrolbutton_clicked(self, button):
         print("on_updatecontrolbutton_clicked")

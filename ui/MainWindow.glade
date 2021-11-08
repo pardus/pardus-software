@@ -2617,6 +2617,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">char</property>
                                                             <property name="ellipsize">end</property>
+                                                            <signal name="activate-link" handler="on_dLicense_activate_link" swapped="no"/>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>
@@ -7141,6 +7142,74 @@ This application served from Pardus non-free package repositories, so that the O
             <property name="fill">True</property>
             <property name="position">6</property>
           </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="licensePopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">dLicense</property>
+    <property name="position">right</property>
+    <child>
+      <object class="GtkScrolledWindow" id="license_scrolledWin">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="min-content-width">500</property>
+        <property name="min-content-height">300</property>
+        <child>
+          <object class="GtkViewport">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">13</property>
+            <property name="margin-end">13</property>
+            <property name="margin-bottom">13</property>
+            <property name="shadow-type">none</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">13</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="licenseHeader">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="licenseBody">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
         </child>
       </object>
     </child>
