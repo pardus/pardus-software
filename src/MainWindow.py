@@ -803,7 +803,7 @@ class MainWindow(object):
             if type == "apps":
                 print("server apps successful")
                 self.status_serverapps = True
-                self.applist = sorted(response["app-list"], key=lambda x: x["prettyname"][self.locale])
+                self.applist = sorted(response["app-list"], key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
                 self.fullapplist = self.applist
             elif type == "cats":
                 print("server cats successful")
@@ -2414,7 +2414,7 @@ class MainWindow(object):
 
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
-            self.applist = sorted(self.applist, key=lambda x: x["prettyname"][self.locale])
+            self.applist = sorted(self.applist, key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 1:  # sort by download
