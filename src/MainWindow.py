@@ -552,7 +552,7 @@ class MainWindow(object):
             except Exception as e:
                 print(str(e))
             try:
-                for apps in self.applist:
+                for apps in self.fullapplist:
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or app == \
                             apps["gnomename"].split(".desktop")[0]:
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
