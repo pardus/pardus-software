@@ -1,3 +1,14 @@
+pardus-software (0.1.0~beta20) unstable; urgency=medium
+
+  * Fix Turkish character problem on app sorting
+  * Update arg control app list as fullapplist
+  * Add gvfs to Depends
+  * Update suggestapp entry limits as 200
+  * Update pardus comment write entry lenghts
+  * Add word wrap to suggestapp textviews
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 11 Nov 2021 16:55:51 +0300
+
 pardus-software (0.1.0~beta19) unstable; urgency=medium
 
   * Add single instance control
