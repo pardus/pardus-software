@@ -4872,7 +4872,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="hexpand">True</property>
-                                                            <property name="max-length">30</property>
+                                                            <property name="max-length">100</property>
                                                             <property name="placeholder-text" translatable="yes">Write your name</property>
                                                             </object>
                                                             <packing>
@@ -4910,7 +4910,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="hexpand">True</property>
-                                                            <property name="max-length">300</property>
+                                                            <property name="max-length">500</property>
                                                             <property name="placeholder-text" translatable="yes">Write your comment</property>
                                                             </object>
                                                             <packing>
