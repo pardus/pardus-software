@@ -6357,6 +6357,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                   <object class="GtkTextView" id="SuggestDescTR">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <property name="wrap-mode">word</property>
                                                     <property name="left-margin">5</property>
                                                     <property name="right-margin">5</property>
                                                     <property name="top-margin">5</property>
@@ -6414,6 +6415,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                   <object class="GtkTextView" id="SuggestDescEN">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <property name="wrap-mode">word</property>
                                                     <property name="left-margin">5</property>
                                                     <property name="right-margin">5</property>
                                                     <property name="top-margin">5</property>
@@ -6510,6 +6512,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                   <object class="GtkTextView" id="SuggestCopyright">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <property name="wrap-mode">word</property>
                                                     <property name="left-margin">5</property>
                                                     <property name="right-margin">5</property>
                                                     <property name="top-margin">5</property>
@@ -6775,6 +6778,7 @@ This application served from Pardus non-free package repositories, so that the O
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">center</property>
+                                    <property name="valign">center</property>
                                     <property name="margin-top">39</property>
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">13</property>
