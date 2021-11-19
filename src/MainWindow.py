@@ -1278,6 +1278,9 @@ class MainWindow(object):
             self.homestack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
             self.homestack.set_transition_duration(200)
 
+            self.pardusAppsStack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
+            self.pardusAppsStack.set_transition_duration(200)
+
             self.searchstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.searchstack.set_transition_duration(200)
 
@@ -1286,6 +1289,9 @@ class MainWindow(object):
 
             self.commentstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.commentstack.set_transition_duration(200)
+
+            self.gcStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.gcStack.set_transition_duration(200)
 
             self.appimage1stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
             self.appimage1stack.set_transition_duration(200)
@@ -1296,6 +1302,12 @@ class MainWindow(object):
             self.activatestack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.activatestack.set_transition_duration(200)
 
+            self.bottomrevealer.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
+            self.bottomrevealer.set_transition_duration(200)
+
+            self.toprevealer.set_transition_type(Gtk.StackTransitionType.SLIDE_DOWN)
+            self.toprevealer.set_transition_duration(200)
+
         else:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.mainstack.set_transition_duration(0)
@@ -1303,11 +1315,17 @@ class MainWindow(object):
             self.homestack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.homestack.set_transition_duration(0)
 
+            self.pardusAppsStack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.pardusAppsStack.set_transition_duration(0)
+
             self.searchstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.searchstack.set_transition_duration(0)
 
             self.commentstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.commentstack.set_transition_duration(0)
+
+            self.gcStack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.gcStack.set_transition_duration(0)
 
             self.appimage1stack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.appimage1stack.set_transition_duration(0)
@@ -1317,6 +1335,12 @@ class MainWindow(object):
 
             self.activatestack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.activatestack.set_transition_duration(0)
+
+            self.bottomrevealer.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.bottomrevealer.set_transition_duration(0)
+
+            self.toprevealer.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.toprevealer.set_transition_duration(0)
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
