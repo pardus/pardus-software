@@ -746,7 +746,7 @@ so that the OS has nothing to do with the health of the application.</property>
                 <property name="can-focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="transition-type">over-up-down</property>
+                <property name="transition-type">slide-up-down</property>
                 <child>
                   <object class="GtkBox" id="PardusHomeBox">
                     <property name="visible">True</property>
@@ -1523,20 +1523,68 @@ so that the OS has nothing to do with the health of the application.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkScrolledWindow" id="PardusAppScroll">
+                      <object class="GtkStack" id="pardusAppsStack">
                         <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="shadow-type">in</property>
+                        <property name="can-focus">False</property>
+                        <property name="transition-type">slide-up-down</property>
                         <child>
-                          <object class="GtkIconView" id="PardusAppsIconView">
+                          <object class="GtkScrolledWindow" id="PardusAppScroll">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="margin">6</property>
-                            <property name="item-orientation">horizontal</property>
-                            <property name="model">PardusCategoryFilter</property>
-                            <property name="item-width">151</property>
-                            <signal name="selection-changed" handler="on_PardusAppsIconView_selection_changed" swapped="no"/>
+                            <property name="shadow-type">in</property>
+                            <child>
+                              <object class="GtkIconView" id="PardusAppsIconView">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="margin">6</property>
+                                <property name="item-orientation">horizontal</property>
+                                <property name="model">PardusCategoryFilter</property>
+                                <property name="item-width">151</property>
+                                <signal name="selection-changed" handler="on_PardusAppsIconView_selection_changed" swapped="no"/>
+                              </object>
+                            </child>
                           </object>
+                          <packing>
+                            <property name="name">normal</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-start">13</property>
+                            <property name="margin-end">13</property>
+                            <property name="margin-top">13</property>
+                            <property name="margin-bottom">13</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <object class="GtkFlowBox" id="SubCategoryFlowBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="homogeneous">True</property>
+                                <property name="column-spacing">7</property>
+                                <property name="row-spacing">7</property>
+                                <property name="min-children-per-line">3</property>
+                                <property name="max-children-per-line">50</property>
+                                <signal name="child-activated" handler="on_SubCategoryFlowBox_child_activated" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">subcats</property>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>

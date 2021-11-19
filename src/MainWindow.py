@@ -102,6 +102,7 @@ class MainWindow(object):
         self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
 
         self.HomeCategoryFlowBox = self.GtkBuilder.get_object("HomeCategoryFlowBox")
+        self.SubCategoryFlowBox = self.GtkBuilder.get_object("SubCategoryFlowBox")
         self.MostDownFlowBox = self.GtkBuilder.get_object("MostDownFlowBox")
         self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
 
@@ -145,6 +146,7 @@ class MainWindow(object):
         self.commentstack = self.GtkBuilder.get_object("commentstack")
         self.prefstack = self.GtkBuilder.get_object("prefstack")
         self.activatestack = self.GtkBuilder.get_object("activatestack")
+        self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
         self.activate_repo_label = self.GtkBuilder.get_object("activate_repo_label")
         self.activate_info_label = self.GtkBuilder.get_object("activate_info_label")
         self.activating_spinner = self.GtkBuilder.get_object("activating_spinner")
@@ -344,6 +346,9 @@ class MainWindow(object):
         else:
             self.PardusCurrentCategoryString = "all"
             self.RepoCurrentCategory = "all"
+
+        self.PardusCurrentCategorySubCats = False
+        self.PardusCurrentCategoryExternal = False
 
         self.useDynamicListStore = False
         self.repoappname = ""
@@ -946,14 +951,14 @@ class MainWindow(object):
 
     def setPardusCategories(self):
         if self.Server.connection:
-            if self.locale == "tr":
-                self.allcats = [{"name": "tümü", "icon": "all"}]
-            else:
-                self.allcats = [{"name": "all", "icon": "all"}]
+            self.categories = []
             for cat in self.catlist:
-                self.allcats.append({"name": cat[self.locale], "icon": cat["en"]})
-            self.categories = sorted(self.allcats, key=lambda x: x["name"])
-
+                self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"], "subcats": cat["subcats"]})
+            self.categories = sorted(self.categories, key=lambda x: x["name"])
+            if self.locale == "tr":
+                self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False})
+            else:
+                self.categories.insert(0, {"name": "all", "icon": "all", "external": False, "subcats": False})
             if self.UserSettings.config_usi:
                 print("User want to use server icons [cat]")
 
@@ -1253,7 +1258,7 @@ class MainWindow(object):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if thatnumber == i:
-                return self.categories[i]["name"], self.categories[i]["icon"]
+                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], self.categories[i]["external"]
 
     def get_repo_category_number(self, thatcategory):
         repocatnumber = 404
@@ -1316,10 +1321,22 @@ class MainWindow(object):
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
         if self.homestack.get_visible_child_name() == "pardusapps":
-            self.homestack.set_visible_child_name("pardushome")
-            self.HomeCategoryFlowBox.unselect_all()
-            self.EditorAppsIconView.unselect_all()
-            self.menubackbutton.set_sensitive(False)
+            if self.PardusCurrentCategorySubCats:
+                self.SubCategoryFlowBox.unselect_all()
+                if self.pardusAppsStack.get_visible_child_name() != "subcats":
+                    self.pardusAppsStack.set_visible_child_name("subcats")
+                    self.pardusicb.set_visible(False)
+                    self.sortPardusAppsCombo.set_visible(False)
+                else:
+                    self.homestack.set_visible_child_name("pardushome")
+                    self.HomeCategoryFlowBox.unselect_all()
+                    self.EditorAppsIconView.unselect_all()
+                    self.menubackbutton.set_sensitive(False)
+            else:
+                self.homestack.set_visible_child_name("pardushome")
+                self.HomeCategoryFlowBox.unselect_all()
+                self.EditorAppsIconView.unselect_all()
+                self.menubackbutton.set_sensitive(False)
         elif self.homestack.get_visible_child_name() == "pardusappsdetail":
             if self.fromeditorapps or self.frommostapps:
                 self.homestack.set_visible_child_name("pardushome")
@@ -2314,19 +2331,31 @@ class MainWindow(object):
                 else:
                     return True
         else:
-            if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
-                if self.pardusicb.get_active():
-                    if self.Package.isinstalled(appname):
-                        return True
-                else:
-                    return True
+            if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
+                for i in self.applist:
+                    if i["name"] == appname:
+                        if i["external"]:
+                            if i["external"]["reponame"] == self.externalreponame:
+                                if self.pardusicb.get_active():
+                                    if self.Package.isinstalled(appname):
+                                        return True
+                                else:
+                                    return True
+
             else:
-                if self.PardusCurrentCategoryString in category:
+                if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
                     if self.pardusicb.get_active():
                         if self.Package.isinstalled(appname):
                             return True
                     else:
                         return True
+                else:
+                    if self.PardusCurrentCategoryString in category:
+                        if self.pardusicb.get_active():
+                            if self.Package.isinstalled(appname):
+                                return True
+                        else:
+                            return True
 
     # def isAppAvailable(self, package):
     #     inrepo = False
@@ -2460,23 +2489,60 @@ class MainWindow(object):
 
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         self.isPardusSearching = False
-        self.mainstack.set_visible_child_name("home")
-        self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
+        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
+        self.PardusCurrentCategoryExternal = self.get_category_name(self.PardusCurrentCategory)
 
-        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon = self.get_category_name(
-            self.PardusCurrentCategory)
-        print("home category selected " + str(self.PardusCurrentCategory) + " " + self.PardusCurrentCategoryString)
-
+        print("HomeCategory: {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
+                                              self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
-
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.homestack.set_visible_child_name("pardusapps")
+        if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
+            self.pardusicb.set_visible(False)
+            self.sortPardusAppsCombo.set_visible(False)
+            self.pardusAppsStack.set_visible_child_name("subcats")
+            for row in self.SubCategoryFlowBox:
+                self.SubCategoryFlowBox.remove(row)
+            subcats = []
+            for i in self.applist:
+                if i["external"]:
+                    for cat in i["category"]:
+                        if cat[self.locale] == self.PardusCurrentCategoryString:
+                                subcats.append(
+                                    {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
+                                     "reponame": i["external"]["reponame"]})
+            subcats = list({u['reponame']:u for u in subcats}.values())
+            for sub in subcats:
+                caticon = Gtk.Image.new()
+                caticon.set_from_pixbuf(self.getServerCatIcon(sub["reponame"]))
+                label = Gtk.Label.new()
+                label_text = str(sub[self.locale]).title()
+                label.set_text(" " + label_text)
+                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box1.pack_start(caticon, False, True, 0)
+                box1.pack_start(label, False, True, 0)
+                box1.name = sub["reponame"]
+                GLib.idle_add(self.SubCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
+            GLib.idle_add(self.SubCategoryFlowBox.show_all)
+        else:
+            self.pardusicb.set_visible(True)
+            self.sortPardusAppsCombo.set_visible(True)
+            self.pardusAppsStack.set_visible_child_name("normal")
+            self.PardusCategoryFilter.refilter()
+
+    def on_SubCategoryFlowBox_child_activated(self, flow_box, child):
+        # print(child.get_children()[0].name)
+        self.externalreponame = child.get_children()[0].name
+        self.pardusicb.set_visible(True)
+        self.sortPardusAppsCombo.set_visible(True)
         self.PardusCategoryFilter.refilter()
+        self.pardusAppsStack.set_visible_child_name("normal")
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
         print("on_HomeCategoryFlowBox_selected_children_changed")
