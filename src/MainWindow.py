@@ -1626,7 +1626,7 @@ class MainWindow(object):
                         self.dActionButton.set_sensitive(True)
                         self.dActionButton.set_label(_("Enable Repo"))
                         self.dActionButton.set_image(
-                            Gtk.Image.new_from_icon_name("value-increase-symbolic", Gtk.IconSize.BUTTON))
+                            Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON))
                         if self.component == "non-free":
                             self.dDisclaimerButton.set_visible(True)
                             type = _("Non-Free")
@@ -3816,7 +3816,7 @@ class MainWindow(object):
                         self.dActionButton.set_sensitive(True)
                         self.dActionButton.set_label(_("Enable Repo"))
                         self.dActionButton.set_image(
-                            Gtk.Image.new_from_icon_name("value-increase-symbolic", Gtk.IconSize.BUTTON))
+                            Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON))
 
         if repo == 2:  # repo apps
             if self.Package.isinstalled(actionedappname):
