@@ -180,6 +180,7 @@ class MainWindow(object):
         self.dtTotalRating = self.GtkBuilder.get_object("dtTotalRating")
         self.dtUserRating = self.GtkBuilder.get_object("dtUserRating")
         self.dtAverageRating = self.GtkBuilder.get_object("dtAverageRating")
+        self.dViewonweb = self.GtkBuilder.get_object("dViewonweb")
 
         self.dtStar1 = self.GtkBuilder.get_object("dtStar1")
         self.dtStar2 = self.GtkBuilder.get_object("dtStar2")
@@ -1536,6 +1537,8 @@ class MainWindow(object):
                 "<a title='{}' href='mailto:{}'>{}</a>".format(self.maintainer_mail, self.maintainer_mail, "E-Mail"))
             self.dWeb.set_markup(
                 "<a title='{}' href='{}'>{}</a>".format(self.maintainer_web, self.maintainer_web, "Website"))
+            self.dViewonweb.set_markup("{}<a href='https://apps.pardus.org.tr/app/{}'>apps.pardus.org.tr</a>{}".format(
+                _("View on "), self.appname, _(".")))
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
