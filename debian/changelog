@@ -1,3 +1,18 @@
+pardus-software (0.1.0~beta21) unstable; urgency=medium
+
+  * Update pardusapps description label margins
+  * Add gvfs-backends to Depends
+  * Add subcategories for external categories
+  * Update animation controls
+  * Update enable repo icon
+  * Update image loading spinner size and align
+  * Update prettyname splitting on PardusAppsDetail page
+  * Add view on web label to pardus apps detail page
+  * Update translations
+  * Update server url
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 22 Nov 2021 19:24:16 +0300
+
 pardus-software (0.1.0~beta20) unstable; urgency=medium
 
   * Fix Turkish character problem on app sorting
