@@ -1379,6 +1379,7 @@ class MainWindow(object):
         self.fromexternal = False
         self.activatestack.set_visible_child_name("main")
         mode = 0
+        prettyname = ""
         try:
             # detection of IconViews (PardusAppsIconView or EditorAppsIconView)
             iconview.get_model().get_name()
@@ -1516,7 +1517,8 @@ class MainWindow(object):
                 self.descSwBox.set_visible(False)
                 self.dDescriptionLabel.set_text(self.description)
             if len(prettyname.split(" ")) > 3:
-                prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" + " ".join(prettyname.split(" ")[3:])
+                prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" +" ".join(prettyname.split(" ")[3:6]) + \
+                             "\n" + " ".join(prettyname.split(" ")[6:])
             self.dName.set_markup("<span font='21'><b>" + prettyname + "</b></span>")
             self.dSection.set_markup("<i>" + self.section + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
