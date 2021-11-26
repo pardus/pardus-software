@@ -1797,6 +1797,7 @@ class MainWindow(object):
                 label2.set_text(comment["comment"])
                 label2.set_selectable(True)
                 label2.set_line_wrap(True)
+                label2.set_line_wrap_mode(2) # WORD_CHAR
                 box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                 box2.pack_start(label2, False, True, 0)
                 hsep = Gtk.HSeparator.new()
@@ -2078,6 +2079,7 @@ class MainWindow(object):
                     label2.set_text(str(comment["summary"]) + "\n" + str(comment["description"]))
                     label2.set_selectable(True)
                     label2.set_line_wrap(True)
+                    label2.set_line_wrap_mode(2) # WORD_CHAR
                     box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                     box2.pack_start(label2, False, True, 0)
                     hsep = Gtk.HSeparator.new()
