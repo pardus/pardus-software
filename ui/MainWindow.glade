@@ -5319,6 +5319,7 @@ This application served from Pardus non-free package repositories, so that the O
                                 <property name="can-focus">True</property>
                                 <property name="halign">end</property>
                                 <property name="valign">center</property>
+                                <property name="active">True</property>
                                 <signal name="state-set" handler="on_switchUSI_state_set" swapped="no"/>
                               </object>
                               <packing>
