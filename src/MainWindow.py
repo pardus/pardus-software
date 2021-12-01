@@ -230,6 +230,8 @@ class MainWindow(object):
         self.gcMoreButtonEN = self.GtkBuilder.get_object("gcMoreButtonEN")
         self.gcStack = self.GtkBuilder.get_object("gcStack")
         self.CommentsNotebook = self.GtkBuilder.get_object("CommentsNotebook")
+        self.gcInfoLabel = self.GtkBuilder.get_object("gcInfoLabel")
+        self.gcInfoLabel.set_markup("<small>{}</small>".format("These comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>."))
 
         self.wpcstar = 0
 
