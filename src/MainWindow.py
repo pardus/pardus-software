@@ -7,6 +7,7 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import os
+import re
 import subprocess
 import threading
 import netifaces
@@ -2049,7 +2050,7 @@ class MainWindow(object):
     def isCommentClean(self, content):
         if self.Server.connection and self.Server.badwords and content:
             for badword in self.Server.badwords:
-                if badword["word"] in str(content).lower():
+                if re.search(r'\b' + badword["word"] + r'\b', content):
                     return False
         return True
 
