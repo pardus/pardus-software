@@ -276,6 +276,7 @@ class MainWindow(object):
         self.switchEA = self.GtkBuilder.get_object("switchEA")
         self.switchSAA = self.GtkBuilder.get_object("switchSAA")
         self.switchHERA = self.GtkBuilder.get_object("switchHERA")
+        self.switchSGC = self.GtkBuilder.get_object("switchSGC")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
         self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
@@ -285,6 +286,7 @@ class MainWindow(object):
         self.tip_soaa = self.GtkBuilder.get_object("tip_soaa")
         self.tip_hera = self.GtkBuilder.get_object("tip_hera")
         self.tip_icons = self.GtkBuilder.get_object("tip_icons")
+        self.tip_sgc = self.GtkBuilder.get_object("tip_sgc")
         self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
         self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
         self.selecticonsBoxTopSeperator = self.GtkBuilder.get_object("selecticonsBoxTopSeperator")
@@ -621,6 +623,7 @@ class MainWindow(object):
         print("{} {}".format("config_availableapps", self.UserSettings.config_saa))
         print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
         print("{} {}".format("config_icon", self.UserSettings.config_icon))
+        print("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -1678,13 +1681,19 @@ class MainWindow(object):
             self.limit_tr = 10
             self.limit_en = 10
 
-            gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                       "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
-            self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, "tr")
+            if self.UserSettings.config_sgc:
+                self.CommentsNotebook.get_nth_page(1).show() # page_num 1 is Gnome Comments
 
-            gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                       "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
-            self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
+                gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
+                           "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
+                self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, "tr")
+
+                gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
+                           "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
+                self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
+            else:
+                self.CommentsNotebook.get_nth_page(1).hide() # page_num 1 is Gnome Comments
+                print("gnome comments disabled")
 
     def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
@@ -3048,6 +3057,7 @@ class MainWindow(object):
         self.switchEA.set_state(self.UserSettings.config_ea)
         self.switchSAA.set_state(self.UserSettings.config_saa)
         self.switchHERA.set_state(self.UserSettings.config_hera)
+        self.switchSGC.set_state(self.UserSettings.config_sgc)
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
@@ -3285,6 +3295,13 @@ class MainWindow(object):
                 ("<a href='https://github.com/zayronxio/Zafiro-icons'>Site</a>")
             ))
             self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_sgc":
+            self.PopoverPrefTip.set_relative_to(self.tip_sgc)
+            self.prefTipLabel.set_markup("{}\n{}".format(
+                _("Show gnome comments in app comments."),
+                _("GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>.")
+            ))
+            self.PopoverPrefTip.popup()
 
     def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
@@ -3292,7 +3309,8 @@ class MainWindow(object):
             print("Updating user icon state")
             try:
                 self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon)
+                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
+                                              self.UserSettings.config_sgc)
                 self.usersettings()
                 GLib.idle_add(self.PardusAppListStore.clear)
                 self.EditorListStore.clear()
@@ -3326,7 +3344,8 @@ class MainWindow(object):
             print("Updating user animation state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon)
+                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
+                                              self.UserSettings.config_sgc)
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
@@ -3338,7 +3357,8 @@ class MainWindow(object):
             print("Updating show available apps state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon)
+                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
+                                              self.UserSettings.config_sgc)
                 self.usersettings()
                 self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
             except Exception as e:
@@ -3363,7 +3383,8 @@ class MainWindow(object):
             print("Updating hide external apps state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                              self.UserSettings.config_saa, state, self.UserSettings.config_icon)
+                                              self.UserSettings.config_saa, state, self.UserSettings.config_icon,
+                                              self.UserSettings.config_sgc)
                 self.usersettings()
                 self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
             except Exception as e:
@@ -3388,14 +3409,23 @@ class MainWindow(object):
         if active != user_config_icon and active is not None:
             print("changing icons to " + str(combo_box.get_active_id()))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa,
-                                          self.UserSettings.config_hera, active)
+                                          self.UserSettings.config_saa, self.UserSettings.config_hera, active,
+                                          self.UserSettings.config_sgc)
             self.usersettings()
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
             self.setPardusCategories()
             self.setEditorApps()
             self.setMostApps()
+
+    def on_switchSGC_state_set(self, switch, state):
+        user_config_sgc = self.UserSettings.config_sgc
+        if state != user_config_sgc:
+            print("Updating show gnome apps state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_icon, state)
+            self.usersettings()
 
     def clearBoxes(self):
         self.EditorListStore.clear()

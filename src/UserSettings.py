@@ -41,13 +41,15 @@ class UserSettings(object):
         self.config_saa = None
         self.config_hera = None
         self.config_icon = None
+        self.config_sgc = None
 
     def createDefaultConfig(self, force=False):
         self.config['DEFAULT'] = {'UseServerIcons': 'yes',
                                   'Animations': 'yes',
                                   'ShowAvailableApps': 'yes',
                                   'HideExternalRepoApps': 'yes',
-                                  'IconName': 'default'}
+                                  'IconName': 'default',
+                                  'ShowGnomeComments': 'yes'}
 
         if not Path.is_file(Path(self.configdir + self.configfile)) or force:
             if self.createDir(self.configdir):
@@ -63,6 +65,7 @@ class UserSettings(object):
             self.config_saa = self.config.getboolean('DEFAULT', 'ShowAvailableApps')
             self.config_hera = self.config.getboolean('DEFAULT', 'HideExternalRepoApps')
             self.config_icon = self.config.get('DEFAULT', 'IconName')
+            self.config_sgc = self.config.getboolean('DEFAULT', 'ShowGnomeComments')
         except:
             print("user config read error ! Trying create defaults")
             # if not read; try to create defaults
@@ -71,17 +74,19 @@ class UserSettings(object):
             self.config_saa = True
             self.config_hera = True
             self.config_icon = "default"
+            self.config_sgc = True
             try:
                 self.createDefaultConfig(force=True)
             except Exception as e:
                 print("self.createDefaultConfig(force=True) : {}".format(e))
 
-    def writeConfig(self, srvicons, anims, avaiapps, extapps, iconname):
+    def writeConfig(self, srvicons, anims, avaiapps, extapps, iconname, gnomecom):
         self.config['DEFAULT'] = {'UseServerIcons': srvicons,
                                   'Animations': anims,
                                   'ShowAvailableApps': avaiapps,
                                   'HideExternalRepoApps': extapps,
-                                  'IconName': iconname}
+                                  'IconName': iconname,
+                                  'ShowGnomeComments': gnomecom}
         if self.createDir(self.configdir):
             with open(self.configdir + self.configfile, "w") as cf:
                 self.config.write(cf)
