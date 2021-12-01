@@ -56,6 +56,7 @@ class Server(object):
         self.servermd5 = []
         self.appversion = ""
         self.iconnames = ""
+        self.badwords = []
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"

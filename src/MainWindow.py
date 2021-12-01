@@ -826,6 +826,7 @@ class MainWindow(object):
                 self.Server.servermd5 = response["md5"]
                 self.Server.appversion = response["version"]
                 self.Server.iconnames = response["iconnames"]
+                self.Server.badwords = response["badwords"]
 
             if self.status_serverapps and self.status_servercats and self.status_serverhome:
                 self.Server.connection = True
@@ -2033,6 +2034,13 @@ class MainWindow(object):
             self.dGnomeBar4.set_fraction(0)
             self.dGnomeBar5.set_fraction(0)
 
+    def isCommentClean(self, content):
+        if self.Server.connection and self.Server.badwords and content:
+            for badword in self.Server.badwords:
+                if badword["word"] in str(content).lower():
+                    return False
+        return True
+
     def setGnomeComments(self, comments, appname="", lang=""):
 
         if lang == "tr":
@@ -2062,36 +2070,43 @@ class MainWindow(object):
                     self.gcMoreButtonEN.set_visible(False)
             for comment in comments:
                 if "rating" and "user_display" and "date_created" and "summary" and "description" in comment:
-                    self.setGnomeCommentStar(comment["rating"] / 20)
-                    label1 = Gtk.Label.new()
-                    label1.set_markup("<b>" + str(comment["user_display"]) + "</b>")
-                    labeldate = Gtk.Label.new()
-                    labeldate.set_text(str(datetime.fromtimestamp(comment["date_created"])))
-                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                    box1.pack_start(self.gcs1, False, True, 0)
-                    box1.pack_start(self.gcs2, False, True, 0)
-                    box1.pack_start(self.gcs3, False, True, 0)
-                    box1.pack_start(self.gcs4, False, True, 0)
-                    box1.pack_start(self.gcs5, False, True, 0)
-                    box1.pack_start(label1, False, True, 10)
-                    box1.pack_end(labeldate, False, True, 0)
-                    label2 = Gtk.Label.new()
-                    label2.set_text(str(comment["summary"]) + "\n" + str(comment["description"]))
-                    label2.set_selectable(True)
-                    label2.set_line_wrap(True)
-                    label2.set_line_wrap_mode(2) # WORD_CHAR
-                    box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                    box2.pack_start(label2, False, True, 0)
-                    hsep = Gtk.HSeparator.new()
-                    box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
-                    box.pack_start(box1, False, True, 5)
-                    box.pack_start(box2, False, True, 5)
-                    box.pack_start(hsep, False, True, 0)
+                    if self.isCommentClean(comment["summary"]) and self.isCommentClean(comment["description"]) and self.isCommentClean(comment["user_display"]):
+                        self.setGnomeCommentStar(comment["rating"] / 20)
+                        label1 = Gtk.Label.new()
+                        label1.set_markup("<b>" + str(comment["user_display"]) + "</b>")
+                        labeldate = Gtk.Label.new()
+                        labeldate.set_text(str(datetime.fromtimestamp(comment["date_created"])))
+                        box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                        box1.pack_start(self.gcs1, False, True, 0)
+                        box1.pack_start(self.gcs2, False, True, 0)
+                        box1.pack_start(self.gcs3, False, True, 0)
+                        box1.pack_start(self.gcs4, False, True, 0)
+                        box1.pack_start(self.gcs5, False, True, 0)
+                        box1.pack_start(label1, False, True, 10)
+                        box1.pack_end(labeldate, False, True, 0)
+                        label2 = Gtk.Label.new()
+                        label2.set_text(str(comment["summary"]) + "\n" + str(comment["description"]))
+                        label2.set_selectable(True)
+                        label2.set_line_wrap(True)
+                        label2.set_line_wrap_mode(2)  # WORD_CHAR
+                        box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                        box2.pack_start(label2, False, True, 0)
+                        hsep = Gtk.HSeparator.new()
+                        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
+                        box.pack_start(box1, False, True, 5)
+                        box.pack_start(box2, False, True, 5)
+                        box.pack_start(hsep, False, True, 0)
 
-                    if lang == "tr":
-                        self.GnomeCommentListBoxTR.add(box)
-                    elif lang == "en":
-                        self.GnomeCommentListBoxEN.add(box)
+                        if lang == "tr":
+                            self.GnomeCommentListBoxTR.add(box)
+                        elif lang == "en":
+                            self.GnomeCommentListBoxEN.add(box)
+                    else:
+                        try:
+                            print("Comment is not clean, app_id: {}, review_id : {}".format(
+                                comment["app_id"], comment["review_id"]))
+                        except Exception as e:
+                            print("{}".format(e))
 
         if lang == "tr":
             self.GnomeCommentListBoxTR.show_all()
