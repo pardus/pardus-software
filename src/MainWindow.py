@@ -3313,14 +3313,7 @@ class MainWindow(object):
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
                                               self.UserSettings.config_sgc)
                 self.usersettings()
-                GLib.idle_add(self.PardusAppListStore.clear)
-                self.EditorListStore.clear()
-                for row in self.HomeCategoryFlowBox:
-                    self.HomeCategoryFlowBox.remove(row)
-                for row in self.MostDownFlowBox:
-                    self.MostDownFlowBox.remove(row)
-                for row in self.MostRateFlowBox:
-                    self.MostRateFlowBox.remove(row)
+                GLib.idle_add(self.clearBoxes)
                 if state:
                     self.Server.getIcons(
                         self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
@@ -3365,14 +3358,7 @@ class MainWindow(object):
             except Exception as e:
                 self.preflabel.set_text(str(e))
 
-            GLib.idle_add(self.PardusAppListStore.clear)
-            self.EditorListStore.clear()
-            for row in self.HomeCategoryFlowBox:
-                self.HomeCategoryFlowBox.remove(row)
-            for row in self.MostDownFlowBox:
-                self.MostDownFlowBox.remove(row)
-            for row in self.MostRateFlowBox:
-                self.MostRateFlowBox.remove(row)
+            GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
             self.setPardusCategories()
             self.setEditorApps()
@@ -3391,14 +3377,7 @@ class MainWindow(object):
             except Exception as e:
                 self.preflabel.set_text(str(e))
 
-            GLib.idle_add(self.PardusAppListStore.clear)
-            self.EditorListStore.clear()
-            for row in self.HomeCategoryFlowBox:
-                self.HomeCategoryFlowBox.remove(row)
-            for row in self.MostDownFlowBox:
-                self.MostDownFlowBox.remove(row)
-            for row in self.MostRateFlowBox:
-                self.MostRateFlowBox.remove(row)
+            GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
             self.setPardusCategories()
             self.setEditorApps()
