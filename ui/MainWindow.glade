@@ -5766,7 +5766,15 @@ This application served from Pardus non-free package repositories, so that the O
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
+                          <object class="GtkLabel" id="prefServerLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>

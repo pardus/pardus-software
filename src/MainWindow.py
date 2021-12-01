@@ -279,6 +279,7 @@ class MainWindow(object):
         self.switchHERA = self.GtkBuilder.get_object("switchHERA")
         self.switchSGC = self.GtkBuilder.get_object("switchSGC")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
+        self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
         self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
         self.prefTipLabel = self.GtkBuilder.get_object("prefTipLabel")
@@ -625,6 +626,7 @@ class MainWindow(object):
         print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
         print("{} {}".format("config_icon", self.UserSettings.config_icon))
         print("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
+        print("{} {}".format("config_serverurl", self.UserSettings.config_server_url))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -784,6 +786,10 @@ class MainWindow(object):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting applications from server")))
         # self.splashlabel.set_markup()
         self.Server = Server()
+
+        # set server url from config
+        self.Server.serverurl = self.UserSettings.config_server_url
+
         self.Server.ServerAppsCB = self.ServerAppsCB
         self.Server.ServerIconsCB = self.ServerIconsCB
         self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
@@ -3059,6 +3065,8 @@ class MainWindow(object):
         self.switchSAA.set_state(self.UserSettings.config_saa)
         self.switchHERA.set_state(self.UserSettings.config_hera)
         self.switchSGC.set_state(self.UserSettings.config_sgc)
+        self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
+            _("Server Address"), self.UserSettings.config_server_url))
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
