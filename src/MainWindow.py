@@ -571,6 +571,7 @@ class MainWindow(object):
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
                         self.fromdetails = True
                         self.detailsappname = app
+                        self.mostappname = None
                         GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
             except Exception as e:
                 print(str(e))
@@ -3551,6 +3552,7 @@ class MainWindow(object):
         if len(selected_items) == 1:
             treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
             ui_appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
+
         if len(editor_selected_items) == 1:
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             ui_appname = self.EditorListStore.get(treeiter, 1)[0]
