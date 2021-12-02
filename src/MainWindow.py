@@ -627,7 +627,6 @@ class MainWindow(object):
         print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
         print("{} {}".format("config_icon", self.UserSettings.config_icon))
         print("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
-        print("{} {}".format("config_serverurl", self.UserSettings.config_server_url))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -789,7 +788,12 @@ class MainWindow(object):
         self.Server = Server()
 
         # set server url from config
-        self.Server.serverurl = self.UserSettings.config_server_url
+        try:
+            self.Server.serverurl = open("/etc/pardus/pardus-software.conf", "r").read().strip()
+        except Exception as e:
+            print("Error getting server url from conf so setting to https://apps.pardus.org.tr")
+            print("{}".format(e))
+            self.Server.serverurl = "https://apps.pardus.org.tr"
 
         self.Server.ServerAppsCB = self.ServerAppsCB
         self.Server.ServerIconsCB = self.ServerIconsCB
@@ -3067,7 +3071,7 @@ class MainWindow(object):
         self.switchHERA.set_state(self.UserSettings.config_hera)
         self.switchSGC.set_state(self.UserSettings.config_sgc)
         self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
-            _("Server Address"), self.UserSettings.config_server_url))
+            _("Server Address"), self.Server.serverurl))
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")

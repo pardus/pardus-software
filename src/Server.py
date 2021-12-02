@@ -21,7 +21,7 @@ from gi.repository import GLib, Gio, Soup
 
 class Server(object):
     def __init__(self):
-        self.serverurl = "https://apps.pardus.org.tr"
+        self.serverurl = "https://" # This is setting from MainWindow
         self.serverapps = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
         self.serverhomepage = "/api/v2/homepage"

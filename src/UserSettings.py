@@ -42,7 +42,6 @@ class UserSettings(object):
         self.config_hera = None
         self.config_icon = None
         self.config_sgc = None
-        self.config_server_url = None
 
     def createDefaultConfig(self, force=False):
         self.config['DEFAULT'] = {'UseServerIcons': 'yes',
@@ -50,8 +49,7 @@ class UserSettings(object):
                                   'ShowAvailableApps': 'yes',
                                   'HideExternalRepoApps': 'yes',
                                   'IconName': 'default',
-                                  'ShowGnomeComments': 'yes',
-                                  'ServerUrl': 'https://apps.pardus.org.tr'}
+                                  'ShowGnomeComments': 'yes'}
 
         if not Path.is_file(Path(self.configdir + self.configfile)) or force:
             if self.createDir(self.configdir):
@@ -68,7 +66,6 @@ class UserSettings(object):
             self.config_hera = self.config.getboolean('DEFAULT', 'HideExternalRepoApps')
             self.config_icon = self.config.get('DEFAULT', 'IconName')
             self.config_sgc = self.config.getboolean('DEFAULT', 'ShowGnomeComments')
-            self.config_server_url = self.config.get('DEFAULT', 'ServerUrl')
         except Exception as e:
             print("{}".format(e))
             print("user config read error ! Trying create defaults")
@@ -79,7 +76,6 @@ class UserSettings(object):
             self.config_hera = True
             self.config_icon = "default"
             self.config_sgc = True
-            self.config_server_url = "https://apps.pardus.org.tr"
             try:
                 self.createDefaultConfig(force=True)
             except Exception as e:
@@ -91,8 +87,7 @@ class UserSettings(object):
                                   'ShowAvailableApps': avaiapps,
                                   'HideExternalRepoApps': extapps,
                                   'IconName': iconname,
-                                  'ShowGnomeComments': gnomecom,
-                                  'ServerUrl': self.config_server_url}
+                                  'ShowGnomeComments': gnomecom}
         if self.createDir(self.configdir):
             with open(self.configdir + self.configfile, "w") as cf:
                 self.config.write(cf)

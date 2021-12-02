@@ -4,4 +4,9 @@ update-mime-database /usr/share/mime || true
 
 update-desktop-database || true
 
+if ! [[ -f "/etc/pardus/pardus-software.conf" ]]; then
+	mkdir -p "/etc/pardus"
+	echo "https://apps.pardus.org.tr" > "/etc/pardus/pardus-software.conf"
+fi
+
 exit 0
