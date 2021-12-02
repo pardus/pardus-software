@@ -3283,7 +3283,7 @@ class MainWindow(object):
             self.PopoverPrefTip.set_relative_to(self.tip_hera)
             self.prefTipLabel.set_text("{}\n{}".format(
                 _("Hide applications offered from external repositories (other than Official Pardus repository)."),
-                _("For example, MEB education applications of Publishing Houses in the Meb Education category.")
+                _("For example, publisher's applications in the Publishers category.")
             ))
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_icons":
