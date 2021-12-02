@@ -1,3 +1,23 @@
+pardus-software (0.1.0~beta22) unstable; urgency=medium
+
+  * Add line_wrap_mode to comments
+  * Add badword filter for gnome comments
+  * Add odrs info label to gnome comments
+  * Fix typo
+  * Add show gnome comments switch to settings
+  * Use regex on badword search function for exact match
+  * Update translations
+  * Use clearBoxes func on switch state sets
+  * Add serverurl config
+  * Add strict as True to config parser
+  * Fix mostappname control on controlargs
+  * Add lang to print status code
+  * Update serverurl config method
+  * Update translations
+  * Update translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 02 Dec 2021 16:03:45 +0300
+
 pardus-software (0.1.0~beta21) unstable; urgency=medium
 
   * Update pardusapps description label margins
