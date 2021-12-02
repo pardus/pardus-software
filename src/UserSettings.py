@@ -35,7 +35,7 @@ class UserSettings(object):
         userhome = str(Path.home())
         self.configdir = userhome + "/.config/pardus-software/"
         self.configfile = "settings.ini"
-        self.config = configparser.ConfigParser()
+        self.config = configparser.ConfigParser(strict=False)
         self.config_usi = None
         self.config_ea = None
         self.config_saa = None
@@ -69,7 +69,8 @@ class UserSettings(object):
             self.config_icon = self.config.get('DEFAULT', 'IconName')
             self.config_sgc = self.config.getboolean('DEFAULT', 'ShowGnomeComments')
             self.config_server_url = self.config.get('DEFAULT', 'ServerUrl')
-        except:
+        except Exception as e:
+            print("{}".format(e))
             print("user config read error ! Trying create defaults")
             # if not read; try to create defaults
             self.config_usi = True
