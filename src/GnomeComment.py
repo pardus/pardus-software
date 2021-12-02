@@ -34,7 +34,7 @@ class GnomeComment(object):
             return False
 
         status_code = message.status_code
-        print("gnome comments server status code : {}".format(status_code))
+        print("gnome comments server status code : {}, lang : {}".format(status_code, lang))
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)
