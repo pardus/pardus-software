@@ -278,6 +278,7 @@ class MainWindow(object):
         self.switchSAA = self.GtkBuilder.get_object("switchSAA")
         self.switchHERA = self.GtkBuilder.get_object("switchHERA")
         self.switchSGC = self.GtkBuilder.get_object("switchSGC")
+        self.switchUDT = self.GtkBuilder.get_object("switchUDT")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
         self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
@@ -289,6 +290,7 @@ class MainWindow(object):
         self.tip_hera = self.GtkBuilder.get_object("tip_hera")
         self.tip_icons = self.GtkBuilder.get_object("tip_icons")
         self.tip_sgc = self.GtkBuilder.get_object("tip_sgc")
+        self.tip_udt = self.GtkBuilder.get_object("tip_udt")
         self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
         self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
         self.selecticonsBoxTopSeperator = self.GtkBuilder.get_object("selecticonsBoxTopSeperator")
@@ -481,6 +483,11 @@ class MainWindow(object):
         self.GnomeComment = GnomeComment()
         self.GnomeComment.gComment = self.gComment
 
+        self.usersettings()
+
+        if self.UserSettings.config_udt:
+            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
+
         self.MainWindow.show_all()
 
         p1 = threading.Thread(target=self.worker)
@@ -534,7 +541,6 @@ class MainWindow(object):
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
-        self.usersettings()
         self.setAnimations()
         self.package()
         self.server()
@@ -627,6 +633,7 @@ class MainWindow(object):
         print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
         print("{} {}".format("config_icon", self.UserSettings.config_icon))
         print("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
+        print("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -3070,6 +3077,7 @@ class MainWindow(object):
         self.switchSAA.set_state(self.UserSettings.config_saa)
         self.switchHERA.set_state(self.UserSettings.config_hera)
         self.switchSGC.set_state(self.UserSettings.config_sgc)
+        self.switchUDT.set_state(self.UserSettings.config_udt)
         self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
             _("Server Address"), self.Server.serverurl))
         self.topbutton2.get_style_context().remove_class("suggested-action")
@@ -3316,6 +3324,13 @@ class MainWindow(object):
                 _("GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>.")
             ))
             self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_udt":
+            self.PopoverPrefTip.set_relative_to(self.tip_udt)
+            self.prefTipLabel.set_markup("{}\n{}".format(
+                _("Whether the application prefers to use a dark theme."),
+                _("If a GTK+ theme includes a dark variant, it will be used instead of the configured theme.")
+            ))
+            self.PopoverPrefTip.popup()
 
     def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
@@ -3324,7 +3339,7 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
                 self.usersettings()
                 GLib.idle_add(self.clearBoxes)
                 if state:
@@ -3352,7 +3367,7 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
@@ -3365,7 +3380,7 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
                 self.usersettings()
                 self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
             except Exception as e:
@@ -3384,7 +3399,7 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                               self.UserSettings.config_saa, state, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
                 self.usersettings()
                 self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
             except Exception as e:
@@ -3403,7 +3418,7 @@ class MainWindow(object):
             print("changing icons to " + str(combo_box.get_active_id()))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera, active,
-                                          self.UserSettings.config_sgc)
+                                          self.UserSettings.config_sgc, self.UserSettings.config_udt)
             self.usersettings()
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
@@ -3417,8 +3432,22 @@ class MainWindow(object):
             print("Updating show gnome apps state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, state)
+                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt)
             self.usersettings()
+
+    def on_switchUDT_state_set(self, switch, state):
+        user_config_udt = self.UserSettings.config_udt
+        if state != user_config_udt:
+            print("Updating use dark theme state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state)
+        if state:
+            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
+        else:
+            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = False
+
+        self.usersettings()
 
     def clearBoxes(self):
         self.EditorListStore.clear()
