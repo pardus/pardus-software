@@ -897,15 +897,24 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="orientation">vertical</property>
                                         <property name="spacing">10</property>
                                         <child>
-                                          <object class="GtkLabel">
+                                          <object class="GtkButton" id="mdabutton">
                                             <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
+                                            <property name="can-focus">True</property>
+                                            <property name="receives-default">True</property>
                                             <property name="halign">center</property>
-                                            <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Most Downloaded Apps</property>
-                                            <attributes>
-                                              <attribute name="weight" value="bold"/>
-                                            </attributes>
+                                            <property name="valign">center</property>
+                                            <property name="relief">none</property>
+                                            <signal name="clicked" handler="on_mdabutton_clicked" swapped="no"/>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="label" translatable="yes">Most Downloaded Apps</property>
+                                                <attributes>
+                                                  <attribute name="weight" value="bold"/>
+                                                </attributes>
+                                              </object>
+                                            </child>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -957,15 +966,24 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="orientation">vertical</property>
                                         <property name="spacing">10</property>
                                         <child>
-                                          <object class="GtkLabel">
+                                          <object class="GtkButton" id="mrabutton">
                                             <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
+                                            <property name="can-focus">True</property>
+                                            <property name="receives-default">True</property>
                                             <property name="halign">center</property>
-                                            <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Most Rated Apps</property>
-                                            <attributes>
-                                              <attribute name="weight" value="bold"/>
-                                            </attributes>
+                                            <property name="valign">center</property>
+                                            <property name="relief">none</property>
+                                            <signal name="clicked" handler="on_mrabutton_clicked" swapped="no"/>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="label" translatable="yes">Most Rated Apps</property>
+                                                <attributes>
+                                                  <attribute name="weight" value="bold"/>
+                                                </attributes>
+                                              </object>
+                                            </child>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>

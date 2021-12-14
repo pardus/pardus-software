@@ -3612,6 +3612,38 @@ class MainWindow(object):
         p1.daemon = True
         p1.start()
 
+    def on_mdabutton_clicked(self, button):
+        self.PardusCurrentCategoryString = "all"
+        self.PardusCurrentCategoryIcon = "all"
+        if self.UserSettings.config_usi:
+            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
+        else:
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
+        self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.PardusCategoryFilter.refilter()
+        if self.sortPardusAppsCombo.get_active != 1:
+            self.sortPardusAppsCombo.set_active(1)
+        if self.pardusicb.get_active():
+            self.pardusicb.set_active(False)
+        self.homestack.set_visible_child_name("pardusapps")
+
+    def on_mrabutton_clicked(self, button):
+        self.PardusCurrentCategoryString = "all"
+        self.PardusCurrentCategoryIcon = "all"
+        if self.UserSettings.config_usi:
+            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
+        else:
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
+        self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.PardusCategoryFilter.refilter()
+        if self.sortPardusAppsCombo.get_active != 2:
+            self.sortPardusAppsCombo.set_active(2)
+        if self.pardusicb.get_active():
+            self.pardusicb.set_active(False)
+        self.homestack.set_visible_child_name("pardusapps")
+
     def actionPackage(self, appname, command):
 
         self.inprogress = True
