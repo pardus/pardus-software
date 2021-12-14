@@ -425,6 +425,11 @@ class MainWindow(object):
         self.mostappname = None
         self.detailsappname = None
 
+        self.applist = []
+        self.fullapplist = []
+        self.catlist = []
+        self.fullcatlist = []
+
         self.statusoftopsearch = self.topsearchbutton.get_active()
 
         self.errormessage = ""
