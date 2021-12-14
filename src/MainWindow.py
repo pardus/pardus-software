@@ -607,6 +607,8 @@ class MainWindow(object):
 
         if not self.Server.connection:
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
+        else:
+            GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
 
         print("page setted to normal")
 
@@ -3598,6 +3600,12 @@ class MainWindow(object):
             ui_appname = self.repoappname
         print("UI APP = " + ui_appname)
         return ui_appname
+
+    def on_retrybutton_clicked(self, button):
+        self.mainstack.set_visible_child_name("splash")
+        p1 = threading.Thread(target=self.worker)
+        p1.daemon = True
+        p1.start()
 
     def actionPackage(self, appname, command):
 

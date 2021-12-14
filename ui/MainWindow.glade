@@ -136,6 +136,11 @@
     <property name="can-focus">False</property>
     <property name="icon-name">go-next-symbolic</property>
   </object>
+  <object class="GtkImage" id="retryimage">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">view-refresh-symbolic</property>
+  </object>
   <object class="GtkImage" id="searchimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -5252,11 +5257,10 @@ This application served from Pardus non-free package repositories, so that the O
                   <object class="GtkBox" id="NoServerBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
                     <property name="orientation">vertical</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
+                    <property name="spacing">21</property>
                     <child>
                       <object class="GtkLabel" id="noserverlabel">
                         <property name="visible">True</property>
@@ -5270,7 +5274,21 @@ This application served from Pardus non-free package repositories, so that the O
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <object class="GtkButton" id="retrybutton">
+                        <property name="label" translatable="yes">Retry</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="image">retryimage</property>
+                        <signal name="clicked" handler="on_retrybutton_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
