@@ -3110,6 +3110,23 @@ class MainWindow(object):
             self.selecticonsBoxTopSeperator.set_visible(False)
             self.selecticonsBox.set_visible(False)
 
+    def on_menu_myapps_clicked(self, button):
+        self.PopoverMenu.popdown()
+        self.PardusCurrentCategoryString = "all"
+        self.PardusCurrentCategoryIcon = "all"
+        if self.UserSettings.config_usi:
+            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
+        else:
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
+        self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.PardusCategoryFilter.refilter()
+        if self.sortPardusAppsCombo.get_active != 0:
+            self.sortPardusAppsCombo.set_active(0)
+        if not self.pardusicb.get_active():
+            self.pardusicb.set_active(True)
+        self.homestack.set_visible_child_name("pardusapps")
+
     def on_menu_updates_clicked(self, button):
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
