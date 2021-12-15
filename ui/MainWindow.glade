@@ -759,7 +759,7 @@ so that the OS has nothing to do with the health of the application.</property>
                     <property name="margin-start">13</property>
                     <property name="margin-end">13</property>
                     <property name="orientation">vertical</property>
-                    <property name="spacing">7</property>
+                    <property name="spacing">8</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -895,7 +895,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="orientation">vertical</property>
-                                        <property name="spacing">10</property>
+                                        <property name="spacing">5</property>
                                         <child>
                                           <object class="GtkButton" id="mdabutton">
                                             <property name="visible">True</property>
@@ -929,8 +929,8 @@ so that the OS has nothing to do with the health of the application.</property>
                                             <property name="halign">center</property>
                                             <property name="hexpand">True</property>
                                             <property name="homogeneous">True</property>
-                                            <property name="column-spacing">7</property>
-                                            <property name="row-spacing">7</property>
+                                            <property name="column-spacing">5</property>
+                                            <property name="row-spacing">5</property>
                                             <property name="max-children-per-line">3</property>
                                             <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
                                           </object>
@@ -964,7 +964,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="orientation">vertical</property>
-                                        <property name="spacing">10</property>
+                                        <property name="spacing">5</property>
                                         <child>
                                           <object class="GtkButton" id="mrabutton">
                                             <property name="visible">True</property>
@@ -998,8 +998,8 @@ so that the OS has nothing to do with the health of the application.</property>
                                             <property name="halign">center</property>
                                             <property name="hexpand">True</property>
                                             <property name="homogeneous">True</property>
-                                            <property name="column-spacing">7</property>
-                                            <property name="row-spacing">7</property>
+                                            <property name="column-spacing">5</property>
+                                            <property name="row-spacing">5</property>
                                             <property name="max-children-per-line">3</property>
                                             <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
                                           </object>
@@ -1055,12 +1055,12 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="halign">center</property>
-                                <property name="spacing">7</property>
+                                <property name="spacing">8</property>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="spacing">7</property>
+                                    <property name="spacing">8</property>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
@@ -1109,7 +1109,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="spacing">7</property>
+                                    <property name="spacing">8</property>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
@@ -1759,7 +1759,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
                                             <property name="halign">center</property>
-                                            <property name="spacing">7</property>
+                                            <property name="spacing">5</property>
                                             <child>
                                               <object class="GtkLabel" id="dtAverageRating">
                                                 <property name="visible">True</property>
@@ -1920,7 +1920,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">center</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">5</property>
                                         <child>
                                           <object class="GtkLabel" id="dtUserRating">
                                             <property name="visible">True</property>
@@ -1946,7 +1946,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">center</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">5</property>
                                         <child>
                                           <object class="GtkImage">
                                             <property name="visible">True</property>
@@ -2153,7 +2153,7 @@ This application served from Pardus non-free package repositories, so that the O
                             <property name="can-focus">False</property>
                             <property name="valign">center</property>
                             <property name="orientation">vertical</property>
-                            <property name="spacing">7</property>
+                            <property name="spacing">8</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
@@ -2196,7 +2196,7 @@ This application served from Pardus non-free package repositories, so that the O
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="halign">center</property>
-                                <property name="spacing">23</property>
+                                <property name="spacing">21</property>
                                 <child>
                                   <object class="GtkButton" id="activate_no_button">
                                     <property name="label" translatable="yes">No</property>
@@ -3237,7 +3237,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="margin-start">13</property>
-                                                    <property name="spacing">7</property>
+                                                    <property name="spacing">8</property>
                                                     <child>
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
@@ -3354,7 +3354,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                     <property name="can-focus">False</property>
                                                     <property name="margin-start">13</property>
                                                     <property name="margin-end">13</property>
-                                                    <property name="spacing">23</property>
+                                                    <property name="spacing">21</property>
                                                     <property name="homogeneous">True</property>
                                                     <child>
                                                       <object class="GtkFrame">
@@ -3382,7 +3382,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="orientation">vertical</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkLabel" id="dPardusRating">
                                                             <property name="visible">True</property>
@@ -3401,7 +3401,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -3511,7 +3511,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -3621,7 +3621,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -3732,7 +3732,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -3842,7 +3842,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -3999,7 +3999,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="orientation">vertical</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkLabel" id="dGnomeRating">
                                                             <property name="visible">True</property>
@@ -4018,7 +4018,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -4128,7 +4128,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -4238,7 +4238,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -4349,7 +4349,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -4459,7 +4459,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="spacing">7</property>
+                                                            <property name="spacing">8</property>
                                                             <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
@@ -5319,9 +5319,9 @@ This application served from Pardus non-free package repositories, so that the O
                   <object class="GtkBox" id="PreferencesBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-top">33</property>
+                    <property name="margin-top">34</property>
                     <property name="orientation">vertical</property>
-                    <property name="spacing">33</property>
+                    <property name="spacing">21</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -5394,17 +5394,6 @@ This application served from Pardus non-free package repositories, so that the O
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
@@ -5465,17 +5454,6 @@ This application served from Pardus non-free package repositories, so that the O
                             <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">3</property>
                           </packing>
                         </child>
                         <child>
@@ -5542,17 +5520,6 @@ This application served from Pardus non-free package repositories, so that the O
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">5</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
@@ -5613,17 +5580,6 @@ This application served from Pardus non-free package repositories, so that the O
                             <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">6</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">7</property>
                           </packing>
                         </child>
                         <child>
@@ -5690,17 +5646,6 @@ This application served from Pardus non-free package repositories, so that the O
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">9</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
@@ -5760,17 +5705,6 @@ This application served from Pardus non-free package repositories, so that the O
                             <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">10</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator" id="selecticonsBoxTopSeperator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">11</property>
                           </packing>
                         </child>
                         <child>
@@ -6004,7 +5938,7 @@ This application served from Pardus non-free package repositories, so that the O
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
-                            <property name="spacing">7</property>
+                            <property name="spacing">8</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
@@ -6025,7 +5959,7 @@ This application served from Pardus non-free package repositories, so that the O
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="halign">center</property>
-                                <property name="spacing">23</property>
+                                <property name="spacing">21</property>
                                 <child>
                                   <object class="GtkButton" id="prefconfirm_cancelbutton">
                                     <property name="label" translatable="yes">Cancel</property>
@@ -6136,7 +6070,7 @@ This application served from Pardus non-free package repositories, so that the O
                     <property name="margin-top">26</property>
                     <property name="margin-bottom">13</property>
                     <property name="orientation">vertical</property>
-                    <property name="spacing">26</property>
+                    <property name="spacing">21</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -6542,7 +6476,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6581,7 +6515,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6619,7 +6553,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6677,7 +6611,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6735,7 +6669,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6774,7 +6708,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6832,7 +6766,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6872,7 +6806,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6911,7 +6845,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6951,7 +6885,7 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <property name="homogeneous">True</property>
                                         <child>
                                           <object class="GtkLabel">
@@ -6992,7 +6926,7 @@ This application served from Pardus non-free package repositories, so that the O
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">center</property>
-                                        <property name="spacing">7</property>
+                                        <property name="spacing">8</property>
                                         <child>
                                           <object class="GtkCheckButton" id="SuggestInRepo">
                                             <property name="label" translatable="yes">Is the application available in Pardus repositories ?</property>

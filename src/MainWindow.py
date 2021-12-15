@@ -293,7 +293,6 @@ class MainWindow(object):
         self.tip_udt = self.GtkBuilder.get_object("tip_udt")
         self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
         self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
-        self.selecticonsBoxTopSeperator = self.GtkBuilder.get_object("selecticonsBoxTopSeperator")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
 
@@ -3101,7 +3100,6 @@ class MainWindow(object):
 
     def setSelectIcons(self):
         if self.UserSettings.config_usi:
-            self.selecticonsBoxTopSeperator.set_visible(True)
             self.selecticonsBox.set_visible(True)
             self.setServerIconCombo.remove_all()
             iconnames = self.Server.iconnames.split(",")
@@ -3111,7 +3109,6 @@ class MainWindow(object):
             user_config_icon = self.UserSettings.config_icon
             self.setServerIconCombo.set_active_id(user_config_icon)
         else:
-            self.selecticonsBoxTopSeperator.set_visible(False)
             self.selecticonsBox.set_visible(False)
 
     def on_menu_myapps_clicked(self, button):
