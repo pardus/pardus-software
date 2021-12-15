@@ -5893,7 +5893,7 @@ This application served from Pardus non-free package repositories, so that the O
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">end</property>
-                                    <property name="label" translatable="yes">Correct Package Manager Sources List</property>
+                                    <property name="label" translatable="yes">Fix Package Manager Sources List</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -5903,7 +5903,7 @@ This application served from Pardus non-free package repositories, so that the O
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="prefcorrectbutton">
-                                    <property name="label" translatable="yes">Correct</property>
+                                    <property name="label" translatable="yes">Fix</property>
                                     <property name="width-request">125</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
@@ -5945,7 +5945,7 @@ This application served from Pardus non-free package repositories, so that the O
                                 <property name="can-focus">False</property>
                                 <property name="margin-start">23</property>
                                 <property name="margin-end">23</property>
-                                <property name="label" translatable="yes">Corrects the system sources list that used by package manager. This process will revert all the changes have been done and will use only Pardus Official Repository source addresses. Use with caution.</property>
+                                <property name="label" translatable="yes">Fixes the system sources list that used by package manager. This process will revert all the changes have been done and will use only Pardus Official Repository source addresses. Use with caution.</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>

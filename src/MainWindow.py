@@ -4060,7 +4060,7 @@ class MainWindow(object):
 
         if self.correctsourcesclicked and status == 0:
             self.preflabel.set_markup("{}\n{}\n<span weight='bold'>{}</span>".format(
-                _("Correcting of system package manager sources list is done."),
+                _("Fixing of system package manager sources list is done."),
                 _("You can now update package manager cache."),
                 _("Pardus Software Center > Menu > Updates > Update Package Cache")))
 
