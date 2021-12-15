@@ -421,6 +421,7 @@ class MainWindow(object):
         self.frommostapps = False
         self.fromrepoapps = False
         self.fromdetails = False
+        self.myapps_clicked = False
 
         self.mostappname = None
         self.detailsappname = None
@@ -2572,6 +2573,9 @@ class MainWindow(object):
         self.MostRateFlowBox.unselect_all()
 
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
+        if self.pardusicb.get_active() and self.myapps_clicked:
+            self.pardusicb.set_active(False)
+            self.myapps_clicked = False
         self.isPardusSearching = False
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
@@ -3111,20 +3115,24 @@ class MainWindow(object):
             self.selecticonsBox.set_visible(False)
 
     def on_menu_myapps_clicked(self, button):
+        self.myapps_clicked = True
         self.PopoverMenu.popdown()
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
+        self.PardusCurrentCategorySubCats = False
+        self.PardusCurrentCategoryExternal = False
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
-        self.PardusCategoryFilter.refilter()
         if self.sortPardusAppsCombo.get_active != 0:
             self.sortPardusAppsCombo.set_active(0)
         if not self.pardusicb.get_active():
             self.pardusicb.set_active(True)
+        self.PardusCategoryFilter.refilter()
+        self.pardusAppsStack.set_visible_child_name("normal")
         self.homestack.set_visible_child_name("pardusapps")
 
     def on_menu_updates_clicked(self, button):
