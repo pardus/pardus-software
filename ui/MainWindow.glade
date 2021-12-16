@@ -838,8 +838,8 @@ so that the OS has nothing to do with the health of the application.</property>
                             <property name="halign">center</property>
                             <property name="hexpand">True</property>
                             <property name="homogeneous">True</property>
-                            <property name="column-spacing">7</property>
-                            <property name="row-spacing">7</property>
+                            <property name="column-spacing">5</property>
+                            <property name="row-spacing">5</property>
                             <property name="min-children-per-line">3</property>
                             <property name="max-children-per-line">50</property>
                             <signal name="child-activated" handler="on_HomeCategoryFlowBox_child_activated" swapped="no"/>

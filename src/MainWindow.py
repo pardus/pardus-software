@@ -987,6 +987,7 @@ class MainWindow(object):
 
     def setPardusCategories(self):
         if self.Server.connection:
+            self.catbuttons = []
             self.categories = []
             for cat in self.catlist:
                 self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"], "subcats": cat["subcats"]})
@@ -995,35 +996,92 @@ class MainWindow(object):
                 self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False})
             else:
                 self.categories.insert(0, {"name": "all", "icon": "all", "external": False, "subcats": False})
-            if self.UserSettings.config_usi:
-                print("User want to use server icons [cat]")
 
-                for cat in self.categories:
-                    caticon = Gtk.Image.new()
+            for cat in self.categories:
+                caticon = Gtk.Image.new()
+                if self.UserSettings.config_usi:
                     caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
-                    label = Gtk.Label.new()
-                    label_text = str(cat["name"]).title()
-                    label.set_text(" " + label_text)
-                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                    box1.pack_start(caticon, False, True, 0)
-                    box1.pack_start(label, False, True, 0)
-                    box1.set_name("homecats")
-                    GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
-            else:
-                print("User want to use system icons [cat]")
-                for cat in self.categories:
-                    caticon = Gtk.Image.new()
+                else:
                     caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"]))
-                    label = Gtk.Label.new()
-                    label_text = str(cat["name"]).title()
-                    label.set_text(" " + label_text)
-                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                    box1.pack_start(caticon, False, True, 0)
-                    box1.pack_start(label, False, True, 0)
-                    box1.set_name("homecats")
-                    GLib.idle_add(self.HomeCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
+                label = Gtk.Label.new()
+                label_text = str(cat["name"]).title()
+                label.set_text(" " + label_text)
+                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box1.pack_start(caticon, False, True, 0)
+                box1.pack_start(label, False, True, 0)
+                box1.set_name("homecats")
+                button = Gtk.Button.new()
+                button.add(box1)
+                button.set_relief(Gtk.ReliefStyle.NONE)
+                button.connect('clicked', self.on_catbutton_clicked)
+                button.name = cat["name"]
+                self.catbuttons.append(button)
+                GLib.idle_add(self.HomeCategoryFlowBox.insert, button, GLib.PRIORITY_DEFAULT_IDLE)
 
             GLib.idle_add(self.HomeCategoryFlowBox.show_all)
+
+    def on_catbutton_clicked(self, button):
+
+        print("on_catbutton_clicked")
+        if self.pardusicb.get_active() and self.myapps_clicked:
+            self.pardusicb.set_active(False)
+            self.myapps_clicked = False
+
+        if self.mda_clicked and self.sortPardusAppsCombo.get_active() == 1:
+            self.sortPardusAppsCombo.set_active(0)
+            self.mda_clicked = False
+
+        if self.mra_clicked and self.sortPardusAppsCombo.get_active() == 2:
+            self.sortPardusAppsCombo.set_active(0)
+            self.mra_clicked = False
+
+        self.isPardusSearching = False
+        self.menubackbutton.set_sensitive(True)
+        # self.PardusCurrentCategory = i
+        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
+        self.PardusCurrentCategoryExternal = self.get_category_name_from_button(button.name)
+
+        print("HomeCategory: {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
+                                              self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
+        if self.UserSettings.config_usi:
+            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
+        else:
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
+        self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.homestack.set_visible_child_name("pardusapps")
+        if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
+            self.pardusicb.set_visible(False)
+            self.sortPardusAppsCombo.set_visible(False)
+            self.pardusAppsStack.set_visible_child_name("subcats")
+            for row in self.SubCategoryFlowBox:
+                self.SubCategoryFlowBox.remove(row)
+            subcats = []
+            for i in self.applist:
+                if i["external"]:
+                    for cat in i["category"]:
+                        if cat[self.locale] == self.PardusCurrentCategoryString:
+                                subcats.append(
+                                    {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
+                                     "reponame": i["external"]["reponame"]})
+            subcats = list({u['reponame']:u for u in subcats}.values())
+            for sub in subcats:
+                caticon = Gtk.Image.new()
+                caticon.set_from_pixbuf(self.getServerCatIcon(sub["reponame"]))
+                label = Gtk.Label.new()
+                label_text = str(sub[self.locale]).title()
+                label.set_text(" " + label_text)
+                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box1.pack_start(caticon, False, True, 0)
+                box1.pack_start(label, False, True, 0)
+                box1.name = sub["reponame"]
+                GLib.idle_add(self.SubCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
+            GLib.idle_add(self.SubCategoryFlowBox.show_all)
+        else:
+            self.pardusicb.set_visible(True)
+            self.sortPardusAppsCombo.set_visible(True)
+            self.pardusAppsStack.set_visible_child_name("normal")
+            self.PardusCategoryFilter.refilter()
 
     def setEditorApps(self):
         if self.Server.connection:
@@ -1294,6 +1352,12 @@ class MainWindow(object):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if thatnumber == i:
+                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], self.categories[i]["external"]
+
+    def get_category_name_from_button(self, name):
+        lencat = len(self.categories)
+        for i in range(0, lencat):
+            if name == self.categories[i]["name"]:
                 return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], self.categories[i]["external"]
 
     def get_repo_category_number(self, thatcategory):
@@ -3125,6 +3189,7 @@ class MainWindow(object):
     def on_menu_myapps_clicked(self, button):
         if not self.pardusicb.get_active():
             self.myapps_clicked = True
+        self.pardusicb.set_visible(True)
         self.PopoverMenu.popdown()
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
