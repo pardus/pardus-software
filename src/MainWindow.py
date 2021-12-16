@@ -421,6 +421,8 @@ class MainWindow(object):
         self.fromrepoapps = False
         self.fromdetails = False
         self.myapps_clicked = False
+        self.mda_clicked = False
+        self.mra_clicked = False
 
         self.mostappname = None
         self.detailsappname = None
@@ -2575,6 +2577,15 @@ class MainWindow(object):
         if self.pardusicb.get_active() and self.myapps_clicked:
             self.pardusicb.set_active(False)
             self.myapps_clicked = False
+
+        if self.mda_clicked and self.sortPardusAppsCombo.get_active() == 1:
+            self.sortPardusAppsCombo.set_active(0)
+            self.mda_clicked = False
+
+        if self.mra_clicked and self.sortPardusAppsCombo.get_active() == 2:
+            self.sortPardusAppsCombo.set_active(0)
+            self.mra_clicked = False
+
         self.isPardusSearching = False
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
@@ -3112,7 +3123,8 @@ class MainWindow(object):
             self.selecticonsBox.set_visible(False)
 
     def on_menu_myapps_clicked(self, button):
-        self.myapps_clicked = True
+        if not self.pardusicb.get_active():
+            self.myapps_clicked = True
         self.PopoverMenu.popdown()
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
@@ -3635,6 +3647,8 @@ class MainWindow(object):
         p1.start()
 
     def on_mdabutton_clicked(self, button):
+        if self.sortPardusAppsCombo.get_active() != 1:
+            self.mda_clicked = True
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
         if self.UserSettings.config_usi:
@@ -3643,14 +3657,16 @@ class MainWindow(object):
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
-        self.PardusCategoryFilter.refilter()
         if self.sortPardusAppsCombo.get_active != 1:
             self.sortPardusAppsCombo.set_active(1)
         if self.pardusicb.get_active():
             self.pardusicb.set_active(False)
+        self.PardusCategoryFilter.refilter()
         self.homestack.set_visible_child_name("pardusapps")
 
     def on_mrabutton_clicked(self, button):
+        if self.sortPardusAppsCombo.get_active() != 2:
+            self.mra_clicked = True
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
         if self.UserSettings.config_usi:
@@ -3659,11 +3675,11 @@ class MainWindow(object):
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
-        self.PardusCategoryFilter.refilter()
         if self.sortPardusAppsCombo.get_active != 2:
             self.sortPardusAppsCombo.set_active(2)
         if self.pardusicb.get_active():
             self.pardusicb.set_active(False)
+        self.PardusCategoryFilter.refilter()
         self.homestack.set_visible_child_name("pardusapps")
 
     def actionPackage(self, appname, command):
