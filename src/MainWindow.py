@@ -1151,6 +1151,7 @@ class MainWindow(object):
                 box.pack_end(box1, False, True, 10)
 
                 frame = Gtk.Frame.new()
+                frame.get_style_context().add_class("pardus-software-frame")
                 frame.add(box)
                 GLib.idle_add(self.MostDownFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
 
@@ -1197,6 +1198,7 @@ class MainWindow(object):
                 box.pack_end(box1, False, True, 10)
 
                 frame = Gtk.Frame.new()
+                frame.get_style_context().add_class("pardus-software-frame")
                 frame.add(box)
                 GLib.idle_add(self.MostRateFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
 

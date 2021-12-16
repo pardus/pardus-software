@@ -2338,32 +2338,7 @@ This application served from Pardus non-free package repositories, so that the O
                                     <property name="margin-end">40</property>
                                     <property name="margin-bottom">10</property>
                                     <property name="hexpand">True</property>
-                                    <child>
-                                      <object class="GtkSeparator">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="margin-top">13</property>
-                                        <property name="margin-bottom">13</property>
-                                        <property name="hexpand">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left-attach">0</property>
-                                        <property name="top-attach">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkSeparator">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="margin-top">13</property>
-                                        <property name="margin-bottom">13</property>
-                                        <property name="hexpand">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left-attach">0</property>
-                                        <property name="top-attach">2</property>
-                                      </packing>
-                                    </child>
+                                    <property name="row-spacing">13</property>
                                     <child>
                                       <object class="GtkExpander">
                                         <property name="visible">True</property>
@@ -3021,6 +2996,9 @@ This application served from Pardus non-free package repositories, so that the O
                                                 </attributes>
                                               </object>
                                             </child>
+                                            <style>
+                                              <class name="pardus-software-frame"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child type="label">
@@ -3197,6 +3175,9 @@ This application served from Pardus non-free package repositories, so that the O
                                                 </attributes>
                                               </object>
                                             </child>
+                                            <style>
+                                              <class name="pardus-software-frame"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child type="label">
@@ -3302,6 +3283,9 @@ This application served from Pardus non-free package repositories, so that the O
                                                 </attributes>
                                               </object>
                                             </child>
+                                            <style>
+                                              <class name="pardus-software-frame"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child type="label">
@@ -3318,19 +3302,6 @@ This application served from Pardus non-free package repositories, so that the O
                                       <packing>
                                         <property name="left-attach">0</property>
                                         <property name="top-attach">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkSeparator">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="margin-top">13</property>
-                                        <property name="margin-bottom">13</property>
-                                        <property name="hexpand">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left-attach">0</property>
-                                        <property name="top-attach">6</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -3966,6 +3937,9 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="label" translatable="yes">Pardus Ratings</property>
                                                           </object>
                                                         </child>
+                                                        <style>
+                                                          <class name="pardus-software-frame"/>
+                                                        </style>
                                                       </object>
                                                       <packing>
                                                         <property name="expand">False</property>
@@ -4583,6 +4557,9 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="label" translatable="yes">Gnome Software Ratings</property>
                                                           </object>
                                                         </child>
+                                                        <style>
+                                                          <class name="pardus-software-frame"/>
+                                                        </style>
                                                       </object>
                                                       <packing>
                                                         <property name="expand">False</property>
@@ -4619,97 +4596,88 @@ This application served from Pardus non-free package repositories, so that the O
                                         <property name="margin-bottom">40</property>
                                         <property name="expanded">True</property>
                                         <child>
-                                          <object class="GtkFrame">
+                                          <object class="GtkNotebook" id="CommentsNotebook">
                                             <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label-xalign">0</property>
-                                            <property name="shadow-type">none</property>
+                                            <property name="can-focus">True</property>
+                                            <property name="margin-top">13</property>
                                             <child>
-                                              <object class="GtkAlignment">
+                                              <object class="GtkScrolledWindow">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">True</property>
+                                                <property name="shadow-type">in</property>
+                                                <property name="min-content-height">250</property>
+                                                <child>
+                                                  <object class="GtkViewport">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <child>
+                                                      <object class="GtkListBox" id="PardusCommentListBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="selection-mode">none</property>
+                                                        <property name="activate-on-single-click">False</property>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                            <child type="tab">
+                                              <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
+                                                <property name="label" translatable="yes">Pardus Comments</property>
+                                              </object>
+                                              <packing>
+                                                <property name="tab-fill">False</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkBox" id="GnomeCommentsBox">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="margin-top">5</property>
+                                                <property name="orientation">vertical</property>
+                                                <property name="spacing">5</property>
                                                 <child>
-                                                  <object class="GtkNotebook" id="CommentsNotebook">
+                                                  <object class="GtkLabel" id="gcInfoLabel">
                                                     <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">center</property>
+                                                    <property name="wrap">True</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkStackSwitcher">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">center</property>
+                                                    <property name="stack">gcStack</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkStack" id="gcStack">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="transition-type">slide-left-right</property>
                                                     <child>
                                                       <object class="GtkScrolledWindow">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">True</property>
                                                         <property name="shadow-type">in</property>
-                                                        <property name="min-content-height">250</property>
+                                                        <property name="min-content-height">275</property>
                                                         <child>
                                                           <object class="GtkViewport">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <child>
-                                                            <object class="GtkListBox" id="PardusCommentListBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="selection-mode">none</property>
-                                                            <property name="activate-on-single-click">False</property>
-                                                            </object>
-                                                            </child>
-                                                          </object>
-                                                        </child>
-                                                      </object>
-                                                    </child>
-                                                    <child type="tab">
-                                                      <object class="GtkLabel">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">Pardus Comments</property>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="tab-fill">False</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkBox" id="GnomeCommentsBox">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="margin-top">7</property>
-                                                        <property name="orientation">vertical</property>
-                                                        <property name="spacing">7</property>
-                                                        <child>
-                                                          <object class="GtkLabel" id="gcInfoLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="halign">center</property>
-                                                            <property name="wrap">True</property>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkStackSwitcher">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="halign">center</property>
-                                                            <property name="stack">gcStack</property>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkStack" id="gcStack">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="transition-type">slide-left-right</property>
-                                                            <child>
-                                                            <object class="GtkScrolledWindow">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <property name="shadow-type">in</property>
-                                                            <property name="min-content-height">275</property>
-                                                            <child>
-                                                            <object class="GtkViewport">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <child>
@@ -4750,22 +4718,22 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="name">gcTurkish</property>
-                                                            <property name="title" translatable="yes">Turkish Comments</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkScrolledWindow">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <property name="shadow-type">in</property>
-                                                            <property name="min-content-height">275</property>
-                                                            <child>
-                                                            <object class="GtkViewport">
+                                                          </object>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="name">gcTurkish</property>
+                                                        <property name="title" translatable="yes">Turkish Comments</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkScrolledWindow">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">True</property>
+                                                        <property name="shadow-type">in</property>
+                                                        <property name="min-content-height">275</property>
+                                                        <child>
+                                                          <object class="GtkViewport">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <child>
@@ -4806,73 +4774,73 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="name">gcEnglish</property>
-                                                            <property name="title" translatable="yes">English Comments</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
                                                           </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                          </packing>
                                                         </child>
                                                       </object>
                                                       <packing>
+                                                        <property name="name">gcEnglish</property>
+                                                        <property name="title" translatable="yes">English Comments</property>
                                                         <property name="position">1</property>
                                                       </packing>
                                                     </child>
-                                                    <child type="tab">
-                                                      <object class="GtkLabel">
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">2</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                              <packing>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child type="tab">
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="label" translatable="yes">Gnome Comments</property>
+                                              </object>
+                                              <packing>
+                                                <property name="position">1</property>
+                                                <property name="tab-fill">False</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkStack" id="commentstack">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="transition-type">over-left-right</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-start">13</property>
+                                                    <property name="margin-end">13</property>
+                                                    <property name="margin-top">8</property>
+                                                    <property name="margin-bottom">8</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <property name="spacing">13</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <child>
+                                                      <object class="GtkLabel" id="wpcStarLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">Gnome Comments</property>
+                                                        <property name="label" translatable="yes">How many stars would you give this app ?</property>
                                                       </object>
                                                       <packing>
-                                                        <property name="position">1</property>
-                                                        <property name="tab-fill">False</property>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkStack" id="commentstack">
+                                                      <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="transition-type">over-left-right</property>
+                                                        <property name="halign">center</property>
                                                         <child>
-                                                          <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="margin-start">13</property>
-                                                            <property name="margin-end">13</property>
-                                                            <property name="margin-top">13</property>
-                                                            <property name="margin-bottom">13</property>
-                                                            <property name="orientation">vertical</property>
-                                                            <property name="spacing">13</property>
-                                                            <property name="homogeneous">True</property>
-                                                            <child>
-                                                            <object class="GtkLabel" id="wpcStarLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">How many stars would you give this app ?</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="halign">center</property>
-                                                            <child>
-                                                            <object class="GtkEventBox" id="wpcStarE1">
+                                                          <object class="GtkEventBox" id="wpcStarE1">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <signal name="button-press-event" handler="on_wpcStarE1_button_press_event" swapped="no"/>
@@ -4883,15 +4851,15 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="pixbuf">../images/rating.svg</property>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkEventBox" id="wpcStarE2">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkEventBox" id="wpcStarE2">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <signal name="button-press-event" handler="on_wpcStarE2_button_press_event" swapped="no"/>
@@ -4902,15 +4870,15 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="pixbuf">../images/rating-unrated.svg</property>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkEventBox" id="wpcStarE3">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkEventBox" id="wpcStarE3">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <signal name="button-press-event" handler="on_wpcStarE3_button_press_event" swapped="no"/>
@@ -4921,15 +4889,15 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="pixbuf">../images/rating-unrated.svg</property>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkEventBox" id="wpcStarE4">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkEventBox" id="wpcStarE4">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <signal name="button-press-event" handler="on_wpcStarE4_button_press_event" swapped="no"/>
@@ -4940,15 +4908,15 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="pixbuf">../images/rating-unrated.svg</property>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkEventBox" id="wpcStarE5">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkEventBox" id="wpcStarE5">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <signal name="button-press-event" handler="on_wpcStarE5_button_press_event" swapped="no"/>
@@ -4959,260 +4927,250 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="pixbuf">../images/rating-unrated.svg</property>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">4</property>
-                                                            </packing>
-                                                            </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <child>
-                                                            <object class="GtkLabel">
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <child>
+                                                          <object class="GtkLabel">
                                                             <property name="width-request">175</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">Your Name :</property>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkEntry" id="wpcAuthor">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkEntry" id="wpcAuthor">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="hexpand">True</property>
                                                             <property name="max-length">100</property>
                                                             <property name="placeholder-text" translatable="yes">Write your name</property>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <child>
-                                                            <object class="GtkLabel">
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <child>
+                                                          <object class="GtkLabel">
                                                             <property name="width-request">175</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">Your Comment :</property>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkEntry" id="wpcComment">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkEntry" id="wpcComment">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="hexpand">True</property>
                                                             <property name="max-length">500</property>
                                                             <property name="placeholder-text" translatable="yes">Write your comment</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkLabel" id="wpcformcontrolLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">4</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="wpcSendButton">
-                                                            <property name="label" translatable="yes">Send</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <property name="receives-default">True</property>
-                                                            <property name="halign">center</property>
-                                                            <signal name="clicked" handler="on_wpcSendButton_clicked" swapped="no"/>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">5</property>
-                                                            </packing>
-                                                            </child>
                                                           </object>
                                                           <packing>
-                                                            <property name="name">sendcomment</property>
-                                                            <property name="title">page0</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="margin-top">5</property>
-                                                            <property name="orientation">vertical</property>
-                                                            <property name="spacing">13</property>
-                                                            <property name="homogeneous">True</property>
-                                                            <child>
-                                                            <object class="GtkLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">You have already posted a comment </property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkLabel" id="wpcgetnameLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Your Name</property>
-                                                            <property name="wrap">True</property>
-                                                            </object>
-                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkLabel" id="wpcgetcommentLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Your Comment</property>
-                                                            <property name="wrap">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="editCommentButton">
-                                                            <property name="label" translatable="yes">Edit Your Comment</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <property name="receives-default">True</property>
-                                                            <property name="halign">center</property>
-                                                            <property name="valign">center</property>
-                                                            <property name="image">editimage</property>
-                                                            <signal name="clicked" handler="on_editCommentButton_clicked" swapped="no"/>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="name">alreadysent</property>
-                                                            <property name="title">page0</property>
-                                                            <property name="position">1</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="orientation">vertical</property>
-                                                            <property name="homogeneous">True</property>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkLabel" id="wpcresultLabel">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="halign">center</property>
-                                                            <property name="valign">center</property>
-                                                            <property name="wrap">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="name">sendresult</property>
-                                                            <property name="title">page0</property>
-                                                            <property name="position">2</property>
                                                           </packing>
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="position">2</property>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">3</property>
                                                       </packing>
                                                     </child>
-                                                    <child type="tab">
-                                                      <object class="GtkLabel">
+                                                    <child>
+                                                      <object class="GtkLabel" id="wpcformcontrolLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">Write Pardus Comment</property>
                                                       </object>
                                                       <packing>
-                                                        <property name="position">2</property>
-                                                        <property name="tab-fill">False</property>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">4</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton" id="wpcSendButton">
+                                                        <property name="label" translatable="yes">Send</property>
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">True</property>
+                                                        <property name="receives-default">True</property>
+                                                        <property name="halign">center</property>
+                                                        <signal name="clicked" handler="on_wpcSendButton_clicked" swapped="no"/>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">5</property>
                                                       </packing>
                                                     </child>
                                                   </object>
+                                                  <packing>
+                                                    <property name="name">sendcomment</property>
+                                                    <property name="title" translatable="yes">page0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-top">5</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <property name="spacing">13</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label" translatable="yes">You have already posted a comment </property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkLabel" id="wpcgetnameLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label" translatable="yes">Your Name</property>
+                                                        <property name="wrap">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkLabel" id="wpcgetcommentLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label" translatable="yes">Your Comment</property>
+                                                        <property name="wrap">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton" id="editCommentButton">
+                                                        <property name="label" translatable="yes">Edit Your Comment</property>
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">True</property>
+                                                        <property name="receives-default">True</property>
+                                                        <property name="halign">center</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="image">editimage</property>
+                                                        <signal name="clicked" handler="on_editCommentButton_clicked" swapped="no"/>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">3</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="name">alreadysent</property>
+                                                    <property name="title" translatable="yes">page0</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <child>
+                                                      <placeholder/>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkLabel" id="wpcresultLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">center</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="wrap">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <placeholder/>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="name">sendresult</property>
+                                                    <property name="title" translatable="yes">page0</property>
+                                                    <property name="position">2</property>
+                                                  </packing>
                                                 </child>
                                               </object>
+                                              <packing>
+                                                <property name="position">2</property>
+                                              </packing>
                                             </child>
-                                            <child type="label">
+                                            <child type="tab">
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
+                                                <property name="label" translatable="yes">Write Pardus Comment</property>
                                               </object>
+                                              <packing>
+                                                <property name="position">2</property>
+                                                <property name="tab-fill">False</property>
+                                              </packing>
                                             </child>
+                                            <style>
+                                              <class name="pardus-software-notebook"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child type="label">
@@ -5232,17 +5190,16 @@ This application served from Pardus non-free package repositories, so that the O
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkSeparator">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="margin-top">13</property>
-                                        <property name="margin-bottom">13</property>
-                                        <property name="hexpand">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left-attach">0</property>
-                                        <property name="top-attach">8</property>
-                                      </packing>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
                                     </child>
                                     <child>
                                       <placeholder/>
