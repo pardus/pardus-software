@@ -3714,6 +3714,7 @@ class MainWindow(object):
         p1.start()
 
     def on_mdabutton_clicked(self, button):
+        self.menubackbutton.set_sensitive(True)
         if self.sortPardusAppsCombo.get_active() != 1:
             self.mda_clicked = True
         self.PardusCurrentCategoryString = "all"
@@ -3732,6 +3733,7 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("pardusapps")
 
     def on_mrabutton_clicked(self, button):
+        self.menubackbutton.set_sensitive(True)
         if self.sortPardusAppsCombo.get_active() != 2:
             self.mra_clicked = True
         self.PardusCurrentCategoryString = "all"
