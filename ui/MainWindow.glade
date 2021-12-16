@@ -5241,6 +5241,8 @@ This application served from Pardus non-free package repositories, so that the O
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Could not connect to the server</property>
+                        <property name="justify">center</property>
+                        <property name="wrap">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
