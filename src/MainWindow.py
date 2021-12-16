@@ -1621,7 +1621,7 @@ class MainWindow(object):
             if len(prettyname.split(" ")) > 3:
                 prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" +" ".join(prettyname.split(" ")[3:6]) + \
                              "\n" + " ".join(prettyname.split(" ")[6:])
-            self.dName.set_markup("<span font='21'><b>" + prettyname + "</b></span>")
+            self.dName.set_markup("<span size='x-large'><b>" + prettyname + "</b></span>")
             self.dSection.set_markup("<i>" + self.section + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
             self.dCategory.set_markup(self.category)
@@ -2081,7 +2081,7 @@ class MainWindow(object):
             print("star error")
 
     def setPardusRatings(self, tr, r, r1, r2, r3, r4, r5):
-        self.dPardusRating.set_markup("<span font='21'><big><b>{:.1f}</b></big></span>".format(float(r)))
+        self.dPardusRating.set_markup("<span size='xx-large'><b>{:.1f}</b></span>".format(float(r)))
         self.dPardusBarLabel1.set_markup("{}".format(r1))
         self.dPardusBarLabel2.set_markup("{}".format(r2))
         self.dPardusBarLabel3.set_markup("{}".format(r3))
@@ -2108,7 +2108,7 @@ class MainWindow(object):
             average = (gr["star1"] * 1 + gr["star2"] * 2 + gr["star3"] * 3 + gr["star4"] * 4 + gr["star5"] * 5) / gr[
                 "total"]
 
-            self.dGnomeRating.set_markup("<span font='21'><big><b>{:.1f}</b></big></span>".format(float(average)))
+            self.dGnomeRating.set_markup("<span size='xx-large'><b>{:.1f}</b></span>".format(float(average)))
             self.dGnomeBarLabel1.set_markup("{}".format(gr["star1"]))
             self.dGnomeBarLabel2.set_markup("{}".format(gr["star2"]))
             self.dGnomeBarLabel3.set_markup("{}".format(gr["star3"]))
@@ -2128,7 +2128,7 @@ class MainWindow(object):
                 self.dGnomeBar4.set_fraction(0)
                 self.dGnomeBar5.set_fraction(0)
         else:
-            self.dGnomeRating.set_markup("<span font='21'><big><b>{}</b></big></span>".format(0.0))
+            self.dGnomeRating.set_markup("<span size='xx-large'><b>{}</b></span>".format(0.0))
             self.dGnomeBarLabel1.set_markup("{}".format(0))
             self.dGnomeBarLabel2.set_markup("{}".format(0))
             self.dGnomeBarLabel3.set_markup("{}".format(0))
