@@ -5044,7 +5044,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                   </object>
                                                   <packing>
                                                     <property name="name">sendcomment</property>
-                                                    <property name="title" translatable="yes">page0</property>
+                                                    <property name="title">page0</property>
                                                   </packing>
                                                 </child>
                                                 <child>
@@ -5113,7 +5113,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                   </object>
                                                   <packing>
                                                     <property name="name">alreadysent</property>
-                                                    <property name="title" translatable="yes">page0</property>
+                                                    <property name="title">page0</property>
                                                     <property name="position">1</property>
                                                   </packing>
                                                 </child>
@@ -5146,7 +5146,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                   </object>
                                                   <packing>
                                                     <property name="name">sendresult</property>
-                                                    <property name="title" translatable="yes">page0</property>
+                                                    <property name="title">page0</property>
                                                     <property name="position">2</property>
                                                   </packing>
                                                 </child>
@@ -5268,7 +5268,6 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">noserver</property>
-                    <property name="title">page0</property>
                     <property name="position">4</property>
                   </packing>
                 </child>

@@ -3099,7 +3099,7 @@ class MainWindow(object):
             pixbuf = self.getSystemCatIcon("all", 32)
 
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
-        self.NavCategoryLabel.set_text("All")
+        self.NavCategoryLabel.set_text(_("all").title())
         if self.locale == "tr":
             self.PardusCurrentCategoryString = "tümü"
         else:
@@ -3280,7 +3280,7 @@ class MainWindow(object):
         else:
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
-        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.NavCategoryLabel.set_text(_("all").title())
         if self.sortPardusAppsCombo.get_active != 0:
             self.sortPardusAppsCombo.set_active(0)
         if not self.pardusicb.get_active():
@@ -3804,7 +3804,7 @@ class MainWindow(object):
         else:
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
-        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.NavCategoryLabel.set_text(_("all").title())
         if self.sortPardusAppsCombo.get_active != 1:
             self.sortPardusAppsCombo.set_active(1)
         if self.pardusicb.get_active():
@@ -3823,7 +3823,7 @@ class MainWindow(object):
         else:
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
-        self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
+        self.NavCategoryLabel.set_text(_("all").title())
         if self.sortPardusAppsCombo.get_active != 2:
             self.sortPardusAppsCombo.set_active(2)
         if self.pardusicb.get_active():
