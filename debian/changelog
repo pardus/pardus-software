@@ -1,3 +1,27 @@
+pardus-software (0.1.0~beta23) unstable; urgency=medium
+
+  * Add use dark theme switch to settings
+  * Add retry button for failed connection on startup
+  * Add init value for some vars
+  * Add click func to most downloaded and rated apps on homepage
+  * Add my apps button to menu
+  * Update translations
+  * Fix show installed apps control on my_apps
+  * Update ui spacing values
+  * Fix typo
+  * Update app sorting controls
+  * Add button widget to home category flowbox
+  * Add pardus-software css classes for radius and Rm unnecessary seperators
+  * Add justify center and word wrap to noserver label
+  * Update span font as span size
+  * Add enable back button on most app buttons clicked
+  * Improve back button
+  * Update translations
+  * Add back button usability on queue page too
+  * Update app icon
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 20 Dec 2021 19:51:39 +0300
+
 pardus-software (0.1.0~beta22) unstable; urgency=medium
 
   * Add line_wrap_mode to comments
