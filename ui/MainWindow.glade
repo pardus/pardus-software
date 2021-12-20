@@ -649,8 +649,7 @@ so that the OS has nothing to do with the health of the application.</property>
                         <signal name="search-changed" handler="on_pardussearchbar_search_changed" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="name">page0</property>
-                        <property name="title">page0</property>
+                        <property name="name">pardus</property>
                       </packing>
                     </child>
                     <child>
@@ -692,8 +691,7 @@ so that the OS has nothing to do with the health of the application.</property>
                         </child>
                       </object>
                       <packing>
-                        <property name="name">page1</property>
-                        <property name="title">page1</property>
+                        <property name="name">repo</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -731,7 +729,7 @@ so that the OS has nothing to do with the health of the application.</property>
                         </child>
                       </object>
                       <packing>
-                        <property name="name">page2</property>
+                        <property name="name">noserver</property>
                         <property name="title">page2</property>
                         <property name="position">2</property>
                       </packing>
@@ -6388,7 +6386,6 @@ This application served from Pardus non-free package repositories, so that the O
                   </object>
                   <packing>
                     <property name="name">updates</property>
-                    <property name="title">page0</property>
                     <property name="position">7</property>
                   </packing>
                 </child>
