@@ -4106,8 +4106,8 @@ class MainWindow(object):
 
             cachestatus = self.Package.updatecache()
 
-            print("cache status " + str(cachestatus))
-            print("p status " + str(self.Package.controlPackageCache(self.actionedappname)))
+            # print("Cache Status: {}, Package Cache Status: {}".format(cachestatus, self.Package.controlPackageCache(self.actionedappname)))
+
             if status == 0 and not self.error and cachestatus:
                 if self.Package.controlPackageCache(self.actionedappname):
                     self.notify()
