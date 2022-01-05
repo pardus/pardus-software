@@ -57,6 +57,7 @@ class Server(object):
         self.appversion = ""
         self.iconnames = ""
         self.badwords = []
+        self.aptuptime = 86400  # default control value is 1 day if server value is none
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"

@@ -25,7 +25,8 @@ gi.require_version("GLib", "2.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Notify", "0.7")
 gi.require_version("GdkPixbuf", "2.0")
-from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk
+gi.require_version("Vte", "2.91")
+from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk, Vte
 
 from Package import Package
 from Server import Server
@@ -148,6 +149,7 @@ class MainWindow(object):
         self.prefstack = self.GtkBuilder.get_object("prefstack")
         self.activatestack = self.GtkBuilder.get_object("activatestack")
         self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
+        self.tryfixstack = self.GtkBuilder.get_object("tryfixstack")
         self.activate_repo_label = self.GtkBuilder.get_object("activate_repo_label")
         self.activate_info_label = self.GtkBuilder.get_object("activate_info_label")
         self.activating_spinner = self.GtkBuilder.get_object("activating_spinner")
@@ -253,6 +255,10 @@ class MainWindow(object):
         self.splashbarstatus = True
         # GLib.timeout_add(200, self.on_timeout, None)
 
+        self.tryfixButton = self.GtkBuilder.get_object("tryfixButton")
+        self.tryfixSpinner = self.GtkBuilder.get_object("tryfixSpinner")
+        self.headerAptUpdateSpinner = self.GtkBuilder.get_object("headerAptUpdateSpinner")
+
         self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
         self.PardusAppsIconView.set_pixbuf_column(0)
         self.PardusAppsIconView.set_text_column(3)
@@ -279,6 +285,7 @@ class MainWindow(object):
         self.switchHERA = self.GtkBuilder.get_object("switchHERA")
         self.switchSGC = self.GtkBuilder.get_object("switchSGC")
         self.switchUDT = self.GtkBuilder.get_object("switchUDT")
+        self.switchAPTU = self.GtkBuilder.get_object("switchAPTU")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
         self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
@@ -291,6 +298,7 @@ class MainWindow(object):
         self.tip_icons = self.GtkBuilder.get_object("tip_icons")
         self.tip_sgc = self.GtkBuilder.get_object("tip_sgc")
         self.tip_udt = self.GtkBuilder.get_object("tip_udt")
+        self.tip_aptu = self.GtkBuilder.get_object("tip_aptu")
         self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
         self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
 
@@ -427,6 +435,8 @@ class MainWindow(object):
 
         self.repoappsinit = False
 
+        self.isbroken = False
+
         self.mostappname = None
         self.detailsappname = None
 
@@ -463,6 +473,17 @@ class MainWindow(object):
         # styleContext.add_provider_for_screen(screen, cssProvider,
         #                                      Gtk.STYLE_PROVIDER_PRIORITY_USER)
         # # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
+
+        self.vteterm = Vte.Terminal()
+        self.vteterm.set_scrollback_lines(-1)
+        menu = Gtk.Menu()
+        menu_items = Gtk.MenuItem(label=_("Copy selected text"))
+        menu.append(menu_items)
+        menu_items.connect("activate", self.menu_action, self.vteterm)
+        menu_items.show()
+        self.vteterm.connect_object("event", self.vte_event, menu)
+        vtebox = self.GtkBuilder.get_object("VteBox")
+        vtebox.add(self.vteterm)
 
         self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
         self.GnomeCommentListBoxEN = self.GtkBuilder.get_object("GnomeCommentListBoxEN")
@@ -557,8 +578,20 @@ class MainWindow(object):
         self.package()
         self.server()
 
+    def aptUpdate(self):
+        if self.Server.connection and self.UserSettings.config_aptup:
+            waittime = 86400
+            if self.UserSettings.config_forceaptuptime == 0:
+                waittime = self.Server.aptuptime
+            else:
+                waittime = self.UserSettings.config_forceaptuptime
+            if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()) :
+                self.headerAptUpdateSpinner.start()
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py"]
+                self.startAptUpdateProcess(command)
+
     def controlPSUpdate(self):
-        if self.Server.connection and self.UserSettings.usercodename == "yirmibir":
+        if self.Server.connection and self.UserSettings.usercodename == "yirmibir" and not self.isbroken:
             user_version = self.Package.installedVersion("pardus-software")
             server_version = self.Server.appversion
             if user_version is not None and server_version != "":
@@ -597,13 +630,23 @@ class MainWindow(object):
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
         if self.Server.connection:
-            self.homestack.set_visible_child_name("pardushome")
-            GLib.idle_add(self.topsearchbutton.set_sensitive, True)
+            if not self.isbroken:
+                self.homestack.set_visible_child_name("pardushome")
+                GLib.idle_add(self.topsearchbutton.set_sensitive, True)
+                GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
+                GLib.idle_add(self.menu_myapps.set_sensitive, True)
+            else:
+                self.homestack.set_visible_child_name("fixapt")
+                GLib.idle_add(self.topsearchbutton.set_sensitive, False)
+                GLib.idle_add(self.menu_myapps.set_sensitive, False)
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
                 "<b>{}\n\n{}</b>".format(_("Could not connect to server."), self.Server.error_message))
             GLib.idle_add(self.topsearchbutton.set_sensitive, False)
+            GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
+            GLib.idle_add(self.menu_myapps.set_sensitive, False)
+
         self.splashspinner.stop()
         self.splashlabel.set_text("")
 
@@ -611,12 +654,9 @@ class MainWindow(object):
         GLib.idle_add(self.topbutton1.set_sensitive, True)
         GLib.idle_add(self.topbutton2.set_sensitive, True)
 
-        if not self.Server.connection:
-            GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
-            GLib.idle_add(self.menu_myapps.set_sensitive, False)
-        else:
-            GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
-            GLib.idle_add(self.menu_myapps.set_sensitive, True)
+        if self.Server.connection and self.isbroken:
+            GLib.idle_add(self.topbutton1.set_sensitive, False)
+            GLib.idle_add(self.topbutton2.set_sensitive, False)
 
         print("page setted to normal")
 
@@ -626,8 +666,10 @@ class MainWindow(object):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
         self.Package = Package()
         if self.Package.updatecache():
+            self.isbroken = False
             self.Package.getApps()
         else:
+            self.isbroken = True
             print("Error while updating Cache")
 
         print("package completed")
@@ -644,6 +686,9 @@ class MainWindow(object):
         print("{} {}".format("config_icon", self.UserSettings.config_icon))
         print("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
         print("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
+        print("{} {}".format("config_aptup", self.UserSettings.config_aptup))
+        print("{} {}".format("config_lastaptup", self.UserSettings.config_lastaptup))
+        print("{} {}".format("config_forceaptuptime", self.UserSettings.config_forceaptuptime))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -842,6 +887,7 @@ class MainWindow(object):
         GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlArgs)
         GLib.idle_add(self.controlPSUpdate)
+        GLib.idle_add(self.aptUpdate)
 
     def ServerAppsCB(self, success, response=None, type=None):
         if success:
@@ -866,6 +912,7 @@ class MainWindow(object):
                 self.Server.appversion = response["version"]
                 self.Server.iconnames = response["iconnames"]
                 self.Server.badwords = response["badwords"]
+                self.Server.aptuptime = response["aptuptime"]
 
             if self.status_serverapps and self.status_servercats and self.status_serverhome:
                 self.Server.connection = True
@@ -3255,6 +3302,7 @@ class MainWindow(object):
         self.switchHERA.set_state(self.UserSettings.config_hera)
         self.switchSGC.set_state(self.UserSettings.config_sgc)
         self.switchUDT.set_state(self.UserSettings.config_udt)
+        self.switchAPTU.set_state(self.UserSettings.config_aptup)
         self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
             _("Server Address"), self.Server.serverurl))
         self.topbutton2.get_style_context().remove_class("suggested-action")
@@ -3279,6 +3327,15 @@ class MainWindow(object):
             self.selecticonsBox.set_visible(False)
 
     def on_menu_myapps_clicked(self, button):
+        self.PardusAppsIconView.unselect_all()
+        if self.topbutton2.get_style_context().has_class("suggested-action"):
+            self.topbutton2.get_style_context().remove_class("suggested-action")
+        if self.queuebutton.get_style_context().has_class("suggested-action"):
+            self.queuebutton.get_style_context().remove_class("suggested-action")
+        if not self.topbutton1.get_style_context().has_class("suggested-action"):
+            self.topbutton1.get_style_context().add_class("suggested-action")
+        self.searchstack.set_visible_child_name("pardus")
+
         self.menubackbutton.set_sensitive(True)
         if not self.pardusicb.get_active():
             self.myapps_clicked = True
@@ -3470,6 +3527,7 @@ class MainWindow(object):
         self.SuggestIconChooser.unselect_all()
 
     def on_pref_tip_clicked(self, button):
+        self.prefTipLabel.set_max_width_chars(-1)
         if button.get_name() == "tip_usi":
             self.PopoverPrefTip.set_relative_to(self.tip_usi)
             self.prefTipLabel.set_text("{}\n{}\n{}".format(
@@ -3532,6 +3590,50 @@ class MainWindow(object):
                 _("If a GTK+ theme includes a dark variant, it will be used instead of the configured theme.")
             ))
             self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_aptu":
+            if self.UserSettings.config_forceaptuptime != 0:
+                force = "{} ( {} )".format(_("The value in your configuration file is used as the wait time."),
+                                       self.displayTime(self.UserSettings.config_forceaptuptime))
+            else:
+                force = False
+            self.PopoverPrefTip.set_relative_to(self.tip_aptu)
+            self.prefTipLabel.set_max_width_chars(60)
+            if force is False:
+                self.prefTipLabel.set_markup("{} {} {}\n<u>{}:</u> <b>{}</b>".format(
+                    _("Allows the package manager cache to be updated again on the next application start if"),
+                    self.displayTime(self.Server.aptuptime),
+                    _("have passed since the last successful update."),
+                    _("Last successful update time is"),
+                    datetime.fromtimestamp(self.UserSettings.config_lastaptup)
+                ))
+            else:
+                self.prefTipLabel.set_markup("{} {} {}\n<u>{}:</u> <b>{}</b>\n\n<span color='red'>{}</span>".format(
+                    _("Allows the package manager cache to be updated again on the next application start if"),
+                    self.displayTime(self.Server.aptuptime),
+                    _("have passed since the last successful update."),
+                    _("Last successful update time is"),
+                    datetime.fromtimestamp(self.UserSettings.config_lastaptup),
+                    force
+                ))
+            self.PopoverPrefTip.popup()
+
+    def displayTime(self, seconds, granularity=5):
+        result = []
+        intervals = (
+            (_("weeks"), 604800),  # 60 * 60 * 24 * 7
+            (_("days"), 86400),  # 60 * 60 * 24
+            (_("hours"), 3600),  # 60 * 60
+            (_("minutes"), 60),
+            (_("seconds"), 1),
+        )
+        for name, count in intervals:
+            value = seconds // count
+            if value:
+                seconds -= value * count
+                if value == 1:
+                    name = name.rstrip('s')
+                result.append("{} {}".format(value, name))
+        return ', '.join(result[:granularity])
 
     def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
@@ -3540,7 +3642,9 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
+                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                              self.UserSettings.config_forceaptuptime)
                 self.usersettings()
                 GLib.idle_add(self.clearBoxes)
                 if state:
@@ -3568,7 +3672,9 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
+                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                              self.UserSettings.config_forceaptuptime)
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
@@ -3581,7 +3687,9 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
+                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                              self.UserSettings.config_forceaptuptime)
                 self.usersettings()
                 self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
             except Exception as e:
@@ -3600,7 +3708,9 @@ class MainWindow(object):
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                               self.UserSettings.config_saa, state, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt)
+                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
+                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                              self.UserSettings.config_forceaptuptime)
                 self.usersettings()
                 self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
             except Exception as e:
@@ -3619,7 +3729,9 @@ class MainWindow(object):
             print("changing icons to " + str(combo_box.get_active_id()))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera, active,
-                                          self.UserSettings.config_sgc, self.UserSettings.config_udt)
+                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
             self.usersettings()
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
@@ -3633,7 +3745,9 @@ class MainWindow(object):
             print("Updating show gnome apps state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt)
+                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
             self.usersettings()
 
     def on_switchUDT_state_set(self, switch, state):
@@ -3642,13 +3756,26 @@ class MainWindow(object):
             print("Updating use dark theme state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state)
+                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
         if state:
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
         else:
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = False
 
         self.usersettings()
+
+    def on_switchAPTU_state_set(self, switch, state):
+        user_config_aptup = self.UserSettings.config_aptup
+        if state != user_config_aptup:
+            print("Updating auto apt update state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
+                                          self.UserSettings.config_udt, state,
+                                          self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
+            self.usersettings()
 
     def clearBoxes(self):
         self.EditorListStore.clear()
@@ -3977,18 +4104,25 @@ class MainWindow(object):
                 elif self.dpkgconferror:
                     self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
 
-            self.Package.updatecache()
+            cachestatus = self.Package.updatecache()
 
-            if status == 0 and not self.error:
-                self.notify()
-                self.sendDownloaded(self.actionedappname)
+            print("cache status " + str(cachestatus))
+            print("p status " + str(self.Package.controlPackageCache(self.actionedappname)))
+            if status == 0 and not self.error and cachestatus:
+                if self.Package.controlPackageCache(self.actionedappname):
+                    self.notify()
+                    self.sendDownloaded(self.actionedappname)
+                else:
+                    if self.isinstalled:
+                        self.notify()
 
             self.controlView(self.actionedappname, self.actionedappdesktop)
 
             ui_appname = self.getActiveAppOnUI()
             if ui_appname == self.actionedappname:
-                self.dActionButton.set_sensitive(True)
-                self.raction.set_sensitive(True)
+                if cachestatus and self.Package.controlPackageCache(ui_appname):
+                    self.dActionButton.set_sensitive(True)
+                    self.raction.set_sensitive(True)
 
             self.topspinner.stop()
             print("Exit Code : {}".format(status))
@@ -4140,6 +4274,23 @@ class MainWindow(object):
                         self.dActionButton.set_label(_("Enable Repo"))
                         self.dActionButton.set_image(
                             Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON))
+                else:
+                    self.dAptUpdateButton.set_visible(True)
+                    if self.aptupdateclicked:
+                        self.dAptUpdateBox.set_visible(True)
+                        self.dAptUpdateInfoLabel.set_visible(True)
+
+                    self.dActionButton.set_label(_(" Not Found"))
+                    self.dActionButton.set_image(
+                        Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
+                    self.dOpenButton.set_visible(False)
+
+                    self.dActionButton.set_sensitive(False)
+                    if self.dActionButton.get_style_context().has_class("destructive-action"):
+                        self.dActionButton.get_style_context().remove_class("destructive-action")
+                    if self.dActionButton.get_style_context().has_class("suggested-action"):
+                        self.dActionButton.get_style_context().remove_class("suggested-action")
+
 
         if repo == 2:  # repo apps
             if self.Package.isinstalled(actionedappname):
@@ -4189,7 +4340,7 @@ class MainWindow(object):
                    "distro": self.UserSettings.userdistro}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
         except Exception as e:
-            print(str(e))
+            print("sendDownloaded Error: {}".format(e))
 
     def startSysProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
@@ -4267,3 +4418,107 @@ class MainWindow(object):
             self.aptupdateclicked = False
 
         print("SysProcess Exit Code : {}".format(status))
+
+    def startAptUpdateProcess(self, params):
+        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                                                      standard_output=True, standard_error=True)
+        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onAptUpdateProcessStdout)
+        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onAptUpdateProcessStderr)
+        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onAptUpdateProcessExit)
+
+        return pid
+
+    def onAptUpdateProcessStdout(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+        line = source.readline()
+        print(line)
+        return True
+
+    def onAptUpdateProcessStderr(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+        line = source.readline()
+        print(line)
+        return True
+
+    def onAptUpdateProcessExit(self, pid, status):
+        self.Package.updatecache()
+        self.headerAptUpdateSpinner.set_visible(False)
+        self.headerAptUpdateSpinner.stop()
+        if status == 0:
+            try:
+                timestamp = int(datetime.now().timestamp())
+            except Exception as e:
+                print("timestamp Error: {}".format(e))
+                timestamp = 0
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
+                                          self.UserSettings.config_udt, self.UserSettings.config_aptup,
+                                          timestamp, self.UserSettings.config_forceaptuptime)
+
+    def on_tryfixButton_clicked(self, button):
+        self.tryfixstack.set_visible_child_name("info")
+
+    def on_tryfixconfirm_clicked(self, button):
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
+                   "fixapt"]
+        self.tryfixstack.set_visible_child_name("main")
+        self.tryfixButton.set_sensitive(False)
+        self.tryfixSpinner.start()
+        self.startVteProcess(command)
+
+    def on_tryfixcancel_clicked(self, button):
+        self.tryfixstack.set_visible_child_name("main")
+
+    def on_tryfixdone_clicked(self, button):
+        self.homestack.set_visible_child_name("pardushome")
+
+    def vte_event(self, widget, event):
+        if event.type == Gdk.EventType.BUTTON_PRESS:
+            if event.button.button == 3:
+                widget.popup_for_device(None, None, None, None, None,
+                                        event.button.button, event.time)
+                return True
+        return False
+
+    def menu_action(self, widget, terminal):
+        terminal.copy_clipboard()
+
+    def startVteProcess(self, params):
+        status, pid = self.runVteCommand(self.vteterm, params)
+        return pid
+
+    def onVteDone(self, obj, status):
+        self.tryfixSpinner.stop()
+        self.tryfixButton.set_sensitive(True)
+        if status == 0:
+            self.Package = Package()
+            if self.Package.updatecache():
+                self.tryfixstack.set_visible_child_name("done")
+                self.isbroken = False
+                self.Package.getApps()
+                GLib.idle_add(self.topsearchbutton.set_sensitive, True)
+                GLib.idle_add(self.menu_myapps.set_sensitive, True)
+                GLib.idle_add(self.topbutton1.set_sensitive, True)
+                GLib.idle_add(self.topbutton2.set_sensitive, True)
+            else:
+                self.tryfixstack.set_visible_child_name("error")
+                self.isbroken = True
+                print("Error while updating Cache")
+        else:
+            print("onVteDone status: {}".format(status))
+
+    def runVteCommand(self, term, command):
+        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
+        term.set_pty(pty)
+        term.connect ("child-exited", self.onVteDone)
+        return term.spawn_sync(Vte.PtyFlags.DEFAULT,
+            os.environ['HOME'],
+            command,
+            [],
+            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            None,
+             None,
+        )

@@ -26,6 +26,18 @@ def main():
         except Exception as e:
             print(str(e))
 
+    def subupdate():
+        subprocess.call(["apt", "update"],
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
+    def fixbroken():
+        subprocess.call(["apt", "install", "--fix-broken", "-yq"],
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
+    def dpkgconfigure():
+        subprocess.call(["dpkg", "--configure", "-a"],
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
     def externalrepo(key, sources, name):
         tmpkeyfilename = ''.join(random.choice(string.ascii_lowercase) for i in range(13))
         tmpkeyfile = open(os.path.join("/tmp", tmpkeyfilename), "w")
@@ -102,6 +114,11 @@ def main():
             correctsourceslist()
         elif sys.argv[1] == "update":
             update()
+        elif sys.argv[1] == "fixapt":
+            correctsourceslist()
+            subupdate()
+            fixbroken()
+            dpkgconfigure()
         else:
             print("unknown argument error")
     else:

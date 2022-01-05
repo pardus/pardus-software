@@ -58,6 +58,13 @@ class Package(object):
             self.apps.append({"name": name, "category": section})
             # self.secs.append(section)
 
+    def controlPackageCache(self, packagename):
+        try:
+            self.cache[packagename]
+        except:
+            return False
+        return True
+
     def isinstalled(self, packagename):
         try:
             package = self.cache[packagename]
@@ -79,7 +86,10 @@ class Package(object):
     # print(package.versions[0].get_dependencies("Depends"))
 
     def description(self, packagename, israw):
-        package = self.cache[packagename]
+        try:
+            package = self.cache[packagename]
+        except:
+            return ""
         try:
             if israw:
                 desc = package.candidate.raw_description.replace("\n", "")
@@ -97,7 +107,10 @@ class Package(object):
 
     def summary(self, packagename):
         # Return the short description (one line summary)
-        package = self.cache[packagename]
+        try:
+            package = self.cache[packagename]
+        except:
+            return ""
         try:
             summ = package.candidate.summary
         except:
@@ -119,7 +132,10 @@ class Package(object):
         return version
 
     def installedVersion(self, packagename):
-        package = self.cache[packagename]
+        try:
+            package = self.cache[packagename]
+        except:
+            return None
         try:
             version = package.installed.version
         except:
@@ -157,23 +173,33 @@ class Package(object):
 
     def residual(self):
         residual = []
-        for pkg in self.cache:
-            if self.cache[pkg.name].has_config_files and not self.cache[pkg.name].is_installed:
-                residual.append(pkg.name)
+        try:
+            for pkg in self.cache:
+                if self.cache[pkg.name].has_config_files and not self.cache[pkg.name].is_installed:
+                    residual.append(pkg.name)
+        except Exception as e:
+            print("Package residual Error: {}".format(e))
+
         return residual
 
     def autoremovable(self):
         autoremovable = []
-        for pkg in self.cache:
-            if self.cache[pkg.name].is_auto_removable:
-                autoremovable.append(pkg.name)
+        try:
+            for pkg in self.cache:
+                if self.cache[pkg.name].is_auto_removable:
+                    autoremovable.append(pkg.name)
+        except Exception as e:
+            print("Package autoremovable Error: {}".format(e))
         return autoremovable
 
     def upgradable(self):
         upgradable = []
-        for pkg in self.cache:
-            if self.cache[pkg.name].is_upgradable:
-                upgradable.append(pkg.name)
+        try:
+            for pkg in self.cache:
+                if self.cache[pkg.name].is_upgradable:
+                    upgradable.append(pkg.name)
+        except Exception as e:
+            print("Package upgradable Error: {}".format(e))
         return upgradable
 
     def versionCompare(self, version1, version2):

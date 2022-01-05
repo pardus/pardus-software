@@ -27,9 +27,10 @@ data_files = [
       "images/rating-unrated-hover.svg"]),
     ("/usr/share/pardus/pardus-software/ui", ["ui/MainWindow.glade"]),
     ("/usr/share/pardus/pardus-software/src",
-     ["src/Actions.py", "src/AppDetail.py", "src/AppImage.py", "src/AppRequest.py", "src/CellRendererButton.py",
-      "src/GnomeComment.py", "src/GnomeRatingServer.py", "src/main.py", "src/MainWindow.py", "src/Package.py",
-      "src/Server.py", "src/SysActions.py", "src/UserSettings.py", "src/__version__"]),
+     ["src/Actions.py", "src/AppDetail.py", "src/AppImage.py", "src/AppRequest.py", "src/AutoAptUpdate.py",
+      "src/CellRendererButton.py", "src/GnomeComment.py", "src/GnomeRatingServer.py", "src/main.py",
+      "src/MainWindow.py", "src/Package.py", "src/Server.py", "src/SysActions.py", "src/UserSettings.py",
+      "src/__version__"]),
     ("/usr/share/icons/hicolor/scalable/apps/", ["images/pardus-software.svg"]),
     ("/usr/share/mime/packages/", ["pardus-software.xml"])
 ]

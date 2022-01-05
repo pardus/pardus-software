@@ -34,4 +34,18 @@
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
 
+  <action id="tr.org.pardus.pkexec.pardus-software-autoaptupdateaction">
+    <description>Pardus Software Center Authentication</description>
+    <message>Authentication is required for Pardus Software Center</message>
+    <message xml:lang="tr">Pardus Yazılım Merkezi için yetkilendirme gerekiyor</message>
+    <icon_name>preferences-system</icon_name>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/share/pardus/pardus-software/src/AutoAptUpdate.py</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+
 </policyconfig>
