@@ -25,6 +25,7 @@ class Server(object):
         self.serverapps = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
         self.serverhomepage = "/api/v2/homepage"
+        self.serverstatistics = "/api/v2/statistics"
         self.serversendrate = "/api/v2/rate"
         self.serversenddownload = "/api/v2/download"
         self.serversendsuggestapp = "/api/v2/suggestapp"
@@ -57,6 +58,11 @@ class Server(object):
         self.appversion = ""
         self.iconnames = ""
         self.badwords = []
+        self.dailydowns = []
+        self.osdowns = []
+        self.appdowns = []
+        self.oscolors = []
+        self.appcolors = []
         self.aptuptime = 86400  # default control value is 1 day if server value is none
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"

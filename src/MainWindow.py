@@ -18,6 +18,9 @@ import locale
 from locale import gettext as _
 from locale import getlocale
 
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
+
 locale.bindtextdomain('pardus-software', '/usr/share/locale')
 locale.textdomain('pardus-software')
 
@@ -110,6 +113,9 @@ class MainWindow(object):
 
         self.hometotaldc = self.GtkBuilder.get_object("hometotaldc")
         self.hometotalrc = self.GtkBuilder.get_object("hometotalrc")
+        self.statstotaldc = self.GtkBuilder.get_object("statstotaldc")
+        self.statstotalrc = self.GtkBuilder.get_object("statstotalrc")
+        self.statsweblabel = self.GtkBuilder.get_object("statsweblabel")
         """
         self.CategoryAllRow = Gtk.ListBoxRow.new()
         self.CategoryListBox.add(self.CategoryAllRow)
@@ -335,6 +341,7 @@ class MainWindow(object):
 
         self.menu_suggestapp = self.GtkBuilder.get_object("menu_suggestapp")
         self.menu_myapps = self.GtkBuilder.get_object("menu_myapps")
+        self.menu_statistics = self.GtkBuilder.get_object("menu_statistics")
 
         self.SuggestAppName = self.GtkBuilder.get_object("SuggestAppName")
         self.SuggestCat = self.GtkBuilder.get_object("SuggestCat")
@@ -356,6 +363,10 @@ class MainWindow(object):
 
         self.SuggestScroll = self.GtkBuilder.get_object("SuggestScroll")
         self.PardusAppDetailScroll = self.GtkBuilder.get_object("PardusAppDetailScroll")
+
+        self.stats1ViewPort = self.GtkBuilder.get_object("stats1ViewPort")
+        self.stats2ViewPort = self.GtkBuilder.get_object("stats2ViewPort")
+        self.stats3ViewPort = self.GtkBuilder.get_object("stats3ViewPort")
 
         self.PardusCurrentCategory = -1
         if self.locale == "tr":
@@ -433,6 +444,8 @@ class MainWindow(object):
         self.mda_clicked = False
         self.mra_clicked = False
 
+        self.statisticsSetted = False
+
         self.repoappsinit = False
 
         self.isbroken = False
@@ -501,6 +514,7 @@ class MainWindow(object):
         self.status_serverapps = False
         self.status_servercats = False
         self.status_serverhome = False
+        self.status_serverstatistics = False
         self.serverappicons_done = False
         self.servercaticons_done = False
 
@@ -635,6 +649,7 @@ class MainWindow(object):
                 GLib.idle_add(self.topsearchbutton.set_sensitive, True)
                 GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
                 GLib.idle_add(self.menu_myapps.set_sensitive, True)
+                GLib.idle_add(self.menu_statistics.set_sensitive, True)
             else:
                 self.homestack.set_visible_child_name("fixapt")
                 GLib.idle_add(self.topsearchbutton.set_sensitive, False)
@@ -646,6 +661,7 @@ class MainWindow(object):
             GLib.idle_add(self.topsearchbutton.set_sensitive, False)
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
             GLib.idle_add(self.menu_myapps.set_sensitive, False)
+            GLib.idle_add(self.menu_statistics.set_sensitive, False)
 
         self.splashspinner.stop()
         self.splashlabel.set_text("")
@@ -866,6 +882,7 @@ class MainWindow(object):
         self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
         self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
         self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
+        self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
 
         # self.applist = sorted(self.Server.applist, key=lambda x: x["prettyname"][self.locale])
         # self.fullapplist = self.applist
@@ -913,8 +930,16 @@ class MainWindow(object):
                 self.Server.iconnames = response["iconnames"]
                 self.Server.badwords = response["badwords"]
                 self.Server.aptuptime = response["aptuptime"]
+            elif type == "statistics":
+                print("server statistics successful")
+                self.status_serverstatistics = True
+                self.Server.dailydowns = response["dailydowns"]
+                self.Server.osdowns = response["osdowns"]
+                self.Server.appdowns = response["appdowns"]
+                self.Server.oscolors = response["oscolors"]
+                self.Server.appcolors = response["appcolors"]
 
-            if self.status_serverapps and self.status_servercats and self.status_serverhome:
+            if self.status_serverapps and self.status_servercats and self.status_serverhome and self.status_serverstatistics:
                 self.Server.connection = True
                 self.getIcons()
         else:
@@ -1549,12 +1574,13 @@ class MainWindow(object):
                 self.homestack.set_visible_child_name("pardusapps")
                 self.PardusAppsIconView.unselect_all()
 
-        elif hsname == "preferences" or hsname == "repohome" or hsname == "updates" or hsname == "suggestapp" or hsname == "queue":
+        elif hsname == "preferences" or hsname == "repohome" or hsname == "updates" or hsname == "suggestapp" or hsname == "queue" or hsname == "statistics":
 
             self.homestack.set_visible_child_name(self.prefback)
 
             self.topsearchbutton.set_active(self.statusoftopsearch)
-            self.topsearchbutton.set_sensitive(True)
+            if not self.isbroken:
+                self.topsearchbutton.set_sensitive(True)
 
             hsname1 = self.homestack.get_visible_child_name()
 
@@ -1603,7 +1629,7 @@ class MainWindow(object):
                         self.topbutton2.get_style_context().remove_class("suggested-action")
                     if not self.queuebutton.get_style_context().has_class("suggested-action"):
                         self.queuebutton.get_style_context().add_class("suggested-action")
-                elif hsname1 == "preferences":
+                elif hsname1 == "preferences" or hsname1 == "fixapt":
                     self.menubackbutton.set_sensitive(False)
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
@@ -3334,6 +3360,8 @@ class MainWindow(object):
             self.queuebutton.get_style_context().remove_class("suggested-action")
         if not self.topbutton1.get_style_context().has_class("suggested-action"):
             self.topbutton1.get_style_context().add_class("suggested-action")
+        # self.topsearchbutton.set_active(True)
+        self.topsearchbutton.set_sensitive(True)
         self.searchstack.set_visible_child_name("pardus")
 
         self.menubackbutton.set_sensitive(True)
@@ -3358,6 +3386,82 @@ class MainWindow(object):
         self.PardusCategoryFilter.refilter()
         self.pardusAppsStack.set_visible_child_name("normal")
         self.homestack.set_visible_child_name("pardusapps")
+
+    def on_menu_statistics_clicked(self, button):
+        self.prefback = self.homestack.get_visible_child_name()
+        self.PopoverMenu.popdown()
+        self.topsearchbutton.set_active(False)
+        self.topsearchbutton.set_sensitive(False)
+        self.menubackbutton.set_sensitive(True)
+        self.homestack.set_visible_child_name("statistics")
+
+        if self.Server.connection:
+            self.setStatistics()
+
+    def setStatistics(self):
+        if not self.statisticsSetted:
+            self.statstotaldc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["downcount"]))
+            self.statstotalrc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["ratecount"]))
+            self.statsweblabel.set_markup("<small>{}<a href='https://apps.pardus.org.tr/statistics' title='https://apps.pardus.org.tr/statistics'>apps.pardus.org.tr</a>{}</small>".format(_("View on "), _(".")))
+            dates = []
+            downs = []
+            for data in self.Server.dailydowns:
+                dates.append(data["date"])
+                downs.append(data["count"])
+            fig1, ax1 = plt.subplots()
+            p1 = ax1.bar(dates, downs, width=0.9, edgecolor="white", linewidth=1)
+            plt.title(_("Daily App Download Counts (Last 30 Days)"))
+            plt.tight_layout()
+            # ax.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
+            fig1.autofmt_xdate(rotation=60)
+            canvas1 = FigureCanvas(fig1)
+            self.stats1ViewPort.add(canvas1)
+
+            osnames = []
+            osdowns = []
+            for key, value in self.Server.osdowns.items():
+                if self.locale == "tr" and key == "Others":
+                    key = "Diğerleri"
+                osnames.append(key)
+                osdowns.append(value)
+
+            explode = (0.1, 0.3, 0.4, 0.5)  # only "explode" the 2nd slice (i.e. 'Hogs')
+            fig2, ax2 = plt.subplots()
+            p2 = ax2.pie(osdowns, labels=osnames, colors=self.Server.oscolors, explode=explode,
+                         autopct=lambda p: f'{p * sum(osdowns) / 100 :.0f} (%{p:.2f})')
+            # plt.setp(p2[1], size="small", weight="bold")
+            # plt.setp(p2[2], size="small", weight="bold")
+            ax2.legend()
+            ax2.axis('equal')
+            plt.title(_("Used Operating Systems (For App Download)"))
+            plt.tight_layout()
+            canvas2 = FigureCanvas(fig2)
+            self.stats2ViewPort.add(canvas2)
+
+            appnames = []
+            appdowns = []
+            for appdata in self.Server.appdowns:
+                if self.locale == "tr":
+                    appnames.append(appdata["name_tr"])
+                else:
+                    appnames.append(appdata["name_en"])
+                appdowns.append(appdata["count"])
+            fig3, ax3 = plt.subplots()
+            p3 = ax3.bar(appnames, appdowns, width=0.9, edgecolor="white", linewidth=1, color=self.Server.appcolors)
+            plt.title(_("Top 30 App Downloads"))
+            plt.xticks(size="small")
+            plt.tight_layout()
+            # ax.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
+            fig3.autofmt_xdate(rotation=45)
+            canvas3 = FigureCanvas(fig3)
+            self.stats3ViewPort.add(canvas3)
+
+            self.stats1ViewPort.show_all()
+            self.stats2ViewPort.show_all()
+            self.stats3ViewPort.show_all()
+
+            self.statisticsSetted = True
+
 
     def on_menu_updates_clicked(self, button):
         self.prefback = self.homestack.get_visible_child_name()
