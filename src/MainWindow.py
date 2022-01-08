@@ -3419,19 +3419,19 @@ class MainWindow(object):
 
             osnames = []
             osdowns = []
-            for key, value in self.Server.osdowns.items():
-                if self.locale == "tr" and key == "Others":
-                    key = "Diğerleri"
-                osnames.append(key)
-                osdowns.append(value)
+            for osdata in self.Server.osdowns:
+                for key, value in osdata.items():
+                    if self.locale == "tr" and key == "Others":
+                        key = "Diğerleri"
+                    osnames.append(key)
+                    osdowns.append(value)
 
-            explode = (0.1, 0.3, 0.4, 0.5)  # only "explode" the 2nd slice (i.e. 'Hogs')
+            explode = (0.1, 0.3, 0.4, 0.5)
             fig2, ax2 = plt.subplots()
             p2 = ax2.pie(osdowns, labels=osnames, colors=self.Server.oscolors, explode=explode,
                          autopct=lambda p: f'{p * sum(osdowns) / 100 :.0f} (%{p:.2f})')
             # plt.setp(p2[1], size="small", weight="bold")
             # plt.setp(p2[2], size="small", weight="bold")
-            ax2.legend()
             ax2.axis('equal')
             plt.title(_("Used Operating Systems (For App Download)"))
             plt.tight_layout()
