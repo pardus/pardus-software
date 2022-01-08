@@ -3333,6 +3333,7 @@ class MainWindow(object):
             _("Server Address"), self.Server.serverurl))
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.queuebutton.get_style_context().remove_class("suggested-action")
         self.preflabel.set_text("")
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
@@ -3394,6 +3395,9 @@ class MainWindow(object):
         self.topsearchbutton.set_sensitive(False)
         self.menubackbutton.set_sensitive(True)
         self.homestack.set_visible_child_name("statistics")
+        self.topbutton2.get_style_context().remove_class("suggested-action")
+        self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.queuebutton.get_style_context().remove_class("suggested-action")
 
         if self.Server.connection:
             self.setStatistics()
@@ -3472,6 +3476,7 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("updates")
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.queuebutton.get_style_context().remove_class("suggested-action")
         self.updateerrorlabel.set_text("")
 
     def on_menu_about_clicked(self, button):
@@ -3487,6 +3492,7 @@ class MainWindow(object):
         self.topsearchbutton.set_sensitive(False)
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.queuebutton.get_style_context().remove_class("suggested-action")
         self.SuggestCat.remove_all()
         self.SuggestCat.append_text(_("Select Category"))
         self.SuggestCat.set_active(0)
