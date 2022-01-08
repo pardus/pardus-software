@@ -1,3 +1,18 @@
+pardus-software (0.1.0~beta24) unstable; urgency=medium
+
+  * Add package manager controls, auto apt update function and Update apt cache controls
+  * Add apt control ui improvements to startup and settings page
+  * Update translations
+  * Fix print
+  * Add bullseye and buster sources list to known repos
+  * Add statistics page
+  * Update translations
+  * Add python3-matplotlib to Depends
+  * Update osdowns dict
+  * Fix button suggested classes on menu clicked
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sat, 08 Jan 2022 16:12:45 +0300
+
 pardus-software (0.1.0~beta23) unstable; urgency=medium
 
   * Add use dark theme switch to settings
