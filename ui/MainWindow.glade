@@ -1231,6 +1231,7 @@ so that the OS has nothing to do with the health of the application.</property>
                           <object class="GtkStack" id="rbotstack">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="transition-type">slide-up</property>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
                               <object class="GtkGrid">
@@ -4813,7 +4814,7 @@ This application served from Pardus non-free package repositories, so that the O
                                               <object class="GtkStack" id="commentstack">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="transition-type">over-left-right</property>
+                                                <property name="transition-type">slide-left-right</property>
                                                 <child>
                                                   <object class="GtkBox">
                                                     <property name="visible">True</property>
@@ -6140,7 +6141,6 @@ This application served from Pardus non-free package repositories, so that the O
                       <object class="GtkStack" id="updatestack">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="transition-duration">250</property>
                         <property name="transition-type">slide-up</property>
                         <child>
                           <object class="GtkBox">
@@ -7111,6 +7111,7 @@ This application served from Pardus non-free package repositories, so that the O
                       <object class="GtkStack" id="tryfixstack">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="transition-type">slide-left-right</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -7472,6 +7473,7 @@ Use with caution. Are you sure you want to continue ?</property>
                       <object class="GtkStack" id="statstack">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="transition-type">crossfade</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">True</property>

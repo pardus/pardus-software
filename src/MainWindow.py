@@ -364,6 +364,7 @@ class MainWindow(object):
         self.SuggestScroll = self.GtkBuilder.get_object("SuggestScroll")
         self.PardusAppDetailScroll = self.GtkBuilder.get_object("PardusAppDetailScroll")
 
+        self.statstack = self.GtkBuilder.get_object("statstack")
         self.stats1ViewPort = self.GtkBuilder.get_object("stats1ViewPort")
         self.stats2ViewPort = self.GtkBuilder.get_object("stats2ViewPort")
         self.stats3ViewPort = self.GtkBuilder.get_object("stats3ViewPort")
@@ -1463,7 +1464,7 @@ class MainWindow(object):
             self.searchstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.searchstack.set_transition_duration(200)
 
-            self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.rbotstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.rbotstack.set_transition_duration(200)
 
             self.commentstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
@@ -1481,11 +1482,35 @@ class MainWindow(object):
             self.activatestack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.activatestack.set_transition_duration(200)
 
+            self.updatestack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
+            self.updatestack.set_transition_duration(200)
+
+            self.tryfixstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.tryfixstack.set_transition_duration(200)
+
+            self.statstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+            self.statstack.set_transition_duration(200)
+
+            self.SuggestStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.SuggestStack.set_transition_duration(200)
+
+            self.prefstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.prefstack.set_transition_duration(200)
+
+            self.ImagePopoverStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.ImagePopoverStack.set_transition_duration(200)
+
             self.bottomrevealer.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.bottomrevealer.set_transition_duration(200)
 
             self.toprevealer.set_transition_type(Gtk.StackTransitionType.SLIDE_DOWN)
             self.toprevealer.set_transition_duration(200)
+
+            self.PopoverMenu.set_transitions_enabled(True)
+            self.DisclaimerPopover.set_transitions_enabled(True)
+            self.ImagePopover.set_transitions_enabled(True)
+            self.licensePopover.set_transitions_enabled(True)
+            self.PopoverPrefTip.set_transitions_enabled(True)
 
         else:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.NONE)
@@ -1499,6 +1524,9 @@ class MainWindow(object):
 
             self.searchstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.searchstack.set_transition_duration(0)
+
+            self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.rbotstack.set_transition_duration(0)
 
             self.commentstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.commentstack.set_transition_duration(0)
@@ -1515,11 +1543,35 @@ class MainWindow(object):
             self.activatestack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.activatestack.set_transition_duration(0)
 
+            self.updatestack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.updatestack.set_transition_duration(0)
+
+            self.tryfixstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.tryfixstack.set_transition_duration(0)
+
+            self.statstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.statstack.set_transition_duration(0)
+
+            self.SuggestStack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.SuggestStack.set_transition_duration(0)
+
+            self.prefstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.prefstack.set_transition_duration(0)
+
+            self.ImagePopoverStack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.ImagePopoverStack.set_transition_duration(0)
+
             self.bottomrevealer.set_transition_type(Gtk.StackTransitionType.NONE)
             self.bottomrevealer.set_transition_duration(0)
 
             self.toprevealer.set_transition_type(Gtk.StackTransitionType.NONE)
             self.toprevealer.set_transition_duration(0)
+
+            self.PopoverMenu.set_transitions_enabled(False)
+            self.DisclaimerPopover.set_transitions_enabled(False)
+            self.ImagePopover.set_transitions_enabled(False)
+            self.licensePopover.set_transitions_enabled(False)
+            self.PopoverPrefTip.set_transitions_enabled(False)
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
