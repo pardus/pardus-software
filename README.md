@@ -6,21 +6,6 @@ It is currently a work in progress. Maintenance is done by <a href="https://www.
 
 You can see the web interface of the application center at <a href="https://apps.pardus.org.tr/">Pardus Apps</a>.
 
-## Screenshots
-
-![Pardus Software Center 1](screenshots/pardus-software-1.png)
-
-![Pardus Software Center 2](screenshots/pardus-software-2.png)
-
-![Pardus Software Center 3](screenshots/pardus-software-3.png)
-
-![Pardus Software Center 4](screenshots/pardus-software-4.png)
-
-![Pardus Software Center 5](screenshots/pardus-software-5.png)
-
-![Pardus Software Center 6](screenshots/pardus-software-6.png)
-
-
 ## Dependencies:
 
 * This application is developed based on Python3 and GTK+ 3. Dependencies:
@@ -40,3 +25,17 @@ You can see the web interface of the application center at <a href="https://apps
 * `sudo apt install devscripts git-buildpackage`
 * `sudo mk-build-deps -ir`
 * `gbp buildpackage --git-export-dir=/tmp/build/pardus-software -us -uc`
+
+## Screenshots
+
+![Pardus Software Center 1](screenshots/pardus-software-1.png)
+
+![Pardus Software Center 2](screenshots/pardus-software-2.png)
+
+![Pardus Software Center 3](screenshots/pardus-software-3.png)
+
+![Pardus Software Center 4](screenshots/pardus-software-4.png)
+
+![Pardus Software Center 5](screenshots/pardus-software-5.png)
+
+![Pardus Software Center 6](screenshots/pardus-software-6.png)
