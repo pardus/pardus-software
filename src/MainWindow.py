@@ -3426,6 +3426,9 @@ class MainWindow(object):
         self.PardusCurrentCategoryIcon = "all"
         self.PardusCurrentCategorySubCats = False
         self.PardusCurrentCategoryExternal = False
+        self.isPardusSearching = False
+        self.pardussearchbar.set_text("")
+        self.topsearchbutton.set_active(False)
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
