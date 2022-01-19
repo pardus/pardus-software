@@ -1,3 +1,15 @@
+pardus-software (0.1.0~beta25) unstable; urgency=medium
+
+  * Add gir1.2-vte-2.91 to Depends
+  * Add missing initial animation types
+  * Add screenshots
+  * Add README.md
+  * Create LICENSE
+  * Update README
+  * Fix search status on myapps
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Wed, 19 Jan 2022 14:48:36 +0300
+
 pardus-software (0.1.0~beta24) unstable; urgency=medium
 
   * Add package manager controls, auto apt update function and Update apt cache controls
