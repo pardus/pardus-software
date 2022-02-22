@@ -2513,46 +2513,66 @@ class MainWindow(object):
 
     def resizeAppImage(self):
         size = self.MainWindow.get_size()
-        w = size.width - size.width / 1.5  # this is for detail Image
-        h = size.height - size.height / 1.5  # this is for detail Image
+        w = size.width - size.width / 1.5 # this is for detail Image
 
         if not self.imgfullscreen:
             pw = size.width - size.width / 4  # this is for popup Image
-            ph = size.height - size.height / 4  # this is for popup Image
         else:
             pw = size.width - 125  # this is for popup Image
-            ph = size.height - 75  # this is for popup Image
 
         if self.pixbuf1:
-            pixbuf = self.pixbuf1.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
-            self.dImage1.set_from_pixbuf(pixbuf)
+            hsize = (w * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
+            if hsize > size.height - size.height / 1.55:
+                hsize = size.height - size.height / 1.55
+                w = (hsize * self.pixbuf1.get_width()) / self.pixbuf1.get_height()
 
-            poppixbuf = self.pixbuf1.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
-            self.pop1Image.set_from_pixbuf(poppixbuf)
+            self.dImage1.set_from_pixbuf(self.pixbuf1.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR))
+
+            phsize = (pw * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
+            if phsize + 75 > size.height:
+                phsize = size.height - 75
+                pw = ( phsize * self.pixbuf1.get_width() ) / self.pixbuf1.get_height()
+
+            self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
 
         if self.pixbuf2:
-            pixbuf = self.pixbuf2.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
-            self.dImage2.set_from_pixbuf(pixbuf)
+            hsize = (w * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
+            if hsize > size.height - size.height / 1.55:
+                hsize = size.height - size.height / 1.55
+                w = (hsize * self.pixbuf2.get_width()) / self.pixbuf2.get_height()
 
-            poppixbuf = self.pixbuf2.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
-            self.pop2Image.set_from_pixbuf(poppixbuf)
+            self.dImage2.set_from_pixbuf(self.pixbuf2.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR))
+
+            phsize = (pw * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
+            if phsize + 75 > size.height:
+                phsize = size.height - 75
+                pw = ( phsize * self.pixbuf2.get_width() ) / self.pixbuf2.get_height()
+
+            self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
 
     def resizePopImage(self, fullscreen=False):
 
         size = self.MainWindow.get_size()
         if not fullscreen:
-            pw = size.width - size.width / 4  # this is for popup Image
-            ph = size.height - size.height / 4  # this is for popup Image
+            basewidth = size.width - size.width / 3
         else:
-            pw = size.width - 125  # this is for popup Image
-            ph = size.height - 75  # this is for popup Image
+            basewidth = size.width - 125
 
         if self.pixbuf1:
-            poppixbuf = self.pixbuf1.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
-            self.pop1Image.set_from_pixbuf(poppixbuf)
+            hsize = (basewidth * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
+            if hsize + 75 > size.height:
+                hsize = size.height - 75
+                basewidth = ( hsize * self.pixbuf1.get_width() ) / self.pixbuf1.get_height()
+
+            self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
+
         if self.pixbuf2:
-            poppixbuf = self.pixbuf2.scale_simple(pw, ph, GdkPixbuf.InterpType.BILINEAR)
-            self.pop2Image.set_from_pixbuf(poppixbuf)
+            hsize = (basewidth * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
+            if hsize + 75 > size.height:
+                hsize = size.height - 75
+                basewidth = ( hsize * self.pixbuf2.get_width() ) / self.pixbuf2.get_height()
+
+            self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
 
     def on_wpcStarE1_button_press_event(self, widget, event):
         self.setWpcStar(1)
