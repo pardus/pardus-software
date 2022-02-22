@@ -4210,28 +4210,13 @@ class MainWindow(object):
         if not self.updateclicked:
             if "dlstatus" in line:
                 percent = line.split(":")[2].split(".")[0]
-                # if self.Package.missingdeps(self.actionedappname):
-                #     print("Downloading dependencies " + percent + " %")
-                #     self.progresstextlabel.set_text(
-                #         self.actionedappname + " | " + "Downloading dependencies : " + percent + " %")
-                # else:
-                #     print("Controlling dependencies : " + percent + " %")
-                #     self.progresstextlabel.set_text(
-                #         self.actionedappname + " | " + "Controlling dependencies : " + percent + " %")
-                # print("1/2 : " + percent + " %")
-                # if not self.externalactioned:
-                self.progresstextlabel.set_text(self.actionedappname + " : " + percent + " %")
-                # else:
-                #     self.progresstextlabel.set_text("Updating Cache : " + percent + " %")
+                self.progresstextlabel.set_text("{} | {} : {} %".format(self.actionedappname, _("Downloading"), percent))
             elif "pmstatus" in line:
                 percent = line.split(":")[2].split(".")[0]
-                # print("Processing : " + percent)
                 if self.isinstalled:
-                    self.progresstextlabel.set_text(
-                        self.actionedappname + " | " + _("Removing") + ": " + percent + " %")
+                    self.progresstextlabel.set_text("{} | {} : {} %".format(self.actionedappname, _("Removing"), percent))
                 else:
-                    self.progresstextlabel.set_text(
-                        self.actionedappname + " | " + _("Installing") + ": " + percent + " %")
+                    self.progresstextlabel.set_text("{} | {} : {} %".format(self.actionedappname, _("Installing"), percent))
             elif "E:" in line and ".deb" in line:
                 print("connection error")
                 self.error = True
