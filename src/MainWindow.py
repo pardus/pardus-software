@@ -403,6 +403,7 @@ class MainWindow(object):
         self.imgLabel = self.GtkBuilder.get_object("imgLabel")
         self.appimage1stack = self.GtkBuilder.get_object("appimage1stack")
         self.appimage2stack = self.GtkBuilder.get_object("appimage2stack")
+        self.fullscreen_image = self.GtkBuilder.get_object("fullscreen_image")
         # self.getDisplay()
 
         self.mac = self.getMac()
@@ -713,6 +714,7 @@ class MainWindow(object):
         self.resizePopImage()
         self.ImagePopover.show_all()
         self.ImagePopover.popup()
+        self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
 
     def on_dEventBox2_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -720,6 +722,7 @@ class MainWindow(object):
         self.resizePopImage()
         self.ImagePopover.show_all()
         self.ImagePopover.popup()
+        self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
 
     def on_imgBackButton_clicked(self, button):
         self.setPopImage(1)
@@ -735,9 +738,11 @@ class MainWindow(object):
         if self.imgfullscreen_count % 2 == 1:
             self.imgfullscreen = True
             self.resizePopImage(True)
+            self.fullscreen_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
         else:
             self.imgfullscreen = False
             self.resizePopImage()
+            self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
 
     def on_ImagePopover_key_press_event(self, widget, event):
 
@@ -752,10 +757,12 @@ class MainWindow(object):
             if self.imgfullscreen_count % 2 == 1:
                 self.imgfullscreen = True
                 self.resizePopImage(True)
+                self.fullscreen_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
                 return True
             else:
                 self.imgfullscreen = False
                 self.resizePopImage()
+                self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
                 return True
 
     def setPopImage(self, image):
@@ -2555,8 +2562,10 @@ class MainWindow(object):
         size = self.MainWindow.get_size()
         if not fullscreen:
             basewidth = size.width - size.width / 3
+            self.ImagePopover.set_size_request(0, 0)
         else:
             basewidth = size.width - 125
+            self.ImagePopover.set_size_request(size.width, size.height)
 
         if self.pixbuf1:
             hsize = (basewidth * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
