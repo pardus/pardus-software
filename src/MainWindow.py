@@ -480,6 +480,7 @@ class MainWindow(object):
         self.imgfullscreen = False
 
         self.imgfullscreen_count = 0
+        self.down_image = 0
 
         # cssProvider = Gtk.CssProvider()
         # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
@@ -733,6 +734,28 @@ class MainWindow(object):
     def on_imgCloseButton_clicked(self, button):
         self.ImagePopover.popdown()
 
+    def on_imgWebButton_clicked(self, button):
+        image = "{}{}".format(self.Server.serverurl, self.screenshots[self.down_image])
+        subprocess.Popen(["xdg-open", image])
+
+    def on_imgDownloadButton_clicked(self, button):
+        filesave_chooser = Gtk.FileChooserDialog(title=_("Save File"), parent=self.MainWindow,
+                                             action=Gtk.FileChooserAction.SAVE)
+        filesave_chooser.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
+        filesave_chooser.add_button(_("Save"), Gtk.ResponseType.ACCEPT).get_style_context().add_class("suggested-action")
+
+        filesave_chooser.set_current_name("pardus-software_{}_{}".format(
+            datetime.now().strftime("%Y-%m-%d_%H_%M_%S"), os.path.basename(self.screenshots[self.down_image])))
+
+        response = filesave_chooser.run()
+        if response == Gtk.ResponseType.ACCEPT:
+            file_path = filesave_chooser.get_filename()
+            if self.down_image == 0:
+                self.pixbuf1.savev(file_path, "png", [], [])
+            elif self.down_image == 1:
+                self.pixbuf2.savev(file_path, "png", [], [])
+        filesave_chooser.destroy()
+
     def on_imgFullButton_clicked(self, button):
         self.imgfullscreen_count += 1
         if self.imgfullscreen_count % 2 == 1:
@@ -772,6 +795,10 @@ class MainWindow(object):
         elif image == 2:
             self.imgLabel.set_text("{} 2".format(_("Image")))
             self.ImagePopoverStack.set_visible_child_name("image2")
+        if type(image) is int:
+            self.down_image = image - 1
+        else:
+            self.down_image = 0
 
     def on_ImagePopover_closed(self, widget):
         self.imgfullscreen = False
