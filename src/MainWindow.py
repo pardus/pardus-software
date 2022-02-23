@@ -744,8 +744,9 @@ class MainWindow(object):
         filesave_chooser.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
         filesave_chooser.add_button(_("Save"), Gtk.ResponseType.ACCEPT).get_style_context().add_class("suggested-action")
 
-        filesave_chooser.set_current_name("pardus-software_{}_{}".format(
-            datetime.now().strftime("%Y-%m-%d_%H_%M_%S"), os.path.basename(self.screenshots[self.down_image])))
+        filesave_chooser.set_current_name("{}_{}.png".format(
+            os.path.splitext(os.path.basename(self.screenshots[self.down_image]))[0],
+            datetime.now().strftime("%Y-%m-%d_%H-%M-%S")))
 
         response = filesave_chooser.run()
         if response == Gtk.ResponseType.ACCEPT:
