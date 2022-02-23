@@ -358,6 +358,7 @@ so that the OS has nothing to do with the health of the application.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Open image on web browser</property>
                 <property name="halign">start</property>
                 <property name="hexpand">True</property>
                 <property name="image">image5</property>
@@ -375,6 +376,7 @@ so that the OS has nothing to do with the health of the application.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Download image</property>
                 <property name="halign">end</property>
                 <property name="hexpand">True</property>
                 <property name="image">image4</property>
