@@ -1,3 +1,18 @@
+pardus-software (0.1.0~beta26) unstable; urgency=medium
+
+  * Fix file size typo
+  * Add downloading info to package install progress
+  * Fix keep aspect ratio problem on app screenshots
+  * Update fullscreen icon and popover size on state changed
+  * Add download and open on web buttons to app images popover
+  * Update hsize control value of appimage popover
+  * Update app image file save name
+  * Add tooltip to download image and open on web buttons
+  * Update translations
+  * Add cycle to next and back image buttons
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Wed, 23 Feb 2022 16:32:19 +0300
+
 pardus-software (0.1.0~beta25) unstable; urgency=medium
 
   * Add gir1.2-vte-2.91 to Depends
