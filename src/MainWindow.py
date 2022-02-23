@@ -726,10 +726,16 @@ class MainWindow(object):
         self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
 
     def on_imgBackButton_clicked(self, button):
-        self.setPopImage(1)
+        if self.ImagePopoverStack.get_visible_child_name() != "image1":
+            self.setPopImage(1)
+        else:
+            self.setPopImage(2)
 
     def on_imgNextButton_clicked(self, button):
-        self.setPopImage(2)
+        if self.ImagePopoverStack.get_visible_child_name() != "image2":
+            self.setPopImage(2)
+        else:
+            self.setPopImage(1)
 
     def on_imgCloseButton_clicked(self, button):
         self.ImagePopover.popdown()
@@ -771,10 +777,16 @@ class MainWindow(object):
     def on_ImagePopover_key_press_event(self, widget, event):
 
         if event.keyval == Gdk.KEY_Left:
-            self.setPopImage(1)
+            if self.ImagePopoverStack.get_visible_child_name() != "image1":
+                self.setPopImage(1)
+            else:
+                self.setPopImage(2)
             return True
         elif event.keyval == Gdk.KEY_Right:
-            self.setPopImage(2)
+            if self.ImagePopoverStack.get_visible_child_name() != "image2":
+                self.setPopImage(2)
+            else:
+                self.setPopImage(1)
             return True
         elif event.keyval == Gdk.KEY_f or event.keyval == Gdk.KEY_F:
             self.imgfullscreen_count += 1
