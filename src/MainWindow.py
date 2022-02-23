@@ -2563,8 +2563,8 @@ class MainWindow(object):
             self.dImage1.set_from_pixbuf(self.pixbuf1.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR))
 
             phsize = (pw * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
-            if phsize + 75 > size.height:
-                phsize = size.height - 75
+            if phsize + 110 > size.height:
+                phsize = size.height - 110
                 pw = ( phsize * self.pixbuf1.get_width() ) / self.pixbuf1.get_height()
 
             self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
@@ -2578,8 +2578,8 @@ class MainWindow(object):
             self.dImage2.set_from_pixbuf(self.pixbuf2.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR))
 
             phsize = (pw * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
-            if phsize + 75 > size.height:
-                phsize = size.height - 75
+            if phsize + 110 > size.height:
+                phsize = size.height - 110
                 pw = ( phsize * self.pixbuf2.get_width() ) / self.pixbuf2.get_height()
 
             self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
@@ -2596,16 +2596,16 @@ class MainWindow(object):
 
         if self.pixbuf1:
             hsize = (basewidth * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
-            if hsize + 75 > size.height:
-                hsize = size.height - 75
+            if hsize + 110 > size.height:
+                hsize = size.height - 110
                 basewidth = ( hsize * self.pixbuf1.get_width() ) / self.pixbuf1.get_height()
 
             self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
 
         if self.pixbuf2:
             hsize = (basewidth * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
-            if hsize + 75 > size.height:
-                hsize = size.height - 75
+            if hsize + 110 > size.height:
+                hsize = size.height - 110
                 basewidth = ( hsize * self.pixbuf2.get_width() ) / self.pixbuf2.get_height()
 
             self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
