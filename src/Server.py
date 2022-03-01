@@ -53,6 +53,7 @@ class Server(object):
         self.ediapplist = []
         self.mostdownapplist = []
         self.mostrateapplist = []
+        self.lastaddedapplist = []
         self.totalstatistics = []
         self.servermd5 = []
         self.appversion = ""

@@ -110,6 +110,7 @@ class MainWindow(object):
         self.SubCategoryFlowBox = self.GtkBuilder.get_object("SubCategoryFlowBox")
         self.MostDownFlowBox = self.GtkBuilder.get_object("MostDownFlowBox")
         self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
+        self.LastAddedFlowBox = self.GtkBuilder.get_object("LastAddedFlowBox")
 
         self.hometotaldc = self.GtkBuilder.get_object("hometotaldc")
         self.hometotalrc = self.GtkBuilder.get_object("hometotalrc")
@@ -445,6 +446,7 @@ class MainWindow(object):
         self.myapps_clicked = False
         self.mda_clicked = False
         self.mra_clicked = False
+        self.la_clicked = False
 
         self.statisticsSetted = False
 
@@ -482,13 +484,13 @@ class MainWindow(object):
         self.imgfullscreen_count = 0
         self.down_image = 0
 
-        # cssProvider = Gtk.CssProvider()
-        # cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
-        # screen = Gdk.Screen.get_default()
-        # styleContext = Gtk.StyleContext()
-        # styleContext.add_provider_for_screen(screen, cssProvider,
-        #                                      Gtk.STYLE_PROVIDER_PRIORITY_USER)
-        # # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
+        cssProvider = Gtk.CssProvider()
+        cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
+        screen = Gdk.Screen.get_default()
+        styleContext = Gtk.StyleContext()
+        styleContext.add_provider_for_screen(screen, cssProvider,
+                                             Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
 
         self.vteterm = Vte.Terminal()
         self.vteterm.set_scrollback_lines(-1)
@@ -972,6 +974,8 @@ class MainWindow(object):
                 self.Server.ediapplist = response["editor-apps"]
                 self.Server.mostdownapplist = response["mostdown-apps"]
                 self.Server.mostrateapplist = response["mostrate-apps"]
+                if "last-apps" in response:
+                    self.Server.lastaddedapplist = response["last-apps"]
                 self.Server.totalstatistics = response["total"]
                 self.Server.servermd5 = response["md5"]
                 self.Server.appversion = response["version"]
@@ -1160,6 +1164,10 @@ class MainWindow(object):
             self.sortPardusAppsCombo.set_active(0)
             self.mra_clicked = False
 
+        if self.la_clicked and self.sortPardusAppsCombo.get_active() == 3:
+            self.sortPardusAppsCombo.set_active(0)
+            self.la_clicked = False
+
         self.isPardusSearching = False
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = -2
@@ -1275,9 +1283,17 @@ class MainWindow(object):
                 box.pack_start(label, False, True, 0)
                 box.pack_end(box1, False, True, 10)
 
+                listbox = Gtk.ListBox.new()
+                listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+                listbox.get_style_context().add_class("pardus-software-listbox")
+                listbox.add(box)
+
                 frame = Gtk.Frame.new()
                 frame.get_style_context().add_class("pardus-software-frame")
-                frame.add(box)
+                frame.add(listbox)
+
+                self.MostDownFlowBox.get_style_context().add_class("pardus-software-flowbox")
+
                 GLib.idle_add(self.MostDownFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
 
             for mra in self.Server.mostrateapplist:
@@ -1322,16 +1338,78 @@ class MainWindow(object):
                 box.pack_start(label, False, True, 0)
                 box.pack_end(box1, False, True, 10)
 
+                listbox = Gtk.ListBox.new()
+                listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+                listbox.get_style_context().add_class("pardus-software-listbox")
+                listbox.add(box)
+
                 frame = Gtk.Frame.new()
                 frame.get_style_context().add_class("pardus-software-frame")
-                frame.add(box)
+                frame.add(listbox)
+
+                self.MostRateFlowBox.get_style_context().add_class("pardus-software-flowbox")
                 GLib.idle_add(self.MostRateFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+
+            for la in self.Server.lastaddedapplist:
+                icon = Gtk.Image.new()
+                if self.UserSettings.config_usi:
+                    icon.set_from_pixbuf(self.getServerAppIcon(la["name"], 64))
+                else:
+                    icon.set_from_pixbuf(self.getSystemAppIcon(la["name"], 64))
+
+                label = Gtk.Label.new()
+                label.set_text(str(self.getPrettyName(la["name"])))
+                label.set_line_wrap(True)
+                label.set_max_width_chars(10)
+                label.name = la["name"]
+
+                downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
+
+                downlabel = Gtk.Label.new()
+                downlabel.set_markup("<small>{}</small>".format(la["download"]))
+
+                rateicon = Gtk.Image.new_from_icon_name("star-new-symbolic", Gtk.IconSize.BUTTON)
+
+                ratelabel = Gtk.Label.new()
+                ratelabel.set_markup("<small>{:.1f}</small>".format(float(la["rate"])))
+
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+                box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                box3 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+
+                box2.pack_start(downicon, False, True, 0)
+                box2.pack_start(downlabel, False, True, 0)
+
+                box3.pack_start(rateicon, False, True, 0)
+                box3.pack_start(ratelabel, False, True, 0)
+
+                box1.set_homogeneous(True)
+                box1.pack_start(box2, False, True, 0)
+                box1.pack_start(box3, False, True, 0)
+
+                box.pack_start(icon, False, True, 10)
+                box.pack_start(label, False, True, 0)
+                box.pack_end(box1, False, True, 10)
+
+                listbox = Gtk.ListBox.new()
+                listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+                listbox.get_style_context().add_class("pardus-software-listbox")
+                listbox.add(box)
+
+                frame = Gtk.Frame.new()
+                frame.get_style_context().add_class("pardus-software-frame")
+                frame.add(listbox)
+
+                self.LastAddedFlowBox.get_style_context().add_class("pardus-software-flowbox")
+                GLib.idle_add(self.LastAddedFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
 
             self.hometotaldc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["downcount"]))
             self.hometotalrc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["ratecount"]))
 
         GLib.idle_add(self.MostDownFlowBox.show_all)
         GLib.idle_add(self.MostRateFlowBox.show_all)
+        GLib.idle_add(self.LastAddedFlowBox.show_all)
 
     def getPrettyName(self, name, split=True):
         prettyname = name
@@ -1668,6 +1746,7 @@ class MainWindow(object):
                 self.EditorAppsIconView.unselect_all()
                 self.MostRateFlowBox.unselect_all()
                 self.MostDownFlowBox.unselect_all()
+                self.LastAddedFlowBox.unselect_all()
                 self.menubackbutton.set_sensitive(False)
             else:
                 self.homestack.set_visible_child_name("pardusapps")
@@ -2910,12 +2989,13 @@ class MainWindow(object):
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
-        self.mostappname = child.get_children()[0].get_children()[0].get_children()[1].name
+        self.mostappname = child.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[1].name
 
         self.on_PardusAppsIconView_selection_changed(self.mostappname)
 
         self.MostDownFlowBox.unselect_all()
         self.MostRateFlowBox.unselect_all()
+        self.LastAddedFlowBox.unselect_all()
 
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         if self.pardusicb.get_active() and self.myapps_clicked:
@@ -2929,6 +3009,10 @@ class MainWindow(object):
         if self.mra_clicked and self.sortPardusAppsCombo.get_active() == 2:
             self.sortPardusAppsCombo.set_active(0)
             self.mra_clicked = False
+
+        if self.la_clicked and self.sortPardusAppsCombo.get_active() == 3:
+            self.sortPardusAppsCombo.set_active(0)
+            self.la_clicked = False
 
         self.isPardusSearching = False
         self.menubackbutton.set_sensitive(True)
@@ -3165,6 +3249,7 @@ class MainWindow(object):
             self.PardusAppsIconView.unselect_all()
             self.MostDownFlowBox.unselect_all()
             self.MostRateFlowBox.unselect_all()
+            self.LastAddedFlowBox.unselect_all()
             self.topsearchbutton.set_active(self.statusoftopsearch)
             self.topsearchbutton.set_sensitive(True)
         else:
@@ -4200,6 +4285,25 @@ class MainWindow(object):
         self.NavCategoryLabel.set_text(_("all").title())
         if self.sortPardusAppsCombo.get_active != 2:
             self.sortPardusAppsCombo.set_active(2)
+        if self.pardusicb.get_active():
+            self.pardusicb.set_active(False)
+        self.PardusCategoryFilter.refilter()
+        self.homestack.set_visible_child_name("pardusapps")
+
+    def on_labutton_clicked(self, button):
+        self.menubackbutton.set_sensitive(True)
+        if self.sortPardusAppsCombo.get_active() != 3:
+            self.la_clicked = True
+        self.PardusCurrentCategoryString = "all"
+        self.PardusCurrentCategoryIcon = "all"
+        if self.UserSettings.config_usi:
+            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
+        else:
+            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
+        self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        self.NavCategoryLabel.set_text(_("all").title())
+        if self.sortPardusAppsCombo.get_active != 3:
+            self.sortPardusAppsCombo.set_active(3)
         if self.pardusicb.get_active():
             self.pardusicb.set_active(False)
         self.PardusCategoryFilter.refilter()
