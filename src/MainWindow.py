@@ -1080,36 +1080,21 @@ class MainWindow(object):
 
     def setPardusApps(self):
         if self.Server.connection:
-            if self.UserSettings.config_usi:
-                print("User want to use server icons [app]")
-                for app in self.applist:
+            for app in self.applist:
+                if self.UserSettings.config_usi:
                     appicon = self.getServerAppIcon(app["name"])
-                    appname = app['name']
-                    prettyname = app["prettyname"][self.locale]
-                    if prettyname == "" or prettyname is None:
-                        prettyname = app["prettyname"]["en"]
-                    category = ""
-                    for i in app["category"]:
-                        category += i[self.locale] + ","
-                    category = category.rstrip(",")
-                    # print(appname + " : " + category)
-                    categorynumber = self.get_category_number(category)
-                    GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
-            else:
-                print("User want to use system icons [app]")
-                for app in self.applist:
+                else:
                     appicon = self.getSystemAppIcon(app["name"])
-                    appname = app['name']
-                    prettyname = app['prettyname'][self.locale]
-                    if prettyname == "" or prettyname is None:
-                        prettyname = app["prettyname"]["en"]
-                    category = ""
-                    for i in app['category']:
-                        category += i[self.locale] + ","
-                    category = category.rstrip(",")
-                    # print(appname + " : " + category)
-                    categorynumber = self.get_category_number(category)
-                    GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
+                appname = app['name']
+                prettyname = app["prettyname"][self.locale]
+                if prettyname == "" or prettyname is None:
+                    prettyname = app["prettyname"]["en"]
+                category = ""
+                for i in app["category"]:
+                    category += i[self.locale] + ","
+                category = category.rstrip(",")
+                categorynumber = self.get_category_number(category)
+                GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
 
     def addToPardusApps(self, list):
         self.PardusAppListStore.append(list)
