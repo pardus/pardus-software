@@ -1720,12 +1720,10 @@ class MainWindow(object):
                     self.sortPardusAppsCombo.set_visible(False)
                 else:
                     self.homestack.set_visible_child_name("pardushome")
-                    self.HomeCategoryFlowBox.unselect_all()
                     self.EditorAppsIconView.unselect_all()
                     self.menubackbutton.set_sensitive(False)
             else:
                 self.homestack.set_visible_child_name("pardushome")
-                self.HomeCategoryFlowBox.unselect_all()
                 self.EditorAppsIconView.unselect_all()
                 self.menubackbutton.set_sensitive(False)
 
@@ -1742,11 +1740,7 @@ class MainWindow(object):
 
             if self.fromeditorapps or self.frommostapps:
                 self.homestack.set_visible_child_name("pardushome")
-                self.HomeCategoryFlowBox.unselect_all()
                 self.EditorAppsIconView.unselect_all()
-                self.MostRateFlowBox.unselect_all()
-                self.MostDownFlowBox.unselect_all()
-                self.LastAddedFlowBox.unselect_all()
                 self.menubackbutton.set_sensitive(False)
             else:
                 self.homestack.set_visible_child_name("pardusapps")
@@ -2830,7 +2824,6 @@ class MainWindow(object):
                     pn_tr = i["prettyname"]["tr"]
                     desc_en = i["description"]["en"]
                     desc_tr = i["description"]["tr"]
-            self.HomeCategoryFlowBox.unselect_all()
             if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
                     or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en \
                     or search_entry_text.lower() in desc_tr:
@@ -2993,9 +2986,6 @@ class MainWindow(object):
 
         self.on_PardusAppsIconView_selection_changed(self.mostappname)
 
-        self.MostDownFlowBox.unselect_all()
-        self.MostRateFlowBox.unselect_all()
-        self.LastAddedFlowBox.unselect_all()
 
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         if self.pardusicb.get_active() and self.myapps_clicked:
@@ -3244,12 +3234,8 @@ class MainWindow(object):
         if self.Server.connection:
             self.searchstack.set_visible_child_name("pardus")
             self.homestack.set_visible_child_name("pardushome")
-            self.HomeCategoryFlowBox.unselect_all()
             self.EditorAppsIconView.unselect_all()
             self.PardusAppsIconView.unselect_all()
-            self.MostDownFlowBox.unselect_all()
-            self.MostRateFlowBox.unselect_all()
-            self.LastAddedFlowBox.unselect_all()
             self.topsearchbutton.set_active(self.statusoftopsearch)
             self.topsearchbutton.set_sensitive(True)
         else:

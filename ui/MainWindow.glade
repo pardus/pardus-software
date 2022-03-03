@@ -909,6 +909,7 @@ so that the OS has nothing to do with the health of the application.</property>
                             <property name="row-spacing">5</property>
                             <property name="min-children-per-line">3</property>
                             <property name="max-children-per-line">50</property>
+                            <property name="selection-mode">none</property>
                             <signal name="child-activated" handler="on_HomeCategoryFlowBox_child_activated" swapped="no"/>
                             <signal name="selected-children-changed" handler="on_HomeCategoryFlowBox_selected_children_changed" swapped="no"/>
                           </object>
@@ -1003,6 +1004,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                                 <property name="column-spacing">5</property>
                                                 <property name="row-spacing">5</property>
                                                 <property name="max-children-per-line">3</property>
+                                                <property name="selection-mode">none</property>
                                                 <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
                                               </object>
                                               <packing>
@@ -1072,6 +1074,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                                 <property name="column-spacing">5</property>
                                                 <property name="row-spacing">5</property>
                                                 <property name="max-children-per-line">3</property>
+                                                <property name="selection-mode">none</property>
                                                 <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
                                               </object>
                                               <packing>
@@ -1143,6 +1146,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="column-spacing">5</property>
                                         <property name="row-spacing">5</property>
                                         <property name="max-children-per-line">6</property>
+                                        <property name="selection-mode">none</property>
                                         <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
                                       </object>
                                       <packing>
