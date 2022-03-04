@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Fatih Altun <fatih.altun@pardus.org.tr>
 Build-Depends: debhelper (>= 10), dh-python, python3-all, python3-setuptools
 Standards-Version: 4.3.0
-Homepage: http://pardus.org.tr
+Homepage: https://github.com/pardus/pardus-software
 
 Package: pardus-software
 Architecture: all
