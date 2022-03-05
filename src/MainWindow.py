@@ -1023,6 +1023,8 @@ class MainWindow(object):
                     self.MostDownFlowBox.remove(row)
                 for row in self.MostRateFlowBox:
                     self.MostRateFlowBox.remove(row)
+                for row in self.LastAddedFlowBox:
+                    self.LastAddedFlowBox.remove(row)
                 self.setPardusApps()
                 self.setEditorApps()
                 self.setMostApps()
@@ -4076,6 +4078,8 @@ class MainWindow(object):
             self.MostDownFlowBox.remove(row)
         for row in self.MostRateFlowBox:
             self.MostRateFlowBox.remove(row)
+        for row in self.LastAddedFlowBox:
+            self.LastAddedFlowBox.remove(row)
 
     def setAvailableApps(self, available, hideextapps):
         newlist = []
