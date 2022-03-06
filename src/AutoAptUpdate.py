@@ -9,6 +9,7 @@ Created on Fri Sep 18 14:53:00 2020
 # import os, subprocess
 import apt
 
+
 def main():
     try:
         cache = apt.Cache()
@@ -18,6 +19,7 @@ def main():
         print(str(e))
     # subprocess.call(["apt", "update"],
     #                 env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
 
 if __name__ == "__main__":
     main()

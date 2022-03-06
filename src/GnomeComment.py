@@ -10,6 +10,7 @@ gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio, Soup
 
+
 class GnomeComment(object):
     def __init__(self):
 
@@ -58,5 +59,3 @@ class GnomeComment(object):
             session.close_finish(result)
         except GLib.Error as error:
             print("GnomeComments Close Error: {}, {}".format(error.domain, error.message))
-
-

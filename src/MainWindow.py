@@ -388,7 +388,7 @@ class MainWindow(object):
 
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
-        self.PardusCategoryFilter.refilter()
+        # self.PardusCategoryFilter.refilter()
 
         # self.RepoCategoryFilter = self.GtkBuilder.get_object("RepoCategoryFilter")
         # self.RepoCategoryFilter.set_visible_func(self.RepoCategoryFilterFunction)
@@ -608,7 +608,7 @@ class MainWindow(object):
                 waittime = self.Server.aptuptime
             else:
                 waittime = self.UserSettings.config_forceaptuptime
-            if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()) :
+            if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()):
                 self.headerAptUpdateSpinner.start()
                 command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py"]
                 self.startAptUpdateProcess(command)
@@ -752,9 +752,10 @@ class MainWindow(object):
 
     def on_imgDownloadButton_clicked(self, button):
         filesave_chooser = Gtk.FileChooserDialog(title=_("Save File"), parent=self.MainWindow,
-                                             action=Gtk.FileChooserAction.SAVE)
+                                                 action=Gtk.FileChooserAction.SAVE)
         filesave_chooser.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
-        filesave_chooser.add_button(_("Save"), Gtk.ResponseType.ACCEPT).get_style_context().add_class("suggested-action")
+        filesave_chooser.add_button(_("Save"), Gtk.ResponseType.ACCEPT).get_style_context().add_class(
+            "suggested-action")
 
         filesave_chooser.set_current_name("{}_{}.png".format(
             os.path.splitext(os.path.basename(self.screenshots[self.down_image]))[0],
@@ -855,7 +856,6 @@ class MainWindow(object):
         #     self.RepoAppListStore.append([appname, category, 0, installstatus, installtext, self.Package.summary(appname)])
 
         if not self.repoappsinit:
-
             renderer_toggle = Gtk.CellRendererToggle()
             renderer_toggle.connect("toggled", self.on_cell_toggled)
             column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=3)
@@ -1110,7 +1110,8 @@ class MainWindow(object):
             self.catbuttons = []
             self.categories = []
             for cat in self.catlist:
-                self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"], "subcats": cat["subcats"]})
+                self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"],
+                                        "subcats": cat["subcats"]})
             self.categories = sorted(self.categories, key=lambda x: x["name"])
             if self.locale == "tr":
                 self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False})
@@ -1166,7 +1167,7 @@ class MainWindow(object):
         self.PardusCurrentCategoryExternal = self.get_category_name_from_button(button.name)
 
         print("HomeCategory: {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                              self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
+                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -1185,10 +1186,10 @@ class MainWindow(object):
                 if i["external"]:
                     for cat in i["category"]:
                         if cat[self.locale] == self.PardusCurrentCategoryString:
-                                subcats.append(
-                                    {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
-                                     "reponame": i["external"]["reponame"]})
-            subcats = list({u['reponame']:u for u in subcats}.values())
+                            subcats.append(
+                                {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
+                                 "reponame": i["external"]["reponame"]})
+            subcats = list({u['reponame']: u for u in subcats}.values())
             for sub in subcats:
                 caticon = Gtk.Image.new()
                 caticon.set_from_pixbuf(self.getServerCatIcon(sub["reponame"]))
@@ -1548,13 +1549,15 @@ class MainWindow(object):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if thatnumber == i:
-                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], self.categories[i]["external"]
+                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
+                       self.categories[i]["external"]
 
     def get_category_name_from_button(self, name):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if name == self.categories[i]["name"]:
-                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], self.categories[i]["external"]
+                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
+                       self.categories[i]["external"]
 
     def get_repo_category_number(self, thatcategory):
         repocatnumber = 404
@@ -1940,7 +1943,7 @@ class MainWindow(object):
                 self.descSwBox.set_visible(False)
                 self.dDescriptionLabel.set_text(self.description)
             if len(prettyname.split(" ")) > 3:
-                prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" +" ".join(prettyname.split(" ")[3:6]) + \
+                prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" + " ".join(prettyname.split(" ")[3:6]) + \
                              "\n" + " ".join(prettyname.split(" ")[6:])
             self.dName.set_markup("<span size='x-large'><b>" + prettyname + "</b></span>")
             self.dSection.set_markup("<i>" + self.section + "</i>")
@@ -2096,13 +2099,13 @@ class MainWindow(object):
             self.gc_limit_tr = 10
             self.gc_limit_en = 10
 
-            self.pc_limit =10
+            self.pc_limit = 10
 
             pcom = {"mac": self.mac, "app": self.appname, "limit": self.pc_limit}
             self.PardusComment.get("POST", self.Server.serverurl + self.Server.serverparduscomments, pcom, self.appname)
 
             if self.UserSettings.config_sgc:
-                self.CommentsNotebook.get_nth_page(1).show() # page_num 1 is Gnome Comments
+                self.CommentsNotebook.get_nth_page(1).show()  # page_num 1 is Gnome Comments
 
                 gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
                            "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_tr}
@@ -2112,7 +2115,7 @@ class MainWindow(object):
                            "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_en}
                 self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
             else:
-                self.CommentsNotebook.get_nth_page(1).hide() # page_num 1 is Gnome Comments
+                self.CommentsNotebook.get_nth_page(1).hide()  # page_num 1 is Gnome Comments
                 print("gnome comments disabled")
 
     def setPardusCommentStar(self, rate):
@@ -2240,7 +2243,7 @@ class MainWindow(object):
                     label_comment.set_text("{}".format(comment["comment"]))
                     label_comment.set_selectable(True)
                     label_comment.set_line_wrap(True)
-                    label_comment.set_line_wrap_mode(2) # WORD_CHAR
+                    label_comment.set_line_wrap_mode(2)  # WORD_CHAR
 
                     box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                     box2.pack_start(label_comment, False, True, 0)
@@ -2530,7 +2533,8 @@ class MainWindow(object):
                     self.gcMoreButtonEN.set_visible(False)
             for comment in comments:
                 if "rating" and "user_display" and "date_created" and "summary" and "description" in comment:
-                    if self.isCommentClean(comment["summary"]) and self.isCommentClean(comment["description"]) and self.isCommentClean(comment["user_display"]):
+                    if self.isCommentClean(comment["summary"]) and self.isCommentClean(
+                            comment["description"]) and self.isCommentClean(comment["user_display"]):
                         self.setGnomeCommentStar(comment["rating"] / 20)
                         label1 = Gtk.Label.new()
                         label1.set_markup("<b>" + str(comment["user_display"]) + "</b>")
@@ -2658,7 +2662,7 @@ class MainWindow(object):
 
     def resizeAppImage(self):
         size = self.MainWindow.get_size()
-        w = size.width - size.width / 1.5 # this is for detail Image
+        w = size.width - size.width / 1.5  # this is for detail Image
 
         if not self.imgfullscreen:
             pw = size.width - size.width / 4  # this is for popup Image
@@ -2676,7 +2680,7 @@ class MainWindow(object):
             phsize = (pw * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
             if phsize + 110 > size.height:
                 phsize = size.height - 110
-                pw = ( phsize * self.pixbuf1.get_width() ) / self.pixbuf1.get_height()
+                pw = (phsize * self.pixbuf1.get_width()) / self.pixbuf1.get_height()
 
             self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
 
@@ -2691,7 +2695,7 @@ class MainWindow(object):
             phsize = (pw * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
             if phsize + 110 > size.height:
                 phsize = size.height - 110
-                pw = ( phsize * self.pixbuf2.get_width() ) / self.pixbuf2.get_height()
+                pw = (phsize * self.pixbuf2.get_width()) / self.pixbuf2.get_height()
 
             self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
 
@@ -2709,7 +2713,7 @@ class MainWindow(object):
             hsize = (basewidth * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
             if hsize + 110 > size.height:
                 hsize = size.height - 110
-                basewidth = ( hsize * self.pixbuf1.get_width() ) / self.pixbuf1.get_height()
+                basewidth = (hsize * self.pixbuf1.get_width()) / self.pixbuf1.get_height()
 
             self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
 
@@ -2717,7 +2721,7 @@ class MainWindow(object):
             hsize = (basewidth * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
             if hsize + 110 > size.height:
                 hsize = size.height - 110
-                basewidth = ( hsize * self.pixbuf2.get_width() ) / self.pixbuf2.get_height()
+                basewidth = (hsize * self.pixbuf2.get_width()) / self.pixbuf2.get_height()
 
             self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
 
@@ -3007,10 +3011,10 @@ class MainWindow(object):
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
-        self.mostappname = child.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[1].name
+        self.mostappname = child.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[
+            1].name
 
         self.on_PardusAppsIconView_selection_changed(self.mostappname)
-
 
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
         if self.pardusicb.get_active() and self.myapps_clicked:
@@ -3036,7 +3040,7 @@ class MainWindow(object):
         self.PardusCurrentCategoryExternal = self.get_category_name(self.PardusCurrentCategory)
 
         print("HomeCategory: {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                              self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
+                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -3055,10 +3059,10 @@ class MainWindow(object):
                 if i["external"]:
                     for cat in i["category"]:
                         if cat[self.locale] == self.PardusCurrentCategoryString:
-                                subcats.append(
-                                    {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
-                                     "reponame": i["external"]["reponame"]})
-            subcats = list({u['reponame']:u for u in subcats}.values())
+                            subcats.append(
+                                {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
+                                 "reponame": i["external"]["reponame"]})
+            subcats = list({u['reponame']: u for u in subcats}.values())
             for sub in subcats:
                 caticon = Gtk.Image.new()
                 caticon.set_from_pixbuf(self.getServerCatIcon(sub["reponame"]))
@@ -3282,7 +3286,6 @@ class MainWindow(object):
             self.queuebutton.get_style_context().remove_class("suggested-action")
         if not self.topbutton1.get_style_context().has_class("suggested-action"):
             self.topbutton1.get_style_context().add_class("suggested-action")
-
 
     def on_topbutton2_clicked(self, button):
         self.menubackbutton.set_sensitive(True)
@@ -3632,7 +3635,9 @@ class MainWindow(object):
         if not self.statisticsSetted:
             self.statstotaldc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["downcount"]))
             self.statstotalrc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["ratecount"]))
-            self.statsweblabel.set_markup("<small>{}<a href='https://apps.pardus.org.tr/statistics' title='https://apps.pardus.org.tr/statistics'>apps.pardus.org.tr</a>{}</small>".format(_("View on "), _(".")))
+            self.statsweblabel.set_markup(
+                "<small>{}<a href='https://apps.pardus.org.tr/statistics' title='https://apps.pardus.org.tr/statistics'>apps.pardus.org.tr</a>{}</small>".format(
+                    _("View on "), _(".")))
             dates = []
             downs = []
             for data in self.Server.dailydowns:
@@ -3691,7 +3696,6 @@ class MainWindow(object):
             self.stats3ViewPort.show_all()
 
             self.statisticsSetted = True
-
 
     def on_menu_updates_clicked(self, button):
         self.prefback = self.homestack.get_visible_child_name()
@@ -3929,7 +3933,7 @@ class MainWindow(object):
         elif button.get_name() == "tip_aptu":
             if self.UserSettings.config_forceaptuptime != 0:
                 force = "{} ( {} )".format(_("The value in your configuration file is used as the wait time."),
-                                       self.displayTime(self.UserSettings.config_forceaptuptime))
+                                           self.displayTime(self.UserSettings.config_forceaptuptime))
             else:
                 force = False
             self.PopoverPrefTip.set_relative_to(self.tip_aptu)
@@ -4402,13 +4406,16 @@ class MainWindow(object):
         if not self.updateclicked:
             if "dlstatus" in line:
                 percent = line.split(":")[2].split(".")[0]
-                self.progresstextlabel.set_text("{} | {} : {} %".format(self.actionedappname, _("Downloading"), percent))
+                self.progresstextlabel.set_text(
+                    "{} | {} : {} %".format(self.actionedappname, _("Downloading"), percent))
             elif "pmstatus" in line:
                 percent = line.split(":")[2].split(".")[0]
                 if self.isinstalled:
-                    self.progresstextlabel.set_text("{} | {} : {} %".format(self.actionedappname, _("Removing"), percent))
+                    self.progresstextlabel.set_text(
+                        "{} | {} : {} %".format(self.actionedappname, _("Removing"), percent))
                 else:
-                    self.progresstextlabel.set_text("{} | {} : {} %".format(self.actionedappname, _("Installing"), percent))
+                    self.progresstextlabel.set_text(
+                        "{} | {} : {} %".format(self.actionedappname, _("Installing"), percent))
             elif "E:" in line and ".deb" in line:
                 print("connection error")
                 self.error = True
@@ -4633,7 +4640,6 @@ class MainWindow(object):
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
                         self.dActionButton.get_style_context().remove_class("suggested-action")
 
-
         if repo == 2:  # repo apps
             if self.Package.isinstalled(actionedappname):
                 if self.raction.get_style_context().has_class("suggested-action"):
@@ -4855,12 +4861,12 @@ class MainWindow(object):
     def runVteCommand(self, term, command):
         pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
         term.set_pty(pty)
-        term.connect ("child-exited", self.onVteDone)
+        term.connect("child-exited", self.onVteDone)
         return term.spawn_sync(Vte.PtyFlags.DEFAULT,
-            os.environ['HOME'],
-            command,
-            [],
-            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-            None,
-             None,
-        )
+                               os.environ['HOME'],
+                               command,
+                               [],
+                               GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                               None,
+                               None,
+                               )

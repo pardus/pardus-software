@@ -12,6 +12,7 @@ gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio, Soup
 
+
 class AppDetail(object):
     def __init__(self):
 
@@ -51,5 +52,3 @@ class AppDetail(object):
             session.close_finish(result)
         except GLib.Error as error:
             print("AppDetail Close Error: {}, {}".format(error.domain, error.message))
-
-

@@ -12,6 +12,7 @@ gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio, Soup
 
+
 class AppRequest(object):
     def __init__(self):
 
