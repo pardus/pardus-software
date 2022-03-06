@@ -40,7 +40,7 @@ from AppImage import AppImage
 from AppDetail import AppDetail
 from AppRequest import AppRequest
 from GnomeComment import GnomeComment
-
+from PardusComment import PardusComment
 from UserSettings import UserSettings
 
 
@@ -236,6 +236,7 @@ class MainWindow(object):
         self.wpcresultLabel = self.GtkBuilder.get_object("wpcresultLabel")
         self.wpcformcontrolLabel = self.GtkBuilder.get_object("wpcformcontrolLabel")
         self.editCommentButton = self.GtkBuilder.get_object("editCommentButton")
+        self.pcMoreButton = self.GtkBuilder.get_object("pcMoreButton")
         self.gcMoreButtonTR = self.GtkBuilder.get_object("gcMoreButtonTR")
         self.gcMoreButtonEN = self.GtkBuilder.get_object("gcMoreButtonEN")
         self.gcStack = self.GtkBuilder.get_object("gcStack")
@@ -534,6 +535,9 @@ class MainWindow(object):
 
         self.GnomeComment = GnomeComment()
         self.GnomeComment.gComment = self.gComment
+
+        self.PardusComment = PardusComment()
+        self.PardusComment.pComment = self.pComment
 
         self.usersettings()
 
@@ -1844,6 +1848,7 @@ class MainWindow(object):
         self.setAppStar(0)
         self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
         self.setPardusComments(None)
+        self.pcMoreButton.set_visible(False)
 
         # reset comment notebook page and gnome comment page
         self.CommentsNotebook.set_current_page(0)
@@ -2088,18 +2093,23 @@ class MainWindow(object):
             dic = {"mac": self.mac, "app": self.appname}
             self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic, self.appname)
 
-            self.limit_tr = 10
-            self.limit_en = 10
+            self.gc_limit_tr = 10
+            self.gc_limit_en = 10
+
+            self.pc_limit =10
+
+            pcom = {"mac": self.mac, "app": self.appname, "limit": self.pc_limit}
+            self.PardusComment.get("POST", self.Server.serverurl + self.Server.serverparduscomments, pcom, self.appname)
 
             if self.UserSettings.config_sgc:
                 self.CommentsNotebook.get_nth_page(1).show() # page_num 1 is Gnome Comments
 
                 gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                           "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
+                           "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_tr}
                 self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, "tr")
 
                 gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                           "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
+                           "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_en}
                 self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
             else:
                 self.CommentsNotebook.get_nth_page(1).hide() # page_num 1 is Gnome Comments
@@ -2195,41 +2205,63 @@ class MainWindow(object):
         else:
             print("comment star error")
 
-    def setPardusComments(self, comments):
+    def setPardusComments(self, comments, appname=""):
 
         for row in self.PardusCommentListBox:
             self.PardusCommentListBox.remove(row)
 
-        if comments:
-            comments = sorted(comments, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"), reverse=True)
-            for comment in comments:
-                self.setPardusCommentStar(comment["value"])
-                label1 = Gtk.Label.new()
-                label1.set_markup("<b>" + comment["author"] + "</b>")
-                labeldate = Gtk.Label.new()
-                labeldate.set_markup(comment["date"])
-                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                box1.pack_start(self.cs1, False, True, 0)
-                box1.pack_start(self.cs2, False, True, 0)
-                box1.pack_start(self.cs3, False, True, 0)
-                box1.pack_start(self.cs4, False, True, 0)
-                box1.pack_start(self.cs5, False, True, 0)
-                box1.pack_start(label1, False, True, 10)
-                box1.pack_end(labeldate, False, True, 0)
-                label2 = Gtk.Label.new()
-                label2.set_text(comment["comment"])
-                label2.set_selectable(True)
-                label2.set_line_wrap(True)
-                label2.set_line_wrap_mode(2) # WORD_CHAR
-                box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                box2.pack_start(label2, False, True, 0)
-                hsep = Gtk.HSeparator.new()
-                self.box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
-                self.box.pack_start(box1, False, True, 5)
-                self.box.pack_start(box2, False, True, 5)
-                self.box.pack_start(hsep, False, True, 0)
+        if comments and appname == self.getActiveAppOnUI():
 
-                self.PardusCommentListBox.add(self.box)
+            if len(comments) == self.pc_limit:
+                self.pcMoreButton.set_visible(True)
+                self.pcMoreButton.set_sensitive(True)
+            else:
+                self.pcMoreButton.set_visible(False)
+
+            if comments:
+                for comment in comments:
+                    self.setPardusCommentStar(comment["value"])
+
+                    label_author = Gtk.Label.new()
+                    label_author.set_markup("<b>{}</b>".format(comment["author"]))
+                    label_date = Gtk.Label.new()
+                    label_date.set_markup("{}".format(comment["date"]))
+
+                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                    box1.pack_start(self.cs1, False, True, 0)
+                    box1.pack_start(self.cs2, False, True, 0)
+                    box1.pack_start(self.cs3, False, True, 0)
+                    box1.pack_start(self.cs4, False, True, 0)
+                    box1.pack_start(self.cs5, False, True, 0)
+                    box1.pack_start(label_author, False, True, 10)
+                    box1.pack_end(label_date, False, True, 3)
+
+                    label_comment = Gtk.Label.new()
+                    label_comment.set_text("{}".format(comment["comment"]))
+                    label_comment.set_selectable(True)
+                    label_comment.set_line_wrap(True)
+                    label_comment.set_line_wrap_mode(2) # WORD_CHAR
+
+                    box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                    box2.pack_start(label_comment, False, True, 0)
+
+                    hsep = Gtk.HSeparator.new()
+
+                    self.box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
+                    self.box.pack_start(box1, False, True, 5)
+                    self.box.pack_start(box2, False, True, 5)
+                    self.box.pack_start(hsep, False, True, 0)
+
+                    if comment["distro"] is None or comment["distro"] == "":
+                        comment["distro"] = _("unknown")
+
+                    if comment["appversion"] is None or comment["appversion"] == "":
+                        comment["appversion"] = _("unknown")
+
+                    self.box.set_tooltip_markup("<b>{}</b> : {}\n<b>{}</b> : {}".format(
+                        _("Distro"), comment["distro"], _("App Version"), comment["appversion"]))
+
+                    self.PardusCommentListBox.add(self.box)
 
         self.PardusCommentListBox.show_all()
 
@@ -2334,7 +2366,7 @@ class MainWindow(object):
                                   response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
                                   response["details"]["rate"]["rates"]["5"])
 
-            self.setPardusComments(response["details"]["comment"])
+            # self.setPardusComments(response["details"]["comment"])
 
         else:
             self.rate_average = 0
@@ -2353,6 +2385,12 @@ class MainWindow(object):
             self.setGnomeComments(response, appname, lang)
         else:
             self.setGnomeComments(comments=None, lang=lang)
+
+    def pComment(self, status, response, appname=""):
+        if status:
+            self.setPardusComments(response["comments"], appname)
+        else:
+            self.setPardusComments(comments=None)
 
     def setAppStar(self, average):
         average = int(average)
@@ -2479,13 +2517,13 @@ class MainWindow(object):
 
         if comments and appname == self.getActiveAppOnUI():
             if lang == "tr":
-                if len(comments) == self.limit_tr:
+                if len(comments) == self.gc_limit_tr:
                     self.gcMoreButtonTR.set_visible(True)
                     self.gcMoreButtonTR.set_sensitive(True)
                 else:
                     self.gcMoreButtonTR.set_visible(False)
             elif lang == "en":
-                if len(comments) == self.limit_en:
+                if len(comments) == self.gc_limit_en:
                     self.gcMoreButtonEN.set_visible(True)
                     self.gcMoreButtonEN.set_sensitive(True)
                 else:
@@ -3120,17 +3158,23 @@ class MainWindow(object):
 
     def on_gcMoreButtonTR_clicked(self, button):
         self.gcMoreButtonTR.set_sensitive(False)
-        self.limit_tr = self.limit_tr + 10
+        self.gc_limit_tr = self.gc_limit_tr + 10
         gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "tr",
-                   "distro": "Pardus", "version": "unknown", "limit": self.limit_tr}
+                   "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_tr}
         self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, lang="tr")
 
     def on_gcMoreButtonEN_clicked(self, button):
         self.gcMoreButtonEN.set_sensitive(False)
-        self.limit_en = self.limit_en + 10
+        self.gc_limit_en = self.gc_limit_en + 10
         gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "en",
-                   "distro": "Pardus", "version": "unknown", "limit": self.limit_en}
+                   "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_en}
         self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, lang="en")
+
+    def on_pcMoreButton_clicked(self, button):
+        self.pcMoreButton.set_sensitive(False)
+        self.pc_limit = self.pc_limit + 10
+        pcom = {"mac": self.mac, "app": self.appname, "limit": self.pc_limit}
+        self.PardusComment.get("POST", self.Server.serverurl + self.Server.serverparduscomments, pcom, self.appname)
 
     def on_dDisclaimerButton_clicked(self, button):
         self.DisclaimerPopover.popup()

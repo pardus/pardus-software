@@ -4751,11 +4751,41 @@ This application served from Pardus non-free package repositories, so that the O
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <child>
-                                                      <object class="GtkListBox" id="PardusCommentListBox">
+                                                      <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="selection-mode">none</property>
-                                                        <property name="activate-on-single-click">False</property>
+                                                        <property name="orientation">vertical</property>
+                                                        <child>
+                                                          <object class="GtkListBox" id="PardusCommentListBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="selection-mode">none</property>
+                                                            <property name="activate-on-single-click">False</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkButton" id="pcMoreButton">
+                                                            <property name="label" translatable="yes">Load More Comments</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">end</property>
+                                                            <property name="margin-top">7</property>
+                                                            <property name="margin-bottom">7</property>
+                                                            <signal name="clicked" handler="on_pcMoreButton_clicked" swapped="no"/>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
                                                       </object>
                                                     </child>
                                                   </object>
