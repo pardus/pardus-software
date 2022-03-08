@@ -270,10 +270,10 @@ class Server(object):
 
     def isExists(self, dir):
         if Path(dir).exists():
-            print(dir + " folder exists")
+            print(dir + " exists")
             return True
         else:
-            print(dir + " folder not exists")
+            print(dir + " not exists")
             return False
 
     # def getGnomeRatings(self):

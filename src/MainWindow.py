@@ -4389,7 +4389,7 @@ class MainWindow(object):
             return False
 
         line = source.readline()
-        # print(line)
+        print(line)
         if self.updateclicked:
             self.updatetextview.get_buffer().insert(self.updatetextview.get_buffer().get_end_iter(), line)
             self.updatetextview.scroll_to_iter(self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0)
@@ -4401,7 +4401,7 @@ class MainWindow(object):
 
         line = source.readline()
 
-        # print("error: " + line)
+        print(line)
 
         if not self.updateclicked:
             if "dlstatus" in line:

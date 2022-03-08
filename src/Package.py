@@ -153,7 +153,7 @@ class Package(object):
                 size = "not found"
         if type(size) is int:
             size = size / 1024
-            print(size)
+            # print(size)
             if size > 1024:
                 size = "{:.2f} MiB".format(float(size / 1024))
             else:
