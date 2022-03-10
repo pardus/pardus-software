@@ -949,6 +949,7 @@ class MainWindow(object):
 
     def afterServers(self):
         self.normalpage()
+        GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
         GLib.idle_add(self.setPardusCategories)
         GLib.idle_add(self.setPardusApps)
@@ -1061,6 +1062,13 @@ class MainWindow(object):
                     self.Server.servercaticons)
         else:
             print("icons cannot downloading because server connection is {}".format(self.Server.connection))
+
+    def controlServer(self):
+        if self.Server.connection:
+            print("Controlling {}".format(self.Server.serverurl))
+            self.AppDetail.control(self.Server.serverurl + "/api/v2/test")
+            self.AppRequest.control(self.Server.serverurl + "/api/v2/test")
+            self.PardusComment.control(self.Server.serverurl + "/api/v2/test")
 
     def gnomeRatings(self):
         print("Getting ratings from gnome odrs")
