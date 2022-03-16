@@ -139,6 +139,7 @@ class MainWindow(object):
         self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
         self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
         self.topsearchbutton = self.GtkBuilder.get_object("topsearchbutton")
+        self.reposearchbutton = self.GtkBuilder.get_object("reposearchbutton")
         self.toprevealer = self.GtkBuilder.get_object("toprevealer")
         self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")
 
@@ -1892,8 +1893,6 @@ class MainWindow(object):
 
             print("APPNAME : {}".format(self.appname))
 
-            self.homestack.set_visible_child_name("pardusappsdetail")
-
             if self.UserSettings.config_usi:
                 pixbuf = self.getServerAppIcon(self.appname, 128)
             else:
@@ -1904,8 +1903,10 @@ class MainWindow(object):
             # We are using self.fullapplist because self.applist may be showing only available apps.
             # If only available applications are shown and one of the homepage applications is not from this list,
             # we still show their information.
+            found_pardusapp = False
             for i in self.fullapplist:
                 if i["name"] == self.appname:
+                    found_pardusapp = True
                     self.description = i["description"][self.locale]
                     self.section = i["section"][0][self.locale]
                     if self.section == "" or self.section is None:
@@ -1933,6 +1934,19 @@ class MainWindow(object):
                         self.command = i["name"]
 
                     self.external = i["external"]
+                    break
+
+            if not found_pardusapp:
+                self.reposearchbar.set_text(self.appname)
+                self.on_topbutton2_clicked(self.topbutton2)
+                self.on_reposearchbutton_clicked(self.reposearchbutton)
+                for row in self.searchstore:
+                    if self.appname == row[0]:
+                        self.RepoAppsTreeView.set_cursor(row.path)
+                        self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+                return False
+
+            self.homestack.set_visible_child_name("pardusappsdetail")
 
             if self.gnomename != "" and self.gnomename is not None:
                 try:
