@@ -580,13 +580,17 @@ class MainWindow(object):
 
     def getLocale(self):
         try:
-            locale = getlocale()[0].split("_")[0]
-            if locale != "tr" and locale != "en":
-                locale = "en"
+            user_locale = os.getenv("LANG").split(".")[0].split("_")[0]
         except Exception as e:
-            print(str(e))
-            locale = "en"
-        return locale
+            print("{}".format(e))
+            try:
+                user_locale = getlocale()[0].split("_")[0]
+            except Exception as e:
+                print("{}".format(e))
+                user_locale = "en"
+        if user_locale != "tr" and user_locale != "en":
+            user_locale = "en"
+        return user_locale
 
     def getDisplay(self):
         # defwindow = Gdk.get_default_root_window()
