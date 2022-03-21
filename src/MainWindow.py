@@ -4681,26 +4681,29 @@ class MainWindow(object):
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
     def notify(self, message_summary="", message_body=""):
-        if Notify.is_initted():
-            Notify.uninit()
+        try:
+            if Notify.is_initted():
+                Notify.uninit()
 
-        if message_summary == "" and message_body == "":
-            Notify.init(self.actionedappname)
-            if self.isinstalled:
-                notification = Notify.Notification.new(
-                    self.getPrettyName(self.actionedappname, False) + _(" Removed"))
+            if message_summary == "" and message_body == "":
+                Notify.init(self.actionedappname)
+                if self.isinstalled:
+                    notification = Notify.Notification.new(
+                        self.getPrettyName(self.actionedappname, False) + _(" Removed"))
+                else:
+                    notification = Notify.Notification.new(
+                        self.getPrettyName(self.actionedappname, False) + _(" Installed"))
+                if self.UserSettings.config_usi:
+                    pixbuf = self.getServerAppIcon(self.actionedappname, 96, notify=True)
+                else:
+                    pixbuf = self.getSystemAppIcon(self.actionedappname, 96, notify=True)
+                notification.set_icon_from_pixbuf(pixbuf)
             else:
-                notification = Notify.Notification.new(
-                    self.getPrettyName(self.actionedappname, False) + _(" Installed"))
-            if self.UserSettings.config_usi:
-                pixbuf = self.getServerAppIcon(self.actionedappname, 96, notify=True)
-            else:
-                pixbuf = self.getSystemAppIcon(self.actionedappname, 96, notify=True)
-            notification.set_icon_from_pixbuf(pixbuf)
-        else:
-            Notify.init(message_summary)
-            notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
-        notification.show()
+                Notify.init(message_summary)
+                notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
+            notification.show()
+        except Exception as e:
+            print("{}".format(e))
 
     def sendDownloaded(self, appname):
         try:
