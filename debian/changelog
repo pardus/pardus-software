@@ -1,3 +1,13 @@
+pardus-software (0.1.0) unstable; urgency=medium
+
+  * Fix if homepage app not in Pardus apps
+  * Update copyright to 2022
+  * Update get_locale function for more accurate detection
+  * Add exception for handle notify errors
+  * Add libgtk-3-bin to Depends
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 28 Mar 2022 12:17:06 +0300
+
 pardus-software (0.1.0~beta30) unstable; urgency=medium
 
   * Add controlServer func for handle Soup exceptions
