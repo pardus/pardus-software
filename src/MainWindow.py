@@ -411,9 +411,7 @@ class MainWindow(object):
 
         self.mac = self.getMac()
 
-        self.descSwBox = self.GtkBuilder.get_object("descSwBox")
-        self.descSwBox.set_visible(False)
-        self.descSw = self.GtkBuilder.get_object("descSw")
+        self.par_desc_more = self.GtkBuilder.get_object("par_desc_more")
 
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
@@ -1828,7 +1826,7 @@ class MainWindow(object):
             mode = 1
 
         self.menubackbutton.set_sensitive(True)
-        self.descSw.set_state(False)
+        self.par_desc_more.set_visible(False)
         self.setWpcStar(0)
         self.wpcstar = 0
         self.wpcformcontrolLabel.set_text("")
@@ -1963,11 +1961,16 @@ class MainWindow(object):
 
             if self.description.count("\n") > 5:
                 self.s_description = "\n".join(self.description.splitlines()[0:5])
-                self.descSwBox.set_visible(True)
+                self.par_desc_more.set_visible(True)
+                self.dDescriptionLabel.set_text(self.s_description)
+            elif len(self.description) > 300:
+                self.s_description = "{} ...".format(self.description[:300])
+                self.par_desc_more.set_visible(True)
                 self.dDescriptionLabel.set_text(self.s_description)
             else:
-                self.descSwBox.set_visible(False)
+                self.par_desc_more.set_visible(False)
                 self.dDescriptionLabel.set_text(self.description)
+
             if len(prettyname.split(" ")) > 3:
                 prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" + " ".join(prettyname.split(" ")[3:6]) + \
                              "\n" + " ".join(prettyname.split(" ")[6:])
@@ -2294,12 +2297,10 @@ class MainWindow(object):
 
         self.PardusCommentListBox.show_all()
 
-    def on_descSw_state_set(self, switch, state):
-        print("switched {}".format(state))
-        if state:
-            self.dDescriptionLabel.set_text(self.description)
-        else:
-            self.dDescriptionLabel.set_text(self.s_description)
+    def on_par_desc_more_clicked(self, button):
+
+        self.dDescriptionLabel.set_text(self.description)
+        button.set_visible(False)
 
     def Request(self, status, response):
         if status:
