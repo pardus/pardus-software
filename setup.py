@@ -2,7 +2,23 @@
 # -*- coding: utf-8 -*-
 
 
-from setuptools import setup, find_packages, os
+from setuptools import setup, find_packages
+import os, subprocess
+
+
+def create_mo_files():
+    podir = "po"
+    mo = []
+    for po in os.listdir(podir):
+        if po.endswith(".po"):
+            os.makedirs("{}/{}/LC_MESSAGES".format(podir, po.split(".po")[0]), exist_ok=True)
+            mo_file = "{}/{}/LC_MESSAGES/{}".format(podir, po.split(".po")[0], "pardus-software.mo")
+            msgfmt_cmd = 'msgfmt {} -o {}'.format(podir + "/" + po, mo_file)
+            subprocess.call(msgfmt_cmd, shell=True)
+            mo.append(("/usr/share/locale/" + po.split(".po")[0] + "/LC_MESSAGES",
+                       ["po/" + po.split(".po")[0] + "/LC_MESSAGES/pardus-software.mo"]))
+    return mo
+
 
 changelog = "debian/changelog"
 if os.path.exists(changelog):
@@ -19,7 +35,6 @@ if os.path.exists(changelog):
 data_files = [
     ("/usr/bin", ["pardus-software"]),
     ("/usr/share/applications", ["tr.org.pardus.software.desktop", "tr.org.pardus.software-open.desktop"]),
-    ("/usr/share/locale/tr/LC_MESSAGES", ["po/tr/LC_MESSAGES/pardus-software.mo"]),
     ("/usr/share/polkit-1/actions", ["tr.org.pardus.pkexec.pardus-software.policy"]),
     ("/usr/share/pardus/pardus-software/css", ["css/style.css"]),
     ("/usr/share/pardus/pardus-software/images",
@@ -33,7 +48,7 @@ data_files = [
       "src/UserSettings.py", "src/__version__"]),
     ("/usr/share/icons/hicolor/scalable/apps/", ["images/pardus-software.svg"]),
     ("/usr/share/mime/packages/", ["pardus-software.xml"])
-]
+] + create_mo_files()
 
 setup(
     name="Pardus Software",
