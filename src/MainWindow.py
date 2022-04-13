@@ -158,6 +158,7 @@ class MainWindow(object):
         self.activatestack = self.GtkBuilder.get_object("activatestack")
         self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
         self.tryfixstack = self.GtkBuilder.get_object("tryfixstack")
+        self.queuestack = self.GtkBuilder.get_object("queuestack")
         self.activate_repo_label = self.GtkBuilder.get_object("activate_repo_label")
         self.activate_info_label = self.GtkBuilder.get_object("activate_info_label")
         self.activating_spinner = self.GtkBuilder.get_object("activating_spinner")
@@ -3231,6 +3232,7 @@ class MainWindow(object):
         if not self.fromexternal:
             self.bottomstack.set_visible_child_name("queue")
             self.bottomrevealer.set_reveal_child(True)
+            self.queuestack.set_visible_child_name("inprogress")
             self.dActionButton.set_sensitive(False)
             self.queue.append({"name": self.appname, "command": self.command})
             self.addtoQueue(self.appname)
@@ -3284,6 +3286,7 @@ class MainWindow(object):
         self.bottomstack.set_visible_child_name("queue")
 
         self.bottomrevealer.set_reveal_child(True)
+        self.queuestack.set_visible_child_name("inprogress")
 
         self.addtoQueue(self.appname)
 
@@ -4522,6 +4525,7 @@ class MainWindow(object):
                 self.bottomrevealer.set_reveal_child(False)
                 if not self.error:
                     self.progresstextlabel.set_text("")
+                    self.queuestack.set_visible_child_name("completed")
 
             if self.error:
                 self.bottomrevealer.set_reveal_child(True)
