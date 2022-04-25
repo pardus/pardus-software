@@ -114,6 +114,7 @@ def main():
 
         if found:
             rmtree("/etc/apt/sources.list.d", ignore_errors=True)
+            rmtree("/var/lib/apt/lists/", ignore_errors=True)
             Path("/etc/apt/sources.list.d").mkdir(parents=True, exist_ok=True)
             sfile = open("/etc/apt/sources.list", "w")
             sfile.write(source)
