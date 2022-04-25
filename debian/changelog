@@ -1,3 +1,21 @@
+pardus-software (0.1.1) unstable; urgency=medium
+
+  [ Hugo Carvalho ]
+  * Add Portuguese (pt) translation
+  * Add files via upload
+
+  [ Fatih Altun ]
+  * Add read more button to pardus apps description
+  * Add mo file create function as dynamically to setup.py
+  * Add gettext to Build-Depends
+  * Fix window overflow problem on small resolutions
+  * Add completed info label to queue box
+  * Update pot file
+  * Update Turkish translations
+  * Add rm apt lists to fix sources list func
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 25 Apr 2022 16:27:40 +0300
+
 pardus-software (0.1.0) unstable; urgency=medium
 
   * Fix if homepage app not in Pardus apps
