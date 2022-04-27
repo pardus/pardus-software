@@ -2885,8 +2885,8 @@ class MainWindow(object):
                     desc_en = i["description"]["en"]
                     desc_tr = i["description"]["tr"]
             if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
-                    or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en \
-                    or search_entry_text.lower() in desc_tr:
+                    or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en.lower() \
+                    or search_entry_text.lower() in desc_tr.lower():
                 if self.pardusicb.get_active():
                     if self.Package.isinstalled(appname):
                         return True
