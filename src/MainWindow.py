@@ -643,9 +643,12 @@ class MainWindow(object):
             except Exception as e:
                 print(str(e))
             try:
+                if ".desktop" in app:
+                    app = "{}".format(app.split(".desktop")[0])
                 for apps in self.fullapplist:
-                    if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or app == \
-                            apps["gnomename"].split(".desktop")[0]:
+                    if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or \
+                            app == apps["gnomename"].split(".desktop")[0] or \
+                            any(app == e for e in apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
                         self.fromdetails = True
                         self.detailsappname = app
