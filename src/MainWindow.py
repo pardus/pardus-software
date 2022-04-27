@@ -634,6 +634,7 @@ class MainWindow(object):
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
+            found = False
             app = self.Application.args["details"]
             try:
                 if app.endswith(".pardusapp"):
@@ -649,6 +650,7 @@ class MainWindow(object):
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or \
                             app == apps["gnomename"].split(".desktop")[0] or \
                             any(app == e for e in apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
+                        found = True
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
                         self.fromdetails = True
                         self.detailsappname = app
@@ -656,6 +658,23 @@ class MainWindow(object):
                         GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
             except Exception as e:
                 print(str(e))
+            try:
+                if not found:
+                    if ".desktop" in self.Application.args["details"]:
+                        process = subprocess.run(["dpkg", "-S", self.Application.args["details"]], stdout=subprocess.PIPE)
+                        output = process.stdout.decode("utf-8")
+                        app = output[:output.find(":")].split(",")[0]
+
+                    self.reposearchbar.set_text(app)
+                    self.on_topbutton2_clicked(self.topbutton2)
+                    self.on_reposearchbutton_clicked(self.reposearchbutton)
+                    for row in self.searchstore:
+                        if app == row[0]:
+                            self.RepoAppsTreeView.set_cursor(row.path)
+                            self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+            except Exception as e:
+                print(str(e))
+
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
