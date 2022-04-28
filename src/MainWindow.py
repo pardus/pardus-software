@@ -2012,6 +2012,7 @@ class MainWindow(object):
                 prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" + " ".join(prettyname.split(" ")[3:6]) + \
                              "\n" + " ".join(prettyname.split(" ")[6:])
             self.dName.set_markup("<span size='x-large'><b>" + prettyname + "</b></span>")
+            self.dName.set_tooltip_markup("<b>{}</b>".format(self.appname))
             self.dSection.set_markup("<i>" + self.section + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
             self.dCategory.set_markup(self.category)
