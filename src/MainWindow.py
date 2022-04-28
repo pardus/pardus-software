@@ -656,6 +656,13 @@ class MainWindow(object):
                         self.detailsappname = app
                         self.mostappname = None
                         GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
+                        if self.topbutton2.get_style_context().has_class("suggested-action"):
+                            self.topbutton2.get_style_context().remove_class("suggested-action")
+                        if self.queuebutton.get_style_context().has_class("suggested-action"):
+                            self.queuebutton.get_style_context().remove_class("suggested-action")
+                        if not self.topbutton1.get_style_context().has_class("suggested-action"):
+                            self.topbutton1.get_style_context().add_class("suggested-action")
+                        self.topsearchbutton.set_active(False)
             except Exception as e:
                 print(str(e))
             try:
