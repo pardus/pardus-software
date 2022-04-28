@@ -664,15 +664,12 @@ class MainWindow(object):
                         process = subprocess.run(["dpkg", "-S", self.Application.args["details"]], stdout=subprocess.PIPE)
                         output = process.stdout.decode("utf-8")
                         app = output[:output.find(":")].split(",")[0]
-
-
                     else:
                         app = "{}.desktop".format(self.Application.args["details"])
                         process = subprocess.run(["dpkg", "-S", app], stdout=subprocess.PIPE)
                         output = process.stdout.decode("utf-8")
                         app = output[:output.find(":")].split(",")[0]
-
-                    if app == "" and ".desktop" in self.Application.args["details"]:
+                    if app == "":
                         app = "{}".format(self.Application.args["details"].split(".desktop")[0])
 
                     self.reposearchbar.set_text(app)
