@@ -178,6 +178,8 @@ class MainWindow(object):
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
         self.dVersion = self.GtkBuilder.get_object("dVersion")
         self.dSize = self.GtkBuilder.get_object("dSize")
+        self.dSizeTitle = self.GtkBuilder.get_object("dSizeTitle")
+        self.dSizeGrid = self.GtkBuilder.get_object("dSizeGrid")
         self.dComponent = self.GtkBuilder.get_object("dComponent")
         self.dType = self.GtkBuilder.get_object("dType")
         self.dCategory = self.GtkBuilder.get_object("dCategory")
@@ -2034,6 +2036,9 @@ class MainWindow(object):
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
+                ret = self.Package.adv_size(self.appname, self.command)
+                print(ret)
+
                 self.dActionButton.set_sensitive(True)
 
                 version = self.Package.version(self.appname)
@@ -2054,7 +2059,7 @@ class MainWindow(object):
                     type = _("Open Source")
 
                 self.dVersion.set_markup(version)
-                self.dSize.set_markup(size)
+                # self.dSize.set_markup(size)
                 self.dComponent.set_markup("{} {}".format(origin, component))
                 self.dType.set_markup(type)
 
@@ -2066,10 +2071,18 @@ class MainWindow(object):
                     self.dActionButton.set_image(
                         Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
 
+                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
+                        _("Package to remove"), ", ".join(ret["to_delete"]), ret["freed_size"],
+                        _("of disk space freed")))
+
                     if self.desktop_file != "" and self.desktop_file is not None:
                         self.dOpenButton.set_visible(True)
                     else:
                         self.dOpenButton.set_visible(False)
+
+                    self.dSizeTitle.set_text(_("Installed Size"))
+                    self.dSize.set_text("{}".format(ret["freed_size"]))
+                    self.dSizeGrid.set_tooltip_text(None)
 
                 else:
                     if self.dActionButton.get_style_context().has_class("destructive-action"):
@@ -2079,10 +2092,18 @@ class MainWindow(object):
                     self.dActionButton.set_image(
                         Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
+                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                        _("Packages to install"), ", ".join(ret["to_install"]), ret["download_size"], _("to download"),
+                        ret["install_size"], _("of disk space required"),))
+
                     self.dOpenButton.set_visible(False)
 
                     self.wpcformcontrolLabel.set_markup(
                         "<span color='red'>{}</span>".format(_("You need to install the application")))
+
+                    self.dSizeTitle.set_text(_("Download Size"))
+                    self.dSize.set_text("{}".format(ret["download_size"]))
+                    self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), ret["install_size"]))
 
                 if len(self.queue) > 0:
                     for qa in self.queue:
@@ -2106,8 +2127,12 @@ class MainWindow(object):
                 self.dActionButton.set_image(
                     Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
 
+                self.dActionButton.set_tooltip_text(None)
+
                 self.dVersion.set_markup(_("None"))
                 self.dSize.set_markup(_("None"))
+                self.dSizeTitle.set_text(_("Download Size"))
+                self.dSizeGrid.set_tooltip_text(None)
                 self.dComponent.set_markup(_("None"))
                 self.dType.set_markup(_("None"))
 

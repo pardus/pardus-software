@@ -1360,6 +1360,9 @@ so that the OS has nothing to do with the health of the application.</property>
                                     <property name="enable-tree-lines">True</property>
                                     <property name="activate-on-single-click">True</property>
                                     <signal name="row-activated" handler="on_RepoAppsTreeView_row_activated" swapped="no"/>
+                                    <child internal-child="selection">
+                                      <object class="GtkTreeSelection"/>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -2512,11 +2515,11 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="can-focus">False</property>
                                                             <property name="homogeneous">True</property>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
+                                                            <!-- n-columns=1 n-rows=2 -->
                                                             <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkLabel">
@@ -2547,27 +2550,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -2576,14 +2558,14 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
-                                                            <object class="GtkGrid">
+                                                            <!-- n-columns=1 n-rows=2 -->
+                                                            <object class="GtkGrid" id="dSizeGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
-                                                            <object class="GtkLabel">
+                                                            <object class="GtkLabel" id="dSizeTitle">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">Download Size</property>
@@ -2607,27 +2589,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -2636,11 +2597,11 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
+                                                            <!-- n-columns=1 n-rows=2 -->
                                                             <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkLabel">
@@ -2667,27 +2628,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -2696,11 +2636,11 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
+                                                            <!-- n-columns=1 n-rows=2 -->
                                                             <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkLabel">
@@ -2726,27 +2666,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="left-attach">0</property>
                                                             <property name="top-attach">1</property>
                                                             </packing>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
                                                             </child>
                                                             </object>
                                                             <packing>
@@ -2779,11 +2698,11 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="can-focus">False</property>
                                                             <property name="homogeneous">True</property>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
+                                                            <!-- n-columns=1 n-rows=2 -->
                                                             <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkLabel">
@@ -2815,27 +2734,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -2844,11 +2742,11 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
+                                                            <!-- n-columns=1 n-rows=2 -->
                                                             <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkLabel">
@@ -2875,27 +2773,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -2904,11 +2781,11 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
+                                                            <!-- n-columns=1 n-rows=2 -->
                                                             <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkLabel">
@@ -2939,27 +2816,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -2968,12 +2824,12 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </packing>
                                                             </child>
                                                             <child>
-                                                            <!-- n-columns=3 n-rows=3 -->
+                                                            <!-- n-columns=1 n-rows=2 -->
                                                             <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="row-spacing">7</property>
+                                                            <property name="row-spacing">8</property>
                                                             <property name="column-homogeneous">True</property>
                                                             <child>
                                                             <object class="GtkBox">
@@ -3046,27 +2902,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="left-attach">0</property>
                                                             <property name="top-attach">1</property>
                                                             </packing>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <placeholder/>
                                                             </child>
                                                             </object>
                                                             <packing>

@@ -150,15 +150,80 @@ class Package(object):
             try:
                 size = package.versions[0].size
             except:
-                size = "not found"
+                size = ""
+        return self.beauty_size(size)
+
+    def adv_size(self, app, packagenames):
+        self.cache.clear()
+        to_install = []
+        to_delete = []
+        recommends = []
+        inst_recommends = True
+        packagenames = packagenames.split(" ")
+        ret = {"download_size": None, "freed_size": None, "install_size": None, "to_install": None, "to_delete": None}
+
+        if "--no-install-recommends" in packagenames:
+            inst_recommends = False
+            packagenames.remove("--no-install-recommends")
+        if "--no-install-suggests" in packagenames:
+            inst_recommends = False
+            packagenames.remove("--no-install-suggests")
+
+        for packagename in packagenames:
+            print(packagename)
+            try:
+                package = self.cache[packagename]
+            except Exception as e:
+                print("{}".format(e))
+                return ret
+            if package.is_installed:
+                package.mark_delete(True, True)
+            else:
+                if inst_recommends:
+                    package.mark_install(True, True)
+                else:
+                    package.mark_install(True, False)
+            changes = self.cache.get_changes()
+            for package in changes:
+                if package.marked_install:
+                    if package.name not in to_install:
+                        to_install.append(package.name)
+                elif package.marked_delete:
+                    if package.name not in to_delete:
+                        to_delete.append(package.name)
+
+        download_size = self.cache.required_download
+        space = self.cache.required_space
+        if space < 0:
+            freed_size = space * -1
+            install_size = 0
+        else:
+            freed_size = 0
+            install_size = space
+
+        ret["download_size"] = self.beauty_size(download_size)
+        ret["freed_size"] = self.beauty_size(freed_size)
+        ret["install_size"] = self.beauty_size(install_size)
+        ret["to_install"] = to_install
+        ret["to_delete"] = to_delete
+
+        # print("freed_size {}".format(ret["freed_size"]))
+        # print("download_size {}".format(ret["download_size"]))
+        # print("install_size {}".format(ret["install_size"]))
+        # print("to_install {}".format(ret["to_install"]))
+        # print("to_delete {}".format(ret["to_delete"]))
+
+        return ret
+
+    def beauty_size(self, size):
         if type(size) is int:
             size = size / 1024
-            # print(size)
             if size > 1024:
                 size = "{:.2f} MiB".format(float(size / 1024))
             else:
                 size = "{:.2f} KiB".format(float(size))
-        return size
+            return size
+        return "size not found"
 
     def origins(self, packagename):
         package = self.cache[packagename]
