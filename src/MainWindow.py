@@ -2072,7 +2072,7 @@ class MainWindow(object):
                         Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
 
                     self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
-                        _("Package to remove"), ", ".join(ret["to_delete"]), ret["freed_size"],
+                        _("Packages to remove"), ", ".join(ret["to_delete"]), ret["freed_size"],
                         _("of disk space freed")))
 
                     if self.desktop_file != "" and self.desktop_file is not None:
