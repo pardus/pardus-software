@@ -436,6 +436,8 @@ class MainWindow(object):
         self.actionedenablingappname = ""
         self.actionedappdesktop = ""
         self.actionedenablingappdesktop = ""
+        self.actionedappcommand = ""
+        self.actionedenablingappcommand = ""
 
         self.queue = []
         self.inprogress = False
@@ -476,6 +478,8 @@ class MainWindow(object):
 
         self.desktop_file = ""
         self.desktop_file_extras = ""
+
+        self.command = ""
 
         self.rate_average = 0
         self.rate_individual = _("is None")
@@ -2194,12 +2198,18 @@ class MainWindow(object):
                 self.CommentsNotebook.get_nth_page(1).hide()  # page_num 1 is Gnome Comments
                 print("gnome comments disabled")
 
-    def size_worker_thread(self):
-        self.size_worker()
+    def size_worker_thread(self, app=None):
+        if app is None:
+            self.size_worker()
+        else:
+            self.size_worker(app)
         self.on_size_worker_done()
 
-    def size_worker(self):
-        self.ret = self.Package.adv_size(self.command)
+    def size_worker(self, app=None):
+        if app is None:
+            self.ret = self.Package.adv_size(self.command)
+        else:
+            self.ret = self.Package.adv_size(app)
         print(self.ret)
 
     def on_size_worker_done(self):
@@ -4474,6 +4484,7 @@ class MainWindow(object):
     def actionEnablePackage(self, appname):
         self.actionedenablingappname = appname
         self.actionedenablingappdesktop = self.desktop_file
+        self.actionedenablingappcommand = self.command
         self.dActionButton.set_label(_(" Activating"))
         command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "externalrepo",
                    self.external["repokey"], self.external["reposlist"], self.external["reponame"]]
@@ -4569,7 +4580,7 @@ class MainWindow(object):
                     if self.isinstalled:
                         self.notify()
 
-            self.controlView(self.actionedappname, self.actionedappdesktop)
+            self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
 
             ui_appname = self.getActiveAppOnUI()
             if ui_appname == self.actionedappname:
@@ -4652,7 +4663,7 @@ class MainWindow(object):
             else:
                 self.updatestack.set_visible_child_name("output")
 
-    def controlView(self, actionedappname, actionedappdesktop):
+    def controlView(self, actionedappname, actionedappdesktop, actionedappcommand):
         selected_items = self.PardusAppsIconView.get_selected_items()
         editor_selected_items = self.EditorAppsIconView.get_selected_items()
 
@@ -4661,26 +4672,26 @@ class MainWindow(object):
             appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
             print("in controlView " + appname)
             if appname == actionedappname:
-                self.updateActionButtons(1, actionedappname, actionedappdesktop)
+                self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
         if len(editor_selected_items) == 1:
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             appname = self.EditorListStore.get(treeiter, 1)[0]
             print("in controlView " + appname)
             if appname == actionedappname:
-                self.updateActionButtons(1, actionedappname, actionedappdesktop)
+                self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
         if self.frommostapps:
             if self.mostappname:
                 if self.mostappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop)
+                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
             else:
                 if self.detailsappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop)
+                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
         if self.fromrepoapps:
             if self.repoappname == actionedappname:
-                self.updateActionButtons(2, actionedappname, actionedappdesktop)
+                self.updateActionButtons(2, actionedappname, actionedappdesktop, actionedappcommand)
 
             # Updating status tick of repo apps
             try:
@@ -4690,7 +4701,7 @@ class MainWindow(object):
             except:
                 pass
 
-    def updateActionButtons(self, repo, actionedappname, actionedappdesktop):
+    def updateActionButtons(self, repo, actionedappname, actionedappdesktop, actionedappcommand):
         if repo == 1:  # pardus apps
             self.fromexternal = False
             if self.Package.isinstalled(actionedappname) is True:
@@ -4706,6 +4717,9 @@ class MainWindow(object):
 
                 self.wpcformcontrolLabel.set_markup("")
 
+                sizethread1 = threading.Thread(target=self.size_worker_thread, daemon=True)
+                sizethread1.start()
+
             elif self.Package.isinstalled(actionedappname) is False:
                 self.dActionButton.set_sensitive(True)
                 if self.dActionButton.get_style_context().has_class("destructive-action"):
@@ -4719,6 +4733,9 @@ class MainWindow(object):
 
                 self.wpcformcontrolLabel.set_markup(
                     "<span color='red'>{}</span>".format(_("You need to install the application")))
+
+                sizethread2 = threading.Thread(target=self.size_worker_thread, daemon=True, args=(actionedappcommand, ))
+                sizethread2.start()
 
             else:
                 if self.external:
@@ -4744,6 +4761,11 @@ class MainWindow(object):
                         self.dActionButton.get_style_context().remove_class("destructive-action")
                     if self.dActionButton.get_style_context().has_class("suggested-action"):
                         self.dActionButton.get_style_context().remove_class("suggested-action")
+
+                self.dActionButton.set_tooltip_text(None)
+                self.dSize.set_markup(_("None"))
+                self.dSizeTitle.set_text(_("Download Size"))
+                self.dSizeGrid.set_tooltip_text(None)
 
         if repo == 2:  # repo apps
             if self.Package.isinstalled(actionedappname):
@@ -4841,7 +4863,7 @@ class MainWindow(object):
             if status == 0 and not self.error:
                 self.notify(message_summary=_("Pardus Software Center"), message_body=_("Repo Activation Completed"))
 
-            self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop)
+            self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop, self.actionedenablingappcommand)
 
         if self.correctsourcesclicked and status == 0:
             self.preflabel.set_markup("{}\n{}\n<span weight='bold'>{}</span>".format(
@@ -4856,7 +4878,7 @@ class MainWindow(object):
             self.dAptUpdateButton.set_sensitive(True)
             self.dAptUpdateSpinner.stop()
             self.Package.updatecache()
-            self.controlView(self.appname, self.desktop_file)
+            self.controlView(self.appname, self.desktop_file, self.command)
             if status == 0:
                 self.dAptUpdateBox.set_visible(False)
                 self.dAptUpdateButton.set_visible(False)
