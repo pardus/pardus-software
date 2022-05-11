@@ -631,8 +631,7 @@ class MainWindow(object):
 
     def controlAvailableApps(self):
         if self.Server.connection:
-            if self.UserSettings.config_saa:
-                self.setAvailableApps(available=True, hideextapps=self.UserSettings.config_hera)
+            self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=self.UserSettings.config_hera)
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
