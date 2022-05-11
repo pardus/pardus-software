@@ -216,12 +216,13 @@ class Package(object):
         return ret
 
     def beauty_size(self, size):
+        # apt uses MB rather than MiB, so let's stay consistent
         if type(size) is int:
-            size = size / 1024
-            if size > 1024:
-                size = "{:.2f} MiB".format(float(size / 1024))
+            size = size / 1000
+            if size > 1000:
+                size = "{:.1f} MB".format(float(size / 1000))
             else:
-                size = "{:.2f} KiB".format(float(size))
+                size = "{:.1f} KB".format(float(size))
             return size
         return "size not found"
 
