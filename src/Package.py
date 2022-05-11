@@ -7,7 +7,7 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import apt, apt_pkg
-
+import time
 
 class Package(object):
     def __init__(self):
@@ -153,11 +153,11 @@ class Package(object):
                 size = ""
         return self.beauty_size(size)
 
-    def adv_size(self, app, packagenames):
+    def adv_size(self, packagenames):
+        time.sleep(0.3)
         self.cache.clear()
         to_install = []
         to_delete = []
-        recommends = []
         inst_recommends = True
         packagenames = packagenames.split(" ")
         ret = {"download_size": None, "freed_size": None, "install_size": None, "to_install": None, "to_delete": None}
@@ -166,7 +166,7 @@ class Package(object):
             inst_recommends = False
             packagenames.remove("--no-install-recommends")
         if "--no-install-suggests" in packagenames:
-            inst_recommends = False
+            # inst_recommends = False
             packagenames.remove("--no-install-suggests")
 
         for packagename in packagenames:

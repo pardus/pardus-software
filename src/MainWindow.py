@@ -2035,13 +2035,14 @@ class MainWindow(object):
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
-                ret = self.Package.adv_size(self.appname, self.command)
-                print(ret)
+                # ret = self.Package.adv_size(self.command)
+                sizethread = threading.Thread(target=self.size_worker_thread, daemon=True)
+                sizethread.start()
 
                 self.dActionButton.set_sensitive(True)
 
                 version = self.Package.version(self.appname)
-                size = self.Package.size(self.appname)
+                # size = self.Package.size(self.appname)
                 origins = self.Package.origins(self.appname)
 
                 component = ""
@@ -2070,18 +2071,10 @@ class MainWindow(object):
                     self.dActionButton.set_image(
                         Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
 
-                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
-                        _("Packages to remove"), ", ".join(ret["to_delete"]), ret["freed_size"],
-                        _("of disk space freed")))
-
                     if self.desktop_file != "" and self.desktop_file is not None:
                         self.dOpenButton.set_visible(True)
                     else:
                         self.dOpenButton.set_visible(False)
-
-                    self.dSizeTitle.set_text(_("Installed Size"))
-                    self.dSize.set_text("{}".format(ret["freed_size"]))
-                    self.dSizeGrid.set_tooltip_text(None)
 
                 else:
                     if self.dActionButton.get_style_context().has_class("destructive-action"):
@@ -2091,18 +2084,10 @@ class MainWindow(object):
                     self.dActionButton.set_image(
                         Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
-                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
-                        _("Packages to install"), ", ".join(ret["to_install"]), ret["download_size"], _("to download"),
-                        ret["install_size"], _("of disk space required"),))
-
                     self.dOpenButton.set_visible(False)
 
                     self.wpcformcontrolLabel.set_markup(
                         "<span color='red'>{}</span>".format(_("You need to install the application")))
-
-                    self.dSizeTitle.set_text(_("Download Size"))
-                    self.dSize.set_text("{}".format(ret["download_size"]))
-                    self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), ret["install_size"]))
 
                 if len(self.queue) > 0:
                     for qa in self.queue:
@@ -2208,6 +2193,34 @@ class MainWindow(object):
             else:
                 self.CommentsNotebook.get_nth_page(1).hide()  # page_num 1 is Gnome Comments
                 print("gnome comments disabled")
+
+    def size_worker_thread(self):
+        self.size_worker()
+        self.on_size_worker_done()
+
+    def size_worker(self):
+        self.ret = self.Package.adv_size(self.command)
+        print(self.ret)
+
+    def on_size_worker_done(self):
+        # print("on_size_worker_done")
+        isinstalled = self.Package.isinstalled(self.appname)
+        if isinstalled:
+            self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
+                _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.ret["freed_size"],
+                _("of disk space freed")))
+
+            self.dSizeTitle.set_text(_("Installed Size"))
+            self.dSize.set_text("{}".format(self.ret["freed_size"]))
+            self.dSizeGrid.set_tooltip_text(None)
+        else:
+            self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                _("Packages to install"), ", ".join(self.ret["to_install"]), self.ret["download_size"], _("to download"),
+                self.ret["install_size"], _("of disk space required"), ))
+
+            self.dSizeTitle.set_text(_("Download Size"))
+            self.dSize.set_text("{}".format(self.ret["download_size"]))
+            self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.ret["install_size"]))
 
     def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
