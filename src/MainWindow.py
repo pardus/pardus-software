@@ -2203,7 +2203,7 @@ class MainWindow(object):
             self.size_worker()
         else:
             self.size_worker(app)
-        self.on_size_worker_done()
+        GLib.idle_add(self.on_size_worker_done)
 
     def size_worker(self, app=None):
         if app is None:
