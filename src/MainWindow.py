@@ -1910,6 +1910,12 @@ class MainWindow(object):
         self.CommentsNotebook.set_current_page(0)
         self.gcStack.set_visible_child_name("gcTurkish")
 
+        # clear size and requiered changes info
+        self.dActionButton.set_tooltip_text(None)
+        self.dSize.set_markup("...")
+        self.dSizeTitle.set_text(_("Size"))
+        self.dSizeGrid.set_tooltip_text(None)
+
         self.dAptUpdateBox.set_visible(False)
         self.dAptUpdateButton.set_visible(False)
         self.dAptUpdateInfoLabel.set_visible(False)
