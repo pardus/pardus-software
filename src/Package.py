@@ -154,7 +154,7 @@ class Package(object):
         return self.beauty_size(size)
 
     def adv_size(self, packagenames):
-        time.sleep(0.1)
+        time.sleep(0.25)
         self.cache.clear()
         to_install = []
         to_delete = []
