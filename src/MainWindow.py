@@ -1156,9 +1156,10 @@ class MainWindow(object):
                 category = category.rstrip(",")
                 categorynumber = self.get_category_number(category)
                 subcategory = ""
-                for i in app["subcategory"]:
-                    subcategory += i[self.locale].lower() + ","
-                subcategory = subcategory.rstrip(",")
+                if "subcategory" in app.keys():
+                    for i in app["subcategory"]:
+                        subcategory += i[self.locale].lower() + ","
+                    subcategory = subcategory.rstrip(",")
                 GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category, subcategory])
 
     def addToPardusApps(self, list):
@@ -1171,7 +1172,7 @@ class MainWindow(object):
             for cat in self.catlist:
                 self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"],
                                         "subcats": cat["subcats"],
-                                        "subcategories": cat["subcategories"]})
+                                        "subcategories": cat["subcategories"] if "subcategories" in cat.keys() else []})
             self.categories = sorted(self.categories, key=lambda x: x["name"])
             if self.locale == "tr":
                 self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False,
