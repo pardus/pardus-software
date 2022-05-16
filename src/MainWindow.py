@@ -148,6 +148,7 @@ class MainWindow(object):
 
         self.pardusicb = self.GtkBuilder.get_object("pardusicb")
         self.sortPardusAppsCombo = self.GtkBuilder.get_object("sortPardusAppsCombo")
+        self.SubCatCombo = self.GtkBuilder.get_object("SubCatCombo")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
@@ -385,6 +386,7 @@ class MainWindow(object):
 
         self.PardusCurrentCategorySubCats = False
         self.PardusCurrentCategoryExternal = False
+        self.PardusCurrentCategorySubCategories = []
 
         self.useDynamicListStore = False
         self.repoappname = ""
@@ -1153,7 +1155,11 @@ class MainWindow(object):
                     category += i[self.locale] + ","
                 category = category.rstrip(",")
                 categorynumber = self.get_category_number(category)
-                GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category])
+                subcategory = ""
+                for i in app["subcategory"]:
+                    subcategory += i[self.locale].lower() + ","
+                subcategory = subcategory.rstrip(",")
+                GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category, subcategory])
 
     def addToPardusApps(self, list):
         self.PardusAppListStore.append(list)
@@ -1164,12 +1170,15 @@ class MainWindow(object):
             self.categories = []
             for cat in self.catlist:
                 self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"],
-                                        "subcats": cat["subcats"]})
+                                        "subcats": cat["subcats"],
+                                        "subcategories": cat["subcategories"]})
             self.categories = sorted(self.categories, key=lambda x: x["name"])
             if self.locale == "tr":
-                self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False})
+                self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False,
+                                           "subcategories": []})
             else:
-                self.categories.insert(0, {"name": "all", "icon": "all", "external": False, "subcats": False})
+                self.categories.insert(0, {"name": "all", "icon": "all", "external": False, "subcats": False,
+                                           "subcategories": []})
 
             for cat in self.categories:
                 caticon = Gtk.Image.new()
@@ -1217,10 +1226,11 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = -2
         self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
-        self.PardusCurrentCategoryExternal = self.get_category_name_from_button(button.name)
+        self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name_from_button(button.name)
 
-        print("HomeCategory: {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
+        print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
+                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal,
+                                                    self.PardusCurrentCategorySubCategories))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -1228,6 +1238,17 @@ class MainWindow(object):
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
         self.homestack.set_visible_child_name("pardusapps")
+
+        self.SubCatCombo.remove_all()
+        if self.PardusCurrentCategorySubCategories:
+            self.SubCatCombo.append_text(_("All"))
+            self.SubCatCombo.set_active(0)
+            self.SubCatCombo.set_visible(True)
+            for subcat in self.PardusCurrentCategorySubCategories:
+                self.SubCatCombo.append_text("{}".format(subcat[self.locale].title()))
+        else:
+            self.SubCatCombo.set_visible(False)
+
         if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
             self.pardusicb.set_visible(False)
             self.sortPardusAppsCombo.set_visible(False)
@@ -1603,14 +1624,14 @@ class MainWindow(object):
         for i in range(0, lencat):
             if thatnumber == i:
                 return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                       self.categories[i]["external"]
+                       self.categories[i]["external"], self.categories[i]["subcategories"]
 
     def get_category_name_from_button(self, name):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if name == self.categories[i]["name"]:
                 return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                       self.categories[i]["external"]
+                       self.categories[i]["external"], self.categories[i]["subcategories"]
 
     def get_repo_category_number(self, thatcategory):
         repocatnumber = 404
@@ -2956,6 +2977,7 @@ class MainWindow(object):
         search_entry_text = self.pardussearchbar.get_text()
         categorynumber = int(model[iteration][2])
         category = list(model[iteration][4].split(","))
+        subcategory = list(model[iteration][5].split(","))
         # category = model[iteration][4]
         appname = model[iteration][1]
         showinstalled = self.pardusicb.get_active()
@@ -3002,9 +3024,25 @@ class MainWindow(object):
                     if self.PardusCurrentCategoryString in category:
                         if self.pardusicb.get_active():
                             if self.Package.isinstalled(appname):
-                                return True
+                                if self.SubCatCombo.get_active_text() is not None:
+                                    if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
+                                        return True
+                                    else:
+                                        if self.PardusCurrentCategorySubCategories:
+                                            if self.SubCatCombo.get_active_text().lower() in subcategory:
+                                                return True
+                                else:
+                                    return True
                         else:
-                            return True
+                            if self.SubCatCombo.get_active_text() is not None:
+                                if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
+                                    return True
+                                else:
+                                    if self.PardusCurrentCategorySubCategories:
+                                        if self.SubCatCombo.get_active_text().lower() in subcategory:
+                                            return True
+                            else:
+                                return True
 
     # def isAppAvailable(self, package):
     #     inrepo = False
@@ -3090,6 +3128,11 @@ class MainWindow(object):
     def on_pardusicb_toggled(self, button):
         self.PardusCategoryFilter.refilter()
 
+    def on_SubCatCombo_changed(self, combo_box):
+        if combo_box.get_active_text() is not None:
+            print("on_SubCatCombo_changed : {}".format(combo_box.get_active_text()))
+            self.PardusCategoryFilter.refilter()
+
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
             self.applist = sorted(self.applist, key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
@@ -3155,10 +3198,11 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
         self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
-        self.PardusCurrentCategoryExternal = self.get_category_name(self.PardusCurrentCategory)
+        self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name(self.PardusCurrentCategory)
 
-        print("HomeCategory: {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal))
+        print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
+                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal,
+                                                    self.PardusCurrentCategorySubCategories))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -3166,6 +3210,17 @@ class MainWindow(object):
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(self.PardusCurrentCategoryString.title())
         self.homestack.set_visible_child_name("pardusapps")
+
+        self.SubCatCombo.remove_all()
+        if self.PardusCurrentCategorySubCategories:
+            self.SubCatCombo.append_text(_("All"))
+            self.SubCatCombo.set_active(0)
+            self.SubCatCombo.set_visible(True)
+            for subcat in self.PardusCurrentCategorySubCategories:
+                self.SubCatCombo.append_text("{}".format(subcat[self.locale].title()))
+        else:
+            self.SubCatCombo.set_visible(False)
+
         if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
             self.pardusicb.set_visible(False)
             self.sortPardusAppsCombo.set_visible(False)
@@ -3536,6 +3591,9 @@ class MainWindow(object):
             self.PardusCurrentCategoryString = "tümü"
         else:
             self.PardusCurrentCategoryString = "all"
+
+        self.SubCatCombo.remove_all()
+        self.SubCatCombo.set_visible(False)
 
         self.PardusCategoryFilter.refilter()
 

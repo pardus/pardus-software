@@ -26,6 +26,8 @@
       <column type="gchararray"/>
       <!-- column-name AppCategoryString -->
       <column type="gchararray"/>
+      <!-- column-name AppSubCategoryString -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkTreeModelFilter" id="PardusCategoryFilter">
@@ -1673,6 +1675,20 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="fill">True</property>
                                 <property name="pack-type">end</property>
                                 <property name="position">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkComboBoxText" id="SubCatCombo">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="active-id">-1</property>
+                                <signal name="changed" handler="on_SubCatCombo_changed" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="pack-type">end</property>
+                                <property name="position">4</property>
                               </packing>
                             </child>
                           </object>
