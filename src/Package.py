@@ -7,7 +7,7 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import apt, apt_pkg
-import time
+import time, os, locale
 
 class Package(object):
     def __init__(self):
@@ -225,6 +225,63 @@ class Package(object):
                 size = "{:.1f} KB".format(float(size))
             return size
         return "size not found"
+
+    def installed_packages(self):
+
+        # apt list --installed   || very slow method
+        # applist = []
+        # for mypkg in self.cache:
+        #     if self.cache[mypkg.name].is_installed:
+        #         applist.append({"name": mypkg.name, "size": self.installed_size(mypkg.name), "summary": self.summary(mypkg.name)})
+
+        # apps that have desktop file in /usr/share/applications/  | slow method
+        # dloc = "/usr/share/applications/"
+        # desktop_dir = os.listdir(dloc)
+        # desktop_list = []
+        # applist = []
+        # for desktop in desktop_dir:
+        #     if desktop.endswith(".desktop") and "NoDisplay=true" not in open(os.path.join(dloc, desktop), "r").read():
+        #         desktop_list.append(desktop)
+        # for desktop in desktop_list:
+        #     process = subprocess.run(["dpkg", "-S", desktop], stdout=subprocess.PIPE)
+        #     output = process.stdout.decode("utf-8")
+        #     app = output[:output.find(":")].split(",")[0]
+        #     applist.append({"name": app, "size": self.installed_size(app), "summary": self.summary(app)})
+        # applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: x["name"])
+
+
+        # parse desktop file in /usr/share/applications/  | normal method
+        applist = []
+        dloc = "/usr/share/applications/"
+        desktop_listdir = os.listdir(dloc)
+        for desktop in desktop_listdir:
+            if desktop.endswith(".desktop"):
+                desktop_read = open(os.path.join(dloc, desktop), "r").read()
+                if "NoDisplay=true" not in desktop_read:
+                    name = ""
+                    icon = ""
+                    comment = ""
+                    if "Name=" in desktop_read:
+                        for line in desktop_read.splitlines():
+                            if line.startswith("Name="):
+                                name = line.split("Name=")[1].strip()
+                                break
+                    if "Icon=" in desktop_read:
+                        for line in desktop_read.splitlines():
+                            if line.startswith("Icon="):
+                                icon = line.split("Icon=")[1].strip()
+                                break
+                    if "Comment=" in desktop_read:
+                        for line in desktop_read.splitlines():
+                            if line.startswith("Comment="):
+                                comment = line.split("Comment=")[1].strip()
+                                break
+                    else:
+                        comment = name
+                    applist.append({"name": name, "icon": icon, "comment": comment, "desktop": desktop})
+        applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: locale.strxfrm(x["name"]))
+
+        return applist
 
     def origins(self, packagename):
         package = self.cache[packagename]

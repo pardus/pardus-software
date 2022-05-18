@@ -517,6 +517,8 @@ class MainWindow(object):
         self.GnomeCommentListBoxTR = self.GtkBuilder.get_object("GnomeCommentListBoxTR")
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
+        self.MyAppsListBox = self.GtkBuilder.get_object("MyAppsListBox")
+
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
         try:
@@ -1604,6 +1606,45 @@ class MainWindow(object):
                         appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return appicon
 
+    def getMyAppIcon(self, app, size=64):
+        try:
+            if self.UserSettings.config_icon == "default":
+                icons = "appicons"
+            else:
+                icons = "appicons-" + self.UserSettings.config_icon
+        except Exception as e:
+            icons = "appicons"
+            print("{}".format(e))
+        try:
+            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
+                                                             size)
+        except:
+            try:
+                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg",
+                                                                 size, size)
+            except:
+                try:
+                    appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
+                except:
+                    try:
+                        appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
+                    except:
+                        try:
+                            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(app, 64, 64)
+                        except:
+                            try:
+                                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                                    self.Server.cachedir + "appicons/pardus-software.svg", size, size)
+                            except:
+                                try:
+                                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                                    Gtk.IconLookupFlags(16))
+                                except:
+                                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                                                                                    Gtk.IconLookupFlags(16))
+
+        return appicon
+
     # def on_timeout(self, user_data):
     #     if self.splashbarstatus:
     #         self.splashbar.pulse()
@@ -2259,6 +2300,22 @@ class MainWindow(object):
             self.dSizeTitle.set_text(_("Download Size"))
             self.dSize.set_text("{}".format(self.ret["download_size"]))
             self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.ret["install_size"]))
+
+
+    def myapps_worker_thread(self):
+        myapps = self.myapps_worker()
+        GLib.idle_add(self.on_myapps_worker_done, myapps)
+
+    def myapps_worker(self):
+        return self.Package.installed_packages()
+
+    def on_myapps_worker_done(self, myapps):
+        print("on_myapps_worker_done")
+        for pkg in myapps:
+            self.addtoMyApps(pkg)
+            # GLib.idle_add(self.addtoMyApps, pkg)
+        GLib.idle_add(self.MyAppsListBox.show_all)
+
 
     def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
@@ -3559,6 +3616,70 @@ class MainWindow(object):
                     index = next((index for (index, app) in enumerate(self.queue) if app["name"] == button.name), None)
                     self.queue.pop(index)
 
+    def addtoMyApps(self, app):
+
+        appicon = Gtk.Image.new()
+        appicon.set_from_pixbuf(self.getMyAppIcon(app["icon"]))
+
+        name = Gtk.Label.new()
+        name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(app["name"], -1)))
+        name.props.halign = Gtk.Align.START
+
+        # sizelabel = Gtk.Label.new()
+        # sizelabel.set_markup("{}".format(self.Package.beauty_size(app["size"])))
+        # sizelabel.props.valign = Gtk.Align.CENTER
+
+        summarylabel = Gtk.Label.new()
+        summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(app["comment"], -1)))
+        summarylabel.set_line_wrap(True)
+        summarylabel.set_line_wrap_mode(2)  # WORD_CHAR
+        summarylabel.props.halign = Gtk.Align.START
+
+        uninstallbutton = Gtk.Button.new()
+        uninstallbutton.name = app["desktop"]
+        uninstallbutton.props.valign = Gtk.Align.CENTER
+        uninstallbutton.props.halign = Gtk.Align.CENTER
+        uninstallbutton.props.always_show_image = True
+        uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+        uninstallbutton.set_label("")
+        uninstallbutton.set_tooltip_text(_("Uninstall"))
+        uninstallbutton.get_style_context().add_class("destructive-action")
+        uninstallbutton.connect("clicked", self.remove_from_myapps)
+
+        openbutton = Gtk.Button.new()
+        openbutton.name = app["desktop"]
+        openbutton.props.valign = Gtk.Align.CENTER
+        openbutton.props.halign = Gtk.Align.CENTER
+        openbutton.props.always_show_image = True
+        openbutton.set_image(Gtk.Image.new_from_icon_name("system-run-symbolic", Gtk.IconSize.BUTTON))
+        openbutton.set_label("")
+        openbutton.set_tooltip_text(_("Open"))
+        openbutton.connect("clicked", self.open_from_myapps)
+
+        box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
+        box1.pack_start(name, False, True, 0)
+        box1.pack_start(summarylabel, False, True, 0)
+        box1.props.valign = Gtk.Align.CENTER
+
+        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+        box.set_margin_top(5)
+        box.set_margin_bottom(5)
+        box.set_margin_start(5)
+        box.set_margin_end(5)
+        box.pack_start(appicon, False, True, 5)
+        box.pack_start(box1, False, True, 5)
+        box.pack_end(uninstallbutton, False, True, 13)
+        box.pack_end(openbutton, False, True, 5)
+        # box.pack_end(sizelabel, False, True, 13)
+
+        GLib.idle_add(self.MyAppsListBox.add, box)
+
+    def remove_from_myapps(self, button):
+        print(button.name)
+
+    def open_from_myapps(self, button):
+        print(button.name)
+
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
         self.homestack.set_visible_child_name("pardusapps")
@@ -3759,42 +3880,69 @@ class MainWindow(object):
             self.selecticonsBox.set_visible(False)
 
     def on_menu_myapps_clicked(self, button):
+
+        ### this shows only available apps on pardus-software (old method)
+        #
+        # self.PardusAppsIconView.unselect_all()
+        # if self.topbutton2.get_style_context().has_class("suggested-action"):
+        #     self.topbutton2.get_style_context().remove_class("suggested-action")
+        # if self.queuebutton.get_style_context().has_class("suggested-action"):
+        #     self.queuebutton.get_style_context().remove_class("suggested-action")
+        # if not self.topbutton1.get_style_context().has_class("suggested-action"):
+        #     self.topbutton1.get_style_context().add_class("suggested-action")
+        # # self.topsearchbutton.set_active(True)
+        # self.topsearchbutton.set_sensitive(True)
+        # self.searchstack.set_visible_child_name("pardus")
+        #
+        # self.menubackbutton.set_sensitive(True)
+        # if not self.pardusicb.get_active():
+        #     self.myapps_clicked = True
+        # self.pardusicb.set_visible(True)
+        # self.PopoverMenu.popdown()
+        # self.PardusCurrentCategoryString = "all"
+        # self.PardusCurrentCategoryIcon = "all"
+        # self.PardusCurrentCategorySubCats = False
+        # self.PardusCurrentCategoryExternal = False
+        # self.isPardusSearching = False
+        # self.pardussearchbar.set_text("")
+        # self.topsearchbutton.set_active(False)
+        # if self.UserSettings.config_usi:
+        #     pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
+        # else:
+        #     pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
+        # self.NavCategoryImage.set_from_pixbuf(pixbuf)
+        # self.NavCategoryLabel.set_text(_("all").title())
+        # if self.sortPardusAppsCombo.get_active != 0:
+        #     self.sortPardusAppsCombo.set_active(0)
+        # if not self.pardusicb.get_active():
+        #     self.pardusicb.set_active(True)
+        # self.PardusCategoryFilter.refilter()
+        # self.pardusAppsStack.set_visible_child_name("normal")
+        #
+        ### this shows only available apps on pardus-software (old method)
+
+
+        self.PopoverMenu.popdown()
         self.PardusAppsIconView.unselect_all()
+        self.EditorAppsIconView.unselect_all()
+        if self.topbutton1.get_style_context().has_class("suggested-action"):
+            self.topbutton1.get_style_context().remove_class("suggested-action")
         if self.topbutton2.get_style_context().has_class("suggested-action"):
             self.topbutton2.get_style_context().remove_class("suggested-action")
         if self.queuebutton.get_style_context().has_class("suggested-action"):
             self.queuebutton.get_style_context().remove_class("suggested-action")
-        if not self.topbutton1.get_style_context().has_class("suggested-action"):
-            self.topbutton1.get_style_context().add_class("suggested-action")
-        # self.topsearchbutton.set_active(True)
         self.topsearchbutton.set_sensitive(True)
         self.searchstack.set_visible_child_name("pardus")
-
-        self.menubackbutton.set_sensitive(True)
-        if not self.pardusicb.get_active():
-            self.myapps_clicked = True
-        self.pardusicb.set_visible(True)
-        self.PopoverMenu.popdown()
-        self.PardusCurrentCategoryString = "all"
-        self.PardusCurrentCategoryIcon = "all"
-        self.PardusCurrentCategorySubCats = False
-        self.PardusCurrentCategoryExternal = False
-        self.isPardusSearching = False
         self.pardussearchbar.set_text("")
         self.topsearchbutton.set_active(False)
-        if self.UserSettings.config_usi:
-            pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
-        else:
-            pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
-        self.NavCategoryImage.set_from_pixbuf(pixbuf)
-        self.NavCategoryLabel.set_text(_("all").title())
-        if self.sortPardusAppsCombo.get_active != 0:
-            self.sortPardusAppsCombo.set_active(0)
-        if not self.pardusicb.get_active():
-            self.pardusicb.set_active(True)
-        self.PardusCategoryFilter.refilter()
-        self.pardusAppsStack.set_visible_child_name("normal")
-        self.homestack.set_visible_child_name("pardusapps")
+        self.menubackbutton.set_sensitive(True)
+        self.homestack.set_visible_child_name("myapps")
+
+        for row in self.MyAppsListBox:
+            self.MyAppsListBox.remove(row)
+
+        myappsthread = threading.Thread(target=self.myapps_worker_thread, daemon=True)
+        myappsthread.start()
 
     def on_menu_statistics_clicked(self, button):
         self.prefback = self.homestack.get_visible_child_name()
