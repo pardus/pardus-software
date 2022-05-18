@@ -158,9 +158,11 @@ class Package(object):
         self.cache.clear()
         to_install = []
         to_delete = []
+        broken = []
         inst_recommends = True
         packagenames = packagenames.split(" ")
-        ret = {"download_size": None, "freed_size": None, "install_size": None, "to_install": None, "to_delete": None}
+        ret = {"download_size": None, "freed_size": None, "install_size": None, "to_install": None, "to_delete": None,
+               "broken": None}
 
         if "--no-install-recommends" in packagenames:
             inst_recommends = False
@@ -170,19 +172,23 @@ class Package(object):
             packagenames.remove("--no-install-suggests")
 
         for packagename in packagenames:
-            print(packagename)
+            # print(packagename)
             try:
                 package = self.cache[packagename]
             except Exception as e:
                 print("{}".format(e))
                 return ret
-            if package.is_installed:
-                package.mark_delete(True, True)
-            else:
-                if inst_recommends:
-                    package.mark_install(True, True)
+            try:
+                if package.is_installed:
+                    package.mark_delete(True, True)
                 else:
-                    package.mark_install(True, False)
+                    if inst_recommends:
+                        package.mark_install(True, True)
+                    else:
+                        package.mark_install(True, False)
+            except:
+                if packagename not in broken:
+                    broken.append(packagename)
             changes = self.cache.get_changes()
             for package in changes:
                 if package.marked_install:
@@ -206,6 +212,7 @@ class Package(object):
         ret["install_size"] = self.beauty_size(install_size)
         ret["to_install"] = to_install
         ret["to_delete"] = to_delete
+        ret["broken"] = broken
 
         # print("freed_size {}".format(ret["freed_size"]))
         # print("download_size {}".format(ret["download_size"]))
