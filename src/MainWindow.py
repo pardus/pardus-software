@@ -2285,17 +2285,36 @@ class MainWindow(object):
         # print("on_size_worker_done")
         isinstalled = self.Package.isinstalled(self.appname)
         if isinstalled:
-            self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
-                _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.ret["freed_size"],
-                _("of disk space freed")))
+            if self.ret["to_install"] and self.ret["to_install"] is not None:
+                self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                    _("Packages to remove"), ", ".join(self.ret["to_delete"]),
+                    _("Packages to install"), ", ".join(self.ret["to_install"]),
+                    self.ret["freed_size"], _("of disk space freed"),
+                    self.ret["download_size"], _("to download"),
+                    self.ret["install_size"], _("of disk space required")))
+            else:
+                if self.ret["to_delete"] and self.ret["to_delete"] is not None:
+                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
+                    _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.ret["freed_size"],
+                    _("of disk space freed")))
 
             self.dSizeTitle.set_text(_("Installed Size"))
             self.dSize.set_text("{}".format(self.ret["freed_size"]))
             self.dSizeGrid.set_tooltip_text(None)
         else:
-            self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
-                _("Packages to install"), ", ".join(self.ret["to_install"]), self.ret["download_size"], _("to download"),
-                self.ret["install_size"], _("of disk space required"), ))
+            if self.ret["to_delete"] and self.ret["to_delete"] is not None:
+                self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                    _("Packages to install"), ", ".join(self.ret["to_install"]),
+                    _("Packages to remove"), ", ".join(self.ret["to_delete"]),
+                    self.ret["download_size"], _("to download"),
+                    self.ret["install_size"], _("of disk space required"),
+                    self.ret["freed_size"], _("of disk space freed")))
+            else:
+                if self.ret["to_install"] and self.ret["to_install"] is not None:
+                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                        _("Packages to install"), ", ".join(self.ret["to_install"]),
+                        self.ret["download_size"], _("to download"),
+                        self.ret["install_size"], _("of disk space required")))
 
             self.dSizeTitle.set_text(_("Download Size"))
             self.dSize.set_text("{}".format(self.ret["download_size"]))
