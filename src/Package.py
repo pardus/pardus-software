@@ -219,7 +219,9 @@ class Package(object):
         # apt uses MB rather than MiB, so let's stay consistent
         if type(size) is int:
             size = size / 1000
-            if size > 1000:
+            if size > 1000000:
+                size = "{:.1f} GB".format(float(size / 1000000))
+            elif size > 1000:
                 size = "{:.1f} MB".format(float(size / 1000))
             else:
                 size = "{:.1f} KB".format(float(size))
