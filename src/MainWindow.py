@@ -160,6 +160,8 @@ class MainWindow(object):
         self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
         self.tryfixstack = self.GtkBuilder.get_object("tryfixstack")
         self.queuestack = self.GtkBuilder.get_object("queuestack")
+        self.myappsstack = self.GtkBuilder.get_object("myappsstack")
+        self.myappsdetailsstack = self.GtkBuilder.get_object("myappsdetailsstack")
         self.activate_repo_label = self.GtkBuilder.get_object("activate_repo_label")
         self.activate_info_label = self.GtkBuilder.get_object("activate_info_label")
         self.activating_spinner = self.GtkBuilder.get_object("activating_spinner")
@@ -271,6 +273,24 @@ class MainWindow(object):
         self.tryfixButton = self.GtkBuilder.get_object("tryfixButton")
         self.tryfixSpinner = self.GtkBuilder.get_object("tryfixSpinner")
         self.headerAptUpdateSpinner = self.GtkBuilder.get_object("headerAptUpdateSpinner")
+
+        self.ui_myapps_app = self.GtkBuilder.get_object("ui_myapps_app")
+        self.ui_myapps_package = self.GtkBuilder.get_object("ui_myapps_package")
+        self.ui_myapps_icon = self.GtkBuilder.get_object("ui_myapps_icon")
+        self.ui_myapps_description = self.GtkBuilder.get_object("ui_myapps_description")
+        self.ui_myapps_spinner = self.GtkBuilder.get_object("ui_myapps_spinner")
+        self.ui_myapp_toremove_label = self.GtkBuilder.get_object("ui_myapp_toremove_label")
+        self.ui_myapp_toinstall_label = self.GtkBuilder.get_object("ui_myapp_toinstall_label")
+        self.ui_myapp_broken_label = self.GtkBuilder.get_object("ui_myapp_broken_label")
+        self.ui_myapp_fsize_label = self.GtkBuilder.get_object("ui_myapp_fsize_label")
+        self.ui_myapp_dsize_label = self.GtkBuilder.get_object("ui_myapp_dsize_label")
+        self.ui_myapp_isize_label = self.GtkBuilder.get_object("ui_myapp_isize_label")
+        self.ui_myapp_toremove_box = self.GtkBuilder.get_object("ui_myapp_toremove_box")
+        self.ui_myapp_toinstall_box = self.GtkBuilder.get_object("ui_myapp_toinstall_box")
+        self.ui_myapp_broken_box = self.GtkBuilder.get_object("ui_myapp_broken_box")
+        self.ui_myapp_fsize_box = self.GtkBuilder.get_object("ui_myapp_fsize_box")
+        self.ui_myapp_dsize_box = self.GtkBuilder.get_object("ui_myapp_dsize_box")
+        self.ui_myapp_isize_box = self.GtkBuilder.get_object("ui_myapp_isize_box")
 
         self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
         self.PardusAppsIconView.set_pixbuf_column(0)
@@ -2289,13 +2309,13 @@ class MainWindow(object):
                 self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
                     _("Packages to remove"), ", ".join(self.ret["to_delete"]),
                     _("Packages to install"), ", ".join(self.ret["to_install"]),
-                    self.ret["freed_size"], _("of disk space freed"),
-                    self.ret["download_size"], _("to download"),
-                    self.ret["install_size"], _("of disk space required")))
+                    self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed"),
+                    self.Package.beauty_size(self.ret["download_size"]), _("to download"),
+                    self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
             else:
                 if self.ret["to_delete"] and self.ret["to_delete"] is not None:
                     self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
-                    _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.ret["freed_size"],
+                    _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.Package.beauty_size(self.ret["freed_size"]),
                     _("of disk space freed")))
 
             self.dSizeTitle.set_text(_("Installed Size"))
@@ -2306,19 +2326,19 @@ class MainWindow(object):
                 self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
                     _("Packages to install"), ", ".join(self.ret["to_install"]),
                     _("Packages to remove"), ", ".join(self.ret["to_delete"]),
-                    self.ret["download_size"], _("to download"),
-                    self.ret["install_size"], _("of disk space required"),
-                    self.ret["freed_size"], _("of disk space freed")))
+                    self.Package.beauty_size(self.ret["download_size"]), _("to download"),
+                    self.Package.beauty_size(self.ret["install_size"]), _("of disk space required"),
+                    self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed")))
             else:
                 if self.ret["to_install"] and self.ret["to_install"] is not None:
                     self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
                         _("Packages to install"), ", ".join(self.ret["to_install"]),
-                        self.ret["download_size"], _("to download"),
-                        self.ret["install_size"], _("of disk space required")))
+                        self.Package.beauty_size(self.ret["download_size"]), _("to download"),
+                        self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
 
             self.dSizeTitle.set_text(_("Download Size"))
-            self.dSize.set_text("{}".format(self.ret["download_size"]))
-            self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.ret["install_size"]))
+            self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
+            self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
 
 
     def myapps_worker_thread(self):
@@ -2335,6 +2355,68 @@ class MainWindow(object):
             # GLib.idle_add(self.addtoMyApps, pkg)
         GLib.idle_add(self.MyAppsListBox.show_all)
 
+
+    def myappsdetail_worker_thread(self, app):
+        myappdetails = self.myappsdetail_worker(app)
+        GLib.idle_add(self.on_myappsdetail_worker_done, myappdetails)
+
+    def myappsdetail_worker(self, app):
+
+        myapp_details, myapp_package = self.Package.myapps_remove_details(app["desktop"])
+        print(myapp_details)
+        return myapp_details, myapp_package, app["name"], app["icon"]
+
+    def on_myappsdetail_worker_done(self, myapp):
+        # print("on_myappsdetail_worker_done")
+        self.ui_myapps_spinner.stop()
+        details, package, name, icon = myapp
+        if details is not None:
+            self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(name))
+            self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
+            self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
+            self.ui_myapps_description.set_markup("{}".format(self.Package.adv_description(package)))
+            if details["to_delete"] and details["to_delete"] is not None:
+                self.ui_myapp_toremove_label.set_markup("{}".format(", ".join(details["to_delete"])))
+                self.ui_myapp_toremove_box.set_visible(True)
+            else:
+                self.ui_myapp_toremove_box.set_visible(False)
+
+            if details["to_install"] and details["to_install"] is not None:
+                self.ui_myapp_toinstall_label.set_markup("{}".format(", ".join(details["to_install"])))
+                self.ui_myapp_toinstall_box.set_visible(True)
+            else:
+                self.ui_myapp_toinstall_box.set_visible(False)
+
+            if details["broken"] and details["broken"] is not None:
+                self.ui_myapp_broken_label.set_markup("{}".format(", ".join(details["broken"])))
+                self.ui_myapp_broken_box.set_visible(True)
+            else:
+                self.ui_myapp_broken_box.set_visible(False)
+
+            if details["freed_size"] and details["freed_size"] is not None and details["freed_size"] > 0:
+                self.ui_myapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(details["freed_size"])))
+                self.ui_myapp_fsize_box.set_visible(True)
+            else:
+                self.ui_myapp_fsize_box.set_visible(False)
+
+            if details["download_size"] and details["download_size"] is not None and details["download_size"] > 0:
+                self.ui_myapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(details["download_size"])))
+                self.ui_myapp_dsize_box.set_visible(True)
+            else:
+                self.ui_myapp_dsize_box.set_visible(False)
+
+            if details["install_size"] and details["install_size"] is not None and details["install_size"] > 0:
+                self.ui_myapp_isize_label.set_markup("{}".format(self.Package.beauty_size(details["install_size"])))
+                self.ui_myapp_isize_box.set_visible(True)
+            else:
+                self.ui_myapp_isize_box.set_visible(False)
+
+            self.myappsstack.set_visible_child_name("details")
+            self.myappsdetailsstack.set_visible_child_name("details")
+
+        else:
+            print("package not found")
+            self.myappsstack.set_visible_child_name("notfound")
 
     def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
@@ -3655,7 +3737,7 @@ class MainWindow(object):
         summarylabel.props.halign = Gtk.Align.START
 
         uninstallbutton = Gtk.Button.new()
-        uninstallbutton.name = app["desktop"]
+        uninstallbutton.name = {"name": app["name"], "desktop": app["desktop"], "icon": app["icon"]}
         uninstallbutton.props.valign = Gtk.Align.CENTER
         uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
@@ -3696,8 +3778,17 @@ class MainWindow(object):
     def remove_from_myapps(self, button):
         print(button.name)
 
+        self.myappsstack.set_visible_child_name("details")
+        self.myappsdetailsstack.set_visible_child_name("spinner")
+        self.ui_myapps_spinner.start()
+        myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(button.name,), daemon=True)
+        myappsdetailsthread.start()
+
     def open_from_myapps(self, button):
         print(button.name)
+
+    def on_ui_myapps_cancel_clicked(self, button):
+        self.myappsstack.set_visible_child_name("myapps")
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
@@ -3956,6 +4047,7 @@ class MainWindow(object):
         self.topsearchbutton.set_active(False)
         self.menubackbutton.set_sensitive(True)
         self.homestack.set_visible_child_name("myapps")
+        self.myappsstack.set_visible_child_name("myapps")
 
         for row in self.MyAppsListBox:
             self.MyAppsListBox.remove(row)

@@ -7,7 +7,7 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import apt, apt_pkg
-import time, os, locale
+import time, os, locale, subprocess, re
 
 class Package(object):
     def __init__(self):
@@ -104,6 +104,39 @@ class Package(object):
             except:
                 desc = "Description is not found"
         return desc
+
+    def adv_description(self, packagename):
+        try:
+            long_desc = ""
+            raw_desc = self.description(packagename, False).split("\n")
+            # append a newline to the summary in the first line
+            summary = raw_desc[0]
+            raw_desc[0] = ""
+            long_desc = "%s\n" % summary
+            for line in raw_desc:
+                tmp = line.strip()
+                if tmp == ".":
+                    long_desc += "\n"
+                else:
+                    long_desc += tmp + "\n"
+            # print long_desc
+            # do some regular expression magic on the description
+            # Add a newline before each bullet
+            p = re.compile(r'^(\s|\t)*(\*|0|-)', re.MULTILINE)
+            long_desc = p.sub('\n*', long_desc)
+            # replace all newlines by spaces
+            p = re.compile(r'\n', re.MULTILINE)
+            long_desc = p.sub(" ", long_desc)
+            # replace all multiple spaces by
+            # newlines
+            p = re.compile(r'\s\s+', re.MULTILINE)
+            long_desc = p.sub("\n", long_desc)
+            long_desc = long_desc.rstrip("\n")
+            # print(summary)
+            # print(long_desc)
+            return long_desc
+        except:
+            return self.description(packagename, False)
 
     def summary(self, packagename):
         # Return the short description (one line summary)
@@ -207,9 +240,9 @@ class Package(object):
             freed_size = 0
             install_size = space
 
-        ret["download_size"] = self.beauty_size(download_size)
-        ret["freed_size"] = self.beauty_size(freed_size)
-        ret["install_size"] = self.beauty_size(install_size)
+        ret["download_size"] = download_size
+        ret["freed_size"] = freed_size
+        ret["install_size"] = install_size
         ret["to_install"] = to_install
         ret["to_delete"] = to_delete
         ret["broken"] = broken
@@ -221,6 +254,26 @@ class Package(object):
         # print("to_delete {}".format(ret["to_delete"]))
 
         return ret
+
+    def myapps_remove_details(self, desktopname):
+        try:
+            process = subprocess.run(["dpkg", "-S", desktopname], stdout=subprocess.PIPE)
+            output = process.stdout.decode("utf-8")
+            package = output[:output.find(":")].split(",")[0]
+            if package:
+                return self.adv_size(package), package
+            else:
+                # try get package name from basename
+                process = subprocess.run(["dpkg", "-S", os.path.basename(desktopname)], stdout=subprocess.PIPE)
+                output = process.stdout.decode("utf-8")
+                package = output[:output.find(":")].split(",")[0]
+                if package:
+                    return self.adv_size(package), package
+                else:
+                    return None, ""
+        except Exception as e:
+            print("Error on myapps_remove_details: {}".format(e))
+            return None, ""
 
     def beauty_size(self, size):
         # apt uses MB rather than MiB, so let's stay consistent
@@ -287,7 +340,8 @@ class Package(object):
                                 break
                     else:
                         comment = name
-                    applist.append({"name": name, "icon": icon, "comment": comment, "desktop": desktop})
+                    applist.append({"name": name, "icon": icon, "comment": comment,
+                                    "desktop": os.path.join(dloc, desktop)})
         applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: locale.strxfrm(x["name"]))
 
         return applist
