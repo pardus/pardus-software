@@ -3786,6 +3786,7 @@ class MainWindow(object):
 
     def open_from_myapps(self, button):
         print(button.name)
+        self.openDesktop(os.path.basename(button.name))
 
     def on_ui_myapps_cancel_clicked(self, button):
         self.myappsstack.set_visible_child_name("myapps")
