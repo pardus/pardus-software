@@ -491,6 +491,7 @@ class MainWindow(object):
         self.fullcatlist = []
 
         self.myapp_toremove_list = []
+        self.myapp_toremove = ""
 
         self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
                                    "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop"
@@ -1571,7 +1572,7 @@ class MainWindow(object):
                     caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
         return caticon
 
-    def getSystemAppIcon(self, app, size=64, notify=False):
+    def getSystemAppIcon(self, app, size=64, notify=False, myappicon=False):
         try:
             appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
         except:
@@ -1590,14 +1591,18 @@ class MainWindow(object):
                             appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                             Gtk.IconLookupFlags(16))
                 else:
-                    try:
-                        appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                        Gtk.IconLookupFlags(16))
-                    except:
-                        appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                    if myappicon:
+                        appicon = self.getMyAppIcon(app, size)
+                    else:
+                        try:
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                            Gtk.IconLookupFlags(16))
+                        except:
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                                                                            Gtk.IconLookupFlags(16))
         return appicon
 
-    def getServerAppIcon(self, app, size=64, notify=False):
+    def getServerAppIcon(self, app, size=64, notify=False, myappicon=False):
         try:
             if self.UserSettings.config_icon == "default":
                 icons = "appicons"
@@ -1627,11 +1632,16 @@ class MainWindow(object):
                             appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                             Gtk.IconLookupFlags(16))
                 else:
-                    try:
-                        appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                        Gtk.IconLookupFlags(16))
-                    except:
-                        appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                    if myappicon:
+                        appicon = self.getMyAppIcon(app, size)
+                        print(appicon)
+                    else:
+                        try:
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                            Gtk.IconLookupFlags(16))
+                        except:
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                                                                            Gtk.IconLookupFlags(16))
         return appicon
 
     def getMyAppIcon(self, app, size=64):
@@ -1658,7 +1668,7 @@ class MainWindow(object):
                         appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
                     except:
                         try:
-                            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(app, 64, 64)
+                            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(app, size, size)
                         except:
                             try:
                                 appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
@@ -2377,6 +2387,7 @@ class MainWindow(object):
     def on_myappsdetail_worker_done(self, myapp):
         # print("on_myappsdetail_worker_done")
         self.myapp_toremove_list = []
+        self.myapp_toremove = ""
         self.ui_myapps_spinner.stop()
         details, package, name, icon = myapp
         if details is not None:
@@ -2388,6 +2399,7 @@ class MainWindow(object):
                 self.ui_myapp_toremove_label.set_markup("{}".format(", ".join(details["to_delete"])))
                 self.ui_myapp_toremove_box.set_visible(True)
                 self.myapp_toremove_list = details["to_delete"]
+                self.myapp_toremove = package
             else:
                 self.ui_myapp_toremove_box.set_visible(False)
 
@@ -3674,13 +3686,13 @@ class MainWindow(object):
         if not self.queuebutton.get_style_context().has_class("suggested-action"):
             self.queuebutton.get_style_context().add_class("suggested-action")
 
-    def addtoQueue(self, appname):
+    def addtoQueue(self, appname, myappicon=False):
 
         appicon = Gtk.Image.new()
         if self.UserSettings.config_usi:
-            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname))
+            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname, myappicon=myappicon))
         else:
-            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname))
+            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname, myappicon=myappicon))
         label = Gtk.Label.new()
         label.set_text(self.getPrettyName(self.appname, split=False))
         actlabel = Gtk.Label.new()
@@ -3814,6 +3826,17 @@ class MainWindow(object):
             _("Are you sure you accept this ?")))
         else:
             print("not important package")
+            self.appname = self.myapp_toremove
+            self.bottomstack.set_visible_child_name("queue")
+            self.bottomrevealer.set_reveal_child(True)
+            self.queuestack.set_visible_child_name("inprogress")
+            self.dActionButton.set_sensitive(False)
+            self.queue.append({"name": self.appname, "command": self.command})
+            self.addtoQueue(self.appname, myappicon=True)
+            if not self.inprogress:
+                self.actionPackage(self.appname, self.command)
+                self.inprogress = True
+                print("action " + self.appname)
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
