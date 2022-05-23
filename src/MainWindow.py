@@ -279,6 +279,7 @@ class MainWindow(object):
         self.ui_myapps_icon = self.GtkBuilder.get_object("ui_myapps_icon")
         self.ui_myapps_description = self.GtkBuilder.get_object("ui_myapps_description")
         self.ui_myapps_spinner = self.GtkBuilder.get_object("ui_myapps_spinner")
+        self.ui_myapps_disclaimer_label = self.GtkBuilder.get_object("ui_myapps_disclaimer_label")
         self.ui_myapp_toremove_label = self.GtkBuilder.get_object("ui_myapp_toremove_label")
         self.ui_myapp_toinstall_label = self.GtkBuilder.get_object("ui_myapp_toinstall_label")
         self.ui_myapp_broken_label = self.GtkBuilder.get_object("ui_myapp_broken_label")
@@ -488,6 +489,13 @@ class MainWindow(object):
         self.fullapplist = []
         self.catlist = []
         self.fullcatlist = []
+
+        self.myapp_toremove_list = []
+
+        self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
+                                   "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop"
+                                   "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
+                                   "eta-nonhid-gnome-desktop-other"]
 
         self.prefback = "pardushome"
 
@@ -2368,6 +2376,7 @@ class MainWindow(object):
 
     def on_myappsdetail_worker_done(self, myapp):
         # print("on_myappsdetail_worker_done")
+        self.myapp_toremove_list = []
         self.ui_myapps_spinner.stop()
         details, package, name, icon = myapp
         if details is not None:
@@ -2378,6 +2387,7 @@ class MainWindow(object):
             if details["to_delete"] and details["to_delete"] is not None:
                 self.ui_myapp_toremove_label.set_markup("{}".format(", ".join(details["to_delete"])))
                 self.ui_myapp_toremove_box.set_visible(True)
+                self.myapp_toremove_list = details["to_delete"]
             else:
                 self.ui_myapp_toremove_box.set_visible(False)
 
@@ -3790,6 +3800,20 @@ class MainWindow(object):
 
     def on_ui_myapps_cancel_clicked(self, button):
         self.myappsstack.set_visible_child_name("myapps")
+
+    def on_ui_myapps_cancel_disclaimer_clicked(self, button):
+        self.myappsdetailsstack.set_visible_child_name("details")
+
+    def on_ui_myapps_uninstall_clicked(self, button):
+        importants =  [i for i in self.important_packages if i in self.myapp_toremove_list]
+        if importants:
+            self.myappsdetailsstack.set_visible_child_name("disclaimer")
+            self.ui_myapps_disclaimer_label.set_markup("<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
+                _("The following important packages will also be removed."),
+                ", ".join(importants),
+            _("Are you sure you accept this ?")))
+        else:
+            print("not important package")
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
