@@ -288,7 +288,7 @@ class Package(object):
             return size
         return "size not found"
 
-    def installed_packages(self):
+    def installed_packages(self, lang="en"):
 
         # apt list --installed   || very slow method
         # applist = []
@@ -323,25 +323,57 @@ class Package(object):
                     name = ""
                     icon = ""
                     comment = ""
+                    name_tr = ""
+                    comment_tr = ""
+                    mainentry = ""
                     if "Name=" in desktop_read:
                         for line in desktop_read.splitlines():
-                            if line.startswith("Name="):
+                            if line.startswith("["):
+                                mainentry = line.strip()[1:-1]
+                            if line.startswith("Name=") and mainentry == "Desktop Entry":
                                 name = line.split("Name=")[1].strip()
                                 break
                     if "Icon=" in desktop_read:
                         for line in desktop_read.splitlines():
-                            if line.startswith("Icon="):
+                            if line.startswith("["):
+                                mainentry = line.strip()[1:-1]
+                            if line.startswith("Icon=") and mainentry == "Desktop Entry":
                                 icon = line.split("Icon=")[1].strip()
                                 break
                     if "Comment=" in desktop_read:
                         for line in desktop_read.splitlines():
-                            if line.startswith("Comment="):
+                            if line.startswith("["):
+                                mainentry = line.strip()[1:-1]
+                            if line.startswith("Comment=") and mainentry == "Desktop Entry":
                                 comment = line.split("Comment=")[1].strip()
                                 break
                     else:
                         comment = name
-                    applist.append({"name": name, "icon": icon, "comment": comment,
-                                    "desktop": os.path.join(dloc, desktop)})
+
+                    if lang == "tr":
+                        if "Name[tr]=" in desktop_read:
+                            for line in desktop_read.splitlines():
+                                if line.startswith("["):
+                                    mainentry = line.strip()[1:-1]
+                                if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
+                                    name_tr = line.split("Name[tr]=")[1].strip()
+                                    print("{} {}".format(mainentry, name_tr))
+                                    break
+                        if "Comment[tr]=" in desktop_read:
+                            for line in desktop_read.splitlines():
+                                if line.startswith("["):
+                                    mainentry = line.strip()[1:-1]
+                                if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
+                                    comment_tr = line.split("Comment[tr]=")[1].strip()
+                                    break
+                        if name_tr == "":
+                            name_tr = name
+                        if comment_tr == "":
+                            comment_tr = comment
+
+                    applist.append({"name": name_tr if lang == "tr" else name,
+                                    "comment": comment_tr if lang == "tr" else comment,
+                                    "desktop": os.path.join(dloc, desktop), "icon": icon})
         applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: locale.strxfrm(x["name"]))
 
         return applist

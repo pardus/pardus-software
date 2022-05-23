@@ -2346,7 +2346,7 @@ class MainWindow(object):
         GLib.idle_add(self.on_myapps_worker_done, myapps)
 
     def myapps_worker(self):
-        return self.Package.installed_packages()
+        return self.Package.installed_packages(lang=self.locale)
 
     def on_myapps_worker_done(self, myapps):
         print("on_myapps_worker_done")
