@@ -256,6 +256,7 @@ class Package(object):
         return ret
 
     def myapps_remove_details(self, desktopname):
+        self.updatecache()
         try:
             process = subprocess.run(["dpkg", "-S", desktopname], stdout=subprocess.PIPE)
             output = process.stdout.decode("utf-8")
