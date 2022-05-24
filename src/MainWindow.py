@@ -3846,7 +3846,7 @@ class MainWindow(object):
         self.bottomstack.set_visible_child_name("queue")
         self.bottomrevealer.set_reveal_child(True)
         self.queuestack.set_visible_child_name("inprogress")
-        self.dActionButton.set_sensitive(False)
+        self.ui_myapps_uninstall_button.set_sensitive(False)
         self.queue.append({"name": self.appname, "command": self.command})
         self.addtoQueue(self.appname, myappicon=True)
         if not self.inprogress:
@@ -5090,6 +5090,12 @@ class MainWindow(object):
                     row[3] = installstatus
             except:
                 pass
+
+        if self.homestack.get_visible_child_name() == "myapps" and \
+                self.myappsstack.get_visible_child_name() == "details" and \
+                actionedappname == self.myapp_toremove:
+            print("in controlView with myapps details actionedappname")
+            self.ui_myapps_uninstall_button.set_sensitive(True)
 
     def updateActionButtons(self, repo, actionedappname, actionedappdesktop, actionedappcommand):
         if repo == 1:  # pardus apps
