@@ -278,7 +278,8 @@ class MainWindow(object):
         self.ui_myapps_package = self.GtkBuilder.get_object("ui_myapps_package")
         self.ui_myapps_icon = self.GtkBuilder.get_object("ui_myapps_icon")
         self.ui_myapps_description = self.GtkBuilder.get_object("ui_myapps_description")
-        self.ui_myapps_uninstall = self.GtkBuilder.get_object("ui_myapps_uninstall")
+        self.ui_myapps_uninstall_button = self.GtkBuilder.get_object("ui_myapps_uninstall_button")
+        self.ui_myapps_accept_disclaimer = self.GtkBuilder.get_object("ui_myapps_accept_disclaimer")
         self.ui_myapps_spinner = self.GtkBuilder.get_object("ui_myapps_spinner")
         self.ui_myapps_disclaimer_label = self.GtkBuilder.get_object("ui_myapps_disclaimer_label")
         self.ui_myapp_toremove_label = self.GtkBuilder.get_object("ui_myapp_toremove_label")
@@ -2394,7 +2395,7 @@ class MainWindow(object):
         self.ui_myapps_spinner.stop()
         details, package, name, icon, desktop = myapp
         if details is not None:
-            self.ui_myapps_uninstall.set_sensitive(True)
+            self.ui_myapps_uninstall_button.set_sensitive(True)
             self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(name))
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
@@ -3822,7 +3823,7 @@ class MainWindow(object):
     def on_ui_myapps_cancel_disclaimer_clicked(self, button):
         self.myappsdetailsstack.set_visible_child_name("details")
 
-    def on_ui_myapps_uninstall_clicked(self, button):
+    def on_ui_myapps_uninstall_button_clicked(self, button):
         importants =  [i for i in self.important_packages if i in self.myapp_toremove_list]
         if importants:
             self.myappsdetailsstack.set_visible_child_name("disclaimer")
@@ -3832,19 +3833,26 @@ class MainWindow(object):
             _("Are you sure you accept this ?")))
         else:
             print("not important package")
-            self.appname = self.myapp_toremove
-            self.command = self.myapp_toremove
-            self.desktop_file =self.myapp_toremove_desktop
-            self.bottomstack.set_visible_child_name("queue")
-            self.bottomrevealer.set_reveal_child(True)
-            self.queuestack.set_visible_child_name("inprogress")
-            self.dActionButton.set_sensitive(False)
-            self.queue.append({"name": self.appname, "command": self.command})
-            self.addtoQueue(self.appname, myappicon=True)
-            if not self.inprogress:
-                self.actionPackage(self.appname, self.command)
-                self.inprogress = True
-                print("action " + self.appname)
+            self.ui_myapps_uninstall()
+
+    def on_ui_myapps_accept_disclaimer_clicked(self, button):
+        self.myappsdetailsstack.set_visible_child_name("details")
+        self.ui_myapps_uninstall()
+
+    def ui_myapps_uninstall(self):
+        self.appname = self.myapp_toremove
+        self.command = self.myapp_toremove
+        self.desktop_file = self.myapp_toremove_desktop
+        self.bottomstack.set_visible_child_name("queue")
+        self.bottomrevealer.set_reveal_child(True)
+        self.queuestack.set_visible_child_name("inprogress")
+        self.dActionButton.set_sensitive(False)
+        self.queue.append({"name": self.appname, "command": self.command})
+        self.addtoQueue(self.appname, myappicon=True)
+        if not self.inprogress:
+            self.actionPackage(self.appname, self.command)
+            self.inprogress = True
+            print("action " + self.appname)
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
@@ -5174,7 +5182,7 @@ class MainWindow(object):
             if self.myappsstack.get_visible_child_name() == "details":
                 print("in myappsstack details")
                 if actionedappname == self.myapp_toremove:
-                    self.ui_myapps_uninstall.set_sensitive(False)
+                    self.ui_myapps_uninstall_button.set_sensitive(False)
 
     def notify(self, message_summary="", message_body=""):
         try:

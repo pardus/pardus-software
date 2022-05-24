@@ -8463,12 +8463,12 @@ Use with caution. Are you sure you want to continue ?</property>
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkButton" id="ui_myapps_uninstall">
+                                                  <object class="GtkButton" id="ui_myapps_uninstall_button">
                                                     <property name="label" translatable="yes">Uninstall</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
-                                                    <signal name="clicked" handler="on_ui_myapps_uninstall_clicked" swapped="no"/>
+                                                    <signal name="clicked" handler="on_ui_myapps_uninstall_button_clicked" swapped="no"/>
                                                     <style>
                                                       <class name="destructive-action"/>
                                                     </style>
@@ -8541,6 +8541,7 @@ Use with caution. Are you sure you want to continue ?</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
+                                                    <signal name="clicked" handler="on_ui_myapps_accept_disclaimer_clicked" swapped="no"/>
                                                     <style>
                                                       <class name="destructive-action"/>
                                                     </style>
