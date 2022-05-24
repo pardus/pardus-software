@@ -278,6 +278,7 @@ class MainWindow(object):
         self.ui_myapps_package = self.GtkBuilder.get_object("ui_myapps_package")
         self.ui_myapps_icon = self.GtkBuilder.get_object("ui_myapps_icon")
         self.ui_myapps_description = self.GtkBuilder.get_object("ui_myapps_description")
+        self.ui_myapps_uninstall = self.GtkBuilder.get_object("ui_myapps_uninstall")
         self.ui_myapps_spinner = self.GtkBuilder.get_object("ui_myapps_spinner")
         self.ui_myapps_disclaimer_label = self.GtkBuilder.get_object("ui_myapps_disclaimer_label")
         self.ui_myapp_toremove_label = self.GtkBuilder.get_object("ui_myapp_toremove_label")
@@ -492,6 +493,7 @@ class MainWindow(object):
 
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
+        self.myapp_toremove_desktop = ""
 
         self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
                                    "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop"
@@ -2382,15 +2384,17 @@ class MainWindow(object):
 
         myapp_details, myapp_package = self.Package.myapps_remove_details(app["desktop"])
         print(myapp_details)
-        return myapp_details, myapp_package, app["name"], app["icon"]
+        return myapp_details, myapp_package, app["name"], app["icon"], app["desktop"]
 
     def on_myappsdetail_worker_done(self, myapp):
         # print("on_myappsdetail_worker_done")
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
+        self.myapp_toremove_desktop = ""
         self.ui_myapps_spinner.stop()
-        details, package, name, icon = myapp
+        details, package, name, icon, desktop = myapp
         if details is not None:
+            self.ui_myapps_uninstall.set_sensitive(True)
             self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(name))
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
@@ -2400,6 +2404,7 @@ class MainWindow(object):
                 self.ui_myapp_toremove_box.set_visible(True)
                 self.myapp_toremove_list = details["to_delete"]
                 self.myapp_toremove = package
+                self.myapp_toremove_desktop = desktop
             else:
                 self.ui_myapp_toremove_box.set_visible(False)
 
@@ -3794,6 +3799,7 @@ class MainWindow(object):
         box.pack_end(uninstallbutton, False, True, 13)
         box.pack_end(openbutton, False, True, 5)
         # box.pack_end(sizelabel, False, True, 13)
+        box.name = app["desktop"]
 
         GLib.idle_add(self.MyAppsListBox.add, box)
 
@@ -3827,6 +3833,8 @@ class MainWindow(object):
         else:
             print("not important package")
             self.appname = self.myapp_toremove
+            self.command = self.myapp_toremove
+            self.desktop_file =self.myapp_toremove_desktop
             self.bottomstack.set_visible_child_name("queue")
             self.bottomrevealer.set_reveal_child(True)
             self.queuestack.set_visible_child_name("inprogress")
@@ -4952,6 +4960,8 @@ class MainWindow(object):
                     if self.isinstalled:
                         self.notify()
 
+                self.control_myapps(self.actionedappname, self.actionedappdesktop)
+
             self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
 
             ui_appname = self.getActiveAppOnUI()
@@ -5152,6 +5162,19 @@ class MainWindow(object):
                 self.raction.get_style_context().add_class("suggested-action")
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
+
+    def control_myapps(self, actionedappname, actionedappdesktop):
+        print("in control_myapps")
+        if self.homestack.get_visible_child_name() == "myapps":
+            print("in homestack myapps")
+            for row in self.MyAppsListBox:
+                if row.get_children()[0].name == actionedappdesktop:
+                    if row.get_index() != 0:
+                        self.MyAppsListBox.remove(row)
+            if self.myappsstack.get_visible_child_name() == "details":
+                print("in myappsstack details")
+                if actionedappname == self.myapp_toremove:
+                    self.ui_myapps_uninstall.set_sensitive(False)
 
     def notify(self, message_summary="", message_body=""):
         try:

@@ -8450,7 +8450,7 @@ Use with caution. Are you sure you want to continue ?</property>
                                                 <property name="spacing">21</property>
                                                 <child>
                                                   <object class="GtkButton" id="ui_myapps_cancel">
-                                                    <property name="label" translatable="yes">Cancel</property>
+                                                    <property name="label" translatable="yes">Back</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
@@ -8523,7 +8523,7 @@ Use with caution. Are you sure you want to continue ?</property>
                                                 <property name="spacing">21</property>
                                                 <child>
                                                   <object class="GtkButton" id="ui_myapps_cancel_disclaimer">
-                                                    <property name="label" translatable="yes">Cancel</property>
+                                                    <property name="label" translatable="yes">Back</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
