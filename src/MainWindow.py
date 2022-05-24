@@ -4968,7 +4968,7 @@ class MainWindow(object):
                     if self.isinstalled:
                         self.notify()
 
-                self.control_myapps(self.actionedappname, self.actionedappdesktop)
+            self.control_myapps(self.actionedappname, self.actionedappdesktop, status, self.error, cachestatus)
 
             self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
 
@@ -5091,12 +5091,6 @@ class MainWindow(object):
             except:
                 pass
 
-        if self.homestack.get_visible_child_name() == "myapps" and \
-                self.myappsstack.get_visible_child_name() == "details" and \
-                actionedappname == self.myapp_toremove:
-            print("in controlView with myapps details actionedappname")
-            self.ui_myapps_uninstall_button.set_sensitive(True)
-
     def updateActionButtons(self, repo, actionedappname, actionedappdesktop, actionedappcommand):
         if repo == 1:  # pardus apps
             self.fromexternal = False
@@ -5177,18 +5171,22 @@ class MainWindow(object):
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
-    def control_myapps(self, actionedappname, actionedappdesktop):
+    def control_myapps(self, actionedappname, actionedappdesktop, status, error, cachestatus):
         print("in control_myapps")
         if self.homestack.get_visible_child_name() == "myapps":
-            print("in homestack myapps")
-            for row in self.MyAppsListBox:
-                if row.get_children()[0].name == actionedappdesktop:
-                    if row.get_index() != 0:
-                        self.MyAppsListBox.remove(row)
-            if self.myappsstack.get_visible_child_name() == "details":
-                print("in myappsstack details")
-                if actionedappname == self.myapp_toremove:
+            if status == 0 and not error and cachestatus:
+                print("in homestack myapps")
+                for row in self.MyAppsListBox:
+                    if row.get_children()[0].name == actionedappdesktop:
+                        if row.get_index() != 0:
+                            self.MyAppsListBox.remove(row)
+                if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                    print("in myappsstack details actionedappname status=0")
                     self.ui_myapps_uninstall_button.set_sensitive(False)
+            else:
+                if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                    print("in myappsstack details actionedappname status!=0")
+                    self.ui_myapps_uninstall_button.set_sensitive(True)
 
     def notify(self, message_summary="", message_body=""):
         try:
