@@ -379,6 +379,68 @@ class Package(object):
 
         return applist
 
+    def parse_desktopfile(self, desktop, lang):
+        dloc = "/usr/share/applications/"
+        if os.path.isfile(os.path.join(dloc, desktop)):
+            desktop_read = open(os.path.join(dloc, desktop), "r").read()
+            name = ""
+            icon = ""
+            comment = ""
+            name_tr = ""
+            comment_tr = ""
+            mainentry = ""
+            if "Name=" in desktop_read:
+                for line in desktop_read.splitlines():
+                    if line.startswith("["):
+                        mainentry = line.strip()[1:-1]
+                    if line.startswith("Name=") and mainentry == "Desktop Entry":
+                        name = line.split("Name=")[1].strip()
+                        break
+            if "Icon=" in desktop_read:
+                for line in desktop_read.splitlines():
+                    if line.startswith("["):
+                        mainentry = line.strip()[1:-1]
+                    if line.startswith("Icon=") and mainentry == "Desktop Entry":
+                        icon = line.split("Icon=")[1].strip()
+                        break
+            if "Comment=" in desktop_read:
+                for line in desktop_read.splitlines():
+                    if line.startswith("["):
+                        mainentry = line.strip()[1:-1]
+                    if line.startswith("Comment=") and mainentry == "Desktop Entry":
+                        comment = line.split("Comment=")[1].strip()
+                        break
+            else:
+                comment = name
+
+            if lang == "tr":
+                if "Name[tr]=" in desktop_read:
+                    for line in desktop_read.splitlines():
+                        if line.startswith("["):
+                            mainentry = line.strip()[1:-1]
+                        if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
+                            name_tr = line.split("Name[tr]=")[1].strip()
+                            print("{} {}".format(mainentry, name_tr))
+                            break
+                if "Comment[tr]=" in desktop_read:
+                    for line in desktop_read.splitlines():
+                        if line.startswith("["):
+                            mainentry = line.strip()[1:-1]
+                        if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
+                            comment_tr = line.split("Comment[tr]=")[1].strip()
+                            break
+                if name_tr == "":
+                    name_tr = name
+                if comment_tr == "":
+                    comment_tr = comment
+
+            return {"name": name_tr if lang == "tr" else name, "comment": comment_tr if lang == "tr" else comment,
+                            "desktop": os.path.join(dloc, desktop), "icon": icon}
+
+        else:
+            print("{} file not exists on {} location".format(desktop, dloc))
+            return None
+
     def origins(self, packagename):
         package = self.cache[packagename]
         try:

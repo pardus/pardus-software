@@ -28,6 +28,15 @@ class Application(Gtk.Application):
             None,
         )
 
+        self.add_main_option(
+            "remove",
+            ord("r"),
+            GLib.OptionFlags(0),
+            GLib.OptionArg(1),
+            "Remove page of application",
+            None,
+        )
+
     def do_activate(self):
         # We only allow a single window and raise any existing ones
         if not self.window:

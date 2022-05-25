@@ -730,6 +730,21 @@ class MainWindow(object):
             except Exception as e:
                 print(str(e))
 
+        if "remove" in self.Application.args.keys():
+            app = self.Application.args["remove"]
+            if not app.endswith(".desktop"):
+                app = "{}.desktop".format(app)
+
+            dic = self.Package.parse_desktopfile(app, self.locale)
+            self.homestack.set_visible_child_name("myapps")
+            if dic is not None:
+                self.myappsstack.set_visible_child_name("details")
+                self.myappsdetailsstack.set_visible_child_name("spinner")
+                self.ui_myapps_spinner.start()
+                myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(dic,), daemon=True)
+                myappsdetailsthread.start()
+            else:
+                self.myappsstack.set_visible_child_name("notfound")
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
@@ -3819,6 +3834,9 @@ class MainWindow(object):
 
     def on_ui_myapps_cancel_clicked(self, button):
         self.myappsstack.set_visible_child_name("myapps")
+        if not len(self.MyAppsListBox) > 0:
+            print("MyAppsListBox creating")
+            self.on_menu_myapps_clicked(None)
 
     def on_ui_myapps_cancel_disclaimer_clicked(self, button):
         self.myappsdetailsstack.set_visible_child_name("details")
