@@ -5178,8 +5178,7 @@ class MainWindow(object):
                 print("in homestack myapps")
                 for row in self.MyAppsListBox:
                     if row.get_children()[0].name == actionedappdesktop:
-                        if row.get_index() != 0:
-                            self.MyAppsListBox.remove(row)
+                        self.MyAppsListBox.remove(row)
                 if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
                     print("in myappsstack details actionedappname status=0")
                     self.ui_myapps_uninstall_button.set_sensitive(False)
