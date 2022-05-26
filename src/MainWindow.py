@@ -138,6 +138,7 @@ class MainWindow(object):
         self.searchbar = self.GtkBuilder.get_object("searchbar")
         self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
         self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
+        self.myapps_searchentry = self.GtkBuilder.get_object("myapps_searchentry")
         self.topsearchbutton = self.GtkBuilder.get_object("topsearchbutton")
         self.reposearchbutton = self.GtkBuilder.get_object("reposearchbutton")
         self.toprevealer = self.GtkBuilder.get_object("toprevealer")
@@ -550,6 +551,7 @@ class MainWindow(object):
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
         self.MyAppsListBox = self.GtkBuilder.get_object("MyAppsListBox")
+        self.MyAppsListBox.set_filter_func(self.myapps_filter_func)
 
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
@@ -737,6 +739,16 @@ class MainWindow(object):
 
             dic = self.Package.parse_desktopfile(app, self.locale)
             self.homestack.set_visible_child_name("myapps")
+            self.PardusAppsIconView.unselect_all()
+            self.EditorAppsIconView.unselect_all()
+            if self.topbutton1.get_style_context().has_class("suggested-action"):
+                self.topbutton1.get_style_context().remove_class("suggested-action")
+            if self.topbutton2.get_style_context().has_class("suggested-action"):
+                self.topbutton2.get_style_context().remove_class("suggested-action")
+            if self.queuebutton.get_style_context().has_class("suggested-action"):
+                self.queuebutton.get_style_context().remove_class("suggested-action")
+            self.topsearchbutton.set_sensitive(True)
+            self.searchstack.set_visible_child_name("myapps")
             if dic is not None:
                 self.myappsstack.set_visible_child_name("details")
                 self.myappsdetailsstack.set_visible_child_name("spinner")
@@ -3780,7 +3792,8 @@ class MainWindow(object):
         summarylabel.props.halign = Gtk.Align.START
 
         uninstallbutton = Gtk.Button.new()
-        uninstallbutton.name = {"name": app["name"], "desktop": app["desktop"], "icon": app["icon"]}
+        uninstallbutton.name = {"name": app["name"], "desktop": app["desktop"], "icon": app["icon"],
+                                "comment": app["comment"]}
         uninstallbutton.props.valign = Gtk.Align.CENTER
         uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
@@ -3871,6 +3884,29 @@ class MainWindow(object):
             self.actionPackage(self.appname, self.command)
             self.inprogress = True
             print("action " + self.appname)
+
+    def myapps_filter_func(self, row):
+        # app info defined in uninstall button so getting this widget
+        myapp_name = row.get_children()[0].get_children()[3].name
+        # print(myapp_name)
+        search = self.myapps_searchentry.get_text().lower()
+        if search in myapp_name["name"].lower() or search in myapp_name["comment"].lower():
+            return True
+
+    def on_myapps_searchentry_search_changed(self, entry_search):
+        self.homestack.set_visible_child_name("myapps")
+        self.myappsstack.set_visible_child_name("myapps")
+        self.MyAppsListBox.invalidate_filter()
+
+    def on_myapps_searchentry_button_press_event(self, widget, click):
+        self.homestack.set_visible_child_name("myapps")
+        self.myappsstack.set_visible_child_name("myapps")
+        self.MyAppsListBox.invalidate_filter()
+
+    def on_myapps_searchentry_focus_in_event(self, widget, click):
+        self.homestack.set_visible_child_name("myapps")
+        self.myappsstack.set_visible_child_name("myapps")
+        self.MyAppsListBox.invalidate_filter()
 
     def on_pardussearchbar_search_changed(self, entry_search):
         self.isPardusSearching = True
@@ -4005,6 +4041,11 @@ class MainWindow(object):
                 print("in grab focus")
             elif self.searchstack.get_visible_child_name() == "repo":
                 self.reposearchbar.grab_focus()
+            elif self.searchstack.get_visible_child_name() == "myapps":
+                self.myapps_searchentry.grab_focus()
+                if not len(self.MyAppsListBox) > 0:
+                    print("MyAppsListBox creating")
+                    self.on_menu_myapps_clicked(None)
         else:
             self.toprevealer.set_reveal_child(False)
             self.statusoftopsearch = False
@@ -4124,9 +4165,9 @@ class MainWindow(object):
         if self.queuebutton.get_style_context().has_class("suggested-action"):
             self.queuebutton.get_style_context().remove_class("suggested-action")
         self.topsearchbutton.set_sensitive(True)
-        self.searchstack.set_visible_child_name("pardus")
-        self.pardussearchbar.set_text("")
-        self.topsearchbutton.set_active(False)
+        self.searchstack.set_visible_child_name("myapps")
+        # self.pardussearchbar.set_text("")
+        # self.topsearchbutton.set_active(False)
         self.menubackbutton.set_sensitive(True)
         self.homestack.set_visible_child_name("myapps")
         self.myappsstack.set_visible_child_name("myapps")

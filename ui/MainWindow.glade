@@ -767,6 +767,26 @@ so that the OS has nothing to do with the health of the application.</property>
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkSearchEntry" id="myapps_searchentry">
+                        <property name="width-request">200</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="hexpand">True</property>
+                        <property name="primary-icon-name">edit-find-symbolic</property>
+                        <property name="primary-icon-activatable">False</property>
+                        <property name="primary-icon-sensitive">False</property>
+                        <property name="placeholder-text" translatable="yes">Search an app in my apps</property>
+                        <signal name="button-press-event" handler="on_myapps_searchentry_button_press_event" swapped="no"/>
+                        <signal name="focus-in-event" handler="on_myapps_searchentry_focus_in_event" swapped="no"/>
+                        <signal name="search-changed" handler="on_myapps_searchentry_search_changed" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="name">myapps</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
                       <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="NoServerSearch">
                         <property name="visible">True</property>
@@ -801,8 +821,7 @@ so that the OS has nothing to do with the health of the application.</property>
                       </object>
                       <packing>
                         <property name="name">noserver</property>
-                        <property name="title">page2</property>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>
