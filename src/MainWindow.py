@@ -498,7 +498,7 @@ class MainWindow(object):
         self.myapp_toremove_desktop = ""
 
         self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
-                                   "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop"
+                                   "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop",
                                    "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
                                    "eta-nonhid-gnome-desktop-other"]
 
