@@ -777,7 +777,7 @@ class MainWindow(object):
                 "<b>{}\n\n{}</b>".format(_("Could not connect to server."), self.Server.error_message))
             GLib.idle_add(self.topsearchbutton.set_sensitive, False)
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
-            GLib.idle_add(self.menu_myapps.set_sensitive, False)
+            GLib.idle_add(self.menu_myapps.set_sensitive, True)
             GLib.idle_add(self.menu_statistics.set_sensitive, False)
 
         self.splashspinner.stop()
