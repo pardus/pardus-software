@@ -1924,6 +1924,23 @@ class MainWindow(object):
                 self.homestack.set_visible_child_name("pardusapps")
                 self.PardusAppsIconView.unselect_all()
 
+        elif hsname == "myapps":
+            masname = self.myappsstack.get_visible_child_name()
+
+            if masname == "myapps":
+                self.homestack.set_visible_child_name(self.prefback)
+                if self.homestack.get_visible_child_name() == "pardushome":
+                    self.menubackbutton.set_sensitive(False)
+            elif masname == "details":
+                madsname = self.myappsdetailsstack.get_visible_child_name()
+                if madsname == "details":
+                    self.myappsstack.set_visible_child_name("myapps")
+                elif madsname == "disclaimer":
+                    self.myappsdetailsstack.set_visible_child_name("details")
+            elif masname == "notfound":
+                self.myappsstack.set_visible_child_name("myapps")
+
+
         elif hsname == "preferences" or hsname == "repohome" or hsname == "updates" or hsname == "suggestapp" or hsname == "queue" or hsname == "statistics":
 
             self.homestack.set_visible_child_name(self.prefback)
@@ -4154,20 +4171,19 @@ class MainWindow(object):
         #
         ### this shows only available apps on pardus-software (old method)
 
+        self.prefback = self.homestack.get_visible_child_name()
 
         self.PopoverMenu.popdown()
-        self.PardusAppsIconView.unselect_all()
-        self.EditorAppsIconView.unselect_all()
-        if self.topbutton1.get_style_context().has_class("suggested-action"):
-            self.topbutton1.get_style_context().remove_class("suggested-action")
-        if self.topbutton2.get_style_context().has_class("suggested-action"):
-            self.topbutton2.get_style_context().remove_class("suggested-action")
-        if self.queuebutton.get_style_context().has_class("suggested-action"):
-            self.queuebutton.get_style_context().remove_class("suggested-action")
+        # self.PardusAppsIconView.unselect_all()
+        # self.EditorAppsIconView.unselect_all()
+        self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.topbutton2.get_style_context().remove_class("suggested-action")
+        self.queuebutton.get_style_context().remove_class("suggested-action")
         self.topsearchbutton.set_sensitive(True)
+        self.topsearchbutton.set_active(self.statusoftopsearch)
+        if self.myapps_searchentry.get_text() != "":
+            self.topsearchbutton.set_active(True)
         self.searchstack.set_visible_child_name("myapps")
-        # self.pardussearchbar.set_text("")
-        # self.topsearchbutton.set_active(False)
         self.menubackbutton.set_sensitive(True)
         self.homestack.set_visible_child_name("myapps")
         self.myappsstack.set_visible_child_name("myapps")
