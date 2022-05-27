@@ -737,16 +737,11 @@ class MainWindow(object):
             if not app.endswith(".desktop"):
                 app = "{}.desktop".format(app)
 
-            dic = self.Package.parse_desktopfile(app, self.locale)
+            dic = self.Package.parse_desktopfile(app)
             self.homestack.set_visible_child_name("myapps")
-            self.PardusAppsIconView.unselect_all()
-            self.EditorAppsIconView.unselect_all()
-            if self.topbutton1.get_style_context().has_class("suggested-action"):
-                self.topbutton1.get_style_context().remove_class("suggested-action")
-            if self.topbutton2.get_style_context().has_class("suggested-action"):
-                self.topbutton2.get_style_context().remove_class("suggested-action")
-            if self.queuebutton.get_style_context().has_class("suggested-action"):
-                self.queuebutton.get_style_context().remove_class("suggested-action")
+            self.topbutton1.get_style_context().remove_class("suggested-action")
+            self.topbutton2.get_style_context().remove_class("suggested-action")
+            self.queuebutton.get_style_context().remove_class("suggested-action")
             self.topsearchbutton.set_sensitive(True)
             self.searchstack.set_visible_child_name("myapps")
             if dic is not None:
@@ -2411,7 +2406,7 @@ class MainWindow(object):
         GLib.idle_add(self.on_myapps_worker_done, myapps)
 
     def myapps_worker(self):
-        return self.Package.installed_packages(lang=self.locale)
+        return self.Package.get_installed_apps()
 
     def on_myapps_worker_done(self, myapps):
         print("on_myapps_worker_done")
@@ -2427,9 +2422,9 @@ class MainWindow(object):
 
     def myappsdetail_worker(self, app):
 
-        myapp_details, myapp_package = self.Package.myapps_remove_details(app["desktop"])
+        myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
         print(myapp_details)
-        return myapp_details, myapp_package, app["name"], app["icon"], app["desktop"]
+        return myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
 
     def on_myappsdetail_worker_done(self, myapp):
         # print("on_myappsdetail_worker_done")
@@ -2437,13 +2432,13 @@ class MainWindow(object):
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
         self.ui_myapps_spinner.stop()
-        details, package, name, icon, desktop = myapp
+        details, package, name, icon, desktop, description = myapp
         if details is not None:
             self.ui_myapps_uninstall_button.set_sensitive(True)
             self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(name))
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
-            self.ui_myapps_description.set_markup("{}".format(self.Package.adv_description(package)))
+            self.ui_myapps_description.set_markup("{}".format(description))
             if details["to_delete"] and details["to_delete"] is not None:
                 self.ui_myapp_toremove_label.set_markup("{}".format(", ".join(details["to_delete"])))
                 self.ui_myapp_toremove_box.set_visible(True)
@@ -3803,14 +3798,14 @@ class MainWindow(object):
         # sizelabel.props.valign = Gtk.Align.CENTER
 
         summarylabel = Gtk.Label.new()
-        summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(app["comment"], -1)))
+        summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(app["description"], -1)))
         summarylabel.set_line_wrap(True)
         summarylabel.set_line_wrap_mode(2)  # WORD_CHAR
         summarylabel.props.halign = Gtk.Align.START
 
         uninstallbutton = Gtk.Button.new()
-        uninstallbutton.name = {"name": app["name"], "desktop": app["desktop"], "icon": app["icon"],
-                                "comment": app["comment"]}
+        uninstallbutton.name = {"name": app["name"], "filename": app["filename"], "icon": app["icon"],
+                                "description": app["description"]}
         uninstallbutton.props.valign = Gtk.Align.CENTER
         uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
@@ -3821,7 +3816,7 @@ class MainWindow(object):
         uninstallbutton.connect("clicked", self.remove_from_myapps)
 
         openbutton = Gtk.Button.new()
-        openbutton.name = app["desktop"]
+        openbutton.name = app["id"]
         openbutton.props.valign = Gtk.Align.CENTER
         openbutton.props.halign = Gtk.Align.CENTER
         openbutton.props.always_show_image = True
@@ -3845,7 +3840,7 @@ class MainWindow(object):
         box.pack_end(uninstallbutton, False, True, 13)
         box.pack_end(openbutton, False, True, 5)
         # box.pack_end(sizelabel, False, True, 13)
-        box.name = app["desktop"]
+        box.name = app["filename"]
 
         GLib.idle_add(self.MyAppsListBox.add, box)
 
@@ -3907,7 +3902,7 @@ class MainWindow(object):
         myapp_name = row.get_children()[0].get_children()[3].name
         # print(myapp_name)
         search = self.myapps_searchentry.get_text().lower()
-        if search in myapp_name["name"].lower() or search in myapp_name["comment"].lower():
+        if search in myapp_name["name"].lower() or search in myapp_name["description"].lower():
             return True
 
     def on_myapps_searchentry_search_changed(self, entry_search):
@@ -4172,10 +4167,7 @@ class MainWindow(object):
         ### this shows only available apps on pardus-software (old method)
 
         self.prefback = self.homestack.get_visible_child_name()
-
         self.PopoverMenu.popdown()
-        # self.PardusAppsIconView.unselect_all()
-        # self.EditorAppsIconView.unselect_all()
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.queuebutton.get_style_context().remove_class("suggested-action")

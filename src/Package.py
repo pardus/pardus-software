@@ -8,6 +8,7 @@ Created on Fri Sep 18 14:53:00 2020
 
 import apt, apt_pkg
 import time, os, locale, subprocess, re
+from gi.repository import Gio
 
 class Package(object):
     def __init__(self):
@@ -289,156 +290,201 @@ class Package(object):
             return size
         return "size not found"
 
-    def installed_packages(self, lang="en"):
+    # old function
+    # def installed_packages(self, lang="en"):
+    #
+    #     # apt list --installed   || very slow method
+    #     # applist = []
+    #     # for mypkg in self.cache:
+    #     #     if self.cache[mypkg.name].is_installed:
+    #     #         applist.append({"name": mypkg.name, "size": self.installed_size(mypkg.name), "summary": self.summary(mypkg.name)})
+    #
+    #     # apps that have desktop file in /usr/share/applications/  | slow method
+    #     # dloc = "/usr/share/applications/"
+    #     # desktop_dir = os.listdir(dloc)
+    #     # desktop_list = []
+    #     # applist = []
+    #     # for desktop in desktop_dir:
+    #     #     if desktop.endswith(".desktop") and "NoDisplay=true" not in open(os.path.join(dloc, desktop), "r").read():
+    #     #         desktop_list.append(desktop)
+    #     # for desktop in desktop_list:
+    #     #     process = subprocess.run(["dpkg", "-S", desktop], stdout=subprocess.PIPE)
+    #     #     output = process.stdout.decode("utf-8")
+    #     #     app = output[:output.find(":")].split(",")[0]
+    #     #     applist.append({"name": app, "size": self.installed_size(app), "summary": self.summary(app)})
+    #     # applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: x["name"])
+    #
+    #
+    #     # parse desktop file in /usr/share/applications/  | normal method
+    #     applist = []
+    #     dloc = "/usr/share/applications/"
+    #     desktop_listdir = os.listdir(dloc)
+    #     for desktop in desktop_listdir:
+    #         if desktop.endswith(".desktop"):
+    #             desktop_read = open(os.path.join(dloc, desktop), "r").read()
+    #             if "NoDisplay=true" not in desktop_read:
+    #                 name = ""
+    #                 icon = ""
+    #                 comment = ""
+    #                 name_tr = ""
+    #                 comment_tr = ""
+    #                 mainentry = ""
+    #                 if "Name=" in desktop_read:
+    #                     for line in desktop_read.splitlines():
+    #                         if line.startswith("["):
+    #                             mainentry = line.strip()[1:-1]
+    #                         if line.startswith("Name=") and mainentry == "Desktop Entry":
+    #                             name = line.split("Name=")[1].strip()
+    #                             break
+    #                 if "Icon=" in desktop_read:
+    #                     for line in desktop_read.splitlines():
+    #                         if line.startswith("["):
+    #                             mainentry = line.strip()[1:-1]
+    #                         if line.startswith("Icon=") and mainentry == "Desktop Entry":
+    #                             icon = line.split("Icon=")[1].strip()
+    #                             break
+    #                 if "Comment=" in desktop_read:
+    #                     for line in desktop_read.splitlines():
+    #                         if line.startswith("["):
+    #                             mainentry = line.strip()[1:-1]
+    #                         if line.startswith("Comment=") and mainentry == "Desktop Entry":
+    #                             comment = line.split("Comment=")[1].strip()
+    #                             break
+    #                 else:
+    #                     comment = name
+    #
+    #                 if lang == "tr":
+    #                     if "Name[tr]=" in desktop_read:
+    #                         for line in desktop_read.splitlines():
+    #                             if line.startswith("["):
+    #                                 mainentry = line.strip()[1:-1]
+    #                             if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
+    #                                 name_tr = line.split("Name[tr]=")[1].strip()
+    #                                 print("{} {}".format(mainentry, name_tr))
+    #                                 break
+    #                     if "Comment[tr]=" in desktop_read:
+    #                         for line in desktop_read.splitlines():
+    #                             if line.startswith("["):
+    #                                 mainentry = line.strip()[1:-1]
+    #                             if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
+    #                                 comment_tr = line.split("Comment[tr]=")[1].strip()
+    #                                 break
+    #                     if name_tr == "":
+    #                         name_tr = name
+    #                     if comment_tr == "":
+    #                         comment_tr = comment
+    #
+    #                 applist.append({"name": name_tr if lang == "tr" else name,
+    #                                 "comment": comment_tr if lang == "tr" else comment,
+    #                                 "desktop": os.path.join(dloc, desktop), "icon": icon})
+    #     applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: locale.strxfrm(x["name"]))
+    #
+    #     return applist
 
-        # apt list --installed   || very slow method
-        # applist = []
-        # for mypkg in self.cache:
-        #     if self.cache[mypkg.name].is_installed:
-        #         applist.append({"name": mypkg.name, "size": self.installed_size(mypkg.name), "summary": self.summary(mypkg.name)})
+    # old function
+    # def parse_desktopfile(self, desktop, lang):
+    #     dloc = "/usr/share/applications/"
+    #     if os.path.isfile(os.path.join(dloc, desktop)):
+    #         desktop_read = open(os.path.join(dloc, desktop), "r").read()
+    #         name = ""
+    #         icon = ""
+    #         comment = ""
+    #         name_tr = ""
+    #         comment_tr = ""
+    #         mainentry = ""
+    #         if "Name=" in desktop_read:
+    #             for line in desktop_read.splitlines():
+    #                 if line.startswith("["):
+    #                     mainentry = line.strip()[1:-1]
+    #                 if line.startswith("Name=") and mainentry == "Desktop Entry":
+    #                     name = line.split("Name=")[1].strip()
+    #                     break
+    #         if "Icon=" in desktop_read:
+    #             for line in desktop_read.splitlines():
+    #                 if line.startswith("["):
+    #                     mainentry = line.strip()[1:-1]
+    #                 if line.startswith("Icon=") and mainentry == "Desktop Entry":
+    #                     icon = line.split("Icon=")[1].strip()
+    #                     break
+    #         if "Comment=" in desktop_read:
+    #             for line in desktop_read.splitlines():
+    #                 if line.startswith("["):
+    #                     mainentry = line.strip()[1:-1]
+    #                 if line.startswith("Comment=") and mainentry == "Desktop Entry":
+    #                     comment = line.split("Comment=")[1].strip()
+    #                     break
+    #         else:
+    #             comment = name
+    #
+    #         if lang == "tr":
+    #             if "Name[tr]=" in desktop_read:
+    #                 for line in desktop_read.splitlines():
+    #                     if line.startswith("["):
+    #                         mainentry = line.strip()[1:-1]
+    #                     if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
+    #                         name_tr = line.split("Name[tr]=")[1].strip()
+    #                         print("{} {}".format(mainentry, name_tr))
+    #                         break
+    #             if "Comment[tr]=" in desktop_read:
+    #                 for line in desktop_read.splitlines():
+    #                     if line.startswith("["):
+    #                         mainentry = line.strip()[1:-1]
+    #                     if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
+    #                         comment_tr = line.split("Comment[tr]=")[1].strip()
+    #                         break
+    #             if name_tr == "":
+    #                 name_tr = name
+    #             if comment_tr == "":
+    #                 comment_tr = comment
+    #
+    #         return {"name": name_tr if lang == "tr" else name, "comment": comment_tr if lang == "tr" else comment,
+    #                         "desktop": os.path.join(dloc, desktop), "icon": icon}
+    #
+    #     else:
+    #         print("{} file not exists on {} location".format(desktop, dloc))
+    #         return None
 
-        # apps that have desktop file in /usr/share/applications/  | slow method
-        # dloc = "/usr/share/applications/"
-        # desktop_dir = os.listdir(dloc)
-        # desktop_list = []
-        # applist = []
-        # for desktop in desktop_dir:
-        #     if desktop.endswith(".desktop") and "NoDisplay=true" not in open(os.path.join(dloc, desktop), "r").read():
-        #         desktop_list.append(desktop)
-        # for desktop in desktop_list:
-        #     process = subprocess.run(["dpkg", "-S", desktop], stdout=subprocess.PIPE)
-        #     output = process.stdout.decode("utf-8")
-        #     app = output[:output.find(":")].split(",")[0]
-        #     applist.append({"name": app, "size": self.installed_size(app), "summary": self.summary(app)})
-        # applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: x["name"])
+    def get_installed_apps(self):
+        apps = []
+        for app in Gio.DesktopAppInfo.get_all():
 
+            id = app.get_id()
+            name = app.get_name()
+            executable = app.get_executable()
+            nodisplay = app.get_nodisplay()
+            icon = app.get_string('Icon')
+            description = app.get_description() or app.get_generic_name() or app.get_name()
+            filename = app.get_filename()
 
-        # parse desktop file in /usr/share/applications/  | normal method
-        applist = []
-        dloc = "/usr/share/applications/"
-        desktop_listdir = os.listdir(dloc)
-        for desktop in desktop_listdir:
-            if desktop.endswith(".desktop"):
-                desktop_read = open(os.path.join(dloc, desktop), "r").read()
-                if "NoDisplay=true" not in desktop_read:
-                    name = ""
-                    icon = ""
-                    comment = ""
-                    name_tr = ""
-                    comment_tr = ""
-                    mainentry = ""
-                    if "Name=" in desktop_read:
-                        for line in desktop_read.splitlines():
-                            if line.startswith("["):
-                                mainentry = line.strip()[1:-1]
-                            if line.startswith("Name=") and mainentry == "Desktop Entry":
-                                name = line.split("Name=")[1].strip()
-                                break
-                    if "Icon=" in desktop_read:
-                        for line in desktop_read.splitlines():
-                            if line.startswith("["):
-                                mainentry = line.strip()[1:-1]
-                            if line.startswith("Icon=") and mainentry == "Desktop Entry":
-                                icon = line.split("Icon=")[1].strip()
-                                break
-                    if "Comment=" in desktop_read:
-                        for line in desktop_read.splitlines():
-                            if line.startswith("["):
-                                mainentry = line.strip()[1:-1]
-                            if line.startswith("Comment=") and mainentry == "Desktop Entry":
-                                comment = line.split("Comment=")[1].strip()
-                                break
-                    else:
-                        comment = name
+            if os.path.dirname(filename) == "/usr/share/applications" and executable and not nodisplay:
+                apps.append({"id": id, "name": name, "icon": icon, "description": description, "filename": filename})
 
-                    if lang == "tr":
-                        if "Name[tr]=" in desktop_read:
-                            for line in desktop_read.splitlines():
-                                if line.startswith("["):
-                                    mainentry = line.strip()[1:-1]
-                                if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
-                                    name_tr = line.split("Name[tr]=")[1].strip()
-                                    print("{} {}".format(mainentry, name_tr))
-                                    break
-                        if "Comment[tr]=" in desktop_read:
-                            for line in desktop_read.splitlines():
-                                if line.startswith("["):
-                                    mainentry = line.strip()[1:-1]
-                                if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
-                                    comment_tr = line.split("Comment[tr]=")[1].strip()
-                                    break
-                        if name_tr == "":
-                            name_tr = name
-                        if comment_tr == "":
-                            comment_tr = comment
+        apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: locale.strxfrm(x["name"]))
 
-                    applist.append({"name": name_tr if lang == "tr" else name,
-                                    "comment": comment_tr if lang == "tr" else comment,
-                                    "desktop": os.path.join(dloc, desktop), "icon": icon})
-        applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: locale.strxfrm(x["name"]))
+        return apps
 
-        return applist
-
-    def parse_desktopfile(self, desktop, lang):
-        dloc = "/usr/share/applications/"
-        if os.path.isfile(os.path.join(dloc, desktop)):
-            desktop_read = open(os.path.join(dloc, desktop), "r").read()
-            name = ""
-            icon = ""
-            comment = ""
-            name_tr = ""
-            comment_tr = ""
-            mainentry = ""
-            if "Name=" in desktop_read:
-                for line in desktop_read.splitlines():
-                    if line.startswith("["):
-                        mainentry = line.strip()[1:-1]
-                    if line.startswith("Name=") and mainentry == "Desktop Entry":
-                        name = line.split("Name=")[1].strip()
-                        break
-            if "Icon=" in desktop_read:
-                for line in desktop_read.splitlines():
-                    if line.startswith("["):
-                        mainentry = line.strip()[1:-1]
-                    if line.startswith("Icon=") and mainentry == "Desktop Entry":
-                        icon = line.split("Icon=")[1].strip()
-                        break
-            if "Comment=" in desktop_read:
-                for line in desktop_read.splitlines():
-                    if line.startswith("["):
-                        mainentry = line.strip()[1:-1]
-                    if line.startswith("Comment=") and mainentry == "Desktop Entry":
-                        comment = line.split("Comment=")[1].strip()
-                        break
+    def parse_desktopfile(self, desktopfilename):
+        try:
+            app = Gio.DesktopAppInfo.new(desktopfilename)
+            if app:
+                id = app.get_id()
+                name = app.get_name()
+                # executable = app.get_executable()
+                # nodisplay = app.get_nodisplay()
+                icon = app.get_string('Icon')
+                description = app.get_description() or app.get_generic_name() or app.get_name()
+                filename = app.get_filename()
+                if os.path.dirname(filename) == "/usr/share/applications":
+                    return {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
+                else:
+                    print("parse_desktopfile: {} app not in /usr/share/applications location.".format(desktopfilename))
+                    return None
             else:
-                comment = name
-
-            if lang == "tr":
-                if "Name[tr]=" in desktop_read:
-                    for line in desktop_read.splitlines():
-                        if line.startswith("["):
-                            mainentry = line.strip()[1:-1]
-                        if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
-                            name_tr = line.split("Name[tr]=")[1].strip()
-                            print("{} {}".format(mainentry, name_tr))
-                            break
-                if "Comment[tr]=" in desktop_read:
-                    for line in desktop_read.splitlines():
-                        if line.startswith("["):
-                            mainentry = line.strip()[1:-1]
-                        if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
-                            comment_tr = line.split("Comment[tr]=")[1].strip()
-                            break
-                if name_tr == "":
-                    name_tr = name
-                if comment_tr == "":
-                    comment_tr = comment
-
-            return {"name": name_tr if lang == "tr" else name, "comment": comment_tr if lang == "tr" else comment,
-                            "desktop": os.path.join(dloc, desktop), "icon": icon}
-
-        else:
-            print("{} file not exists on {} location".format(desktop, dloc))
+                print("parse_desktopfile: {} app not exists".format(desktopfilename))
+                return None
+        except Exception as e:
+            print("{}".format(e))
+            print("parse_desktopfile: {} app not exists".format(desktopfilename))
             return None
 
     def origins(self, packagename):
