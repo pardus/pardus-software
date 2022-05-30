@@ -702,12 +702,7 @@ class MainWindow(object):
                         self.detailsappname = app
                         self.mostappname = None
                         GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
-                        if self.topbutton2.get_style_context().has_class("suggested-action"):
-                            self.topbutton2.get_style_context().remove_class("suggested-action")
-                        if self.queuebutton.get_style_context().has_class("suggested-action"):
-                            self.queuebutton.get_style_context().remove_class("suggested-action")
-                        if not self.topbutton1.get_style_context().has_class("suggested-action"):
-                            self.topbutton1.get_style_context().add_class("suggested-action")
+                        self.set_stack_n_search(1)
                         self.topsearchbutton.set_active(False)
             except Exception as e:
                 print(str(e))
@@ -726,7 +721,7 @@ class MainWindow(object):
                         app = "{}".format(self.Application.args["details"].split(".desktop")[0])
 
                     self.reposearchbar.set_text(app)
-                    self.on_topbutton2_clicked(self.topbutton2)
+                    self.on_topbutton2_clicked(None)
                     self.on_reposearchbutton_clicked(self.reposearchbutton)
                     for row in self.searchstore:
                         if app == row[0]:
@@ -1885,14 +1880,7 @@ class MainWindow(object):
         hsname = self.homestack.get_visible_child_name()
         if hsname == "pardusapps":
 
-            if self.topbutton2.get_style_context().has_class("suggested-action"):
-                self.topbutton2.get_style_context().remove_class("suggested-action")
-            if self.queuebutton.get_style_context().has_class("suggested-action"):
-                self.queuebutton.get_style_context().remove_class("suggested-action")
-            if not self.topbutton1.get_style_context().has_class("suggested-action"):
-                self.topbutton1.get_style_context().add_class("suggested-action")
-
-            self.searchstack.set_visible_child_name("pardus")
+            self.set_stack_n_search(1)
 
             if self.PardusCurrentCategorySubCats:
                 self.SubCategoryFlowBox.unselect_all()
@@ -1911,14 +1899,7 @@ class MainWindow(object):
 
         elif hsname == "pardusappsdetail":
 
-            self.searchstack.set_visible_child_name("pardus")
-
-            if self.topbutton2.get_style_context().has_class("suggested-action"):
-                self.topbutton2.get_style_context().remove_class("suggested-action")
-            if self.queuebutton.get_style_context().has_class("suggested-action"):
-                self.queuebutton.get_style_context().remove_class("suggested-action")
-            if not self.topbutton1.get_style_context().has_class("suggested-action"):
-                self.topbutton1.get_style_context().add_class("suggested-action")
+            self.set_stack_n_search(1)
 
             if self.fromeditorapps or self.frommostapps:
                 self.homestack.set_visible_child_name("pardushome")
@@ -1932,9 +1913,24 @@ class MainWindow(object):
             masname = self.myappsstack.get_visible_child_name()
 
             if masname == "myapps":
-                self.homestack.set_visible_child_name(self.prefback)
-                if self.homestack.get_visible_child_name() == "pardushome":
+                if self.prefback == "pardushome" and not self.Server.connection:
+                    self.homestack.set_visible_child_name("noserver")
+                else:
+                    self.homestack.set_visible_child_name(self.prefback)
+                hsma = self.homestack.get_visible_child_name()
+                if  hsma == "pardushome":
+                    self.set_stack_n_search(1)
                     self.menubackbutton.set_sensitive(False)
+                elif  hsma == "pardusapps" or hsma == "pardusappsdetail":
+                    self.set_stack_n_search(1)
+                elif hsma == "noserver":
+                    self.set_stack_n_search(1)
+                    self.menubackbutton.set_sensitive(False)
+                    self.topsearchbutton.set_sensitive(False)
+                elif hsma == "repohome":
+                    self.set_stack_n_search(2)
+                elif hsma == "queue":
+                    self.set_stack_n_search(3)
             elif masname == "details":
                 madsname = self.myappsdetailsstack.get_visible_child_name()
                 if madsname == "details":
@@ -1959,49 +1955,55 @@ class MainWindow(object):
                 self.menubackbutton.set_sensitive(False)
             else:
                 if hsname1 == "pardushome":
-                    self.searchstack.set_visible_child_name("pardus")
+                    self.set_stack_n_search(1)
                     self.menubackbutton.set_sensitive(False)
-                    if self.topbutton2.get_style_context().has_class("suggested-action"):
-                        self.topbutton2.get_style_context().remove_class("suggested-action")
-                    if self.queuebutton.get_style_context().has_class("suggested-action"):
-                        self.queuebutton.get_style_context().remove_class("suggested-action")
-                    if not self.topbutton1.get_style_context().has_class("suggested-action"):
-                        self.topbutton1.get_style_context().add_class("suggested-action")
                 elif hsname1 == "repohome":
-                    self.searchstack.set_visible_child_name("repo")
+                    self.set_stack_n_search(2)
                     self.menubackbutton.set_sensitive(False)
-                    if self.topbutton1.get_style_context().has_class("suggested-action"):
-                        self.topbutton1.get_style_context().remove_class("suggested-action")
-                    if self.queuebutton.get_style_context().has_class("suggested-action"):
-                        self.queuebutton.get_style_context().remove_class("suggested-action")
-                    if not self.topbutton2.get_style_context().has_class("suggested-action"):
-                        self.topbutton2.get_style_context().add_class("suggested-action")
                 elif hsname1 == "pardusappsdetail" or hsname1 == "pardusapps":
-                    self.searchstack.set_visible_child_name("pardus")
-                    if self.topbutton2.get_style_context().has_class("suggested-action"):
-                        self.topbutton2.get_style_context().remove_class("suggested-action")
-                    if self.queuebutton.get_style_context().has_class("suggested-action"):
-                        self.queuebutton.get_style_context().remove_class("suggested-action")
-                    if not self.topbutton1.get_style_context().has_class("suggested-action"):
-                        self.topbutton1.get_style_context().add_class("suggested-action")
+                    self.set_stack_n_search(1)
                 elif hsname1 == "noserver":
+                    self.set_stack_n_search(1)
                     self.topsearchbutton.set_sensitive(False)
                     self.menubackbutton.set_sensitive(False)
-                    if self.topbutton2.get_style_context().has_class("suggested-action"):
-                        self.topbutton2.get_style_context().remove_class("suggested-action")
-                    if self.queuebutton.get_style_context().has_class("suggested-action"):
-                        self.queuebutton.get_style_context().remove_class("suggested-action")
-                    if not self.topbutton1.get_style_context().has_class("suggested-action"):
-                        self.topbutton1.get_style_context().add_class("suggested-action")
                 elif hsname1 == "queue":
-                    if self.topbutton1.get_style_context().has_class("suggested-action"):
-                        self.topbutton1.get_style_context().remove_class("suggested-action")
-                    if self.topbutton2.get_style_context().has_class("suggested-action"):
-                        self.topbutton2.get_style_context().remove_class("suggested-action")
-                    if not self.queuebutton.get_style_context().has_class("suggested-action"):
-                        self.queuebutton.get_style_context().add_class("suggested-action")
+                    self.set_stack_n_search(3)
                 elif hsname1 == "preferences" or hsname1 == "fixapt":
                     self.menubackbutton.set_sensitive(False)
+
+    def set_stack_n_search(self, id):
+        # id:  1 = pardus, 2 = repo, 3 = queue, 4 = myapps
+        if id == 1:
+            if not self.topbutton1.get_style_context().has_class("suggested-action"):
+                self.topbutton1.get_style_context().add_class("suggested-action")
+            if self.topbutton2.get_style_context().has_class("suggested-action"):
+                self.topbutton2.get_style_context().remove_class("suggested-action")
+            if self.queuebutton.get_style_context().has_class("suggested-action"):
+                self.queuebutton.get_style_context().remove_class("suggested-action")
+            self.searchstack.set_visible_child_name("pardus")
+        elif id == 2:
+            if self.topbutton1.get_style_context().has_class("suggested-action"):
+                self.topbutton1.get_style_context().remove_class("suggested-action")
+            if not self.topbutton2.get_style_context().has_class("suggested-action"):
+                self.topbutton2.get_style_context().add_class("suggested-action")
+            if self.queuebutton.get_style_context().has_class("suggested-action"):
+                self.queuebutton.get_style_context().remove_class("suggested-action")
+            self.searchstack.set_visible_child_name("repo")
+        elif id == 3:
+            if self.topbutton1.get_style_context().has_class("suggested-action"):
+                self.topbutton1.get_style_context().remove_class("suggested-action")
+            if not self.topbutton2.get_style_context().has_class("suggested-action"):
+                self.topbutton2.get_style_context().remove_class("suggested-action")
+            if not self.queuebutton.get_style_context().has_class("suggested-action"):
+                self.queuebutton.get_style_context().add_class("suggested-action")
+        elif id == 4:
+            if self.topbutton1.get_style_context().has_class("suggested-action"):
+                self.topbutton1.get_style_context().remove_class("suggested-action")
+            if not self.topbutton2.get_style_context().has_class("suggested-action"):
+                self.topbutton2.get_style_context().remove_class("suggested-action")
+            if self.queuebutton.get_style_context().has_class("suggested-action"):
+                self.queuebutton.get_style_context().remove_class("suggested-action")
+            self.searchstack.set_visible_child_name("myapps")
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
         self.fromrepoapps = False
@@ -3682,8 +3684,10 @@ class MainWindow(object):
             print("action " + self.appname)
 
     def on_topbutton1_clicked(self, button):
+        self.set_stack_n_search(1)
+        self.menubackbutton.set_sensitive(False)
         if self.Server.connection:
-            self.searchstack.set_visible_child_name("pardus")
+            # self.searchstack.set_visible_child_name("pardus")
             self.homestack.set_visible_child_name("pardushome")
             self.EditorAppsIconView.unselect_all()
             self.PardusAppsIconView.unselect_all()
@@ -3695,26 +3699,15 @@ class MainWindow(object):
             self.topsearchbutton.set_active(False)
             self.topsearchbutton.set_sensitive(False)
 
-        self.menubackbutton.set_sensitive(False)
-        if self.topbutton2.get_style_context().has_class("suggested-action"):
-            self.topbutton2.get_style_context().remove_class("suggested-action")
-        if self.queuebutton.get_style_context().has_class("suggested-action"):
-            self.queuebutton.get_style_context().remove_class("suggested-action")
-        if not self.topbutton1.get_style_context().has_class("suggested-action"):
-            self.topbutton1.get_style_context().add_class("suggested-action")
-
     def on_topbutton2_clicked(self, button):
-        self.menubackbutton.set_sensitive(True)
+        if button is not None:
+            self.menubackbutton.set_sensitive(True)
+        else:
+            self.menubackbutton.set_sensitive(False)
         self.prefback = self.homestack.get_visible_child_name()
 
-        self.searchstack.set_visible_child_name("repo")
         self.homestack.set_visible_child_name("repohome")
-        if self.topbutton1.get_style_context().has_class("suggested-action"):
-            self.topbutton1.get_style_context().remove_class("suggested-action")
-        if self.queuebutton.get_style_context().has_class("suggested-action"):
-            self.queuebutton.get_style_context().remove_class("suggested-action")
-        if not self.topbutton2.get_style_context().has_class("suggested-action"):
-            self.topbutton2.get_style_context().add_class("suggested-action")
+        self.set_stack_n_search(2)
 
         # control for active actioned app
 
@@ -3739,12 +3732,7 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.prefback = self.homestack.get_visible_child_name()
         self.homestack.set_visible_child_name("queue")
-        if self.topbutton1.get_style_context().has_class("suggested-action"):
-            self.topbutton1.get_style_context().remove_class("suggested-action")
-        if self.topbutton2.get_style_context().has_class("suggested-action"):
-            self.topbutton2.get_style_context().remove_class("suggested-action")
-        if not self.queuebutton.get_style_context().has_class("suggested-action"):
-            self.queuebutton.get_style_context().add_class("suggested-action")
+        self.set_stack_n_search(3)
 
     def addtoQueue(self, appname, myappicon=False):
 
@@ -4180,17 +4168,16 @@ class MainWindow(object):
         # self.pardusAppsStack.set_visible_child_name("normal")
         #
         ### this shows only available apps on pardus-software (old method)
-
-        self.prefback = self.homestack.get_visible_child_name()
+        if button is not None:
+            self.prefback = self.homestack.get_visible_child_name()
+        else:
+            self.prefback = "pardushome"
         self.PopoverMenu.popdown()
-        self.topbutton1.get_style_context().remove_class("suggested-action")
-        self.topbutton2.get_style_context().remove_class("suggested-action")
-        self.queuebutton.get_style_context().remove_class("suggested-action")
+        self.set_stack_n_search(4)
         self.topsearchbutton.set_sensitive(True)
         self.topsearchbutton.set_active(self.statusoftopsearch)
         if self.myapps_searchentry.get_text() != "":
             self.topsearchbutton.set_active(True)
-        self.searchstack.set_visible_child_name("myapps")
         self.menubackbutton.set_sensitive(True)
         self.homestack.set_visible_child_name("myapps")
         self.myappsstack.set_visible_child_name("myapps")
