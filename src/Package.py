@@ -263,19 +263,19 @@ class Package(object):
             output = process.stdout.decode("utf-8")
             package = output[:output.find(":")].split(",")[0]
             if package:
-                return self.adv_size(package), package
+                return True, self.adv_size(package), package
             else:
                 # try get package name from basename
                 process = subprocess.run(["dpkg", "-S", os.path.basename(desktopname)], stdout=subprocess.PIPE)
                 output = process.stdout.decode("utf-8")
                 package = output[:output.find(":")].split(",")[0]
                 if package:
-                    return self.adv_size(package), package
+                    return True, self.adv_size(package), package
                 else:
-                    return None, ""
+                    return False, None, ""
         except Exception as e:
             print("Error on myapps_remove_details: {}".format(e))
-            return None, ""
+            return False, None, ""
 
     def beauty_size(self, size):
         # apt uses MB rather than MiB, so let's stay consistent
@@ -474,18 +474,18 @@ class Package(object):
                 icon = app.get_string('Icon')
                 description = app.get_description() or app.get_generic_name() or app.get_name()
                 filename = app.get_filename()
+                print(filename)
                 if os.path.dirname(filename) == "/usr/share/applications":
-                    return {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
+                    return True, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
                 else:
-                    print("parse_desktopfile: {} app not in /usr/share/applications location.".format(desktopfilename))
-                    return None
+                    return False, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
             else:
                 print("parse_desktopfile: {} app not exists".format(desktopfilename))
-                return None
+                return False, None
         except Exception as e:
             print("{}".format(e))
             print("parse_desktopfile: {} app not exists".format(desktopfilename))
-            return None
+            return False, None
 
     def origins(self, packagename):
         package = self.cache[packagename]

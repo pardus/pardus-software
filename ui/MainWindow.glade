@@ -8603,19 +8603,83 @@ Use with caution. Are you sure you want to continue ?</property>
                                 <property name="can-focus">False</property>
                                 <property name="halign">center</property>
                                 <property name="valign">start</property>
-                                <property name="margin-top">13</property>
+                                <property name="margin-start">34</property>
+                                <property name="margin-end">34</property>
+                                <property name="margin-top">34</property>
                                 <property name="orientation">vertical</property>
-                                <property name="spacing">13</property>
+                                <property name="spacing">21</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkBox" id="ui_myapps_notfoundname_box">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Package not found.</property>
+                                    <property name="halign">center</property>
+                                    <property name="spacing">13</property>
+                                    <child>
+                                      <object class="GtkImage" id="ui_myapps_notfoundname_image">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="pixel-size">64</property>
+                                        <property name="icon-name">image-missing</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ui_myapps_notfoundname_name">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="label">&lt;big&gt;App Name&lt;/big&gt;</property>
+                                        <property name="use-markup">True</property>
+                                        <property name="wrap">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
                                     <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="margin-bottom">13</property>
+                                    <property name="label" translatable="yes">&lt;b&gt;&lt;big&gt;Application could not be uninstalled.&lt;/big&gt;&lt;/b&gt;</property>
+                                    <property name="use-markup">True</property>
+                                    <property name="justify">center</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="label" translatable="yes">- Application uninstalling process is only valid for applications that the package manager (apt) supports.
+&lt;i&gt;&lt;small&gt;( installed from repositories or via the .deb package )&lt;/small&gt;&lt;/i&gt;
+
+- For applications installed using tools such as Flatpak, Snap, Wine, you can review the removal instructions of the relevant application.</property>
+                                    <property name="use-markup">True</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -8625,12 +8689,13 @@ Use with caution. Are you sure you want to continue ?</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <property name="halign">center</property>
+                                    <property name="margin-top">13</property>
                                     <signal name="clicked" handler="on_ui_myapps_cancel_clicked" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">1</property>
+                                    <property name="position">7</property>
                                   </packing>
                                 </child>
                               </object>

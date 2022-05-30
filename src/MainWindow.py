@@ -283,6 +283,9 @@ class MainWindow(object):
         self.ui_myapps_accept_disclaimer = self.GtkBuilder.get_object("ui_myapps_accept_disclaimer")
         self.ui_myapps_spinner = self.GtkBuilder.get_object("ui_myapps_spinner")
         self.ui_myapps_disclaimer_label = self.GtkBuilder.get_object("ui_myapps_disclaimer_label")
+        self.ui_myapps_notfoundname_box = self.GtkBuilder.get_object("ui_myapps_notfoundname_box")
+        self.ui_myapps_notfoundname_image = self.GtkBuilder.get_object("ui_myapps_notfoundname_image")
+        self.ui_myapps_notfoundname_name = self.GtkBuilder.get_object("ui_myapps_notfoundname_name")
         self.ui_myapp_toremove_label = self.GtkBuilder.get_object("ui_myapp_toremove_label")
         self.ui_myapp_toinstall_label = self.GtkBuilder.get_object("ui_myapp_toinstall_label")
         self.ui_myapp_broken_label = self.GtkBuilder.get_object("ui_myapp_broken_label")
@@ -737,14 +740,14 @@ class MainWindow(object):
             if not app.endswith(".desktop"):
                 app = "{}.desktop".format(app)
 
-            dic = self.Package.parse_desktopfile(app)
+            valid, dic = self.Package.parse_desktopfile(app)
             self.homestack.set_visible_child_name("myapps")
             self.topbutton1.get_style_context().remove_class("suggested-action")
             self.topbutton2.get_style_context().remove_class("suggested-action")
             self.queuebutton.get_style_context().remove_class("suggested-action")
             self.topsearchbutton.set_sensitive(True)
             self.searchstack.set_visible_child_name("myapps")
-            if dic is not None:
+            if valid:
                 self.myappsstack.set_visible_child_name("details")
                 self.myappsdetailsstack.set_visible_child_name("spinner")
                 self.ui_myapps_spinner.start()
@@ -752,6 +755,12 @@ class MainWindow(object):
                 myappsdetailsthread.start()
             else:
                 self.myappsstack.set_visible_child_name("notfound")
+                if dic is None:
+                    self.ui_myapps_notfoundname_box.set_visible(False)
+                else:
+                    self.ui_myapps_notfoundname_box.set_visible(True)
+                    self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(dic["icon"], size=64))
+                    self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(dic["name"]))
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
@@ -2422,9 +2431,9 @@ class MainWindow(object):
 
     def myappsdetail_worker(self, app):
 
-        myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
+        valid, myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
         print(myapp_details)
-        return myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
+        return valid, myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
 
     def on_myappsdetail_worker_done(self, myapp):
         # print("on_myappsdetail_worker_done")
@@ -2432,8 +2441,8 @@ class MainWindow(object):
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
         self.ui_myapps_spinner.stop()
-        details, package, name, icon, desktop, description = myapp
-        if details is not None:
+        valid, details, package, name, icon, desktop, description = myapp
+        if valid and details is not None:
             self.ui_myapps_uninstall_button.set_sensitive(True)
             self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(name))
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
@@ -2484,6 +2493,12 @@ class MainWindow(object):
         else:
             print("package not found")
             self.myappsstack.set_visible_child_name("notfound")
+            if details is None:
+                self.ui_myapps_notfoundname_box.set_visible(False)
+            else:
+                self.ui_myapps_notfoundname_box.set_visible(True)
+                self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
+                self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(name))
 
     def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
