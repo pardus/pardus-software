@@ -8280,7 +8280,7 @@ Use with caution. Are you sure you want to continue ?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Disk Space to be Freed :</property>
+                                                            <property name="label" translatable="yes">Disk space to be freed :</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -8344,7 +8344,7 @@ Use with caution. Are you sure you want to continue ?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Download Size :</property>
+                                                            <property name="label" translatable="yes">Download size :</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -8408,7 +8408,7 @@ Use with caution. Are you sure you want to continue ?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Required Disk Space :</property>
+                                                            <property name="label" translatable="yes">Required disk space :</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
