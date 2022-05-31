@@ -2199,7 +2199,7 @@ class MainWindow(object):
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
-                # ret = self.Package.adv_size(self.command)
+                # ret = self.Package.required_changes(self.command)
                 sizethread = threading.Thread(target=self.size_worker_thread, daemon=True)
                 sizethread.start()
 
@@ -2367,9 +2367,9 @@ class MainWindow(object):
 
     def size_worker(self, app=None):
         if app is None:
-            self.ret = self.Package.adv_size(self.command)
+            self.ret = self.Package.required_changes(self.command)
         else:
-            self.ret = self.Package.adv_size(app)
+            self.ret = self.Package.required_changes(app)
         print(self.ret)
 
     def on_size_worker_done(self):

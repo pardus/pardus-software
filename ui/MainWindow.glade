@@ -7906,7 +7906,10 @@ Use with caution. Are you sure you want to continue ?</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
-                                                    <property name="label" translatable="yes">Loading</property>
+                                                    <property name="label" translatable="yes">Loading package details</property>
+                                                    <attributes>
+                                                      <attribute name="weight" value="bold"/>
+                                                    </attributes>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>

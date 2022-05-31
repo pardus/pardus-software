@@ -187,8 +187,9 @@ class Package(object):
                 size = ""
         return self.beauty_size(size)
 
-    def adv_size(self, packagenames):
-        time.sleep(0.25)
+    def required_changes(self, packagenames, sleep=True):
+        if sleep:
+            time.sleep(0.25)
         self.cache.clear()
         to_install = []
         to_delete = []
@@ -263,14 +264,14 @@ class Package(object):
             output = process.stdout.decode("utf-8")
             package = output[:output.find(":")].split(",")[0]
             if package:
-                return True, self.adv_size(package), package
+                return True, self.required_changes(package, sleep=False), package
             else:
                 # try get package name from basename
                 process = subprocess.run(["dpkg", "-S", os.path.basename(desktopname)], stdout=subprocess.PIPE)
                 output = process.stdout.decode("utf-8")
                 package = output[:output.find(":")].split(",")[0]
                 if package:
-                    return True, self.adv_size(package), package
+                    return True, self.required_changes(package, sleep=False), package
                 else:
                     return False, None, ""
         except Exception as e:
