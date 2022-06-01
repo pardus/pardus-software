@@ -2291,6 +2291,7 @@ class MainWindow(object):
                             self.dActionButton.set_image(
                                 Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
                             self.dActionButton.set_sensitive(False)
+                            self.dActionInfoButton.set_sensitive(False)
 
             else:
                 # self.dActionButton.set_sensitive(False)
@@ -3652,6 +3653,7 @@ class MainWindow(object):
             self.bottomrevealer.set_reveal_child(True)
             self.queuestack.set_visible_child_name("inprogress")
             self.dActionButton.set_sensitive(False)
+            self.dActionInfoButton.set_sensitive(False)
             self.queue.append({"name": self.appname, "command": self.command})
             self.addtoQueue(self.appname)
             if not self.inprogress:
@@ -4943,6 +4945,7 @@ class MainWindow(object):
         if ui_appname == appname:
             self.dActionButton.set_sensitive(False)
             self.dActionButton.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
+            self.dActionInfoButton.set_sensitive(False)
             self.raction.set_sensitive(False)
             self.raction.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
 
@@ -5075,6 +5078,7 @@ class MainWindow(object):
             if ui_appname == self.actionedappname:
                 if cachestatus and self.Package.controlPackageCache(ui_appname):
                     self.dActionButton.set_sensitive(True)
+                    self.dActionInfoButton.set_sensitive(True)
                     self.raction.set_sensitive(True)
 
             self.topspinner.stop()
