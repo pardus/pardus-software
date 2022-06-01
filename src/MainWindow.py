@@ -169,6 +169,9 @@ class MainWindow(object):
         self.dIcon = self.GtkBuilder.get_object("dIcon")
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
+        self.dActionInfoButton = self.GtkBuilder.get_object("dActionInfoButton")
+        self.dActionButtonBox = self.GtkBuilder.get_object("dActionButtonBox")
+        self.dActionButtonBox.set_homogeneous(False)
         self.dOpenButton = self.GtkBuilder.get_object("dOpenButton")
         self.dAptUpdateButton = self.GtkBuilder.get_object("dAptUpdateButton")
         self.dAptUpdateInfoLabel = self.GtkBuilder.get_object("dAptUpdateInfoLabel")
@@ -199,6 +202,7 @@ class MainWindow(object):
         self.dtUserRating = self.GtkBuilder.get_object("dtUserRating")
         self.dtAverageRating = self.GtkBuilder.get_object("dtAverageRating")
         self.dViewonweb = self.GtkBuilder.get_object("dViewonweb")
+
 
         self.dtStar1 = self.GtkBuilder.get_object("dtStar1")
         self.dtStar2 = self.GtkBuilder.get_object("dtStar2")
@@ -2005,6 +2009,28 @@ class MainWindow(object):
                 self.queuebutton.get_style_context().remove_class("suggested-action")
             self.searchstack.set_visible_child_name("myapps")
 
+    def set_button_class(self, button, state):
+        # state 0 = app is not installed
+        # state 1 = app is installed
+        # state 2 = app is not found
+
+        if state == 1:
+            if button.get_style_context().has_class("suggested-action"):
+                button.get_style_context().remove_class("suggested-action")
+            button.get_style_context().add_class("destructive-action")
+            button.set_sensitive(True)
+        elif state == 0:
+            if button.get_style_context().has_class("destructive-action"):
+                button.get_style_context().remove_class("destructive-action")
+            button.get_style_context().add_class("suggested-action")
+            button.set_sensitive(True)
+        elif state == 2:
+            if button.get_style_context().has_class("suggested-action"):
+                button.get_style_context().remove_class("suggested-action")
+            if button.get_style_context().has_class("destructive-action"):
+                button.get_style_context().remove_class("destructive-action")
+            button.set_sensitive(False)
+
     def on_PardusAppsIconView_selection_changed(self, iconview):
         self.fromrepoapps = False
         self.external = []
@@ -2203,7 +2229,7 @@ class MainWindow(object):
                 sizethread = threading.Thread(target=self.size_worker_thread, daemon=True)
                 sizethread.start()
 
-                self.dActionButton.set_sensitive(True)
+                # self.dActionButton.set_sensitive(True)
 
                 version = self.Package.version(self.appname)
                 # size = self.Package.size(self.appname)
@@ -2228,9 +2254,10 @@ class MainWindow(object):
                 self.dType.set_markup(type)
 
                 if isinstalled:
-                    if self.dActionButton.get_style_context().has_class("suggested-action"):
-                        self.dActionButton.get_style_context().remove_class("suggested-action")
-                    self.dActionButton.get_style_context().add_class("destructive-action")
+
+                    self.set_button_class(self.dActionButton, 1)
+                    self.set_button_class(self.dActionInfoButton, 1)
+
                     self.dActionButton.set_label(_(" Uninstall"))
                     self.dActionButton.set_image(
                         Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
@@ -2241,9 +2268,10 @@ class MainWindow(object):
                         self.dOpenButton.set_visible(False)
 
                 else:
-                    if self.dActionButton.get_style_context().has_class("destructive-action"):
-                        self.dActionButton.get_style_context().remove_class("destructive-action")
-                    self.dActionButton.get_style_context().add_class("suggested-action")
+
+                    self.set_button_class(self.dActionButton, 0)
+                    self.set_button_class(self.dActionInfoButton, 0)
+
                     self.dActionButton.set_label(_(" Install"))
                     self.dActionButton.set_image(
                         Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
@@ -2265,11 +2293,10 @@ class MainWindow(object):
                             self.dActionButton.set_sensitive(False)
 
             else:
-                self.dActionButton.set_sensitive(False)
-                if self.dActionButton.get_style_context().has_class("destructive-action"):
-                    self.dActionButton.get_style_context().remove_class("destructive-action")
-                if self.dActionButton.get_style_context().has_class("suggested-action"):
-                    self.dActionButton.get_style_context().remove_class("suggested-action")
+                # self.dActionButton.set_sensitive(False)
+
+                self.set_button_class(self.dActionButton, 2)
+                self.set_button_class(self.dActionInfoButton, 2)
 
                 self.dActionButton.set_label(_(" Not Found"))
                 self.dActionButton.set_image(
@@ -2390,7 +2417,7 @@ class MainWindow(object):
                     _("of disk space freed")))
 
             self.dSizeTitle.set_text(_("Installed Size"))
-            self.dSize.set_text("{}".format(self.ret["freed_size"]))
+            self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
             self.dSizeGrid.set_tooltip_text(None)
         else:
             if self.ret["to_delete"] and self.ret["to_delete"] is not None:
@@ -2650,7 +2677,7 @@ class MainWindow(object):
 
                     self.PardusCommentListBox.add(self.box)
 
-        self.PardusCommentListBox.show_all()
+                self.PardusCommentListBox.show_all()
 
     def on_par_desc_more_clicked(self, button):
 
@@ -3599,6 +3626,9 @@ class MainWindow(object):
     def on_dDisclaimerButton_clicked(self, button):
         self.DisclaimerPopover.popup()
 
+    def on_dActionInfoButton_clicked(self, button):
+        self.DisclaimerPopover.popup()
+
     def on_dOpenButton_clicked(self, button):
         if not self.openDesktop(self.desktop_file):
             if self.desktop_file_extras != "":
@@ -3823,7 +3853,7 @@ class MainWindow(object):
         openbutton.props.valign = Gtk.Align.CENTER
         openbutton.props.halign = Gtk.Align.CENTER
         openbutton.props.always_show_image = True
-        openbutton.set_image(Gtk.Image.new_from_icon_name("system-run-symbolic", Gtk.IconSize.BUTTON))
+        openbutton.set_image(Gtk.Image.new_from_icon_name("media-playback-start-symbolic", Gtk.IconSize.BUTTON))
         openbutton.set_label("")
         openbutton.set_tooltip_text(_("Open"))
         openbutton.connect("clicked", self.open_from_myapps)
@@ -5164,10 +5194,11 @@ class MainWindow(object):
         if repo == 1:  # pardus apps
             self.fromexternal = False
             if self.Package.isinstalled(actionedappname) is True:
-                self.dActionButton.set_sensitive(True)
-                if self.dActionButton.get_style_context().has_class("suggested-action"):
-                    self.dActionButton.get_style_context().remove_class("suggested-action")
-                self.dActionButton.get_style_context().add_class("destructive-action")
+                # self.dActionButton.set_sensitive(True)
+
+                self.set_button_class(self.dActionButton, 1)
+                self.set_button_class(self.dActionInfoButton, 1)
+
                 self.dActionButton.set_label(_(" Uninstall"))
                 self.dActionButton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
 
@@ -5180,10 +5211,12 @@ class MainWindow(object):
                 sizethread1.start()
 
             elif self.Package.isinstalled(actionedappname) is False:
-                self.dActionButton.set_sensitive(True)
-                if self.dActionButton.get_style_context().has_class("destructive-action"):
-                    self.dActionButton.get_style_context().remove_class("destructive-action")
-                self.dActionButton.get_style_context().add_class("suggested-action")
+                # self.dActionButton.set_sensitive(True)
+
+                self.set_button_class(self.dActionButton, 0)
+                self.set_button_class(self.dActionInfoButton, 0)
+
+
                 self.dActionButton.set_label(_(" Install"))
                 self.dActionButton.set_image(
                     Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
@@ -5215,11 +5248,10 @@ class MainWindow(object):
                         Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
                     self.dOpenButton.set_visible(False)
 
-                    self.dActionButton.set_sensitive(False)
-                    if self.dActionButton.get_style_context().has_class("destructive-action"):
-                        self.dActionButton.get_style_context().remove_class("destructive-action")
-                    if self.dActionButton.get_style_context().has_class("suggested-action"):
-                        self.dActionButton.get_style_context().remove_class("suggested-action")
+                    # self.dActionButton.set_sensitive(False)
+
+                    self.set_button_class(self.dActionButton, 2)
+                    self.set_button_class(self.dActionInfoButton, 2)
 
                 self.dActionButton.set_tooltip_text(None)
                 self.dSize.set_markup(_("None"))

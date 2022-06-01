@@ -170,8 +170,8 @@
   </object>
   <object class="GtkPopover" id="DisclaimerPopover">
     <property name="can-focus">False</property>
-    <property name="relative-to">dDisclaimerButton</property>
-    <property name="position">left</property>
+    <property name="relative-to">dActionInfoButton</property>
+    <property name="position">bottom</property>
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
@@ -2207,13 +2207,46 @@ so that the OS has nothing to do with the health of the application.</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkButton" id="dActionButton">
-                                            <property name="label">button</property>
+                                          <object class="GtkButtonBox" id="dActionButtonBox">
                                             <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
-                                            <property name="receives-default">True</property>
-                                            <property name="halign">center</property>
-                                            <signal name="clicked" handler="on_dActionButton_clicked" swapped="no"/>
+                                            <property name="can-focus">False</property>
+                                            <property name="layout-style">expand</property>
+                                            <child>
+                                              <object class="GtkButton" id="dActionButton">
+                                                <property name="label">button</property>
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">True</property>
+                                                <property name="receives-default">True</property>
+                                                <property name="halign">end</property>
+                                                <signal name="clicked" handler="on_dActionButton_clicked" swapped="no"/>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">True</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkButton" id="dActionInfoButton">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">True</property>
+                                                <property name="receives-default">True</property>
+                                                <property name="halign">start</property>
+                                                <signal name="clicked" handler="on_dActionInfoButton_clicked" swapped="no"/>
+                                                <child>
+                                                  <object class="GtkImage">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="icon-name">dialog-information-symbolic</property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">True</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
