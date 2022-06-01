@@ -180,6 +180,8 @@ class MainWindow(object):
         # self.dOpenButton.get_style_context().add_class("circular")
         self.dDisclaimerButton = self.GtkBuilder.get_object("dDisclaimerButton")
         self.DisclaimerPopover = self.GtkBuilder.get_object("DisclaimerPopover")
+        self.RequiredChangesPopover = self.GtkBuilder.get_object("RequiredChangesPopover")
+        self.RequiredChangesLabel = self.GtkBuilder.get_object("RequiredChangesLabel")
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
         self.dSection = self.GtkBuilder.get_object("dSection")
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
@@ -2091,7 +2093,8 @@ class MainWindow(object):
         self.gcStack.set_visible_child_name("gcTurkish")
 
         # clear size and requiered changes info
-        self.dActionButton.set_tooltip_text(None)
+        # self.dActionButton.set_tooltip_text(None)
+        self.RequiredChangesLabel.set_text("")
         self.dSize.set_markup("...")
         self.dSizeTitle.set_text(_("Size"))
         self.dSizeGrid.set_tooltip_text(None)
@@ -2303,7 +2306,8 @@ class MainWindow(object):
                 self.dActionButton.set_image(
                     Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
 
-                self.dActionButton.set_tooltip_text(None)
+                # self.dActionButton.set_tooltip_text(None)
+                self.RequiredChangesLabel.set_text("")
 
                 self.dVersion.set_markup(_("None"))
                 self.dSize.set_markup(_("None"))
@@ -2405,7 +2409,8 @@ class MainWindow(object):
         isinstalled = self.Package.isinstalled(self.appname)
         if isinstalled:
             if self.ret["to_install"] and self.ret["to_install"] is not None:
-                self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                    self.appname,
                     _("Packages to remove"), ", ".join(self.ret["to_delete"]),
                     _("Packages to install"), ", ".join(self.ret["to_install"]),
                     self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed"),
@@ -2413,7 +2418,7 @@ class MainWindow(object):
                     self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
             else:
                 if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}".format(
+                    self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}".format(self.appname,
                     _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.Package.beauty_size(self.ret["freed_size"]),
                     _("of disk space freed")))
 
@@ -2422,7 +2427,8 @@ class MainWindow(object):
             self.dSizeGrid.set_tooltip_text(None)
         else:
             if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-                self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                    self.appname,
                     _("Packages to install"), ", ".join(self.ret["to_install"]),
                     _("Packages to remove"), ", ".join(self.ret["to_delete"]),
                     self.Package.beauty_size(self.ret["download_size"]), _("to download"),
@@ -2430,7 +2436,8 @@ class MainWindow(object):
                     self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed")))
             else:
                 if self.ret["to_install"] and self.ret["to_install"] is not None:
-                    self.dActionButton.set_tooltip_markup("<b>{} :</b>\n{}\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                    self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
+                        self.appname,
                         _("Packages to install"), ", ".join(self.ret["to_install"]),
                         self.Package.beauty_size(self.ret["download_size"]), _("to download"),
                         self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
@@ -3628,7 +3635,7 @@ class MainWindow(object):
         self.DisclaimerPopover.popup()
 
     def on_dActionInfoButton_clicked(self, button):
-        self.DisclaimerPopover.popup()
+        self.RequiredChangesPopover.popup()
 
     def on_dOpenButton_clicked(self, button):
         if not self.openDesktop(self.desktop_file):
@@ -5257,7 +5264,8 @@ class MainWindow(object):
                     self.set_button_class(self.dActionButton, 2)
                     self.set_button_class(self.dActionInfoButton, 2)
 
-                self.dActionButton.set_tooltip_text(None)
+                # self.dActionButton.set_tooltip_text(None)
+                self.RequiredChangesLabel.set_text("")
                 self.dSize.set_markup(_("None"))
                 self.dSizeTitle.set_text(_("Download Size"))
                 self.dSizeGrid.set_tooltip_text(None)

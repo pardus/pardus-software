@@ -170,8 +170,8 @@
   </object>
   <object class="GtkPopover" id="DisclaimerPopover">
     <property name="can-focus">False</property>
-    <property name="relative-to">dActionInfoButton</property>
-    <property name="position">bottom</property>
+    <property name="relative-to">dDisclaimerButton</property>
+    <property name="position">left</property>
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
@@ -9195,6 +9195,23 @@ Use with caution. Are you sure you want to continue ?</property>
             <property name="position">10</property>
           </packing>
         </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="RequiredChangesPopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">dActionInfoButton</property>
+    <property name="position">bottom</property>
+    <child>
+      <object class="GtkLabel" id="RequiredChangesLabel">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">8</property>
+        <property name="margin-end">8</property>
+        <property name="margin-top">8</property>
+        <property name="margin-bottom">8</property>
+        <property name="wrap">True</property>
+        <property name="max-width-chars">71</property>
       </object>
     </child>
   </object>
