@@ -4125,6 +4125,22 @@ class MainWindow(object):
                         self.topsearchbutton.set_active(False)
                         self.toprevealer.set_reveal_child(False)
                         return True
+            elif self.homestack.get_visible_child_name() == "myapps" and self.myappsstack.get_visible_child_name() == "myapps":
+                if not self.topsearchbutton.get_active():
+                    if event.string.isdigit() or event.string.isalpha():
+                        self.myapps_searchentry.get_buffer().delete_text(0, -1)
+                        self.myapps_searchentry.grab_focus()
+                        self.topsearchbutton.set_active(True)
+                        self.toprevealer.set_reveal_child(True)
+                        self.myapps_searchentry.get_buffer().insert_text(1, event.string, 1)
+                        self.myapps_searchentry.set_position(2)
+                        return True
+                else:
+                    if event.keyval == Gdk.KEY_Escape:
+                        self.myapps_searchentry.get_buffer().delete_text(0, -1)
+                        self.topsearchbutton.set_active(False)
+                        self.toprevealer.set_reveal_child(False)
+                        return True
 
     def on_menu_settings_clicked(self, button):
         self.prefback = self.homestack.get_visible_child_name()
