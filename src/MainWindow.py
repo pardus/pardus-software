@@ -181,7 +181,22 @@ class MainWindow(object):
         self.dDisclaimerButton = self.GtkBuilder.get_object("dDisclaimerButton")
         self.DisclaimerPopover = self.GtkBuilder.get_object("DisclaimerPopover")
         self.RequiredChangesPopover = self.GtkBuilder.get_object("RequiredChangesPopover")
-        self.RequiredChangesLabel = self.GtkBuilder.get_object("RequiredChangesLabel")
+        self.dapp_packagename_box = self.GtkBuilder.get_object("dapp_packagename_box")
+        self.dapp_toremove_box = self.GtkBuilder.get_object("dapp_toremove_box")
+        self.dapp_toinstall_box = self.GtkBuilder.get_object("dapp_toinstall_box")
+        self.dapp_broken_box = self.GtkBuilder.get_object("dapp_broken_box")
+        self.dapp_fsize_box = self.GtkBuilder.get_object("dapp_fsize_box")
+        self.dapp_dsize_box = self.GtkBuilder.get_object("dapp_dsize_box")
+        self.dapp_isize_box = self.GtkBuilder.get_object("dapp_isize_box")
+        self.dapp_packagename_label = self.GtkBuilder.get_object("dapp_packagename_label")
+        self.dapp_toremove_label = self.GtkBuilder.get_object("dapp_toremove_label")
+        self.dapp_toinstall_label = self.GtkBuilder.get_object("dapp_toinstall_label")
+        self.dapp_broken_label = self.GtkBuilder.get_object("dapp_broken_label")
+        self.dapp_fsize_label = self.GtkBuilder.get_object("dapp_fsize_label")
+        self.dapp_dsize_label = self.GtkBuilder.get_object("dapp_dsize_label")
+        self.dapp_isize_label = self.GtkBuilder.get_object("dapp_isize_label")
+
+        # self.RequiredChangesLabel = self.GtkBuilder.get_object("RequiredChangesLabel")
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
         self.dSection = self.GtkBuilder.get_object("dSection")
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
@@ -2094,7 +2109,8 @@ class MainWindow(object):
 
         # clear size and requiered changes info
         # self.dActionButton.set_tooltip_text(None)
-        self.RequiredChangesLabel.set_text("")
+        # self.RequiredChangesLabel.set_text("")
+        self.clear_drequired_popup()
         self.dSize.set_markup("...")
         self.dSizeTitle.set_text(_("Size"))
         self.dSizeGrid.set_tooltip_text(None)
@@ -2307,7 +2323,8 @@ class MainWindow(object):
                     Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
 
                 # self.dActionButton.set_tooltip_text(None)
-                self.RequiredChangesLabel.set_text("")
+                # self.RequiredChangesLabel.set_text("")
+                self.clear_drequired_popup()
 
                 self.dVersion.set_markup(_("None"))
                 self.dSize.set_markup(_("None"))
@@ -2390,6 +2407,15 @@ class MainWindow(object):
                 self.CommentsNotebook.get_nth_page(1).hide()  # page_num 1 is Gnome Comments
                 print("gnome comments disabled")
 
+    def clear_drequired_popup(self):
+        self.dapp_packagename_label.set_text("{}".format(""))
+        self.dapp_toremove_label.set_text("{}".format(""))
+        self.dapp_toinstall_label.set_text("{}".format(""))
+        self.dapp_broken_label.set_text("{}".format(""))
+        self.dapp_fsize_label.set_text("{}".format(""))
+        self.dapp_dsize_label.set_text("{}".format(""))
+        self.dapp_isize_label.set_text("{}".format(""))
+
     def size_worker_thread(self, app=None):
         if app is None:
             self.size_worker()
@@ -2406,41 +2432,82 @@ class MainWindow(object):
 
     def on_size_worker_done(self):
         # print("on_size_worker_done")
-        isinstalled = self.Package.isinstalled(self.appname)
-        if isinstalled:
-            if self.ret["to_install"] and self.ret["to_install"] is not None:
-                self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
-                    self.appname,
-                    _("Packages to remove"), ", ".join(self.ret["to_delete"]),
-                    _("Packages to install"), ", ".join(self.ret["to_install"]),
-                    self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed"),
-                    self.Package.beauty_size(self.ret["download_size"]), _("to download"),
-                    self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
-            else:
-                if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-                    self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}".format(self.appname,
-                    _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.Package.beauty_size(self.ret["freed_size"]),
-                    _("of disk space freed")))
 
-            self.dSizeTitle.set_text(_("Installed Size"))
-            self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
-            self.dSizeGrid.set_tooltip_text(None)
+        self.dapp_packagename_label.set_markup("<b>{}</b>".format(self.appname))
+
+        if self.ret["to_delete"] and self.ret["to_delete"] is not None:
+            self.dapp_toremove_label.set_markup("{}".format(", ".join(self.ret["to_delete"])))
+            self.dapp_toremove_box.set_visible(True)
         else:
-            if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-                self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
-                    self.appname,
-                    _("Packages to install"), ", ".join(self.ret["to_install"]),
-                    _("Packages to remove"), ", ".join(self.ret["to_delete"]),
-                    self.Package.beauty_size(self.ret["download_size"]), _("to download"),
-                    self.Package.beauty_size(self.ret["install_size"]), _("of disk space required"),
-                    self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed")))
-            else:
-                if self.ret["to_install"] and self.ret["to_install"] is not None:
-                    self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
-                        self.appname,
-                        _("Packages to install"), ", ".join(self.ret["to_install"]),
-                        self.Package.beauty_size(self.ret["download_size"]), _("to download"),
-                        self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
+            self.dapp_toremove_box.set_visible(False)
+
+        if self.ret["to_install"] and self.ret["to_install"] is not None:
+            self.dapp_toinstall_label.set_markup("{}".format(", ".join(self.ret["to_install"])))
+            self.dapp_toinstall_box.set_visible(True)
+        else:
+            self.dapp_toinstall_box.set_visible(False)
+
+        if self.ret["broken"] and self.ret["broken"] is not None:
+            self.dapp_broken_label.set_markup("{}".format(", ".join(self.ret["broken"])))
+            self.dapp_broken_box.set_visible(True)
+        else:
+            self.dapp_broken_box.set_visible(False)
+
+        if self.ret["freed_size"] and self.ret["freed_size"] is not None and self.ret["freed_size"] > 0:
+            self.dapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
+            self.dapp_fsize_box.set_visible(True)
+        else:
+            self.dapp_fsize_box.set_visible(False)
+
+        if self.ret["download_size"] and self.ret["download_size"] is not None and self.ret["download_size"] > 0:
+            self.dapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["download_size"])))
+            self.dapp_dsize_box.set_visible(True)
+        else:
+            self.dapp_dsize_box.set_visible(False)
+
+        if self.ret["install_size"] and self.ret["install_size"] is not None and self.ret["install_size"] > 0:
+            self.dapp_isize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["install_size"])))
+            self.dapp_isize_box.set_visible(True)
+        else:
+            self.dapp_isize_box.set_visible(False)
+
+
+
+        # isinstalled = self.Package.isinstalled(self.appname)
+        # if isinstalled:
+        #     if self.ret["to_install"] and self.ret["to_install"] is not None:
+        #         self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+        #             self.appname,
+        #             _("Packages to remove"), ", ".join(self.ret["to_delete"]),
+        #             _("Packages to install"), ", ".join(self.ret["to_install"]),
+        #             self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed"),
+        #             self.Package.beauty_size(self.ret["download_size"]), _("to download"),
+        #             self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
+        #     else:
+        #         if self.ret["to_delete"] and self.ret["to_delete"] is not None:
+        #             self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}".format(self.appname,
+        #             _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.Package.beauty_size(self.ret["freed_size"]),
+        #             _("of disk space freed")))
+        #
+        #     self.dSizeTitle.set_text(_("Installed Size"))
+        #     self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
+        #     self.dSizeGrid.set_tooltip_text(None)
+        # else:
+        #     if self.ret["to_delete"] and self.ret["to_delete"] is not None:
+        #         self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
+        #             self.appname,
+        #             _("Packages to install"), ", ".join(self.ret["to_install"]),
+        #             _("Packages to remove"), ", ".join(self.ret["to_delete"]),
+        #             self.Package.beauty_size(self.ret["download_size"]), _("to download"),
+        #             self.Package.beauty_size(self.ret["install_size"]), _("of disk space required"),
+        #             self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed")))
+        #     else:
+        #         if self.ret["to_install"] and self.ret["to_install"] is not None:
+        #             self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
+        #                 self.appname,
+        #                 _("Packages to install"), ", ".join(self.ret["to_install"]),
+        #                 self.Package.beauty_size(self.ret["download_size"]), _("to download"),
+        #                 self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
 
             self.dSizeTitle.set_text(_("Download Size"))
             self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
@@ -5281,7 +5348,9 @@ class MainWindow(object):
                     self.set_button_class(self.dActionInfoButton, 2)
 
                 # self.dActionButton.set_tooltip_text(None)
-                self.RequiredChangesLabel.set_text("")
+                # self.RequiredChangesLabel.set_text("")
+                self.clear_drequired_popup()
+
                 self.dSize.set_markup(_("None"))
                 self.dSizeTitle.set_text(_("Download Size"))
                 self.dSizeGrid.set_tooltip_text(None)
