@@ -5009,6 +5009,8 @@ class MainWindow(object):
         p1.start()
 
     def on_mdabutton_clicked(self, button):
+        self.SubCatCombo.remove_all()
+        self.SubCatCombo.set_visible(False)
         self.menubackbutton.set_sensitive(True)
         if self.sortPardusAppsCombo.get_active() != 1:
             self.mda_clicked = True
@@ -5028,6 +5030,8 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("pardusapps")
 
     def on_mrabutton_clicked(self, button):
+        self.SubCatCombo.remove_all()
+        self.SubCatCombo.set_visible(False)
         self.menubackbutton.set_sensitive(True)
         if self.sortPardusAppsCombo.get_active() != 2:
             self.mra_clicked = True
@@ -5047,6 +5051,8 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("pardusapps")
 
     def on_labutton_clicked(self, button):
+        self.SubCatCombo.remove_all()
+        self.SubCatCombo.set_visible(False)
         self.menubackbutton.set_sensitive(True)
         if self.sortPardusAppsCombo.get_active() != 3:
             self.la_clicked = True
