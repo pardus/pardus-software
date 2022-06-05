@@ -2483,7 +2483,22 @@ class MainWindow(object):
         else:
             self.dapp_isize_box.set_visible(False)
 
+        isinstalled = self.Package.isinstalled(self.appname)
 
+        if isinstalled is not None:
+            if isinstalled:
+                self.dSizeTitle.set_text(_("Installed Size"))
+                self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
+                self.dSizeGrid.set_tooltip_text(None)
+            else:
+                self.dSizeTitle.set_text(_("Download Size"))
+                self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
+                self.dSizeGrid.set_tooltip_text("{}: {}".format(
+                    _("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
+        else:
+            self.dSize.set_markup(_("None"))
+            self.dSizeTitle.set_text(_("Download Size"))
+            self.dSizeGrid.set_tooltip_text(None)
 
         # isinstalled = self.Package.isinstalled(self.appname)
         # if isinstalled:
@@ -2520,10 +2535,10 @@ class MainWindow(object):
         #                 _("Packages to install"), ", ".join(self.ret["to_install"]),
         #                 self.Package.beauty_size(self.ret["download_size"]), _("to download"),
         #                 self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
-
-            self.dSizeTitle.set_text(_("Download Size"))
-            self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
-            self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
+        #
+        #     self.dSizeTitle.set_text(_("Download Size"))
+        #     self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
+        #     self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
 
 
     def myapps_worker_thread(self):
