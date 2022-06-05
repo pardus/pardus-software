@@ -3829,7 +3829,6 @@ class MainWindow(object):
 
     def on_topbutton1_clicked(self, button):
         self.set_stack_n_search(1)
-        self.menubackbutton.set_sensitive(False)
         if self.Server.connection:
             # self.searchstack.set_visible_child_name("pardus")
             self.homestack.set_visible_child_name("pardushome")
@@ -3842,6 +3841,7 @@ class MainWindow(object):
             self.homestack.set_visible_child_name("noserver")
             self.topsearchbutton.set_active(False)
             self.topsearchbutton.set_sensitive(False)
+        self.menubackbutton.set_sensitive(False)
 
     def on_topbutton2_clicked(self, button):
         if button is not None:
