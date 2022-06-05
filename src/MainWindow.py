@@ -498,6 +498,7 @@ class MainWindow(object):
         self.frommostapps = False
         self.fromrepoapps = False
         self.fromdetails = False
+        self.fromqueue = False
         self.myapps_clicked = False
         self.mda_clicked = False
         self.mra_clicked = False
@@ -511,6 +512,7 @@ class MainWindow(object):
 
         self.mostappname = None
         self.detailsappname = None
+        self.queueappname = None
 
         self.applist = []
         self.fullapplist = []
@@ -722,6 +724,7 @@ class MainWindow(object):
                         self.fromdetails = True
                         self.detailsappname = app
                         self.mostappname = None
+                        self.fromqueue = False
                         GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
                         self.set_stack_n_search(1)
                         self.topsearchbutton.set_active(False)
@@ -1927,8 +1930,11 @@ class MainWindow(object):
                 self.EditorAppsIconView.unselect_all()
                 self.menubackbutton.set_sensitive(False)
             else:
-                self.homestack.set_visible_child_name("pardusapps")
-                self.PardusAppsIconView.unselect_all()
+                if self.fromqueue:
+                    self.homestack.set_visible_child_name("queue")
+                else:
+                    self.homestack.set_visible_child_name("pardusapps")
+                    self.PardusAppsIconView.unselect_all()
 
         elif hsname == "myapps":
             masname = self.myappsstack.get_visible_child_name()
@@ -2049,6 +2055,7 @@ class MainWindow(object):
             button.set_sensitive(False)
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
+        self.set_stack_n_search(1)
         self.fromrepoapps = False
         self.external = []
         self.fromexternal = False
@@ -2123,20 +2130,25 @@ class MainWindow(object):
             selected_items = iconview.get_selected_items()
             lensel = len(selected_items)
             self.frommostapps = False
+            self.fromqueue = False
         except:
-            self.frommostapps = True
+            if not self.fromqueue:
+                self.frommostapps = True
             lensel = 1
 
         if lensel == 1:
             if not self.frommostapps:
-                if mode == 1:
-                    treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
-                    self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
-                    # prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
+                if not self.fromqueue:
+                    if mode == 1:
+                        treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
+                        self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
+                        # prettyname = self.PardusCategoryFilter.get(treeiter, 3)[0]
+                    else:
+                        treeiter = self.EditorListStore.get_iter(selected_items[0])
+                        self.appname = self.EditorListStore.get(treeiter, 1)[0]
+                        # prettyname = self.EditorListStore.get(treeiter, 3)[0]
                 else:
-                    treeiter = self.EditorListStore.get_iter(selected_items[0])
-                    self.appname = self.EditorListStore.get(treeiter, 1)[0]
-                    # prettyname = self.EditorListStore.get(treeiter, 3)[0]
+                    self.appname = iconview
             else:
                 self.appname = iconview
 
@@ -3519,6 +3531,7 @@ class MainWindow(object):
 
         self.mostappname = child.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[
             1].name
+        self.fromqueue = False
 
         self.on_PardusAppsIconView_selection_changed(self.mostappname)
 
@@ -3677,6 +3690,16 @@ class MainWindow(object):
     #     if len(self.queue) > 1:
     #         self.queue.pop(1)
     #         self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
+
+    def on_QueueListBox_row_activated(self, list_box, row):
+        self.queueappname = row.get_children()[0].name
+        print("queueappname : {}".format(self.queueappname))
+        self.fromqueue = True
+        self.frommostapps = False
+        self.fromdetails = False
+        self.fromrepoapps = False
+        self.repoappclicked = False
+        self.on_PardusAppsIconView_selection_changed(self.queueappname)
 
     def on_gcMoreButtonTR_clicked(self, button):
         self.gcMoreButtonTR.set_sensitive(False)
@@ -4955,11 +4978,13 @@ class MainWindow(object):
         if self.frommostapps:
             if self.mostappname:
                 ui_appname = self.mostappname
-            else:
+            elif self.detailsappname:
                 ui_appname = self.detailsappname
+        if self.fromqueue:
+            ui_appname = self.queueappname
         if self.fromrepoapps:
             ui_appname = self.repoappname
-        print("UI APP = " + ui_appname)
+        print("ui_app : {}".format(ui_appname))
         return ui_appname
 
     def on_retrybutton_clicked(self, button):
@@ -5270,6 +5295,11 @@ class MainWindow(object):
                     self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
             else:
                 if self.detailsappname == actionedappname:
+                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+
+        if self.fromqueue:
+            if self.queueappname:
+                if self.queueappname == actionedappname:
                     self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
         if self.fromrepoapps:
