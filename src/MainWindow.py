@@ -526,7 +526,7 @@ class MainWindow(object):
         self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
                                    "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop",
                                    "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
-                                   "eta-nonhid-gnome-desktop-other"]
+                                   "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
 
         self.prefback = "pardushome"
 
@@ -1117,6 +1117,8 @@ class MainWindow(object):
                 self.Server.appversion = response["version"]
                 self.Server.iconnames = response["iconnames"]
                 self.Server.badwords = response["badwords"]
+                if "important-packages" in response and response["important-packages"]:
+                    self.important_packages = response["important-packages"]
                 self.Server.aptuptime = response["aptuptime"]
             elif type == "statistics":
                 print("server statistics successful")
