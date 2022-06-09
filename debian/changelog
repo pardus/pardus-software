@@ -1,3 +1,68 @@
+pardus-software (0.2.0) unstable; urgency=medium
+
+  * Add extra desktop name controls to controlargs function
+  * Add missing lower method to search func
+  * Add search in repo apps too on controlargs func
+  * Fix repo apps searching controls in controlargs
+  * Fix if app not found value in controlargs
+  * Add control style_context on controlargs func
+  * Add package name tooltip to app name
+  * Add installed, required, freed size infos with required changes to pardus app detail
+  * Update file size units
+  * Fix typo
+  * Update pot file
+  * Update Turkish translations
+  * Fix show available apps config control
+  * Add thread for get package size and required changes info
+  * Update size and required changes info after action completed
+  * Add GLib_idle to size_worker_done func
+  * Update sleep time as 0.25
+  * Update size and required changes infos as empty before loaded
+  * Add subcategory combobox to pardus apps
+  * Add subcategory key control for old servers
+  * Add user's all desktop apps to myapps and Update myapps ui
+  * Add GB to get size method
+  * Add except for broken packages while marking
+  * Update to_install and to_remove controls
+  * Add details page for myapps' remove action
+  * Add action to myapps' open button
+  * Add localization to get installed_apps
+  * Add disclaimer to myapps' remove action for important package removings
+  * Add remove action to myapps and Fix get myapps queue icon
+  * Add control_myapps func for control myapps list after remove
+  * Add updatecache to myapp details page
+  * Add action to myapps' uninstall disclaimer accept button
+  * Fix sensitive control of myapps_uninstall_button
+  * Add status,error,cache control to control_myapps func
+  * Rm unnecessary code on myapplistbox remove
+  * Revert updatecache on myapp details page for better loading time
+  * Add remove option to application
+  * Add search ability for myapps too
+  * Fix typo
+  * Update myapps menu sensitive control on no connection
+  * Add menuback controls for myapps page
+  * Update get_installed_apps and parse_desktopfile funcs using Gio
+  * Update myapps' notfound page
+  * Update menu back controls
+  * Fix typo and Add sleep control to required_changes
+  * Fix typo
+  * Update pot file
+  * Update Turkish translations
+  * Update pardus app detail action button as buttonbox with info button
+  * Add dActionInfoButton sensitive controls
+  * Add required changes popover to daction info button
+  * Add key_press_event control for myapps page too
+  * Update RequiredChangesPopover ui
+  * Add row_activated action to queue listbox
+  * Fix set size labels on worker_done func
+  * Fix menuback sensitive control on pardus page click
+  * Add subcatcombo clear to most and last buttons on home
+  * Update pot file
+  * Update Turkish translations
+  * Add get important packages from server if available
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 09 Jun 2022 10:30:31 +0300
+
 pardus-software (0.1.1) unstable; urgency=medium
 
   [ Hugo Carvalho ]
