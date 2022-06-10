@@ -4017,7 +4017,7 @@ class MainWindow(object):
         self.myappsstack.set_visible_child_name("myapps")
         if not len(self.MyAppsListBox) > 0:
             print("MyAppsListBox creating")
-            self.on_menu_myapps_clicked(None)
+            GLib.idle_add(self.on_menu_myapps_clicked, None)
 
     def on_ui_myapps_cancel_disclaimer_clicked(self, button):
         self.myappsdetailsstack.set_visible_child_name("details")
