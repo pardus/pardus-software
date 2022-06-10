@@ -2192,7 +2192,14 @@ class MainWindow(object):
 
                     command = i["command"]
                     if command and command[self.locale].strip() != "":
-                        self.command = command[self.locale]
+                        self.command = []
+                        for package in command[self.locale].split(" "):
+                            if self.Package.controlPackageCache(package):
+                                self.command.append(package)
+                        if self.command:
+                            self.command = " ".join(self.command)
+                        else:
+                            self.command = i["name"]
                     else:
                         self.command = i["name"]
 
