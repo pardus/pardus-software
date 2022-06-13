@@ -6,7 +6,12 @@ update-desktop-database || true
 
 if ! [[ -f "/etc/pardus/pardus-software.conf" ]]; then
 	mkdir -p "/etc/pardus"
-	echo "https://apps.pardus.org.tr" > "/etc/pardus/pardus-software.conf"
+	echo "# pardus-software conf file" > "/etc/pardus/pardus-software.conf"
+	echo "# repo = 1 for use repo, repo = 0 for not use repo" >> "/etc/pardus/pardus-software.conf"
+	echo "# myapps = 1 for use myapps, myapps = 0 for not use myapps" >> "/etc/pardus/pardus-software.conf"
+	echo "server = https://apps.pardus.org.tr" >> "/etc/pardus/pardus-software.conf"
+	echo "repo = 1" >> "/etc/pardus/pardus-software.conf"
+	echo "myapps = 1" >> "/etc/pardus/pardus-software.conf"
 fi
 
 exit 0

@@ -755,31 +755,34 @@ class MainWindow(object):
                 print(str(e))
 
         if "remove" in self.Application.args.keys():
-            app = self.Application.args["remove"]
-            if not app.endswith(".desktop"):
-                app = "{}.desktop".format(app)
+            if self.myapps_perm == 1:
+                app = self.Application.args["remove"]
+                if not app.endswith(".desktop"):
+                    app = "{}.desktop".format(app)
 
-            valid, dic = self.Package.parse_desktopfile(app)
-            self.homestack.set_visible_child_name("myapps")
-            self.topbutton1.get_style_context().remove_class("suggested-action")
-            self.topbutton2.get_style_context().remove_class("suggested-action")
-            self.queuebutton.get_style_context().remove_class("suggested-action")
-            self.topsearchbutton.set_sensitive(True)
-            self.searchstack.set_visible_child_name("myapps")
-            if valid:
-                self.myappsstack.set_visible_child_name("details")
-                self.myappsdetailsstack.set_visible_child_name("spinner")
-                self.ui_myapps_spinner.start()
-                myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(dic,), daemon=True)
-                myappsdetailsthread.start()
-            else:
-                self.myappsstack.set_visible_child_name("notfound")
-                if dic is None:
-                    self.ui_myapps_notfoundname_box.set_visible(False)
+                valid, dic = self.Package.parse_desktopfile(app)
+                self.homestack.set_visible_child_name("myapps")
+                self.topbutton1.get_style_context().remove_class("suggested-action")
+                self.topbutton2.get_style_context().remove_class("suggested-action")
+                self.queuebutton.get_style_context().remove_class("suggested-action")
+                self.topsearchbutton.set_sensitive(True)
+                self.searchstack.set_visible_child_name("myapps")
+                if valid:
+                    self.myappsstack.set_visible_child_name("details")
+                    self.myappsdetailsstack.set_visible_child_name("spinner")
+                    self.ui_myapps_spinner.start()
+                    myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(dic,), daemon=True)
+                    myappsdetailsthread.start()
                 else:
-                    self.ui_myapps_notfoundname_box.set_visible(True)
-                    self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(dic["icon"], size=64))
-                    self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(dic["name"]))
+                    self.myappsstack.set_visible_child_name("notfound")
+                    if dic is None:
+                        self.ui_myapps_notfoundname_box.set_visible(False)
+                    else:
+                        self.ui_myapps_notfoundname_box.set_visible(True)
+                        self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(dic["icon"], size=64))
+                        self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(dic["name"]))
+            else:
+                print("myapps permission is 0 so you can not use remove arg")
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
@@ -788,7 +791,10 @@ class MainWindow(object):
                 self.homestack.set_visible_child_name("pardushome")
                 GLib.idle_add(self.topsearchbutton.set_sensitive, True)
                 GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
-                GLib.idle_add(self.menu_myapps.set_sensitive, True)
+                if self.myapps_perm == 1:
+                    GLib.idle_add(self.menu_myapps.set_sensitive, True)
+                else:
+                    GLib.idle_add(self.menu_myapps.set_sensitive, False)
                 GLib.idle_add(self.menu_statistics.set_sensitive, True)
             else:
                 self.homestack.set_visible_child_name("fixapt")
@@ -797,10 +803,14 @@ class MainWindow(object):
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
-                "<b>{}\n\n{}</b>".format(_("Could not connect to server."), self.Server.error_message))
+                "<b>{}\n\n{}\n\n{}: {}</b>".format(_("Could not connect to server."), self.Server.error_message,
+                                                 _("Server address"), self.Server.serverurl))
             GLib.idle_add(self.topsearchbutton.set_sensitive, False)
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
-            GLib.idle_add(self.menu_myapps.set_sensitive, True)
+            if self.myapps_perm == 1:
+                GLib.idle_add(self.menu_myapps.set_sensitive, True)
+            else:
+                GLib.idle_add(self.menu_myapps.set_sensitive, False)
             GLib.idle_add(self.menu_statistics.set_sensitive, False)
 
         self.splashspinner.stop()
@@ -808,7 +818,10 @@ class MainWindow(object):
 
         GLib.idle_add(self.HeaderBarMenuButton.set_sensitive, True)
         GLib.idle_add(self.topbutton1.set_sensitive, True)
-        GLib.idle_add(self.topbutton2.set_sensitive, True)
+        if self.repo_perm == 1:
+            GLib.idle_add(self.topbutton2.set_sensitive, True)
+        else:
+            GLib.idle_add(self.topbutton2.set_sensitive, False)
 
         if self.Server.connection and self.isbroken:
             GLib.idle_add(self.topbutton1.set_sensitive, False)
@@ -986,42 +999,48 @@ class MainWindow(object):
         #         installtext = "Install"
         #     self.RepoAppListStore.append([appname, category, 0, installstatus, installtext, self.Package.summary(appname)])
 
-        if not self.repoappsinit:
-            renderer_toggle = Gtk.CellRendererToggle()
-            renderer_toggle.connect("toggled", self.on_cell_toggled)
-            column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=3)
-            column_toggle.set_resizable(True)
-            column_toggle.set_sort_column_id(3)
-            self.RepoAppsTreeView.append_column(column_toggle)
+        if self.repo_perm == 1:
 
-            renderer = Gtk.CellRendererText()
-            column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=0)
-            column_name.set_resizable(True)
-            column_name.set_sort_column_id(0)
-            self.RepoAppsTreeView.append_column(column_name)
+            if not self.repoappsinit:
+                renderer_toggle = Gtk.CellRendererToggle()
+                renderer_toggle.connect("toggled", self.on_cell_toggled)
+                column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=3)
+                column_toggle.set_resizable(True)
+                column_toggle.set_sort_column_id(3)
+                self.RepoAppsTreeView.append_column(column_toggle)
 
-            renderer = Gtk.CellRendererText()
-            column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=1)
-            column_cat.set_resizable(True)
-            column_cat.set_sort_column_id(1)
-            self.RepoAppsTreeView.append_column(column_cat)
+                renderer = Gtk.CellRendererText()
+                column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=0)
+                column_name.set_resizable(True)
+                column_name.set_sort_column_id(0)
+                self.RepoAppsTreeView.append_column(column_name)
 
-            # renderer_btn = CellRendererButton()
-            # renderer_btn.connect("clicked", self.on_cell_clicked)
-            # column_btn = Gtk.TreeViewColumn("Action", renderer_btn, text=4)
-            # column_btn.set_resizable(True)
-            # column_btn.set_sort_column_id(4)
-            # self.RepoAppsTreeView.append_column(column_btn)
+                renderer = Gtk.CellRendererText()
+                column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=1)
+                column_cat.set_resizable(True)
+                column_cat.set_sort_column_id(1)
+                self.RepoAppsTreeView.append_column(column_cat)
 
-            renderer = Gtk.CellRendererText()
-            column_desc = Gtk.TreeViewColumn(_("Description"), renderer, text=5)
-            column_desc.set_resizable(True)
-            column_desc.set_sort_column_id(5)
-            self.RepoAppsTreeView.append_column(column_desc)
+                # renderer_btn = CellRendererButton()
+                # renderer_btn.connect("clicked", self.on_cell_clicked)
+                # column_btn = Gtk.TreeViewColumn("Action", renderer_btn, text=4)
+                # column_btn.set_resizable(True)
+                # column_btn.set_sort_column_id(4)
+                # self.RepoAppsTreeView.append_column(column_btn)
 
-            self.RepoAppsTreeView.show_all()
+                renderer = Gtk.CellRendererText()
+                column_desc = Gtk.TreeViewColumn(_("Description"), renderer, text=5)
+                column_desc.set_resizable(True)
+                column_desc.set_sort_column_id(5)
+                self.RepoAppsTreeView.append_column(column_desc)
 
-            self.repoappsinit = True
+                self.RepoAppsTreeView.show_all()
+
+                self.repoappsinit = True
+
+        elif self.repo_perm == 0:
+            print("repo_perm is 0 so repo apps not setting")
+            self.topbutton2.set_sensitive(False)
 
         # if self.useDynamicListStore:
         #
@@ -1054,13 +1073,51 @@ class MainWindow(object):
         # self.splashlabel.set_markup()
         self.Server = Server()
 
-        # set server url from config
+        conffile = "/etc/pardus/pardus-software.conf"
+        self.repo_perm = 1
+        self.myapps_perm = 1
         try:
-            self.Server.serverurl = open("/etc/pardus/pardus-software.conf", "r").read().strip()
+            conf = open(os.path.join(conffile), "r").read()
+            # strip all whitespaces to get more accurate results
+            conf = conf.replace(" ", "")
+
+            for line in conf.splitlines():
+                if not line.startswith("#"):
+                    if line.startswith("server="):
+                        self.Server.serverurl = line.split("server=")[1]
+                    if line.startswith("repo="):
+                        self.repo_perm = line.split("repo=")[1]
+                    if line.startswith("myapps="):
+                        self.myapps_perm = line.split("myapps=")[1]
         except Exception as e:
-            print("Error getting server url from conf so setting to https://apps.pardus.org.tr")
             print("{}".format(e))
-            self.Server.serverurl = "https://apps.pardus.org.tr"
+
+        if not self.Server.serverurl:
+            try:
+                self.Server.serverurl = open(conffile, "r").read().strip()
+                print("{}".format("server url getted from old type one line config"))
+            except Exception as e:
+                print("Error getting server url from conf so setting to https://apps.pardus.org.tr")
+                print("{}".format(e))
+                self.Server.serverurl = "https://apps.pardus.org.tr"
+        else:
+            print("{}".format("server url getted from new type config"))
+
+        try:
+            self.repo_perm = int(self.repo_perm)
+        except:
+            print("repo key's value must be int. 1 or 0. So setting to default value 1")
+            self.repo_perm = 1
+
+        try:
+            self.myapps_perm = int(self.myapps_perm)
+        except:
+            print("myapps_perm key's value must be int. 1 or 0. So setting to default value 1")
+            self.myapps_perm = 1
+
+        print("server url: {}".format(self.Server.serverurl))
+        print("repo permission: {}".format(self.repo_perm))
+        print("myapps permission: {}".format(self.myapps_perm))
 
         self.Server.ServerAppsCB = self.ServerAppsCB
         self.Server.ServerIconsCB = self.ServerIconsCB
@@ -3853,33 +3910,36 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(False)
 
     def on_topbutton2_clicked(self, button):
-        if button is not None:
-            self.menubackbutton.set_sensitive(True)
+        if self.repo_perm == 1:
+            if button is not None:
+                self.menubackbutton.set_sensitive(True)
+            else:
+                self.menubackbutton.set_sensitive(False)
+            self.prefback = self.homestack.get_visible_child_name()
+
+            self.homestack.set_visible_child_name("repohome")
+            self.set_stack_n_search(2)
+
+            # control for active actioned app
+
+            if self.repoappclicked:
+                self.RepoAppsTreeView.row_activated(self.activerepopath, self.RepoAppsTreeView.get_column(0))
+
+                # Updating status tick of repo apps
+                try:
+                    for row in self.searchstore:
+                        installstatus = self.Package.isinstalled(row[0])
+                        row[3] = installstatus
+                except:
+                    pass
+
+            self.statusoftopsearch = self.topsearchbutton.get_active()
+            self.topsearchbutton.set_active(True)
+            self.reposearchbar.grab_focus()
+
+            self.topsearchbutton.set_sensitive(True)
         else:
-            self.menubackbutton.set_sensitive(False)
-        self.prefback = self.homestack.get_visible_child_name()
-
-        self.homestack.set_visible_child_name("repohome")
-        self.set_stack_n_search(2)
-
-        # control for active actioned app
-
-        if self.repoappclicked:
-            self.RepoAppsTreeView.row_activated(self.activerepopath, self.RepoAppsTreeView.get_column(0))
-
-            # Updating status tick of repo apps
-            try:
-                for row in self.searchstore:
-                    installstatus = self.Package.isinstalled(row[0])
-                    row[3] = installstatus
-            except:
-                pass
-
-        self.statusoftopsearch = self.topsearchbutton.get_active()
-        self.topsearchbutton.set_active(True)
-        self.reposearchbar.grab_focus()
-
-        self.topsearchbutton.set_sensitive(True)
+            print("repo perm is 0 so you can not use repo button")
 
     def on_queuebutton_clicked(self, button):
         self.menubackbutton.set_sensitive(True)
@@ -5642,9 +5702,15 @@ class MainWindow(object):
                 self.isbroken = False
                 self.Package.getApps()
                 GLib.idle_add(self.topsearchbutton.set_sensitive, True)
-                GLib.idle_add(self.menu_myapps.set_sensitive, True)
+                if self.myapps_perm == 1:
+                    GLib.idle_add(self.menu_myapps.set_sensitive, True)
+                else:
+                    GLib.idle_add(self.menu_myapps.set_sensitive, False)
                 GLib.idle_add(self.topbutton1.set_sensitive, True)
-                GLib.idle_add(self.topbutton2.set_sensitive, True)
+                if self.repo_perm == 1:
+                    GLib.idle_add(self.topbutton2.set_sensitive, True)
+                else:
+                    GLib.idle_add(self.topbutton2.set_sensitive, False)
             else:
                 self.tryfixstack.set_visible_child_name("error")
                 self.isbroken = True
