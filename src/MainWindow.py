@@ -1882,6 +1882,12 @@ class MainWindow(object):
             self.prefstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.prefstack.set_transition_duration(200)
 
+            self.myappsstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.myappsstack.set_transition_duration(200)
+
+            self.myappsdetailsstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+            self.myappsdetailsstack.set_transition_duration(200)
+
             self.ImagePopoverStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.ImagePopoverStack.set_transition_duration(200)
 
@@ -1942,6 +1948,12 @@ class MainWindow(object):
 
             self.prefstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.prefstack.set_transition_duration(0)
+
+            self.myappsstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.myappsstack.set_transition_duration(0)
+
+            self.myappsdetailsstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.myappsdetailsstack.set_transition_duration(0)
 
             self.ImagePopoverStack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.ImagePopoverStack.set_transition_duration(0)
