@@ -1,0 +1,5 @@
+#!/bin/bash
+
+delgroup --system pardus-software || true
+
+exit 0

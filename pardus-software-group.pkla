@@ -1,0 +1,6 @@
+[Pardus Software]
+Identity=unix-group:pardus-software
+Action=tr.org.pardus.pkexec.pardus-software*
+ResultAny=yes
+ResultInactive=yes
+ResultActive=yes

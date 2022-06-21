@@ -14,4 +14,6 @@ if ! [[ -f "/etc/pardus/pardus-software.conf" ]]; then
 	echo "myapps = 1" >> "/etc/pardus/pardus-software.conf"
 fi
 
+getent group pardus-software &> /dev/null || addgroup --system pardus-software || true
+
 exit 0
