@@ -13,7 +13,7 @@ import threading
 import netifaces
 import psutil
 from datetime import datetime
-import gi, sys
+import gi, sys, grp
 import locale
 from locale import gettext as _
 from locale import getlocale
@@ -362,6 +362,7 @@ class MainWindow(object):
         self.tip_aptu = self.GtkBuilder.get_object("tip_aptu")
         self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
         self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
+        self.passwordlessbutton = self.GtkBuilder.get_object("passwordlessbutton")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
 
@@ -4353,7 +4354,17 @@ class MainWindow(object):
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
 
+        self.control_groups()
+
         self.setSelectIcons()
+
+    def control_groups(self):
+        self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.username in g.gr_mem]
+        if "pardus-software" in self.usergroups:
+            self.passwordlessbutton.set_label(_("Deactivate"))
+        else:
+            self.passwordlessbutton.set_label(_("Activate"))
+        self.passwordlessbutton.set_sensitive(True)
 
     def setSelectIcons(self):
         if self.UserSettings.config_usi:
@@ -5004,6 +5015,17 @@ class MainWindow(object):
         self.startSysProcess(command)
         self.prefstack.set_visible_child_name("main")
         self.correctsourcesclicked = True
+
+    def on_passwordlessbutton_clicked(self, button):
+        self.passwordlessbutton.set_sensitive(False)
+        self.preflabel.set_text("")
+        if "pardus-software" in self.usergroups:
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "del",
+                       self.UserSettings.username]
+        else:
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
+                       self.UserSettings.username]
+        self.startGroupProcess(command)
 
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
@@ -5671,6 +5693,35 @@ class MainWindow(object):
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc,
                                           self.UserSettings.config_udt, self.UserSettings.config_aptup,
                                           timestamp, self.UserSettings.config_forceaptuptime)
+
+    def startGroupProcess(self, params):
+        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                                                      standard_output=True, standard_error=True)
+        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStdout)
+        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStderr)
+        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onGroupProcessExit)
+
+        return pid
+
+    def onGroupProcessStdout(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+        line = source.readline()
+        print("onGroupProcessStdout - line: {}".format(line))
+        self.preflabel.set_markup("<small><span weight='light'>{}</span></small>".format(line))
+        return True
+
+    def onGroupProcessStderr(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+        line = source.readline()
+        print("onGroupProcessStderr - line: {}".format(line))
+        self.preflabel.set_markup("<small><span color='red' weight='light'>{}</span></small>".format(line))
+        return True
+
+    def onGroupProcessExit(self, pid, status):
+        print("onGroupProcessExit - status: {}".format(status))
+        self.control_groups()
 
     def on_tryfixButton_clicked(self, button):
         self.tryfixstack.set_visible_child_name("info")

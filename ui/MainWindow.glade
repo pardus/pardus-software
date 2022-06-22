@@ -5330,7 +5330,7 @@ This application served from Pardus non-free package repositories, so that the O
                       <object class="GtkBox" id="PreferencesBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="margin-top">34</property>
+                        <property name="margin-top">21</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">21</property>
                         <child>
@@ -5846,7 +5846,7 @@ This application served from Pardus non-free package repositories, so that the O
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="position">1</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -5857,48 +5857,7 @@ This application served from Pardus non-free package repositories, so that the O
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="margin-bottom">13</property>
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">13</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="preflabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="wrap">True</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="prefServerLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="pack-type">end</property>
-                            <property name="position">3</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
@@ -5967,6 +5926,7 @@ This application served from Pardus non-free package repositories, so that the O
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">end</property>
+                                        <property name="hexpand">True</property>
                                         <property name="label" translatable="yes">Fix Package Manager Sources List</property>
                                       </object>
                                       <packing>
@@ -6000,7 +5960,47 @@ This application served from Pardus non-free package repositories, so that the O
                                   </packing>
                                 </child>
                                 <child>
-                                  <placeholder/>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="spacing">13</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">end</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="label" translatable="yes">Passwordless Application Usage</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="passwordlessbutton">
+                                        <property name="label">Enable</property>
+                                        <property name="width-request">125</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                        <property name="halign">center</property>
+                                        <property name="valign">center</property>
+                                        <signal name="clicked" handler="on_passwordlessbutton_clicked" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>
@@ -6085,7 +6085,33 @@ This application served from Pardus non-free package repositories, so that the O
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="preflabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
                             <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="prefServerLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="valign">end</property>
+                            <property name="margin-bottom">13</property>
+                            <property name="vexpand">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">4</property>
                           </packing>
                         </child>
                       </object>

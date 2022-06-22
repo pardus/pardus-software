@@ -33,6 +33,10 @@ class UserSettings(object):
             self.userdistro = ""
 
         userhome = str(Path.home())
+        try:
+            self.username = userhome.split("/")[-1]
+        except:
+            self.username = ""
         self.configdir = userhome + "/.config/pardus-software/"
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser(strict=False)
