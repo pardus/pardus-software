@@ -25,6 +25,7 @@ def main():
             cache.update()
         except Exception as e:
             print(str(e))
+            subupdate()
 
     def subupdate():
         subprocess.call(["apt", "update"],
@@ -36,6 +37,10 @@ def main():
 
     def dpkgconfigure():
         subprocess.call(["dpkg", "--configure", "-a"],
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
+    def aptclean():
+        subprocess.call(["apt", "clean"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def externalrepo(key, sources, name):
@@ -120,6 +125,7 @@ def main():
             sfile.write(source)
             sfile.flush()
             sfile.close()
+            aptclean()
 
     if len(sys.argv) > 1:
         if sys.argv[1] == "externalrepo":
