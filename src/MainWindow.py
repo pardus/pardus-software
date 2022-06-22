@@ -535,6 +535,7 @@ class MainWindow(object):
         self.statusoftopsearch = self.topsearchbutton.get_active()
 
         self.errormessage = ""
+        self.grouperrormessage = ""
 
         self.updateclicked = False
         self.aptupdateclicked = False
@@ -5040,6 +5041,7 @@ class MainWindow(object):
     def on_passwordlessbutton_clicked(self, button):
         self.passwordlessbutton.set_sensitive(False)
         self.preflabel_settext("")
+        self.grouperrormessage = ""
         if "pardus-software" in self.usergroups:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "del",
                        self.UserSettings.username]
@@ -5738,12 +5740,16 @@ class MainWindow(object):
             return False
         line = source.readline()
         print("onGroupProcessStderr - line: {}".format(line))
-        self.preflabel_settext("<small><span color='red' weight='light'>{}</span></small>".format(line))
+        self.grouperrormessage = line
         return True
 
     def onGroupProcessExit(self, pid, status):
         print("onGroupProcessExit - status: {}".format(status))
         self.control_groups()
+        if status == 32256: # operation cancelled | Request dismissed
+            self.preflabel_settext("")
+        else:
+            self.preflabel_settext("<small><span color='red' weight='light'>{}</span></small>".format(self.grouperrormessage))
 
     def on_tryfixButton_clicked(self, button):
         self.tryfixstack.set_visible_child_name("info")
