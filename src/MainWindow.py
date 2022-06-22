@@ -350,6 +350,7 @@ class MainWindow(object):
         self.preflabel = self.GtkBuilder.get_object("preflabel")
         self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
+        self.prefupdatebutton = self.GtkBuilder.get_object("prefupdatebutton")
         self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
         self.prefTipLabel = self.GtkBuilder.get_object("prefTipLabel")
         self.tip_usi = self.GtkBuilder.get_object("tip_usi")
@@ -4350,21 +4351,30 @@ class MainWindow(object):
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.queuebutton.get_style_context().remove_class("suggested-action")
-        self.preflabel.set_text("")
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
+        self.preflabel_settext("")
 
         self.control_groups()
 
         self.setSelectIcons()
 
     def control_groups(self):
-        self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.username in g.gr_mem]
-        if "pardus-software" in self.usergroups:
-            self.passwordlessbutton.set_label(_("Deactivate"))
+        try:
+            self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.username in g.gr_mem]
+        except Exception as e:
+            print("control_groups: {}".format(e))
+            self.usergroups = []
+
+        if self.usergroups:
+            self.passwordlessbutton.set_visible(True)
+            if "pardus-software" in self.usergroups:
+                self.passwordlessbutton.set_label(_("Deactivate"))
+            else:
+                self.passwordlessbutton.set_label(_("Activate"))
+            self.passwordlessbutton.set_sensitive(True)
         else:
-            self.passwordlessbutton.set_label(_("Activate"))
-        self.passwordlessbutton.set_sensitive(True)
+            self.passwordlessbutton.set_visible(False)
 
     def setSelectIcons(self):
         if self.UserSettings.config_usi:
@@ -4825,7 +4835,7 @@ class MainWindow(object):
                     self.setMostApps()
                     self.setSelectIcons()
             except Exception as e:
-                self.preflabel.set_text(str(e))
+                self.preflabel_settext("{}".format(e))
                 print(e)
 
     def on_switchEA_state_set(self, switch, state):
@@ -4841,7 +4851,7 @@ class MainWindow(object):
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
-                self.preflabel.set_text(str(e))
+                self.preflabel_settext("{}".format(e))
 
     def on_switchSAA_state_set(self, switch, state):
         user_config_saa = self.UserSettings.config_saa
@@ -4856,7 +4866,7 @@ class MainWindow(object):
                 self.usersettings()
                 self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
             except Exception as e:
-                self.preflabel.set_text(str(e))
+                self.preflabel_settext("{}".format(e))
 
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
@@ -4877,7 +4887,7 @@ class MainWindow(object):
                 self.usersettings()
                 self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
             except Exception as e:
-                self.preflabel.set_text(str(e))
+                self.preflabel_settext("{}".format(e))
 
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
@@ -4996,11 +5006,11 @@ class MainWindow(object):
         if state:
             self.prefcachebutton.set_sensitive(False)
             self.prefcachebutton.set_label(_("Cleared"))
-            self.preflabel.set_text(_("Cache files cleared, please close and reopen the application"))
+            self.preflabel_settext(_("Cache files cleared, please close and reopen the application"))
         else:
             self.prefcachebutton.set_sensitive(True)
             self.prefcachebutton.set_label(_("Error"))
-            self.preflabel.set_text(message)
+            self.preflabel_settext("{}".format(message))
 
     def on_prefcorrectbutton_clicked(self, button):
         self.prefstack.set_visible_child_name("confirm")
@@ -5016,9 +5026,20 @@ class MainWindow(object):
         self.prefstack.set_visible_child_name("main")
         self.correctsourcesclicked = True
 
+    def on_prefupdatebutton_clicked(self, button):
+        self.homestack.set_visible_child_name("updates")
+        self.on_updatecontrolbutton_clicked(self.updatecontrolbutton)
+
+    def preflabel_settext(self, text, updatebutton=False):
+        self.preflabel.set_markup(text)
+        if updatebutton:
+            self.prefupdatebutton.set_visible(True)
+        else:
+            self.prefupdatebutton.set_visible(False)
+
     def on_passwordlessbutton_clicked(self, button):
         self.passwordlessbutton.set_sensitive(False)
-        self.preflabel.set_text("")
+        self.preflabel_settext("")
         if "pardus-software" in self.usergroups:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "del",
                        self.UserSettings.username]
@@ -5624,10 +5645,11 @@ class MainWindow(object):
             self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop, self.actionedenablingappcommand)
 
         if self.correctsourcesclicked and status == 0:
-            self.preflabel.set_markup("{}\n{}\n<span weight='bold'>{}</span>".format(
+            self.preflabel_settext("<span weight='bold'>{}\n{}</span>".format(
                 _("Fixing of system package manager sources list is done."),
-                _("You can now update package manager cache."),
-                _("Pardus Software Center > Menu > Updates > Update Package Cache")))
+                _("You can now update package manager cache.")), updatebutton=True)
+            self.Package.updatecache()
+            self.prefupdatebutton.set_visible(True)
 
         self.correctsourcesclicked = False
 
@@ -5708,7 +5730,7 @@ class MainWindow(object):
             return False
         line = source.readline()
         print("onGroupProcessStdout - line: {}".format(line))
-        self.preflabel.set_markup("<small><span weight='light'>{}</span></small>".format(line))
+        # self.preflabel_settext("<small><span weight='light'>{}</span></small>".format(line))
         return True
 
     def onGroupProcessStderr(self, source, condition):
@@ -5716,7 +5738,7 @@ class MainWindow(object):
             return False
         line = source.readline()
         print("onGroupProcessStderr - line: {}".format(line))
-        self.preflabel.set_markup("<small><span color='red' weight='light'>{}</span></small>".format(line))
+        self.preflabel_settext("<small><span color='red' weight='light'>{}</span></small>".format(line))
         return True
 
     def onGroupProcessExit(self, pid, status):
