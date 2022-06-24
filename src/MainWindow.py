@@ -421,6 +421,10 @@ class MainWindow(object):
         self.SuggestScroll = self.GtkBuilder.get_object("SuggestScroll")
         self.PardusAppDetailScroll = self.GtkBuilder.get_object("PardusAppDetailScroll")
 
+        self.PardusCommentScroll = self.GtkBuilder.get_object("PardusCommentScroll")
+        self.GnomeTRCommentScroll = self.GtkBuilder.get_object("GnomeTRCommentScroll")
+        self.GnomeENCommentScroll = self.GtkBuilder.get_object("GnomeENCommentScroll")
+
         self.statstack = self.GtkBuilder.get_object("statstack")
         self.stats1ViewPort = self.GtkBuilder.get_object("stats1ViewPort")
         self.stats2ViewPort = self.GtkBuilder.get_object("stats2ViewPort")
@@ -2164,6 +2168,9 @@ class MainWindow(object):
 
         # set scroll position to top (reset)
         self.PardusAppDetailScroll.set_vadjustment(Gtk.Adjustment())
+        self.PardusCommentScroll.set_vadjustment(Gtk.Adjustment())
+        self.GnomeTRCommentScroll.set_vadjustment(Gtk.Adjustment())
+        self.GnomeENCommentScroll.set_vadjustment(Gtk.Adjustment())
 
         # clear gnome comments
         self.gcMoreButtonTR.set_visible(False)

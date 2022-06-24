@@ -4625,7 +4625,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="can-focus">True</property>
                                                 <property name="margin-top">13</property>
                                                 <child>
-                                                  <object class="GtkScrolledWindow">
+                                                  <object class="GtkScrolledWindow" id="PardusCommentScroll">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="shadow-type">in</property>
@@ -4725,7 +4725,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                         <property name="can-focus">False</property>
                                                         <property name="transition-type">slide-left-right</property>
                                                         <child>
-                                                          <object class="GtkScrolledWindow">
+                                                          <object class="GtkScrolledWindow" id="GnomeTRCommentScroll">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="shadow-type">in</property>
@@ -4781,7 +4781,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkScrolledWindow">
+                                                          <object class="GtkScrolledWindow" id="GnomeENCommentScroll">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="shadow-type">in</property>
