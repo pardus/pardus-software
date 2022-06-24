@@ -2266,6 +2266,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="label" translatable="yes">Try Update Package Cache</property>
+                                                <property name="justify">center</property>
                                                 <property name="wrap">True</property>
                                               </object>
                                             </child>
