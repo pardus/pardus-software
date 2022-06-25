@@ -3388,7 +3388,7 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
-            self.wpcStarLabel.set_markup(_("How many stars would you give this app ?"))
+            self.wpcStarLabel.set_markup(_("How many stars would you give this app?"))
         elif rate == 1:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
             self.wpcStar2.set_from_pixbuf(self.wpcstaroff)
@@ -4111,7 +4111,7 @@ class MainWindow(object):
             self.ui_myapps_disclaimer_label.set_markup("<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
                 _("The following important packages will also be removed."),
                 ", ".join(importants),
-            _("Are you sure you accept this ?")))
+            _("Are you sure you accept this?")))
         else:
             print("not important package")
             self.ui_myapps_uninstall()

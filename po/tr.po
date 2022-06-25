@@ -293,7 +293,7 @@ msgstr "Gnome Yorumları"
 
 #: ui/MainWindow.glade:4882 src/MainWindow.py:3384
 msgid "How many stars would you give this app ?"
-msgstr "Bu uygulamaya kaç yıldız verirsiniz ?"
+msgstr "Bu uygulamaya kaç yıldız verirsiniz?"
 
 #: ui/MainWindow.glade:5006
 msgid "Your Name :"
@@ -492,7 +492,7 @@ msgstr "E-Posta adresiniz"
 
 #: ui/MainWindow.glade:7134
 msgid "Is the application available in Pardus repositories ?"
-msgstr "Uygulama Pardus depolarında mevcut mu ?"
+msgstr "Uygulama Pardus depolarında mevcut mu?"
 
 #: ui/MainWindow.glade:7230
 msgid "Your application suggestion has been successfully submitted. "
@@ -528,7 +528,7 @@ msgstr ""
 "\"apt install --fix-broken\" komutunu çalıştıracak,\n"
 "\"dpkg --configure -a\" komutunu çalıştıracak.\n"
 "\n"
-"Dikkatle kullanın. Devam etmek istediğinize emin misiniz ? "
+"Dikkatle kullanın. Devam etmek istediğinize emin misiniz? "
 
 #: ui/MainWindow.glade:7433
 msgid "Operation completed."
@@ -920,7 +920,7 @@ msgstr "Aşağıdaki önemli paketler de kaldırılacak."
 
 #: src/MainWindow.py:4107
 msgid "Are you sure you accept this ?"
-msgstr "Bunu kabul ettiğinize emin misiniz ?"
+msgstr "Bunu kabul ettiğinize emin misiniz?"
 
 #: src/MainWindow.py:4182 src/MainWindow.py:5150 src/MainWindow.py:5171
 #: src/MainWindow.py:5192
