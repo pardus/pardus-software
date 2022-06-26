@@ -2400,7 +2400,7 @@ This application served from Pardus non-free package repositories, so that the O
                                   <object class="GtkLabel">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Are you sure you want to activate this repository ?</property>
+                                    <property name="label" translatable="yes">Are you sure you want to activate this repository?</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -4880,7 +4880,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                           <object class="GtkLabel" id="wpcStarLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">How many stars would you give this app ?</property>
+                                                            <property name="label" translatable="yes">How many stars would you give this app?</property>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -7132,7 +7132,7 @@ This application served from Pardus non-free package repositories, so that the O
                                             <property name="spacing">8</property>
                                             <child>
                                               <object class="GtkCheckButton" id="SuggestInRepo">
-                                                <property name="label" translatable="yes">Is the application available in Pardus repositories ?</property>
+                                                <property name="label" translatable="yes">Is the application available in Pardus repositories?</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">True</property>
                                                 <property name="receives-default">False</property>
@@ -7348,7 +7348,7 @@ will run "apt update" command,
 will run "apt install --fix-broken" command,
 will run "dpkg --configure -a".
 
-Use with caution. Are you sure you want to continue ?</property>
+Use with caution. Are you sure you want to continue?</property>
                                     <property name="justify">center</property>
                                   </object>
                                   <packing>
