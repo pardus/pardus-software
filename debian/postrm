@@ -2,4 +2,8 @@
 
 delgroup --system pardus-software || true
 
+if [[ -f "/etc/pardus/pardus-software.conf" ]]; then
+	rm -fr /etc/pardus/pardus-software.conf
+fi
+
 exit 0

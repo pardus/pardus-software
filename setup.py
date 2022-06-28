@@ -48,7 +48,8 @@ data_files = [
       "src/UserSettings.py", "src/__version__"]),
     ("/usr/share/icons/hicolor/scalable/apps/", ["images/pardus-software.svg"]),
     ("/usr/share/mime/packages/", ["pardus-software.xml"]),
-    ("/var/lib/polkit-1/localauthority/50-local.d/", ["pardus-software-group.pkla"])
+    ("/var/lib/polkit-1/localauthority/50-local.d/", ["pardus-software-group.pkla"]),
+    ("/etc/pardus/", ["pardus-software.conf"])
 ] + create_mo_files()
 
 setup(
