@@ -727,14 +727,14 @@ class MainWindow(object):
                             app == apps["gnomename"].split(".desktop")[0] or \
                             any(app == e for e in apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
                         found = True
+                        # self.set_stack_n_search(1)
+                        self.topsearchbutton.set_active(False)
                         app = apps["name"]  # if the name is coming from desktop then set it to app name
                         self.fromdetails = True
                         self.detailsappname = app
                         self.mostappname = None
                         self.fromqueue = False
                         GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
-                        self.set_stack_n_search(1)
-                        self.topsearchbutton.set_active(False)
             except Exception as e:
                 print(str(e))
             try:
@@ -2295,7 +2295,7 @@ class MainWindow(object):
                         self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
                 return False
 
-            self.homestack.set_visible_child_name("pardusappsdetail")
+            GLib.idle_add(self.homestack.set_visible_child_name, "pardusappsdetail")
 
             if self.gnomename != "" and self.gnomename is not None:
                 try:
