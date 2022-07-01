@@ -769,27 +769,8 @@ class MainWindow(object):
                 if not app.endswith(".desktop"):
                     app = "{}.desktop".format(app)
 
-                valid, dic = self.Package.parse_desktopfile(app)
-                self.homestack.set_visible_child_name("myapps")
-                self.topbutton1.get_style_context().remove_class("suggested-action")
-                self.topbutton2.get_style_context().remove_class("suggested-action")
-                self.queuebutton.get_style_context().remove_class("suggested-action")
-                self.topsearchbutton.set_sensitive(True)
-                self.searchstack.set_visible_child_name("myapps")
-                if valid:
-                    self.myappsstack.set_visible_child_name("details")
-                    self.myappsdetailsstack.set_visible_child_name("spinner")
-                    self.ui_myapps_spinner.start()
-                    myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(dic,), daemon=True)
-                    myappsdetailsthread.start()
-                else:
-                    self.myappsstack.set_visible_child_name("notfound")
-                    if dic is None:
-                        self.ui_myapps_notfoundname_box.set_visible(False)
-                    else:
-                        self.ui_myapps_notfoundname_box.set_visible(True)
-                        self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(dic["icon"], size=64))
-                        self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(dic["name"]))
+                self.open_myapps_detailspage_from_desktopfile(app)
+
             else:
                 print("myapps permission is 0 so you can not use remove arg")
 
@@ -4167,14 +4148,61 @@ class MainWindow(object):
     def myappspackage_worker_done(self, status, package, desktopfilename):
         if status:
             print(package)
-            if any(package == e["name"] for e in self.fullapplist):
+            name = any(package == e["name"] for e in self.fullapplist)
+            if name:
                 self.frommyapps = True
+                self.frommostapps = False
+                self.fromqueue = False
+                self.fromeditorapps = False
                 self.myappname = package
                 self.on_PardusAppsIconView_selection_changed(package)
             else:
-                print("{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(desktopfilename, package))
+                command = any(package in e["command"][self.locale] for e in self.fullapplist if e["command"])
+                if command:
+                    appname = None
+                    for app in self.fullapplist:
+                        if app["command"]:
+                            if package in app["command"][self.locale]:
+                                appname = app["name"]
+                                break
+                    if appname:
+                        self.frommyapps = True
+                        self.frommostapps = False
+                        self.fromqueue = False
+                        self.fromeditorapps = False
+                        self.myappname = appname
+                        self.on_PardusAppsIconView_selection_changed(appname)
+                    else:
+                        self.open_myapps_detailspage_from_desktopfile(desktopfilename)
+                else:
+                    print("{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(desktopfilename, package))
+                    self.open_myapps_detailspage_from_desktopfile(desktopfilename)
+
         else:
             print("{} not found on_MyAppsListBox_row_activated".format(desktopfilename))
+
+    def open_myapps_detailspage_from_desktopfile(self, desktopfilename):
+        valid, dic = self.Package.parse_desktopfile(os.path.basename(desktopfilename))
+        self.homestack.set_visible_child_name("myapps")
+        self.topbutton1.get_style_context().remove_class("suggested-action")
+        self.topbutton2.get_style_context().remove_class("suggested-action")
+        self.queuebutton.get_style_context().remove_class("suggested-action")
+        self.topsearchbutton.set_sensitive(True)
+        self.searchstack.set_visible_child_name("myapps")
+        if valid:
+            self.myappsstack.set_visible_child_name("details")
+            self.myappsdetailsstack.set_visible_child_name("spinner")
+            self.ui_myapps_spinner.start()
+            myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(dic,), daemon=True)
+            myappsdetailsthread.start()
+        else:
+            self.myappsstack.set_visible_child_name("notfound")
+            if dic is None:
+                self.ui_myapps_notfoundname_box.set_visible(False)
+            else:
+                self.ui_myapps_notfoundname_box.set_visible(True)
+                self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(dic["icon"], size=64))
+                self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(dic["name"]))
 
     def on_myapps_searchentry_search_changed(self, entry_search):
         self.homestack.set_visible_child_name("myapps")
