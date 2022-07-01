@@ -7915,6 +7915,7 @@ Use with caution. Are you sure you want to continue?</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="selection-mode">none</property>
+                                        <signal name="row-activated" handler="on_MyAppsListBox_row_activated" swapped="no"/>
                                       </object>
                                     </child>
                                   </object>

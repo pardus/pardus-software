@@ -278,6 +278,26 @@ class Package(object):
             print("Error on myapps_remove_details: {}".format(e))
             return False, None, ""
 
+    def get_appname_from_desktopfile(self, desktopname):
+        try:
+            process = subprocess.run(["dpkg", "-S", desktopname], stdout=subprocess.PIPE)
+            output = process.stdout.decode("utf-8")
+            package = output[:output.find(":")].split(",")[0]
+            if package:
+                return True, package
+            else:
+                # try get package name from basename
+                process = subprocess.run(["dpkg", "-S", os.path.basename(desktopname)], stdout=subprocess.PIPE)
+                output = process.stdout.decode("utf-8")
+                package = output[:output.find(":")].split(",")[0]
+                if package:
+                    return True, package
+                else:
+                    return False, ""
+        except Exception as e:
+            print("Error on get_appname_from_desktopfile: {}".format(e))
+            return False, ""
+
     def beauty_size(self, size):
         # apt uses MB rather than MiB, so let's stay consistent
         if type(size) is int:

@@ -505,6 +505,7 @@ class MainWindow(object):
         self.fromrepoapps = False
         self.fromdetails = False
         self.fromqueue = False
+        self.frommyapps = False
         self.myapps_clicked = False
         self.mda_clicked = False
         self.mra_clicked = False
@@ -519,6 +520,7 @@ class MainWindow(object):
         self.mostappname = None
         self.detailsappname = None
         self.queueappname = None
+        self.myappname = None
 
         self.applist = []
         self.fullapplist = []
@@ -2007,6 +2009,8 @@ class MainWindow(object):
                 self.homestack.set_visible_child_name("pardushome")
                 self.EditorAppsIconView.unselect_all()
                 self.menubackbutton.set_sensitive(False)
+            elif self.frommyapps:
+                self.homestack.set_visible_child_name("myapps")
             else:
                 if self.fromqueue:
                     self.homestack.set_visible_child_name("queue")
@@ -2212,14 +2216,15 @@ class MainWindow(object):
             lensel = len(selected_items)
             self.frommostapps = False
             self.fromqueue = False
+            self.frommyapps = False
         except:
-            if not self.fromqueue:
+            if not self.fromqueue and not self.frommyapps:
                 self.frommostapps = True
             lensel = 1
 
         if lensel == 1:
             if not self.frommostapps:
-                if not self.fromqueue:
+                if not self.fromqueue and not self.frommyapps:
                     if mode == 1:
                         treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
                         self.appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
@@ -3635,6 +3640,7 @@ class MainWindow(object):
         self.mostappname = child.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[
             1].name
         self.fromqueue = False
+        self.frommyapps = False
 
         self.on_PardusAppsIconView_selection_changed(self.mostappname)
 
@@ -4142,6 +4148,33 @@ class MainWindow(object):
         search = self.myapps_searchentry.get_text().lower()
         if search in myapp_name["name"].lower() or search in myapp_name["description"].lower():
             return True
+
+    def on_MyAppsListBox_row_activated(self, list_box, row):
+        desktopfilename = row.get_children()[0].name
+        myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread, args=(desktopfilename,), daemon=True)
+        myappspackagethread.start()
+
+    def myappspackage_worker_thread(self, desktopfilename):
+        status, package = self.myappspackage_worker(desktopfilename)
+        GLib.idle_add(self.myappspackage_worker_done, status, package, desktopfilename)
+
+    def myappspackage_worker(self, desktopfilename):
+
+        status, package = self.Package.get_appname_from_desktopfile(desktopfilename)
+
+        return status, package
+
+    def myappspackage_worker_done(self, status, package, desktopfilename):
+        if status:
+            print(package)
+            if any(package == e["name"] for e in self.fullapplist):
+                self.frommyapps = True
+                self.myappname = package
+                self.on_PardusAppsIconView_selection_changed(package)
+            else:
+                print("{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(desktopfilename, package))
+        else:
+            print("{} not found on_MyAppsListBox_row_activated".format(desktopfilename))
 
     def on_myapps_searchentry_search_changed(self, entry_search):
         self.homestack.set_visible_child_name("myapps")
@@ -5130,6 +5163,8 @@ class MainWindow(object):
                 ui_appname = self.detailsappname
         if self.fromqueue:
             ui_appname = self.queueappname
+        if self.frommyapps:
+            ui_appname = self.myappname
         if self.fromrepoapps:
             ui_appname = self.repoappname
         print("ui_app : {}".format(ui_appname))
@@ -5454,6 +5489,11 @@ class MainWindow(object):
         if self.fromqueue:
             if self.queueappname:
                 if self.queueappname == actionedappname:
+                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+
+        if self.frommyapps:
+            if self.myappname:
+                if self.myappname == actionedappname:
                     self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
         if self.fromrepoapps:
