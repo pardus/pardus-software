@@ -1132,6 +1132,7 @@ class MainWindow(object):
         self.normalpage()
         GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
+        GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.setPardusCategories)
         GLib.idle_add(self.setPardusApps)
         GLib.idle_add(self.setEditorApps)
