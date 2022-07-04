@@ -116,7 +116,7 @@
   <object class="GtkImage" id="editimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">document-edit-symbolic</property>
+    <property name="icon-name">text-editor-symbolic</property>
   </object>
   <object class="GtkImage" id="fullscreen_image">
     <property name="visible">True</property>
@@ -164,6 +164,11 @@
     <property name="icon-name">edit-find-symbolic</property>
   </object>
   <object class="GtkImage" id="sendappimage">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">mail-send-symbolic</property>
+  </object>
+  <object class="GtkImage" id="sendcommentimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">mail-send-symbolic</property>
@@ -4871,11 +4876,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                         <property name="can-focus">False</property>
                                                         <property name="margin-start">13</property>
                                                         <property name="margin-end">13</property>
-                                                        <property name="margin-top">8</property>
-                                                        <property name="margin-bottom">8</property>
+                                                        <property name="margin-top">13</property>
+                                                        <property name="margin-bottom">13</property>
                                                         <property name="orientation">vertical</property>
                                                         <property name="spacing">13</property>
-                                                        <property name="homogeneous">True</property>
                                                         <child>
                                                           <object class="GtkLabel" id="wpcStarLabel">
                                                             <property name="visible">True</property>
@@ -4895,9 +4899,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="halign">center</property>
                                                             <child>
                                                             <object class="GtkEventBox" id="wpcStarE1">
+                                                            <property name="name">star1</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <signal name="button-press-event" handler="on_wpcStarE1_button_press_event" swapped="no"/>
+                                                            <signal name="button-press-event" handler="on_wpcStar_button_press_event" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage" id="wpcStar1">
                                                             <property name="visible">True</property>
@@ -4914,9 +4919,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             <child>
                                                             <object class="GtkEventBox" id="wpcStarE2">
+                                                            <property name="name">star2</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <signal name="button-press-event" handler="on_wpcStarE2_button_press_event" swapped="no"/>
+                                                            <signal name="button-press-event" handler="on_wpcStar_button_press_event" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage" id="wpcStar2">
                                                             <property name="visible">True</property>
@@ -4933,9 +4939,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             <child>
                                                             <object class="GtkEventBox" id="wpcStarE3">
+                                                            <property name="name">star3</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <signal name="button-press-event" handler="on_wpcStarE3_button_press_event" swapped="no"/>
+                                                            <signal name="button-press-event" handler="on_wpcStar_button_press_event" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage" id="wpcStar3">
                                                             <property name="visible">True</property>
@@ -4952,9 +4959,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             <child>
                                                             <object class="GtkEventBox" id="wpcStarE4">
+                                                            <property name="name">star4</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <signal name="button-press-event" handler="on_wpcStarE4_button_press_event" swapped="no"/>
+                                                            <signal name="button-press-event" handler="on_wpcStar_button_press_event" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage" id="wpcStar4">
                                                             <property name="visible">True</property>
@@ -4971,9 +4979,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             <child>
                                                             <object class="GtkEventBox" id="wpcStarE5">
+                                                            <property name="name">star5</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <signal name="button-press-event" handler="on_wpcStarE5_button_press_event" swapped="no"/>
+                                                            <signal name="button-press-event" handler="on_wpcStar_button_press_event" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage" id="wpcStar5">
                                                             <property name="visible">True</property>
@@ -4993,6 +5002,23 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel" id="wpcinfoLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">Your app rating has been successfully submitted; you can also add a comment if you want.</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="wrap">True</property>
+                                                            <attributes>
+                                                            <attribute name="weight" value="bold"/>
+                                                            </attributes>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
                                                           </packing>
                                                         </child>
                                                         <child>
@@ -5019,44 +5045,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="hexpand">True</property>
                                                             <property name="max-length">100</property>
                                                             <property name="placeholder-text" translatable="yes">Write your name</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <child>
-                                                            <object class="GtkLabel">
-                                                            <property name="width-request">175</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Your Comment :</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkEntry" id="wpcComment">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <property name="hexpand">True</property>
-                                                            <property name="max-length">500</property>
-                                                            <property name="placeholder-text" translatable="yes">Write your comment</property>
+                                                            <property name="input-hints">GTK_INPUT_HINT_NO_EMOJI | GTK_INPUT_HINT_NONE</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -5072,14 +5061,72 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel" id="wpcformcontrolLabel">
+                                                          <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="width-request">175</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label" translatable="yes">Your Comment :</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkScrolledWindow" id="wpcCommentScroll">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="shadow-type">in</property>
+                                                            <property name="min-content-height">125</property>
+                                                            <child>
+                                                            <object class="GtkViewport">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkTextView" id="wpcComment">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="wrap-mode">word</property>
+                                                            <property name="left-margin">5</property>
+                                                            <property name="right-margin">5</property>
+                                                            <property name="top-margin">5</property>
+                                                            <property name="bottom-margin">5</property>
+                                                            <property name="input-hints">GTK_INPUT_HINT_NO_EMOJI | GTK_INPUT_HINT_NONE</property>
+                                                            </object>
+                                                            </child>
+                                                            </object>
+                                                            </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">4</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel" id="wpcformcontrolLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="wrap">True</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">5</property>
                                                           </packing>
                                                         </child>
                                                         <child>
@@ -5089,12 +5136,14 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="can-focus">True</property>
                                                             <property name="receives-default">True</property>
                                                             <property name="halign">center</property>
+                                                            <property name="image">sendcommentimage</property>
                                                             <signal name="clicked" handler="on_wpcSendButton_clicked" swapped="no"/>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
-                                                            <property name="position">5</property>
+                                                            <property name="pack-type">end</property>
+                                                            <property name="position">6</property>
                                                           </packing>
                                                         </child>
                                                       </object>
@@ -5107,15 +5156,22 @@ This application served from Pardus non-free package repositories, so that the O
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="margin-top">5</property>
+                                                        <property name="margin-start">13</property>
+                                                        <property name="margin-end">13</property>
+                                                        <property name="margin-top">13</property>
+                                                        <property name="margin-bottom">13</property>
                                                         <property name="orientation">vertical</property>
-                                                        <property name="spacing">13</property>
-                                                        <property name="homogeneous">True</property>
+                                                        <property name="spacing">21</property>
                                                         <child>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">You have already posted a comment </property>
+                                                            <property name="label" translatable="yes">You have already rated the app.</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="wrap">True</property>
+                                                            <attributes>
+                                                            <attribute name="weight" value="bold"/>
+                                                            </attributes>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -5124,11 +5180,10 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel" id="wpcgetnameLabel">
+                                                          <object class="GtkLabel" id="addCommentInfoLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Your Name</property>
-                                                            <property name="wrap">True</property>
+                                                            <property name="label" translatable="yes">You can also add a comment if you want or you can edit your unapproved comment.</property>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -5137,11 +5192,91 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel" id="wpcgetcommentLabel">
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="orientation">vertical</property>
+                                                            <property name="spacing">21</property>
+                                                            <child>
+                                                            <object class="GtkBox" id="wpcUserBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="spacing">13</property>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">end</property>
+                                                            <property name="icon-name">user-info-symbolic</property>
+                                                            <property name="icon_size">5</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="wpcgetnameLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">Your Name</property>
+                                                            <property name="wrap">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkBox" id="wpcCommentBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="spacing">13</property>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">end</property>
+                                                            <property name="icon-name">user-available-symbolic</property>
+                                                            <property name="icon_size">5</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="wpcgetcommentLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">Your Comment</property>
                                                             <property name="wrap">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -5150,20 +5285,20 @@ This application served from Pardus non-free package repositories, so that the O
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkButton" id="editCommentButton">
-                                                            <property name="label" translatable="yes">Edit Your Comment</property>
+                                                          <object class="GtkButton" id="addCommentButton">
+                                                            <property name="label" translatable="yes">Add Comment</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="receives-default">True</property>
                                                             <property name="halign">center</property>
                                                             <property name="valign">center</property>
                                                             <property name="image">editimage</property>
-                                                            <signal name="clicked" handler="on_editCommentButton_clicked" swapped="no"/>
+                                                            <signal name="clicked" handler="on_addCommentButton_clicked" swapped="no"/>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
-                                                            <property name="position">3</property>
+                                                            <property name="position">4</property>
                                                           </packing>
                                                         </child>
                                                       </object>

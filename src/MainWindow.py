@@ -257,6 +257,7 @@ class MainWindow(object):
         self.wpcStar4 = self.GtkBuilder.get_object("wpcStar4")
         self.wpcStar5 = self.GtkBuilder.get_object("wpcStar5")
         self.wpcStarLabel = self.GtkBuilder.get_object("wpcStarLabel")
+        self.wpcinfoLabel = self.GtkBuilder.get_object("wpcinfoLabel")
         self.wpcComment = self.GtkBuilder.get_object("wpcComment")
         self.wpcAuthor = self.GtkBuilder.get_object("wpcAuthor")
         self.wpcSendButton = self.GtkBuilder.get_object("wpcSendButton")
@@ -264,7 +265,9 @@ class MainWindow(object):
         self.wpcgetcommentLabel = self.GtkBuilder.get_object("wpcgetcommentLabel")
         self.wpcresultLabel = self.GtkBuilder.get_object("wpcresultLabel")
         self.wpcformcontrolLabel = self.GtkBuilder.get_object("wpcformcontrolLabel")
-        self.editCommentButton = self.GtkBuilder.get_object("editCommentButton")
+        self.addCommentInfoLabel = self.GtkBuilder.get_object("addCommentInfoLabel")
+        self.addCommentButton = self.GtkBuilder.get_object("addCommentButton")
+        self.wpcCommentBox = self.GtkBuilder.get_object("wpcCommentBox")
         self.pcMoreButton = self.GtkBuilder.get_object("pcMoreButton")
         self.gcMoreButtonTR = self.GtkBuilder.get_object("gcMoreButtonTR")
         self.gcMoreButtonEN = self.GtkBuilder.get_object("gcMoreButtonEN")
@@ -2138,10 +2141,12 @@ class MainWindow(object):
         self.par_desc_more.set_visible(False)
         self.setWpcStar(0)
         self.wpcstar = 0
+        self.wpcformcontrolLabel.set_visible(False)
         self.wpcformcontrolLabel.set_text("")
         self.wpcresultLabel.set_text("")
         self.wpcAuthor.set_text(self.Server.username)
-        self.wpcComment.set_text("")
+        start, end = self.wpcComment.get_buffer().get_bounds()
+        self.wpcComment.get_buffer().delete(start, end)
         self.wpcSendButton.set_sensitive(True)
 
         # loading screen for app images
@@ -2382,7 +2387,7 @@ class MainWindow(object):
                         Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
                     self.dOpenButton.set_visible(False)
-
+                    self.wpcformcontrolLabel.set_visible(True)
                     self.wpcformcontrolLabel.set_markup(
                         "<span color='red'>{}</span>".format(_("You need to install the application")))
 
@@ -2422,6 +2427,7 @@ class MainWindow(object):
                 self.dOpenButton.set_visible(False)
                 self.dDisclaimerButton.set_visible(False)
 
+                self.wpcformcontrolLabel.set_visible(True)
                 self.wpcformcontrolLabel.set_markup(
                     "<span color='red'>{}</span>".format(_("You need to install the application")))
 
@@ -2877,14 +2883,51 @@ class MainWindow(object):
                     self.dtTotalRating.set_markup("( {} )".format(response["rating"]["rate"]["count"]))
 
                     if response["rating"]["rate"]["recommentable"]:
-                        self.editCommentButton.set_visible(True)
+                        self.addCommentButton.set_visible(True)
+                        self.addCommentInfoLabel.set_visible(True)
                     else:
-                        self.editCommentButton.set_visible(False)
+                        self.addCommentButton.set_visible(False)
+                        self.addCommentInfoLabel.set_visible(False)
+
+                    if self.rate_comment == "" or self.rate_comment is None:
+                        self.wpcCommentBox.set_visible(False)
+                        self.addCommentButton.set_label(_("Add Comment"))
+                    else:
+                        self.wpcCommentBox.set_visible(True)
+                        self.addCommentButton.set_label(_("Edit Comment"))
+
 
                     if response["rating"]["justrate"]:
-                        self.commentstack.set_visible_child_name("alreadysent")
-                        self.wpcgetnameLabel.set_text(str(response["rating"]["rate"]["author"]))
-                        self.wpcgetcommentLabel.set_text(str(response["rating"]["rate"]["comment"]))
+
+                        if response["rating"]["rate"]["recommentable"]:
+                            # scroll to add comment
+                            vadj = self.PardusAppDetailScroll.get_vadjustment()
+                            bot = vadj.get_upper()
+                            vadj.set_value(bot)
+                            self.PardusAppDetailScroll.set_vadjustment(vadj)
+
+                            # if self.rate_comment == "" or self.rate_comment is None:
+                            #     self.commentstack.set_visible_child_name("sendcomment")
+                            # else:
+                            #     self.commentstack.set_visible_child_name("alreadysent")
+
+                            self.setWpcStar(response["rating"]["rate"]["individual"])
+                            self.wpcAuthor.set_text(str(response["rating"]["rate"]["author"]))
+                            start, end = self.wpcComment.get_buffer().get_bounds()
+                            self.wpcComment.get_buffer().delete(start, end)
+                            self.wpcComment.get_buffer().insert(self.wpcComment.get_buffer().get_end_iter(),
+                                                                "{}".format(response["rating"]["rate"]["comment"]))
+
+                            self.CommentsNotebook.set_current_page(2)
+                            self.wpcComment.grab_focus()
+
+                            self.wpcinfoLabel.set_visible(True)
+
+                        else:
+                            self.commentstack.set_visible_child_name("alreadysent")
+                            self.wpcgetnameLabel.set_text(str(response["rating"]["rate"]["author"]))
+                            self.wpcgetcommentLabel.set_text(str(response["rating"]["rate"]["comment"]))
+
                     else:
                         self.commentstack.set_visible_child_name("sendresult")
                         self.wpcresultLabel.set_text(
@@ -2893,6 +2936,7 @@ class MainWindow(object):
                     if response["rating"]["justrate"]:
                         print("justrate error")
                     else:
+                        self.wpcformcontrolLabel.set_visible(True)
                         if response["rating"]["flood"]:
                             self.wpcformcontrolLabel.set_text(_("Please try again soon"))
                         else:
@@ -2942,9 +2986,18 @@ class MainWindow(object):
                 self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
 
                 if response["details"]["individual"]["recommentable"]:
-                    self.editCommentButton.set_visible(True)
+                    self.addCommentButton.set_visible(True)
+                    self.addCommentInfoLabel.set_visible(True)
                 else:
-                    self.editCommentButton.set_visible(False)
+                    self.addCommentButton.set_visible(False)
+                    self.addCommentInfoLabel.set_visible(False)
+
+                if self.rate_comment == "" or self.rate_comment is None:
+                    self.wpcCommentBox.set_visible(False)
+                    self.addCommentButton.set_label(_("Add Comment"))
+                else:
+                    self.wpcCommentBox.set_visible(True)
+                    self.addCommentButton.set_label(_("Edit Comment"))
 
             self.rate_average = response["details"]["rate"]["average"]
             self.setAppStar(response["details"]["rate"]["average"])
@@ -3310,36 +3363,45 @@ class MainWindow(object):
 
             self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
 
-    def on_wpcStarE1_button_press_event(self, widget, event):
-        self.setWpcStar(1)
+    # def on_wpcStarE1_button_press_event(self, widget, event):
+    #     self.setWpcStar(1)
+    #
+    # def on_wpcStarE2_button_press_event(self, widget, event):
+    #     self.setWpcStar(2)
+    #
+    # def on_wpcStarE3_button_press_event(self, widget, event):
+    #     self.setWpcStar(3)
+    #
+    # def on_wpcStarE4_button_press_event(self, widget, event):
+    #     self.setWpcStar(4)
+    #
+    # def on_wpcStarE5_button_press_event(self, widget, event):
+    #     self.setWpcStar(5)
 
-    def on_wpcStarE2_button_press_event(self, widget, event):
-        self.setWpcStar(2)
+    def on_wpcStar_button_press_event(self, widget, event):
+        self.setWpcStar(int(widget.get_name()[-1]))
+        # self.eventStarSet(widget.get_name())
 
-    def on_wpcStarE3_button_press_event(self, widget, event):
-        self.setWpcStar(3)
-
-    def on_wpcStarE4_button_press_event(self, widget, event):
-        self.setWpcStar(4)
-
-    def on_wpcStarE5_button_press_event(self, widget, event):
-        self.setWpcStar(5)
-
-    def on_editCommentButton_clicked(self, button):
+    def on_addCommentButton_clicked(self, button):
 
         self.setWpcStar(self.rate_individual)
         self.wpcAuthor.set_text(self.rate_author)
-        self.wpcComment.set_text(self.rate_comment)
+        start, end = self.wpcComment.get_buffer().get_bounds()
+        self.wpcComment.get_buffer().delete(start, end)
+        self.wpcComment.get_buffer().insert(self.wpcComment.get_buffer().get_end_iter(), self.rate_comment)
+
         self.commentstack.set_visible_child_name("sendcomment")
 
     def on_wpcSendButton_clicked(self, button):
         print("on_wpcSendButton_clicked")
 
         author = self.wpcAuthor.get_text().strip()
-        comment = self.wpcComment.get_text().strip()
+        start, end = self.wpcComment.get_buffer().get_bounds()
+        comment = self.wpcComment.get_buffer().get_text(start, end, True).strip()
         value = self.wpcstar
         status = True
         if value == 0 or comment == "" or author == "":
+            self.wpcformcontrolLabel.set_visible(True)
             self.wpcformcontrolLabel.set_text(_("Cannot be null"))
         else:
             installed = self.Package.isinstalled(self.appname)
@@ -3363,6 +3425,7 @@ class MainWindow(object):
                 else:
                     self.wpcresultLabel.set_text(_("Error"))
             else:
+                self.wpcformcontrolLabel.set_visible(True)
                 self.wpcformcontrolLabel.set_markup(
                     "<span color='red'>{}</span>".format(_("You need to install the application")))
 
@@ -3374,6 +3437,8 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
+            self.wpcinfoLabel.set_visible(False)
+            self.wpcStarLabel.set_visible(True)
             self.wpcStarLabel.set_markup(_("How many stars would you give this app?"))
         elif rate == 1:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
@@ -3381,7 +3446,8 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
-            self.wpcStarLabel.set_markup("<b>1</b>")
+            self.wpcStarLabel.set_visible(False)
+            # self.wpcStarLabel.set_markup("<b>{}</b>".format(_("Hate it")))
             self.wpcstar = 1
         elif rate == 2:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
@@ -3389,7 +3455,8 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
-            self.wpcStarLabel.set_markup("<b>2</b>")
+            self.wpcStarLabel.set_visible(False)
+            # self.wpcStarLabel.set_markup("<b>{}</b>".format(_("Don't like it")))
             self.wpcstar = 2
         elif rate == 3:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
@@ -3397,7 +3464,8 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaron)
             self.wpcStar4.set_from_pixbuf(self.wpcstaroff)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
-            self.wpcStarLabel.set_markup("<b>3</b>")
+            self.wpcStarLabel.set_visible(False)
+            # self.wpcStarLabel.set_markup("<b>{}</b>".format(_("It's OK")))
             self.wpcstar = 3
         elif rate == 4:
             self.wpcStar1.set_from_pixbuf(self.wpcstaron)
@@ -3405,7 +3473,8 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaron)
             self.wpcStar4.set_from_pixbuf(self.wpcstaron)
             self.wpcStar5.set_from_pixbuf(self.wpcstaroff)
-            self.wpcStarLabel.set_markup("<b>4</b>")
+            self.wpcStarLabel.set_visible(False)
+            # self.wpcStarLabel.set_markup("<b>{}</b>".format(_("Like it")))
             self.wpcstar = 4
 
         elif rate == 5:
@@ -3414,7 +3483,8 @@ class MainWindow(object):
             self.wpcStar3.set_from_pixbuf(self.wpcstaron)
             self.wpcStar4.set_from_pixbuf(self.wpcstaron)
             self.wpcStar5.set_from_pixbuf(self.wpcstaron)
-            self.wpcStarLabel.set_markup("<b>5</b>")
+            self.wpcStarLabel.set_visible(False)
+            # self.wpcStarLabel.set_markup("<b>{}</b>".format(_("Love it")))
             self.wpcstar = 5
         else:
             print("wpc star error")
@@ -5551,6 +5621,7 @@ class MainWindow(object):
                 if actionedappdesktop != "" and actionedappdesktop is not None:
                     self.dOpenButton.set_visible(True)
 
+                self.wpcformcontrolLabel.set_visible(False)
                 self.wpcformcontrolLabel.set_markup("")
 
                 sizethread1 = threading.Thread(target=self.size_worker_thread, daemon=True)
@@ -5569,6 +5640,7 @@ class MainWindow(object):
 
                 self.dOpenButton.set_visible(False)
 
+                self.wpcformcontrolLabel.set_visible(True)
                 self.wpcformcontrolLabel.set_markup(
                     "<span color='red'>{}</span>".format(_("You need to install the application")))
 
