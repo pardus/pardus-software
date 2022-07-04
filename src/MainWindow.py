@@ -2866,10 +2866,10 @@ class MainWindow(object):
         self.dDescriptionLabel.set_text(self.description)
         button.set_visible(False)
 
-    def Request(self, status, response):
+    def Request(self, status, response, appname=""):
         if status:
             # print(response)
-            if response["response-type"] == 10:
+            if response["response-type"] == 10 and appname == self.getActiveAppOnUI():
                 self.wpcSendButton.set_sensitive(True)
                 if response["rating"]["status"]:
                     self.rate_average = response["rating"]["rate"]["average"]
@@ -3271,7 +3271,7 @@ class MainWindow(object):
             dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
                    "installed": installed, "comment": "", "appversion": version, "distro": self.UserSettings.userdistro,
                    "justrate": True}
-            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
+            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
         else:
             self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
@@ -3415,7 +3415,7 @@ class MainWindow(object):
                        "installed": installed, "appversion": version, "distro": self.UserSettings.userdistro,
                        "justrate": False}
                 try:
-                    self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic)
+                    self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
                 except Exception as e:
                     status = False
                     self.commentstack.set_visible_child_name("sendresult")
