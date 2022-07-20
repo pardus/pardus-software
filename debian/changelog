@@ -1,3 +1,39 @@
+pardus-software (0.3.0) unstable; urgency=medium
+
+  [ Fatih Altun ]
+  * Add control for server app command package names
+  * Fix myapps listbox creating bug on some old systems
+  * Add authorization configuration to use repo and myapps sections
+  * Add animation controls for myapps stack
+  * Add pardus-software group and polkit for passwordless usage
+  * Update pkla actions as full name
+  * Add passwordless usage control button to settings
+  * Add another apt update way to exceptions
+  * Add show update button after fix sources and update info label ui
+  * Update group action error label, discard 32256
+  * Update pot file
+  * Update Turkish translations
+  * Add update-translations script
+  * Add justify center to dAptUpdateButton
+  * Add reset scroll position to comments
+
+  [ yakusha ]
+  * Correct question mark punctiation
+
+  [ Fatih Altun ]
+  * Update pardus-software.conf as interactive conf file
+  * Rm postrm script
+  * Add GLib.idle to set pardusappsdetail page
+  * Add row activated action to myapps listbox
+  * Add app command data control to myapps activated func
+  * Update rating ui to be more useful user experience
+  * Add activeapp control to rating
+  * Fix multiple widget create problem
+  * Update pot file
+  * Update Turkish translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Wed, 20 Jul 2022 21:01:31 +0300
+
 pardus-software (0.2.0) unstable; urgency=medium
 
   * Add extra desktop name controls to controlargs function
