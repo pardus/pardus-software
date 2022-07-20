@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-22 23:17+0300\n"
+"POT-Creation-Date: 2022-07-20 20:25+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "Add, remove, update applications"
 msgstr ""
 
-#: ui/MainWindow.glade:84 ui/MainWindow.glade:6978 src/MainWindow.py:4652
+#: ui/MainWindow.glade:84 ui/MainWindow.glade:7114 src/MainWindow.py:4791
 msgid "Website"
 msgstr ""
 
-#: ui/MainWindow.glade:183
+#: ui/MainWindow.glade:188
 msgid ""
 "<b>Disclaimer</b>\n"
 "\n"
@@ -33,460 +33,468 @@ msgid ""
 "so that the OS has nothing to do with the health of the application."
 msgstr ""
 
-#: ui/MainWindow.glade:234
+#: ui/MainWindow.glade:239
 msgid "Image 1"
 msgstr ""
 
-#: ui/MainWindow.glade:363
+#: ui/MainWindow.glade:368
 msgid "Open image on web browser"
 msgstr ""
 
-#: ui/MainWindow.glade:381
+#: ui/MainWindow.glade:386
 msgid "Download image"
 msgstr ""
 
-#: ui/MainWindow.glade:584
+#: ui/MainWindow.glade:589
 msgid "Queue"
 msgstr ""
 
-#: ui/MainWindow.glade:658
+#: ui/MainWindow.glade:663
 msgid "OK"
 msgstr ""
 
-#: ui/MainWindow.glade:717
+#: ui/MainWindow.glade:722
 msgid "Search an app"
 msgstr ""
 
-#: ui/MainWindow.glade:742
+#: ui/MainWindow.glade:747
 msgid "Search an app in repo"
 msgstr ""
 
-#: ui/MainWindow.glade:752
+#: ui/MainWindow.glade:757
 msgid "Search"
 msgstr ""
 
-#: ui/MainWindow.glade:779
+#: ui/MainWindow.glade:784
 msgid "Search an app in my apps"
 msgstr ""
 
-#: ui/MainWindow.glade:875
+#: ui/MainWindow.glade:880
 msgid "Editor's Picks"
 msgstr ""
 
-#: ui/MainWindow.glade:919
+#: ui/MainWindow.glade:924
 msgid "Categories"
 msgstr ""
 
-#: ui/MainWindow.glade:1013 ui/MainWindow.glade:7714
+#: ui/MainWindow.glade:1018 ui/MainWindow.glade:7850
 msgid "Most Downloaded Apps"
 msgstr ""
 
-#: ui/MainWindow.glade:1083
+#: ui/MainWindow.glade:1088
 msgid "Most Rated Apps"
 msgstr ""
 
-#: ui/MainWindow.glade:1155
+#: ui/MainWindow.glade:1160
 msgid "Last Added Apps"
 msgstr ""
 
-#: ui/MainWindow.glade:1236 ui/MainWindow.glade:7753
+#: ui/MainWindow.glade:1241 ui/MainWindow.glade:7889
 msgid "<small>Total App Download Count :</small>"
 msgstr ""
 
-#: ui/MainWindow.glade:1285 ui/MainWindow.glade:7802
+#: ui/MainWindow.glade:1290 ui/MainWindow.glade:7938
 msgid "<small>Total App Rate Count :</small>"
 msgstr ""
 
-#: ui/MainWindow.glade:1413
+#: ui/MainWindow.glade:1418
 msgid "You can search for applications in repositories using search."
 msgstr ""
 
-#: ui/MainWindow.glade:1467
+#: ui/MainWindow.glade:1472
 msgid "No package is selected."
 msgstr ""
 
-#: ui/MainWindow.glade:1629 ui/MainWindow.glade:2610 ui/MainWindow.glade:2653
-#: ui/MainWindow.glade:2692 ui/MainWindow.glade:2731 ui/MainWindow.glade:2793
-#: ui/MainWindow.glade:2837 ui/MainWindow.glade:2876 src/MainWindow.py:2422
-#: src/MainWindow.py:2423 src/MainWindow.py:2426 src/MainWindow.py:2427
-#: src/MainWindow.py:2580 src/MainWindow.py:5531
+#: ui/MainWindow.glade:1634 ui/MainWindow.glade:2616 ui/MainWindow.glade:2659
+#: ui/MainWindow.glade:2698 ui/MainWindow.glade:2737 ui/MainWindow.glade:2799
+#: ui/MainWindow.glade:2843 ui/MainWindow.glade:2882 src/MainWindow.py:2421
+#: src/MainWindow.py:2422 src/MainWindow.py:2425 src/MainWindow.py:2426
+#: src/MainWindow.py:2580 src/MainWindow.py:5679
 msgid "None"
 msgstr ""
 
-#: ui/MainWindow.glade:1660
+#: ui/MainWindow.glade:1665
 msgid "Show only installed apps"
 msgstr ""
 
-#: ui/MainWindow.glade:1667
+#: ui/MainWindow.glade:1672
 msgid "Show installed apps"
 msgstr ""
 
-#: ui/MainWindow.glade:1685
+#: ui/MainWindow.glade:1690
 msgid "Sort by Name"
 msgstr ""
 
-#: ui/MainWindow.glade:1686
+#: ui/MainWindow.glade:1691
 msgid "Sort by Download"
 msgstr ""
 
-#: ui/MainWindow.glade:1687
+#: ui/MainWindow.glade:1692
 msgid "Sort by Rating"
 msgstr ""
 
-#: ui/MainWindow.glade:1688
+#: ui/MainWindow.glade:1693
 msgid "Sort by Last Added"
 msgstr ""
 
-#: ui/MainWindow.glade:2111
+#: ui/MainWindow.glade:2116
 msgid "<small>Your Rate</small>"
 msgstr ""
 
-#: ui/MainWindow.glade:2149
+#: ui/MainWindow.glade:2154
 msgid "<small>Download</small>"
 msgstr ""
 
-#: ui/MainWindow.glade:2196 src/MainWindow.py:4056
+#: ui/MainWindow.glade:2201 src/MainWindow.py:4121
 msgid "Open"
 msgstr ""
 
-#: ui/MainWindow.glade:2268
+#: ui/MainWindow.glade:2273
 msgid "Try Update Package Cache"
 msgstr ""
 
-#: ui/MainWindow.glade:2339
+#: ui/MainWindow.glade:2345
 msgid ""
 "<b>Disclaimer</b>\n"
 "This application served from Pardus non-free package repositories, so that "
 "the OS has nothing to do with the health of the application."
 msgstr ""
 
-#: ui/MainWindow.glade:2341
+#: ui/MainWindow.glade:2347
 msgid "Disclaimer"
 msgstr ""
 
-#: ui/MainWindow.glade:2377
+#: ui/MainWindow.glade:2383
 msgid "This application is available through an external repository."
 msgstr ""
 
-#: ui/MainWindow.glade:2390
+#: ui/MainWindow.glade:2396
 msgid "repo address"
 msgstr ""
 
-#: ui/MainWindow.glade:2402
-msgid "Are you sure you want to activate this repository ?"
+#: ui/MainWindow.glade:2408
+msgid "Are you sure you want to activate this repository?"
 msgstr ""
 
-#: ui/MainWindow.glade:2418
+#: ui/MainWindow.glade:2424
 msgid "No"
 msgstr ""
 
-#: ui/MainWindow.glade:2435 ui/MainWindow.glade:7384
+#: ui/MainWindow.glade:2441 ui/MainWindow.glade:7520
 msgid "Yes"
 msgstr ""
 
-#: ui/MainWindow.glade:2485
+#: ui/MainWindow.glade:2491
 msgid "Activating Repo"
 msgstr ""
 
-#: ui/MainWindow.glade:2510
+#: ui/MainWindow.glade:2516
 msgid "Please wait..."
 msgstr ""
 
-#: ui/MainWindow.glade:2596
+#: ui/MainWindow.glade:2602
 msgid "Version"
 msgstr ""
 
-#: ui/MainWindow.glade:2639 src/MainWindow.py:2424 src/MainWindow.py:2575
-#: src/MainWindow.py:2581 src/MainWindow.py:5532
+#: ui/MainWindow.glade:2645 src/MainWindow.py:2423 src/MainWindow.py:2575
+#: src/MainWindow.py:2581 src/MainWindow.py:5680
 msgid "Download Size"
 msgstr ""
 
-#: ui/MainWindow.glade:2678
+#: ui/MainWindow.glade:2684
 msgid "Type"
 msgstr ""
 
-#: ui/MainWindow.glade:2717 ui/MainWindow.glade:6727 src/MainWindow.py:4637
+#: ui/MainWindow.glade:2723 ui/MainWindow.glade:6863 src/MainWindow.py:4776
 msgid "Category"
 msgstr ""
 
-#: ui/MainWindow.glade:2779 ui/MainWindow.glade:6881 src/MainWindow.py:4646
+#: ui/MainWindow.glade:2785 ui/MainWindow.glade:7017 src/MainWindow.py:4785
 msgid "License"
 msgstr ""
 
-#: ui/MainWindow.glade:2823
+#: ui/MainWindow.glade:2829
 msgid "Component"
 msgstr ""
 
-#: ui/MainWindow.glade:2862
+#: ui/MainWindow.glade:2868
 msgid "Available Repositories"
 msgstr ""
 
-#: ui/MainWindow.glade:3056
+#: ui/MainWindow.glade:3062
 msgid "Details"
 msgstr ""
 
-#: ui/MainWindow.glade:3235
+#: ui/MainWindow.glade:3241
 msgid "Images"
 msgstr ""
 
-#: ui/MainWindow.glade:3272
+#: ui/MainWindow.glade:3278
 msgid "Description ..."
 msgstr ""
 
-#: ui/MainWindow.glade:3284
+#: ui/MainWindow.glade:3290
 msgid "read more"
 msgstr ""
 
-#: ui/MainWindow.glade:3318 src/MainWindow.py:1035
+#: ui/MainWindow.glade:3324 src/MainWindow.py:1025
 msgid "Description"
 msgstr ""
 
-#: ui/MainWindow.glade:3960
+#: ui/MainWindow.glade:3966
 msgid "Pardus Ratings"
 msgstr ""
 
-#: ui/MainWindow.glade:4580
+#: ui/MainWindow.glade:4586
 msgid "Gnome Software Ratings"
 msgstr ""
 
-#: ui/MainWindow.glade:4603
+#: ui/MainWindow.glade:4609
 msgid "Ratings"
 msgstr ""
 
-#: ui/MainWindow.glade:4656 ui/MainWindow.glade:4756 ui/MainWindow.glade:4812
+#: ui/MainWindow.glade:4662 ui/MainWindow.glade:4762 ui/MainWindow.glade:4818
 msgid "Load More Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:4682
+#: ui/MainWindow.glade:4688
 msgid "Pardus Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:4779
+#: ui/MainWindow.glade:4785
 msgid "Turkish Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:4835
+#: ui/MainWindow.glade:4841
 msgid "English Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:4855
+#: ui/MainWindow.glade:4861
 msgid "Gnome Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:4882 src/MainWindow.py:3384
-msgid "How many stars would you give this app ?"
+#: ui/MainWindow.glade:4887 src/MainWindow.py:3443
+msgid "How many stars would you give this app?"
 msgstr ""
 
-#: ui/MainWindow.glade:5006
+#: ui/MainWindow.glade:5011
+msgid ""
+"Your app rating has been successfully submitted; you can also add a comment "
+"if you want."
+msgstr ""
+
+#: ui/MainWindow.glade:5033
 msgid "Your Name :"
 msgstr ""
 
-#: ui/MainWindow.glade:5020
+#: ui/MainWindow.glade:5047
 msgid "Write your name"
 msgstr ""
 
-#: ui/MainWindow.glade:5044
+#: ui/MainWindow.glade:5073
 msgid "Your Comment :"
 msgstr ""
 
-#: ui/MainWindow.glade:5058
-msgid "Write your comment"
-msgstr ""
-
-#: ui/MainWindow.glade:5086 ui/MainWindow.glade:7177
+#: ui/MainWindow.glade:5134 ui/MainWindow.glade:7313
 msgid "Send"
 msgstr ""
 
-#: ui/MainWindow.glade:5117
-msgid "You have already posted a comment "
+#: ui/MainWindow.glade:5169
+msgid "You have already rated the app."
 msgstr ""
 
-#: ui/MainWindow.glade:5129 ui/MainWindow.glade:7057
+#: ui/MainWindow.glade:5186
+msgid ""
+"You can also add a comment if you want or you can edit your unapproved "
+"comment."
+msgstr ""
+
+#: ui/MainWindow.glade:5225 ui/MainWindow.glade:7193
 msgid "Your Name"
 msgstr ""
 
-#: ui/MainWindow.glade:5142
+#: ui/MainWindow.glade:5264
 msgid "Your Comment"
 msgstr ""
 
-#: ui/MainWindow.glade:5153
-msgid "Edit Your Comment"
+#: ui/MainWindow.glade:5289 src/MainWindow.py:2895 src/MainWindow.py:2998
+msgid "Add Comment"
 msgstr ""
 
-#: ui/MainWindow.glade:5217
+#: ui/MainWindow.glade:5353
 msgid "Write Pardus Comment"
 msgstr ""
 
-#: ui/MainWindow.glade:5233
+#: ui/MainWindow.glade:5369
 msgid "Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:5296
+#: ui/MainWindow.glade:5432
 msgid "Could not connect to the server"
 msgstr ""
 
-#: ui/MainWindow.glade:5308
+#: ui/MainWindow.glade:5444
 msgid "Retry"
 msgstr ""
 
-#: ui/MainWindow.glade:5355
+#: ui/MainWindow.glade:5491
 msgid "Use Server Icons"
 msgstr ""
 
-#: ui/MainWindow.glade:5418
+#: ui/MainWindow.glade:5554
 msgid "Enable Animations"
 msgstr ""
 
-#: ui/MainWindow.glade:5481
+#: ui/MainWindow.glade:5617
 msgid "Show Only Available Applications"
 msgstr ""
 
-#: ui/MainWindow.glade:5544
+#: ui/MainWindow.glade:5680
 msgid "Hide External Repo Applications"
 msgstr ""
 
-#: ui/MainWindow.glade:5607
+#: ui/MainWindow.glade:5743
 msgid "Show Gnome Comments"
 msgstr ""
 
-#: ui/MainWindow.glade:5670
+#: ui/MainWindow.glade:5806
 msgid "Update Package Manager on Start"
 msgstr ""
 
-#: ui/MainWindow.glade:5733
+#: ui/MainWindow.glade:5869
 msgid "Use Dark Theme"
 msgstr ""
 
-#: ui/MainWindow.glade:5795
+#: ui/MainWindow.glade:5931
 msgid "Icons"
 msgstr ""
 
-#: ui/MainWindow.glade:5887
+#: ui/MainWindow.glade:6023
 msgid "Clear Cache Files"
 msgstr ""
 
-#: ui/MainWindow.glade:5897 src/MainWindow.py:4356
+#: ui/MainWindow.glade:6033 src/MainWindow.py:4495
 msgid "Clear"
 msgstr ""
 
-#: ui/MainWindow.glade:5930
+#: ui/MainWindow.glade:6066
 msgid "Fix Package Manager Sources List"
 msgstr ""
 
-#: ui/MainWindow.glade:5940
+#: ui/MainWindow.glade:6076
 msgid "Fix"
 msgstr ""
 
-#: ui/MainWindow.glade:5973
+#: ui/MainWindow.glade:6109
 msgid "Passwordless Application Usage"
 msgstr ""
 
-#: ui/MainWindow.glade:6022
+#: ui/MainWindow.glade:6158
 msgid ""
 "Fixes the system sources list that used by package manager. This process "
 "will revert all the changes have been done and will use only Pardus Official "
 "Repository source addresses. Use with caution."
 msgstr ""
 
-#: ui/MainWindow.glade:6039 ui/MainWindow.glade:7367 src/MainWindow.py:903
+#: ui/MainWindow.glade:6175 ui/MainWindow.glade:7503 src/MainWindow.py:893
 msgid "Cancel"
 msgstr ""
 
-#: ui/MainWindow.glade:6056 ui/MainWindow.glade:8655
+#: ui/MainWindow.glade:6192 ui/MainWindow.glade:8792
 msgid "Accept"
 msgstr ""
 
-#: ui/MainWindow.glade:6113
+#: ui/MainWindow.glade:6249
 msgid "Update Now"
 msgstr ""
 
-#: ui/MainWindow.glade:6214
+#: ui/MainWindow.glade:6350
 msgid "All processes in the queue have been completed."
 msgstr ""
 
-#: ui/MainWindow.glade:6286
+#: ui/MainWindow.glade:6422
 msgid "Update Package Cache"
 msgstr ""
 
-#: ui/MainWindow.glade:6394
+#: ui/MainWindow.glade:6530
 msgid "List of upgradable packages"
 msgstr ""
 
-#: ui/MainWindow.glade:6395
+#: ui/MainWindow.glade:6531
 msgid "Upgradable Packages"
 msgstr ""
 
-#: ui/MainWindow.glade:6431
+#: ui/MainWindow.glade:6567
 msgid "Upgrade"
 msgstr ""
 
-#: ui/MainWindow.glade:6460
+#: ui/MainWindow.glade:6596
 msgid "List of automatically removable all unused packages"
 msgstr ""
 
-#: ui/MainWindow.glade:6461
+#: ui/MainWindow.glade:6597
 msgid "Autoremovable Packages"
 msgstr ""
 
-#: ui/MainWindow.glade:6497 ui/MainWindow.glade:6563
+#: ui/MainWindow.glade:6633 ui/MainWindow.glade:6699
 msgid "Remove"
 msgstr ""
 
-#: ui/MainWindow.glade:6526
+#: ui/MainWindow.glade:6662
 msgid "List of unnecessary packages with residual config files"
 msgstr ""
 
-#: ui/MainWindow.glade:6527
+#: ui/MainWindow.glade:6663
 msgid "Residual Packages"
 msgstr ""
 
-#: ui/MainWindow.glade:6688 ui/MainWindow.glade:8096 src/MainWindow.py:4634
+#: ui/MainWindow.glade:6824 ui/MainWindow.glade:8233 src/MainWindow.py:4773
 msgid "Application Name"
 msgstr ""
 
-#: ui/MainWindow.glade:6765 src/MainWindow.py:4640
+#: ui/MainWindow.glade:6901 src/MainWindow.py:4779
 msgid "Description ( Turkish )"
 msgstr ""
 
-#: ui/MainWindow.glade:6823 src/MainWindow.py:4643
+#: ui/MainWindow.glade:6959 src/MainWindow.py:4782
 msgid "Description ( English )"
 msgstr ""
 
-#: ui/MainWindow.glade:6920 src/MainWindow.py:4649
+#: ui/MainWindow.glade:7056 src/MainWindow.py:4788
 msgid "Copyright Text"
 msgstr ""
 
-#: ui/MainWindow.glade:7018
+#: ui/MainWindow.glade:7154
 msgid "Icon ( svg )"
 msgstr ""
 
-#: ui/MainWindow.glade:7031
+#: ui/MainWindow.glade:7167
 msgid "Select Icon"
 msgstr ""
 
-#: ui/MainWindow.glade:7097
+#: ui/MainWindow.glade:7233
 msgid "Your E-Mail Address"
 msgstr ""
 
-#: ui/MainWindow.glade:7134
-msgid "Is the application available in Pardus repositories ?"
+#: ui/MainWindow.glade:7270
+msgid "Is the application available in Pardus repositories?"
 msgstr ""
 
-#: ui/MainWindow.glade:7230
+#: ui/MainWindow.glade:7366
 msgid "Your application suggestion has been successfully submitted. "
 msgstr ""
 
-#: ui/MainWindow.glade:7279
+#: ui/MainWindow.glade:7415
 msgid ""
 "Your system sources list that used by package manager seems broken or your "
 "system has broken dependencies."
 msgstr ""
 
-#: ui/MainWindow.glade:7302
+#: ui/MainWindow.glade:7438
 msgid "Try Fix"
 msgstr ""
 
-#: ui/MainWindow.glade:7344
+#: ui/MainWindow.glade:7480
 msgid ""
 "This operation;\n"
 "will remove all sources.list and sources.list.d entries and create "
@@ -495,95 +503,95 @@ msgid ""
 "will run \"apt install --fix-broken\" command,\n"
 "will run \"dpkg --configure -a\".\n"
 "\n"
-"Use with caution. Are you sure you want to continue ?"
+"Use with caution. Are you sure you want to continue?"
 msgstr ""
 
-#: ui/MainWindow.glade:7433
+#: ui/MainWindow.glade:7569
 msgid "Operation completed."
 msgstr ""
 
-#: ui/MainWindow.glade:7446
+#: ui/MainWindow.glade:7582
 msgid "Go to Homepage"
 msgstr ""
 
-#: ui/MainWindow.glade:7475
+#: ui/MainWindow.glade:7611
 msgid "You can check the terminal output below. "
 msgstr ""
 
-#: ui/MainWindow.glade:7504
+#: ui/MainWindow.glade:7640
 msgid "The error in the package manager could not be fixed."
 msgstr ""
 
-#: ui/MainWindow.glade:7522
+#: ui/MainWindow.glade:7658
 msgid ""
 "You can follow the instructions by looking at the terminal output below."
 msgstr ""
 
-#: ui/MainWindow.glade:7534
+#: ui/MainWindow.glade:7670
 msgid "You can ask for help about your problem through Pardus help channels."
 msgstr ""
 
-#: ui/MainWindow.glade:7673
+#: ui/MainWindow.glade:7809
 msgid "Daily App Download Counts"
 msgstr ""
 
-#: ui/MainWindow.glade:7693
+#: ui/MainWindow.glade:7829
 msgid "Used Operating Systems"
 msgstr ""
 
-#: ui/MainWindow.glade:7851
+#: ui/MainWindow.glade:7987
 msgid "<small>View on apps.pardus.org.tr</small>"
 msgstr ""
 
-#: ui/MainWindow.glade:8002
+#: ui/MainWindow.glade:8139
 msgid "Loading package details"
 msgstr ""
 
-#: ui/MainWindow.glade:8112 ui/MainWindow.glade:8115
+#: ui/MainWindow.glade:8249 ui/MainWindow.glade:8252
 msgid "Package Name"
 msgstr ""
 
-#: ui/MainWindow.glade:8142
+#: ui/MainWindow.glade:8279
 msgid "description"
 msgstr ""
 
-#: ui/MainWindow.glade:8184
+#: ui/MainWindow.glade:8321
 msgid "Packages to remove :"
 msgstr ""
 
-#: ui/MainWindow.glade:8248
+#: ui/MainWindow.glade:8385
 msgid "Packages to install :"
 msgstr ""
 
-#: ui/MainWindow.glade:8312
+#: ui/MainWindow.glade:8449
 msgid "Broken packages :"
 msgstr ""
 
-#: ui/MainWindow.glade:8376
+#: ui/MainWindow.glade:8513
 msgid "Disk space to be freed :"
 msgstr ""
 
-#: ui/MainWindow.glade:8440
+#: ui/MainWindow.glade:8577
 msgid "Download size :"
 msgstr ""
 
-#: ui/MainWindow.glade:8504
+#: ui/MainWindow.glade:8641
 msgid "Required disk space :"
 msgstr ""
 
-#: ui/MainWindow.glade:8568 ui/MainWindow.glade:8641
+#: ui/MainWindow.glade:8705 ui/MainWindow.glade:8778
 msgid "Back"
 msgstr ""
 
-#: ui/MainWindow.glade:8582 src/MainWindow.py:4045
+#: ui/MainWindow.glade:8719 src/MainWindow.py:4110
 msgid "Uninstall"
 msgstr ""
 
-#: ui/MainWindow.glade:8752
+#: ui/MainWindow.glade:8889
 msgid "<b><big>Application could not be uninstalled.</big></b>"
 msgstr ""
 
-#: ui/MainWindow.glade:8768
+#: ui/MainWindow.glade:8905
 msgid ""
 "- Application uninstalling process is only valid for applications that the "
 "package manager (apt) supports.\n"
@@ -594,202 +602,202 @@ msgid ""
 "can review the removal instructions of the relevant application."
 msgstr ""
 
-#: ui/MainWindow.glade:8783
+#: ui/MainWindow.glade:8920
 msgid "Back to My Apps"
 msgstr ""
 
-#: ui/MainWindow.glade:8842 src/MainWindow.py:341 src/MainWindow.py:5645
+#: ui/MainWindow.glade:8979 src/MainWindow.py:344 src/MainWindow.py:5793
 msgid "Pardus Software Center"
 msgstr ""
 
-#: ui/MainWindow.glade:8867
+#: ui/MainWindow.glade:9004
 msgid "Repo"
 msgstr ""
 
-#: ui/MainWindow.glade:8914
+#: ui/MainWindow.glade:9051
 msgid "Auto apt update in progress."
 msgstr ""
 
-#: ui/MainWindow.glade:8961
+#: ui/MainWindow.glade:9098
 msgid "Settings"
 msgstr ""
 
-#: ui/MainWindow.glade:9017
+#: ui/MainWindow.glade:9154
 msgid "Updates"
 msgstr ""
 
-#: ui/MainWindow.glade:9073
+#: ui/MainWindow.glade:9210
 msgid "My Apps"
 msgstr ""
 
-#: ui/MainWindow.glade:9129
+#: ui/MainWindow.glade:9266
 msgid "Statistics"
 msgstr ""
 
-#: ui/MainWindow.glade:9185
+#: ui/MainWindow.glade:9322
 msgid "Suggest App"
 msgstr ""
 
-#: ui/MainWindow.glade:9241
+#: ui/MainWindow.glade:9378
 msgid "About"
 msgstr ""
 
-#: ui/MainWindow.glade:9372
+#: ui/MainWindow.glade:9509
 msgid "Disk space to be freed"
 msgstr ""
 
-#: ui/MainWindow.glade:9426
+#: ui/MainWindow.glade:9563
 msgid "Download size"
 msgstr ""
 
-#: ui/MainWindow.glade:9480
+#: ui/MainWindow.glade:9617
 msgid "Required disk space"
 msgstr ""
 
-#: ui/MainWindow.glade:9559
+#: ui/MainWindow.glade:9696
 msgid "Packages to remove"
 msgstr ""
 
-#: ui/MainWindow.glade:9623
+#: ui/MainWindow.glade:9760
 msgid "Packages to install"
 msgstr ""
 
-#: ui/MainWindow.glade:9687
+#: ui/MainWindow.glade:9824
 msgid "Broken packages"
 msgstr ""
 
-#: src/MainWindow.py:275
+#: src/MainWindow.py:278
 msgid ""
 "These comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</"
 "a>."
 msgstr ""
 
-#: src/MainWindow.py:549 src/MainWindow.py:2936 src/MainWindow.py:2937
+#: src/MainWindow.py:558 src/MainWindow.py:2974 src/MainWindow.py:2975
 msgid "is None"
 msgstr ""
 
-#: src/MainWindow.py:569
+#: src/MainWindow.py:578
 msgid "Copy selected text"
 msgstr ""
 
-#: src/MainWindow.py:700
+#: src/MainWindow.py:709
 msgid "Pardus Software Center | New version available"
 msgstr ""
 
-#: src/MainWindow.py:701
+#: src/MainWindow.py:710
 msgid "Please upgrade application using Menu/Updates"
 msgstr ""
 
-#: src/MainWindow.py:809
+#: src/MainWindow.py:799
 msgid "Could not connect to server."
 msgstr ""
 
-#: src/MainWindow.py:810
+#: src/MainWindow.py:800
 msgid "Server address"
 msgstr ""
 
-#: src/MainWindow.py:838
+#: src/MainWindow.py:828
 msgid "Updating Cache"
 msgstr ""
 
-#: src/MainWindow.py:901
+#: src/MainWindow.py:891
 msgid "Save File"
 msgstr ""
 
-#: src/MainWindow.py:904
+#: src/MainWindow.py:894
 msgid "Save"
 msgstr ""
 
-#: src/MainWindow.py:960 src/MainWindow.py:963
+#: src/MainWindow.py:950 src/MainWindow.py:953
 msgid "Image"
 msgstr ""
 
-#: src/MainWindow.py:1010
+#: src/MainWindow.py:1000
 msgid "Status"
 msgstr ""
 
-#: src/MainWindow.py:1016 src/MainWindow.py:4658
+#: src/MainWindow.py:1006 src/MainWindow.py:4797
 msgid "Name"
 msgstr ""
 
-#: src/MainWindow.py:1022
+#: src/MainWindow.py:1012
 msgid "Section"
 msgstr ""
 
-#: src/MainWindow.py:1075
+#: src/MainWindow.py:1065
 msgid "Getting applications from server"
 msgstr ""
 
-#: src/MainWindow.py:1205 src/MainWindow.py:1210
+#: src/MainWindow.py:1196 src/MainWindow.py:1201
 msgid "Couldn't get icons"
 msgstr ""
 
-#: src/MainWindow.py:1206
+#: src/MainWindow.py:1197
 msgid "Application icons could not be retrieved from the server"
 msgstr ""
 
-#: src/MainWindow.py:1211
+#: src/MainWindow.py:1202
 msgid "Category icons could not be retrieved from the server"
 msgstr ""
 
-#: src/MainWindow.py:1238
+#: src/MainWindow.py:1229
 msgid "Getting icons from server"
 msgstr ""
 
-#: src/MainWindow.py:1391 src/MainWindow.py:3670
+#: src/MainWindow.py:1382 src/MainWindow.py:3735
 msgid "All"
 msgstr ""
 
-#: src/MainWindow.py:2196
+#: src/MainWindow.py:2194
 msgid "Size"
 msgstr ""
 
-#: src/MainWindow.py:2336 src/MainWindow.py:4474
+#: src/MainWindow.py:2335 src/MainWindow.py:4613
 msgid "View on "
 msgstr ""
 
-#: src/MainWindow.py:2336 src/MainWindow.py:4474
+#: src/MainWindow.py:2335 src/MainWindow.py:4613
 msgid "."
 msgstr ""
 
-#: src/MainWindow.py:2358 src/MainWindow.py:2444
+#: src/MainWindow.py:2357 src/MainWindow.py:2444
 msgid "Non-Free"
 msgstr ""
 
-#: src/MainWindow.py:2361 src/MainWindow.py:2447
+#: src/MainWindow.py:2360 src/MainWindow.py:2447
 msgid "Open Source"
 msgstr ""
 
-#: src/MainWindow.py:2373 src/MainWindow.py:4248 src/MainWindow.py:5473
-#: src/MainWindow.py:5540
+#: src/MainWindow.py:2372 src/MainWindow.py:4387 src/MainWindow.py:5619
+#: src/MainWindow.py:5688
 msgid " Uninstall"
 msgstr ""
 
-#: src/MainWindow.py:2387 src/MainWindow.py:4254 src/MainWindow.py:5491
-#: src/MainWindow.py:5546
+#: src/MainWindow.py:2386 src/MainWindow.py:4393 src/MainWindow.py:5638
+#: src/MainWindow.py:5694
 msgid " Install"
 msgstr ""
 
-#: src/MainWindow.py:2394 src/MainWindow.py:2433 src/MainWindow.py:3230
-#: src/MainWindow.py:3374 src/MainWindow.py:5498
+#: src/MainWindow.py:2393 src/MainWindow.py:2433 src/MainWindow.py:3277
+#: src/MainWindow.py:3431 src/MainWindow.py:5646
 msgid "You need to install the application"
 msgstr ""
 
-#: src/MainWindow.py:2400 src/MainWindow.py:4270 src/MainWindow.py:5221
-#: src/MainWindow.py:5222
+#: src/MainWindow.py:2399 src/MainWindow.py:4409 src/MainWindow.py:5362
+#: src/MainWindow.py:5363
 msgid " Removing"
 msgstr ""
 
-#: src/MainWindow.py:2402 src/MainWindow.py:4272 src/MainWindow.py:5227
-#: src/MainWindow.py:5228
+#: src/MainWindow.py:2401 src/MainWindow.py:4411 src/MainWindow.py:5368
+#: src/MainWindow.py:5369
 msgid " Installing"
 msgstr ""
 
-#: src/MainWindow.py:2414 src/MainWindow.py:4263 src/MainWindow.py:5517
+#: src/MainWindow.py:2413 src/MainWindow.py:4402 src/MainWindow.py:5665
 msgid " Not Found"
 msgstr ""
 
-#: src/MainWindow.py:2439 src/MainWindow.py:5508
+#: src/MainWindow.py:2439 src/MainWindow.py:5656
 msgid "Enable Repo"
 msgstr ""
 
@@ -809,354 +817,358 @@ msgstr ""
 msgid "App Version"
 msgstr ""
 
-#: src/MainWindow.py:2883 src/MainWindow.py:2937 src/MainWindow.py:2946
-#: src/MainWindow.py:3179 src/MainWindow.py:3186 src/MainWindow.py:3193
-#: src/MainWindow.py:3200 src/MainWindow.py:3207 src/MainWindow.py:3214
+#: src/MainWindow.py:2883 src/MainWindow.py:2975 src/MainWindow.py:2984
+#: src/MainWindow.py:3226 src/MainWindow.py:3233 src/MainWindow.py:3240
+#: src/MainWindow.py:3247 src/MainWindow.py:3254 src/MainWindow.py:3261
 msgid "Your Rate"
 msgstr ""
 
-#: src/MainWindow.py:2898
+#: src/MainWindow.py:2898 src/MainWindow.py:3001
+msgid "Edit Comment"
+msgstr ""
+
+#: src/MainWindow.py:2935
 msgid ""
 "Your comment has been sent successfully. It will be published after approval."
 msgstr ""
 
-#: src/MainWindow.py:2904 src/MainWindow.py:2917
+#: src/MainWindow.py:2942 src/MainWindow.py:2955
 msgid "Please try again soon"
 msgstr ""
 
-#: src/MainWindow.py:2906 src/MainWindow.py:2919 src/MainWindow.py:2921
-#: src/MainWindow.py:3371 src/MainWindow.py:4620 src/MainWindow.py:5013
+#: src/MainWindow.py:2944 src/MainWindow.py:2957 src/MainWindow.py:2959
+#: src/MainWindow.py:3427 src/MainWindow.py:4759 src/MainWindow.py:5152
 msgid "Error"
 msgstr ""
 
-#: src/MainWindow.py:2927
+#: src/MainWindow.py:2965
 msgid "Download"
 msgstr ""
 
-#: src/MainWindow.py:3350
+#: src/MainWindow.py:3406
 msgid "Cannot be null"
 msgstr ""
 
-#: src/MainWindow.py:3869
+#: src/MainWindow.py:3934
 msgid "Updating"
 msgstr ""
 
-#: src/MainWindow.py:3876
+#: src/MainWindow.py:3941
 msgid "Package manager is busy, try again later."
 msgstr ""
 
-#: src/MainWindow.py:3888
+#: src/MainWindow.py:3953
 msgid "Please try again after the processes in the queue are completed."
 msgstr ""
 
-#: src/MainWindow.py:3978
+#: src/MainWindow.py:4043
 msgid "Will be removed"
 msgstr ""
 
-#: src/MainWindow.py:3980
+#: src/MainWindow.py:4045
 msgid "Will be installed"
 msgstr ""
 
-#: src/MainWindow.py:3991 src/MainWindow.py:5358
+#: src/MainWindow.py:4056 src/MainWindow.py:5499
 msgid "You cannot cancel because the application is in progress."
 msgstr ""
 
-#: src/MainWindow.py:3993 src/MainWindow.py:5282 src/MainWindow.py:5361
+#: src/MainWindow.py:4058 src/MainWindow.py:5423 src/MainWindow.py:5502
 msgid "Removing"
 msgstr ""
 
-#: src/MainWindow.py:3995 src/MainWindow.py:5285 src/MainWindow.py:5363
+#: src/MainWindow.py:4060 src/MainWindow.py:5426 src/MainWindow.py:5504
 msgid "Installing"
 msgstr ""
 
-#: src/MainWindow.py:4105
+#: src/MainWindow.py:4170
 msgid "The following important packages will also be removed."
 msgstr ""
 
-#: src/MainWindow.py:4107
-msgid "Are you sure you accept this ?"
+#: src/MainWindow.py:4172
+msgid "Are you sure you accept this?"
 msgstr ""
 
-#: src/MainWindow.py:4182 src/MainWindow.py:5150 src/MainWindow.py:5171
-#: src/MainWindow.py:5192
+#: src/MainWindow.py:4321 src/MainWindow.py:5291 src/MainWindow.py:5312
+#: src/MainWindow.py:5333
 msgid "all"
 msgstr ""
 
-#: src/MainWindow.py:4351
+#: src/MainWindow.py:4490
 msgid "Server Address"
 msgstr ""
 
-#: src/MainWindow.py:4373
+#: src/MainWindow.py:4512
 msgid "Deactivate"
 msgstr ""
 
-#: src/MainWindow.py:4375
+#: src/MainWindow.py:4514
 msgid "Activate"
 msgstr ""
 
-#: src/MainWindow.py:4385
+#: src/MainWindow.py:4524
 msgid "Default"
 msgstr ""
 
-#: src/MainWindow.py:4482
+#: src/MainWindow.py:4621
 msgid "Daily App Download Counts (Last 30 Days)"
 msgstr ""
 
-#: src/MainWindow.py:4505
+#: src/MainWindow.py:4644
 msgid "Used Operating Systems (For App Download)"
 msgstr ""
 
-#: src/MainWindow.py:4520
+#: src/MainWindow.py:4659
 msgid "Top 30 App Downloads"
 msgstr ""
 
-#: src/MainWindow.py:4561
+#: src/MainWindow.py:4700
 msgid "Select Category"
 msgstr ""
 
-#: src/MainWindow.py:4620
+#: src/MainWindow.py:4759
 msgid "is empty"
 msgstr ""
 
-#: src/MainWindow.py:4661
+#: src/MainWindow.py:4800
 msgid "Mail"
 msgstr ""
 
-#: src/MainWindow.py:4668
+#: src/MainWindow.py:4807
 msgid "Icon not found"
 msgstr ""
 
-#: src/MainWindow.py:4671
+#: src/MainWindow.py:4810
 msgid "Icon size must be less than 1 MB"
 msgstr ""
 
-#: src/MainWindow.py:4676
+#: src/MainWindow.py:4815
 msgid "Icon file read error"
 msgstr ""
 
-#: src/MainWindow.py:4681 src/MainWindow.py:4684
+#: src/MainWindow.py:4820 src/MainWindow.py:4823
 msgid "Icon file must be svg"
 msgstr ""
 
-#: src/MainWindow.py:4708
+#: src/MainWindow.py:4847
 msgid ""
 "If you use the server icons, the application icons will be pulled from the "
 "server completely."
 msgstr ""
 
-#: src/MainWindow.py:4709
+#: src/MainWindow.py:4848
 msgid ""
 "If you turn this option off, application icons will be pulled from your "
 "system,"
 msgstr ""
 
-#: src/MainWindow.py:4710
+#: src/MainWindow.py:4849
 msgid "which may cause some application icons to appear blank."
 msgstr ""
 
-#: src/MainWindow.py:4714
+#: src/MainWindow.py:4853
 msgid "Transition animations in the application."
 msgstr ""
 
-#: src/MainWindow.py:4719
+#: src/MainWindow.py:4858
 msgid "Show only available applications in"
 msgstr ""
 
-#: src/MainWindow.py:4719
+#: src/MainWindow.py:4858
 msgid "repository."
 msgstr ""
 
-#: src/MainWindow.py:4720
+#: src/MainWindow.py:4859
 msgid "If you turn this option off, all apps will be shown, but"
 msgstr ""
 
-#: src/MainWindow.py:4721
+#: src/MainWindow.py:4860
 msgid "'Not Found' will be displayed for apps not available in the repository."
 msgstr ""
 
-#: src/MainWindow.py:4726
+#: src/MainWindow.py:4865
 msgid ""
 "Hide applications offered from external repositories (other than Official "
 "Pardus repository)."
 msgstr ""
 
-#: src/MainWindow.py:4727
+#: src/MainWindow.py:4866
 msgid "For example, publisher's applications in the Publishers category."
 msgstr ""
 
-#: src/MainWindow.py:4733
+#: src/MainWindow.py:4872
 msgid "Default icons use Papirus icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4735
+#: src/MainWindow.py:4874
 msgid "Candy is Candy icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4737
+#: src/MainWindow.py:4876
 msgid "Flat is Flat Remix icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4739
+#: src/MainWindow.py:4878
 msgid "Flatery is Flatery icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4741
+#: src/MainWindow.py:4880
 msgid "Kora is Kora icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4743
+#: src/MainWindow.py:4882
 msgid "Numix is Numix Circle icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4745
+#: src/MainWindow.py:4884
 msgid "Oranchelo is Oranchelo icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4747
+#: src/MainWindow.py:4886
 msgid "Tela is Tela icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4749
+#: src/MainWindow.py:4888
 msgid "Zafiro is Zafiro icon theme."
 msgstr ""
 
-#: src/MainWindow.py:4756
+#: src/MainWindow.py:4895
 msgid "Show gnome comments in app comments."
 msgstr ""
 
-#: src/MainWindow.py:4757
+#: src/MainWindow.py:4896
 msgid ""
 "GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</"
 "a>."
 msgstr ""
 
-#: src/MainWindow.py:4763
+#: src/MainWindow.py:4902
 msgid "Whether the application prefers to use a dark theme."
 msgstr ""
 
-#: src/MainWindow.py:4764
+#: src/MainWindow.py:4903
 msgid ""
 "If a GTK+ theme includes a dark variant, it will be used instead of the "
 "configured theme."
 msgstr ""
 
-#: src/MainWindow.py:4769
+#: src/MainWindow.py:4908
 msgid "The value in your configuration file is used as the wait time."
 msgstr ""
 
-#: src/MainWindow.py:4777 src/MainWindow.py:4785
+#: src/MainWindow.py:4916 src/MainWindow.py:4924
 msgid ""
 "Allows the package manager cache to be updated again on the next application "
 "start if"
 msgstr ""
 
-#: src/MainWindow.py:4779 src/MainWindow.py:4787
+#: src/MainWindow.py:4918 src/MainWindow.py:4926
 msgid "have passed since the last successful update."
 msgstr ""
 
-#: src/MainWindow.py:4780 src/MainWindow.py:4788
+#: src/MainWindow.py:4919 src/MainWindow.py:4927
 msgid "Last successful update time is"
 msgstr ""
 
-#: src/MainWindow.py:4797
+#: src/MainWindow.py:4936
 msgid "weeks"
 msgstr ""
 
-#: src/MainWindow.py:4798
+#: src/MainWindow.py:4937
 msgid "days"
 msgstr ""
 
-#: src/MainWindow.py:4799
+#: src/MainWindow.py:4938
 msgid "hours"
 msgstr ""
 
-#: src/MainWindow.py:4800
+#: src/MainWindow.py:4939
 msgid "minutes"
 msgstr ""
 
-#: src/MainWindow.py:4801
+#: src/MainWindow.py:4940
 msgid "seconds"
 msgstr ""
 
-#: src/MainWindow.py:5009
+#: src/MainWindow.py:5148
 msgid "Cleared"
 msgstr ""
 
-#: src/MainWindow.py:5010
+#: src/MainWindow.py:5149
 msgid "Cache files cleared, please close and reopen the application"
 msgstr ""
 
-#: src/MainWindow.py:5073 src/MainWindow.py:5090 src/MainWindow.py:5106
+#: src/MainWindow.py:5212 src/MainWindow.py:5229 src/MainWindow.py:5245
 msgid "Package manager is busy"
 msgstr ""
 
-#: src/MainWindow.py:5240
+#: src/MainWindow.py:5381
 msgid " Activating"
 msgstr ""
 
-#: src/MainWindow.py:5277
+#: src/MainWindow.py:5418
 msgid "Downloading"
 msgstr ""
 
-#: src/MainWindow.py:5311
+#: src/MainWindow.py:5452
 msgid " | Removed : 100 %"
 msgstr ""
 
-#: src/MainWindow.py:5313
+#: src/MainWindow.py:5454
 msgid " | Installed : 100 %"
 msgstr ""
 
-#: src/MainWindow.py:5315
+#: src/MainWindow.py:5456
 msgid " |  Not Completed"
 msgstr ""
 
-#: src/MainWindow.py:5317
+#: src/MainWindow.py:5458
 msgid "<b><span color='red'>Connection Error !</span></b>"
 msgstr ""
 
-#: src/MainWindow.py:5319
+#: src/MainWindow.py:5460
 msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
 msgstr ""
 
-#: src/MainWindow.py:5321
+#: src/MainWindow.py:5462
 msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
 msgstr ""
 
-#: src/MainWindow.py:5380
+#: src/MainWindow.py:5521
 msgid ""
 "Only one software management tool is allowed to run at the same time.\n"
 "Please close the other application e.g. 'Update Manager', 'aptitude' or "
 "'Synaptic' first."
 msgstr ""
 
-#: src/MainWindow.py:5399 src/MainWindow.py:5405
+#: src/MainWindow.py:5540 src/MainWindow.py:5546
 msgid "No action required"
 msgstr ""
 
-#: src/MainWindow.py:5411
+#: src/MainWindow.py:5552
 msgid "All packages are up to date"
 msgstr ""
 
-#: src/MainWindow.py:5574
+#: src/MainWindow.py:5722
 msgid " Removed"
 msgstr ""
 
-#: src/MainWindow.py:5577
+#: src/MainWindow.py:5725
 msgid " Installed"
 msgstr ""
 
-#: src/MainWindow.py:5645
+#: src/MainWindow.py:5793
 msgid "Repo Activation Completed"
 msgstr ""
 
-#: src/MainWindow.py:5651
+#: src/MainWindow.py:5799
 msgid "Fixing of system package manager sources list is done."
 msgstr ""
 
-#: src/MainWindow.py:5652
+#: src/MainWindow.py:5800
 msgid "You can now update package manager cache."
 msgstr ""
 
-#: src/MainWindow.py:5677
+#: src/MainWindow.py:5825
 msgid "An error occurred while updating the package cache. Exit Code : "
 msgstr ""
