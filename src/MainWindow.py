@@ -21,8 +21,8 @@ from locale import getlocale
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
 
-locale.bindtextdomain('pardus-software', '/usr/share/locale')
-locale.textdomain('pardus-software')
+locale.bindtextdomain("pardus-software", "/usr/share/locale")
+locale.textdomain("pardus-software")
 
 gi.require_version("GLib", "2.0")
 gi.require_version("Gtk", "3.0")
@@ -34,6 +34,7 @@ from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk, Vte
 from Package import Package
 from Server import Server
 from GnomeRatingServer import GnomeRatingServer
+
 # from CellRendererButton import CellRendererButton
 
 from AppImage import AppImage
@@ -48,7 +49,9 @@ class MainWindow(object):
     def __init__(self, application):
         self.Application = application
 
-        self.MainWindowUIFileName = os.path.dirname(os.path.abspath(__file__)) + "/../ui/MainWindow.glade"
+        self.MainWindowUIFileName = (
+            os.path.dirname(os.path.abspath(__file__)) + "/../ui/MainWindow.glade"
+        )
         try:
             self.GtkBuilder = Gtk.Builder.new_from_file(self.MainWindowUIFileName)
             self.GtkBuilder.connect_signals(self)
@@ -70,36 +73,65 @@ class MainWindow(object):
         self.dpkgconferror = False
 
         try:
-            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
-                                                                        Gtk.IconLookupFlags(16))
+            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon(
+                "gtk-missing-image", 96, Gtk.IconLookupFlags(16)
+            )
         except:
-            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
-                                                                        Gtk.IconLookupFlags(16))
+            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon(
+                "image-missing", 96, Gtk.IconLookupFlags(16)
+            )
 
         self.staron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 24, 24
+        )
         self.staroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__))
+            + "/../images/rating-unrated.svg",
+            24,
+            24,
+        )
 
         self.staronhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover.svg",
+            24,
+            24,
+        )
         self.staroffhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated-hover.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__))
+            + "/../images/rating-unrated-hover.svg",
+            24,
+            24,
+        )
 
         self.cstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16
+        )
         self.cstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__))
+            + "/../images/rating-unrated.svg",
+            16,
+            16,
+        )
 
         self.gcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16
+        )
         self.gcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__))
+            + "/../images/rating-unrated.svg",
+            16,
+            16,
+        )
 
         self.wpcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 38, 38)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 38, 38
+        )
         self.wpcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 38, 38)
+            os.path.dirname(os.path.abspath(__file__))
+            + "/../images/rating-unrated.svg",
+            38,
+            38,
+        )
 
         self.isPardusSearching = False
         self.isRepoSearching = False
@@ -180,7 +212,9 @@ class MainWindow(object):
         # self.dOpenButton.get_style_context().add_class("circular")
         self.dDisclaimerButton = self.GtkBuilder.get_object("dDisclaimerButton")
         self.DisclaimerPopover = self.GtkBuilder.get_object("DisclaimerPopover")
-        self.RequiredChangesPopover = self.GtkBuilder.get_object("RequiredChangesPopover")
+        self.RequiredChangesPopover = self.GtkBuilder.get_object(
+            "RequiredChangesPopover"
+        )
         self.dapp_packagename_box = self.GtkBuilder.get_object("dapp_packagename_box")
         self.dapp_toremove_box = self.GtkBuilder.get_object("dapp_toremove_box")
         self.dapp_toinstall_box = self.GtkBuilder.get_object("dapp_toinstall_box")
@@ -188,7 +222,9 @@ class MainWindow(object):
         self.dapp_fsize_box = self.GtkBuilder.get_object("dapp_fsize_box")
         self.dapp_dsize_box = self.GtkBuilder.get_object("dapp_dsize_box")
         self.dapp_isize_box = self.GtkBuilder.get_object("dapp_isize_box")
-        self.dapp_packagename_label = self.GtkBuilder.get_object("dapp_packagename_label")
+        self.dapp_packagename_label = self.GtkBuilder.get_object(
+            "dapp_packagename_label"
+        )
         self.dapp_toremove_label = self.GtkBuilder.get_object("dapp_toremove_label")
         self.dapp_toinstall_label = self.GtkBuilder.get_object("dapp_toinstall_label")
         self.dapp_broken_label = self.GtkBuilder.get_object("dapp_broken_label")
@@ -219,7 +255,6 @@ class MainWindow(object):
         self.dtUserRating = self.GtkBuilder.get_object("dtUserRating")
         self.dtAverageRating = self.GtkBuilder.get_object("dtAverageRating")
         self.dViewonweb = self.GtkBuilder.get_object("dViewonweb")
-
 
         self.dtStar1 = self.GtkBuilder.get_object("dtStar1")
         self.dtStar2 = self.GtkBuilder.get_object("dtStar2")
@@ -274,8 +309,13 @@ class MainWindow(object):
         self.gcStack = self.GtkBuilder.get_object("gcStack")
         self.CommentsNotebook = self.GtkBuilder.get_object("CommentsNotebook")
         self.gcInfoLabel = self.GtkBuilder.get_object("gcInfoLabel")
-        self.gcInfoLabel.set_markup("<small>{}</small>".format(
-            _("These comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>.")))
+        self.gcInfoLabel.set_markup(
+            "<small>{}</small>".format(
+                _(
+                    "These comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>."
+                )
+            )
+        )
 
         self.wpcstar = 0
 
@@ -297,27 +337,47 @@ class MainWindow(object):
 
         self.tryfixButton = self.GtkBuilder.get_object("tryfixButton")
         self.tryfixSpinner = self.GtkBuilder.get_object("tryfixSpinner")
-        self.headerAptUpdateSpinner = self.GtkBuilder.get_object("headerAptUpdateSpinner")
+        self.headerAptUpdateSpinner = self.GtkBuilder.get_object(
+            "headerAptUpdateSpinner"
+        )
 
         self.ui_myapps_app = self.GtkBuilder.get_object("ui_myapps_app")
         self.ui_myapps_package = self.GtkBuilder.get_object("ui_myapps_package")
         self.ui_myapps_icon = self.GtkBuilder.get_object("ui_myapps_icon")
         self.ui_myapps_description = self.GtkBuilder.get_object("ui_myapps_description")
-        self.ui_myapps_uninstall_button = self.GtkBuilder.get_object("ui_myapps_uninstall_button")
-        self.ui_myapps_accept_disclaimer = self.GtkBuilder.get_object("ui_myapps_accept_disclaimer")
+        self.ui_myapps_uninstall_button = self.GtkBuilder.get_object(
+            "ui_myapps_uninstall_button"
+        )
+        self.ui_myapps_accept_disclaimer = self.GtkBuilder.get_object(
+            "ui_myapps_accept_disclaimer"
+        )
         self.ui_myapps_spinner = self.GtkBuilder.get_object("ui_myapps_spinner")
-        self.ui_myapps_disclaimer_label = self.GtkBuilder.get_object("ui_myapps_disclaimer_label")
-        self.ui_myapps_notfoundname_box = self.GtkBuilder.get_object("ui_myapps_notfoundname_box")
-        self.ui_myapps_notfoundname_image = self.GtkBuilder.get_object("ui_myapps_notfoundname_image")
-        self.ui_myapps_notfoundname_name = self.GtkBuilder.get_object("ui_myapps_notfoundname_name")
-        self.ui_myapp_toremove_label = self.GtkBuilder.get_object("ui_myapp_toremove_label")
-        self.ui_myapp_toinstall_label = self.GtkBuilder.get_object("ui_myapp_toinstall_label")
+        self.ui_myapps_disclaimer_label = self.GtkBuilder.get_object(
+            "ui_myapps_disclaimer_label"
+        )
+        self.ui_myapps_notfoundname_box = self.GtkBuilder.get_object(
+            "ui_myapps_notfoundname_box"
+        )
+        self.ui_myapps_notfoundname_image = self.GtkBuilder.get_object(
+            "ui_myapps_notfoundname_image"
+        )
+        self.ui_myapps_notfoundname_name = self.GtkBuilder.get_object(
+            "ui_myapps_notfoundname_name"
+        )
+        self.ui_myapp_toremove_label = self.GtkBuilder.get_object(
+            "ui_myapp_toremove_label"
+        )
+        self.ui_myapp_toinstall_label = self.GtkBuilder.get_object(
+            "ui_myapp_toinstall_label"
+        )
         self.ui_myapp_broken_label = self.GtkBuilder.get_object("ui_myapp_broken_label")
         self.ui_myapp_fsize_label = self.GtkBuilder.get_object("ui_myapp_fsize_label")
         self.ui_myapp_dsize_label = self.GtkBuilder.get_object("ui_myapp_dsize_label")
         self.ui_myapp_isize_label = self.GtkBuilder.get_object("ui_myapp_isize_label")
         self.ui_myapp_toremove_box = self.GtkBuilder.get_object("ui_myapp_toremove_box")
-        self.ui_myapp_toinstall_box = self.GtkBuilder.get_object("ui_myapp_toinstall_box")
+        self.ui_myapp_toinstall_box = self.GtkBuilder.get_object(
+            "ui_myapp_toinstall_box"
+        )
         self.ui_myapp_broken_box = self.GtkBuilder.get_object("ui_myapp_broken_box")
         self.ui_myapp_fsize_box = self.GtkBuilder.get_object("ui_myapp_fsize_box")
         self.ui_myapp_dsize_box = self.GtkBuilder.get_object("ui_myapp_dsize_box")
@@ -534,10 +594,20 @@ class MainWindow(object):
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
 
-        self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
-                                   "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop",
-                                   "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
-                                   "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
+        self.important_packages = [
+            "pardus-common-desktop",
+            "pardus-xfce-desktop",
+            "pardus-gnome-desktop",
+            "pardus-edu-common-desktop",
+            "pardus-edu-gnome-desktop",
+            "eta-common-desktop",
+            "eta-gnome-desktop",
+            "eta-nonhid-gnome-desktop",
+            "eta-gnome-desktop-other",
+            "eta-nonhid-gnome-desktop-other",
+            "xfce4-session",
+            "gnome-session",
+        ]
 
         self.prefback = "pardushome"
 
@@ -565,11 +635,14 @@ class MainWindow(object):
         self.down_image = 0
 
         cssProvider = Gtk.CssProvider()
-        cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
+        cssProvider.load_from_path(
+            os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css"
+        )
         screen = Gdk.Screen.get_default()
         styleContext = Gtk.StyleContext()
-        styleContext.add_provider_for_screen(screen, cssProvider,
-                                             Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        styleContext.add_provider_for_screen(
+            screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER
+        )
         # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
 
         self.vteterm = Vte.Terminal()
@@ -594,7 +667,9 @@ class MainWindow(object):
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
         try:
-            version = open(os.path.dirname(os.path.abspath(__file__)) + "/__version__").readline()
+            version = open(
+                os.path.dirname(os.path.abspath(__file__)) + "/__version__"
+            ).readline()
             self.aboutdialog.set_version(version)
         except:
             pass
@@ -640,7 +715,7 @@ class MainWindow(object):
         except:
             AF_LINK = 17
         gateway_info = netifaces.gateways()
-        default_gateways = gateway_info['default']
+        default_gateways = gateway_info["default"]
         for family in default_gateways:
             interface = default_gateways[family][1]  # 0 for gateway, 1 for interface
             mac = netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]["addr"].upper()
@@ -648,7 +723,7 @@ class MainWindow(object):
         if mac is None or mac == "":
             print("mac address can not get from netifaces, trying psutil")
             nics = psutil.net_if_addrs()
-            nics.pop('lo')  # remove loopback
+            nics.pop("lo")  # remove loopback
             for i in nics:
                 for j in nics[i]:
                     if j.family == AF_LINK:
@@ -694,24 +769,40 @@ class MainWindow(object):
                 waittime = self.Server.aptuptime
             else:
                 waittime = self.UserSettings.config_forceaptuptime
-            if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()):
+            if self.UserSettings.config_lastaptup + waittime < int(
+                datetime.now().timestamp()
+            ):
                 self.headerAptUpdateSpinner.start()
-                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py"]
+                command = [
+                    "/usr/bin/pkexec",
+                    os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py",
+                ]
                 self.startAptUpdateProcess(command)
 
     def controlPSUpdate(self):
-        if self.Server.connection and self.UserSettings.usercodename == "yirmibir" and not self.isbroken:
+        if (
+            self.Server.connection
+            and self.UserSettings.usercodename == "yirmibir"
+            and not self.isbroken
+        ):
             user_version = self.Package.installedVersion("pardus-software")
             server_version = self.Server.appversion
             if user_version is not None and server_version != "":
                 version = self.Package.versionCompare(user_version, server_version)
                 if version < 0:
-                    self.notify(message_summary=_("Pardus Software Center | New version available"),
-                                message_body=_("Please upgrade application using Menu/Updates"))
+                    self.notify(
+                        message_summary=_(
+                            "Pardus Software Center | New version available"
+                        ),
+                        message_body=_("Please upgrade application using Menu/Updates"),
+                    )
 
     def controlAvailableApps(self):
         if self.Server.connection:
-            self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=self.UserSettings.config_hera)
+            self.setAvailableApps(
+                available=self.UserSettings.config_saa,
+                hideextapps=self.UserSettings.config_hera,
+            )
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
@@ -728,13 +819,24 @@ class MainWindow(object):
                 if ".desktop" in app:
                     app = "{}".format(app.split(".desktop")[0])
                 for apps in self.fullapplist:
-                    if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or \
-                            app == apps["gnomename"].split(".desktop")[0] or \
-                            any(app == e for e in apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
+                    if (
+                        app == apps["name"]
+                        or app == apps["desktop"].split(".desktop")[0]
+                        or app == apps["gnomename"].split(".desktop")[0]
+                        or any(
+                            app == e
+                            for e in apps["desktopextras"]
+                            .replace(" ", "")
+                            .replace(".desktop", "")
+                            .split(",")
+                        )
+                    ):
                         found = True
                         # self.set_stack_n_search(1)
                         self.topsearchbutton.set_active(False)
-                        app = apps["name"]  # if the name is coming from desktop then set it to app name
+                        app = apps[
+                            "name"
+                        ]  # if the name is coming from desktop then set it to app name
                         self.fromdetails = True
                         self.detailsappname = app
                         self.mostappname = None
@@ -745,16 +847,23 @@ class MainWindow(object):
             try:
                 if not found:
                     if ".desktop" in self.Application.args["details"]:
-                        process = subprocess.run(["dpkg", "-S", self.Application.args["details"]], stdout=subprocess.PIPE)
+                        process = subprocess.run(
+                            ["dpkg", "-S", self.Application.args["details"]],
+                            stdout=subprocess.PIPE,
+                        )
                         output = process.stdout.decode("utf-8")
-                        app = output[:output.find(":")].split(",")[0]
+                        app = output[: output.find(":")].split(",")[0]
                     else:
                         app = "{}.desktop".format(self.Application.args["details"])
-                        process = subprocess.run(["dpkg", "-S", app], stdout=subprocess.PIPE)
+                        process = subprocess.run(
+                            ["dpkg", "-S", app], stdout=subprocess.PIPE
+                        )
                         output = process.stdout.decode("utf-8")
-                        app = output[:output.find(":")].split(",")[0]
+                        app = output[: output.find(":")].split(",")[0]
                     if app == "":
-                        app = "{}".format(self.Application.args["details"].split(".desktop")[0])
+                        app = "{}".format(
+                            self.Application.args["details"].split(".desktop")[0]
+                        )
 
                     self.reposearchbar.set_text(app)
                     self.on_topbutton2_clicked(None)
@@ -762,7 +871,9 @@ class MainWindow(object):
                     for row in self.searchstore:
                         if app == row[0]:
                             self.RepoAppsTreeView.set_cursor(row.path)
-                            self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+                            self.on_RepoAppsTreeView_row_activated(
+                                self.RepoAppsTreeView, row.path, 0
+                            )
             except Exception as e:
                 print(str(e))
 
@@ -796,8 +907,13 @@ class MainWindow(object):
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
-                "<b>{}\n\n{}\n\n{}: {}</b>".format(_("Could not connect to server."), self.Server.error_message,
-                                                 _("Server address"), self.Server.serverurl))
+                "<b>{}\n\n{}\n\n{}: {}</b>".format(
+                    _("Could not connect to server."),
+                    self.Server.error_message,
+                    _("Server address"),
+                    self.Server.serverurl,
+                )
+            )
             GLib.idle_add(self.topsearchbutton.set_sensitive, False)
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
             if self.myapps_perm == 1:
@@ -825,7 +941,9 @@ class MainWindow(object):
     def package(self):
         # self.splashspinner.start()
         # self.splashbar.pulse()
-        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
+        GLib.idle_add(
+            self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache"))
+        )
         self.Package = Package()
         if self.Package.updatecache():
             self.isbroken = False
@@ -850,7 +968,11 @@ class MainWindow(object):
         print("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
         print("{} {}".format("config_aptup", self.UserSettings.config_aptup))
         print("{} {}".format("config_lastaptup", self.UserSettings.config_lastaptup))
-        print("{} {}".format("config_forceaptuptime", self.UserSettings.config_forceaptuptime))
+        print(
+            "{} {}".format(
+                "config_forceaptuptime", self.UserSettings.config_forceaptuptime
+            )
+        )
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -858,7 +980,9 @@ class MainWindow(object):
         self.resizePopImage()
         self.ImagePopover.show_all()
         self.ImagePopover.popup()
-        self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
+        self.fullscreen_image.set_from_icon_name(
+            "view-fullscreen-symbolic", Gtk.IconSize.BUTTON
+        )
 
     def on_dEventBox2_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -866,7 +990,9 @@ class MainWindow(object):
         self.resizePopImage()
         self.ImagePopover.show_all()
         self.ImagePopover.popup()
-        self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
+        self.fullscreen_image.set_from_icon_name(
+            "view-fullscreen-symbolic", Gtk.IconSize.BUTTON
+        )
 
     def on_imgBackButton_clicked(self, button):
         if self.ImagePopoverStack.get_visible_child_name() != "image1":
@@ -888,15 +1014,24 @@ class MainWindow(object):
         subprocess.Popen(["xdg-open", image])
 
     def on_imgDownloadButton_clicked(self, button):
-        filesave_chooser = Gtk.FileChooserDialog(title=_("Save File"), parent=self.MainWindow,
-                                                 action=Gtk.FileChooserAction.SAVE)
+        filesave_chooser = Gtk.FileChooserDialog(
+            title=_("Save File"),
+            parent=self.MainWindow,
+            action=Gtk.FileChooserAction.SAVE,
+        )
         filesave_chooser.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
-        filesave_chooser.add_button(_("Save"), Gtk.ResponseType.ACCEPT).get_style_context().add_class(
-            "suggested-action")
+        filesave_chooser.add_button(
+            _("Save"), Gtk.ResponseType.ACCEPT
+        ).get_style_context().add_class("suggested-action")
 
-        filesave_chooser.set_current_name("{}_{}.png".format(
-            os.path.splitext(os.path.basename(self.screenshots[self.down_image]))[0],
-            datetime.now().strftime("%Y-%m-%d_%H-%M-%S")))
+        filesave_chooser.set_current_name(
+            "{}_{}.png".format(
+                os.path.splitext(os.path.basename(self.screenshots[self.down_image]))[
+                    0
+                ],
+                datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),
+            )
+        )
 
         response = filesave_chooser.run()
         if response == Gtk.ResponseType.ACCEPT:
@@ -912,11 +1047,15 @@ class MainWindow(object):
         if self.imgfullscreen_count % 2 == 1:
             self.imgfullscreen = True
             self.resizePopImage(True)
-            self.fullscreen_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
+            self.fullscreen_image.set_from_icon_name(
+                "view-restore-symbolic", Gtk.IconSize.BUTTON
+            )
         else:
             self.imgfullscreen = False
             self.resizePopImage()
-            self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
+            self.fullscreen_image.set_from_icon_name(
+                "view-fullscreen-symbolic", Gtk.IconSize.BUTTON
+            )
 
     def on_ImagePopover_key_press_event(self, widget, event):
 
@@ -937,12 +1076,16 @@ class MainWindow(object):
             if self.imgfullscreen_count % 2 == 1:
                 self.imgfullscreen = True
                 self.resizePopImage(True)
-                self.fullscreen_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
+                self.fullscreen_image.set_from_icon_name(
+                    "view-restore-symbolic", Gtk.IconSize.BUTTON
+                )
                 return True
             else:
                 self.imgfullscreen = False
                 self.resizePopImage()
-                self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
+                self.fullscreen_image.set_from_icon_name(
+                    "view-fullscreen-symbolic", Gtk.IconSize.BUTTON
+                )
                 return True
 
     def setPopImage(self, image):
@@ -997,7 +1140,9 @@ class MainWindow(object):
             if not self.repoappsinit:
                 renderer_toggle = Gtk.CellRendererToggle()
                 renderer_toggle.connect("toggled", self.on_cell_toggled)
-                column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=3)
+                column_toggle = Gtk.TreeViewColumn(
+                    _("Status"), renderer_toggle, active=3
+                )
                 column_toggle.set_resizable(True)
                 column_toggle.set_sort_column_id(3)
                 self.RepoAppsTreeView.append_column(column_toggle)
@@ -1062,7 +1207,10 @@ class MainWindow(object):
     def server(self):
         # self.splashbar.pulse()
         print("Getting applications from server")
-        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting applications from server")))
+        GLib.idle_add(
+            self.splashlabel.set_markup,
+            "<b>{}</b>".format(_("Getting applications from server")),
+        )
         # self.splashlabel.set_markup()
         self.Server = Server()
 
@@ -1090,7 +1238,9 @@ class MainWindow(object):
                 self.Server.serverurl = open(conffile, "r").read().strip()
                 print("{}".format("server url getted from old type one line config"))
             except Exception as e:
-                print("Error getting server url from conf so setting to https://apps.pardus.org.tr")
+                print(
+                    "Error getting server url from conf so setting to https://apps.pardus.org.tr"
+                )
                 print("{}".format(e))
                 self.Server.serverurl = "https://apps.pardus.org.tr"
         else:
@@ -1105,7 +1255,9 @@ class MainWindow(object):
         try:
             self.myapps_perm = int(self.myapps_perm)
         except:
-            print("myapps_perm key's value must be int. 1 or 0. So setting to default value 1")
+            print(
+                "myapps_perm key's value must be int. 1 or 0. So setting to default value 1"
+            )
             self.myapps_perm = 1
 
         print("server url: {}".format(self.Server.serverurl))
@@ -1117,7 +1269,9 @@ class MainWindow(object):
         self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
         self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
         self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
-        self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
+        self.Server.get(
+            self.Server.serverurl + self.Server.serverstatistics, "statistics"
+        )
 
         # self.applist = sorted(self.Server.applist, key=lambda x: x["prettyname"][self.locale])
         # self.fullapplist = self.applist
@@ -1148,7 +1302,10 @@ class MainWindow(object):
             if type == "apps":
                 print("server apps successful")
                 self.status_serverapps = True
-                self.applist = sorted(response["app-list"], key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
+                self.applist = sorted(
+                    response["app-list"],
+                    key=lambda x: locale.strxfrm(x["prettyname"][self.locale]),
+                )
                 self.fullapplist = self.applist
             elif type == "cats":
                 print("server cats successful")
@@ -1180,7 +1337,12 @@ class MainWindow(object):
                 self.Server.oscolors = response["oscolors"]
                 self.Server.appcolors = response["appcolors"]
 
-            if self.status_serverapps and self.status_servercats and self.status_serverhome and self.status_serverstatistics:
+            if (
+                self.status_serverapps
+                and self.status_servercats
+                and self.status_serverhome
+                and self.status_serverstatistics
+            ):
                 self.Server.connection = True
                 self.getIcons()
         else:
@@ -1193,13 +1355,21 @@ class MainWindow(object):
             if type == self.Server.serverappicons:
                 self.serverappicons_done = True
                 if not status:
-                    self.notify(message_summary=_("Couldn't get icons"),
-                                message_body=_("Application icons could not be retrieved from the server"))
+                    self.notify(
+                        message_summary=_("Couldn't get icons"),
+                        message_body=_(
+                            "Application icons could not be retrieved from the server"
+                        ),
+                    )
             elif type == self.Server.servercaticons:
                 self.servercaticons_done = True
                 if not status:
-                    self.notify(message_summary=_("Couldn't get icons"),
-                                message_body=_("Category icons could not be retrieved from the server"))
+                    self.notify(
+                        message_summary=_("Couldn't get icons"),
+                        message_body=_(
+                            "Category icons could not be retrieved from the server"
+                        ),
+                    )
             if self.serverappicons_done and self.servercaticons_done:
                 self.afterServers()
         else:
@@ -1226,26 +1396,51 @@ class MainWindow(object):
     def getIcons(self):
         if self.Server.connection:
             print("Getting icons from server")
-            GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting icons from server")))
+            GLib.idle_add(
+                self.splashlabel.set_markup,
+                "<b>{}</b>".format(_("Getting icons from server")),
+            )
             redown_app_icons, redown_cat_icons = self.Server.controlIcons()
             if redown_app_icons:
                 self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
-                    self.Server.serverappicons, force_download=True)
+                    self.Server.serverurl
+                    + self.Server.serverfiles
+                    + self.Server.serverappicons
+                    + self.Server.serverarchive,
+                    self.Server.serverappicons,
+                    force_download=True,
+                )
             else:
                 self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
-                    self.Server.serverappicons)
+                    self.Server.serverurl
+                    + self.Server.serverfiles
+                    + self.Server.serverappicons
+                    + self.Server.serverarchive,
+                    self.Server.serverappicons,
+                )
             if redown_cat_icons:
                 self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
-                    self.Server.servercaticons, force_download=True)
+                    self.Server.serverurl
+                    + self.Server.serverfiles
+                    + self.Server.servercaticons
+                    + self.Server.serverarchive,
+                    self.Server.servercaticons,
+                    force_download=True,
+                )
             else:
                 self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
-                    self.Server.servercaticons)
+                    self.Server.serverurl
+                    + self.Server.serverfiles
+                    + self.Server.servercaticons
+                    + self.Server.serverarchive,
+                    self.Server.servercaticons,
+                )
         else:
-            print("icons cannot downloading because server connection is {}".format(self.Server.connection))
+            print(
+                "icons cannot downloading because server connection is {}".format(
+                    self.Server.connection
+                )
+            )
 
     def controlServer(self):
         if self.Server.connection:
@@ -1283,7 +1478,7 @@ class MainWindow(object):
                     appicon = self.getServerAppIcon(app["name"])
                 else:
                     appicon = self.getSystemAppIcon(app["name"])
-                appname = app['name']
+                appname = app["name"]
                 prettyname = app["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
                     prettyname = app["prettyname"]["en"]
@@ -1297,7 +1492,17 @@ class MainWindow(object):
                     for i in app["subcategory"]:
                         subcategory += i[self.locale].lower() + ","
                     subcategory = subcategory.rstrip(",")
-                GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category, subcategory])
+                GLib.idle_add(
+                    self.addToPardusApps,
+                    [
+                        appicon,
+                        appname,
+                        categorynumber,
+                        prettyname,
+                        category,
+                        subcategory,
+                    ],
+                )
 
     def addToPardusApps(self, list):
         self.PardusAppListStore.append(list)
@@ -1307,16 +1512,40 @@ class MainWindow(object):
             self.catbuttons = []
             self.categories = []
             for cat in self.catlist:
-                self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"],
-                                        "subcats": cat["subcats"],
-                                        "subcategories": cat["subcategories"] if "subcategories" in cat.keys() else []})
+                self.categories.append(
+                    {
+                        "name": cat[self.locale],
+                        "icon": cat["en"],
+                        "external": cat["external"],
+                        "subcats": cat["subcats"],
+                        "subcategories": cat["subcategories"]
+                        if "subcategories" in cat.keys()
+                        else [],
+                    }
+                )
             self.categories = sorted(self.categories, key=lambda x: x["name"])
             if self.locale == "tr":
-                self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False,
-                                           "subcategories": []})
+                self.categories.insert(
+                    0,
+                    {
+                        "name": "tümü",
+                        "icon": "all",
+                        "external": False,
+                        "subcats": False,
+                        "subcategories": [],
+                    },
+                )
             else:
-                self.categories.insert(0, {"name": "all", "icon": "all", "external": False, "subcats": False,
-                                           "subcategories": []})
+                self.categories.insert(
+                    0,
+                    {
+                        "name": "all",
+                        "icon": "all",
+                        "external": False,
+                        "subcats": False,
+                        "subcategories": [],
+                    },
+                )
 
             for cat in self.categories:
                 caticon = Gtk.Image.new()
@@ -1334,10 +1563,12 @@ class MainWindow(object):
                 button = Gtk.Button.new()
                 button.add(box1)
                 button.set_relief(Gtk.ReliefStyle.NONE)
-                button.connect('clicked', self.on_catbutton_clicked)
+                button.connect("clicked", self.on_catbutton_clicked)
                 button.name = cat["name"]
                 self.catbuttons.append(button)
-                GLib.idle_add(self.HomeCategoryFlowBox.insert, button, GLib.PRIORITY_DEFAULT_IDLE)
+                GLib.idle_add(
+                    self.HomeCategoryFlowBox.insert, button, GLib.PRIORITY_DEFAULT_IDLE
+                )
 
             GLib.idle_add(self.HomeCategoryFlowBox.show_all)
 
@@ -1363,12 +1594,23 @@ class MainWindow(object):
         self.isPardusSearching = False
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = -2
-        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
-        self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name_from_button(button.name)
+        (
+            self.PardusCurrentCategoryString,
+            self.PardusCurrentCategoryIcon,
+            self.PardusCurrentCategorySubCats,
+            self.PardusCurrentCategoryExternal,
+            self.PardusCurrentCategorySubCategories,
+        ) = self.get_category_name_from_button(button.name)
 
-        print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal,
-                                                    self.PardusCurrentCategorySubCategories))
+        print(
+            "HomeCategory: {} {} {} {} {}".format(
+                self.PardusCurrentCategory,
+                self.PardusCurrentCategoryString,
+                self.PardusCurrentCategorySubCats,
+                self.PardusCurrentCategoryExternal,
+                self.PardusCurrentCategorySubCategories,
+            )
+        )
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -1399,9 +1641,13 @@ class MainWindow(object):
                     for cat in i["category"]:
                         if cat[self.locale] == self.PardusCurrentCategoryString:
                             subcats.append(
-                                {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
-                                 "reponame": i["external"]["reponame"]})
-            subcats = list({u['reponame']: u for u in subcats}.values())
+                                {
+                                    "en": i["external"]["repoprettyen"],
+                                    "tr": i["external"]["repoprettytr"],
+                                    "reponame": i["external"]["reponame"],
+                                }
+                            )
+            subcats = list({u["reponame"]: u for u in subcats}.values())
             for sub in subcats:
                 caticon = Gtk.Image.new()
                 caticon.set_from_pixbuf(self.getServerCatIcon(sub["reponame"]))
@@ -1412,7 +1658,9 @@ class MainWindow(object):
                 box1.pack_start(caticon, False, True, 0)
                 box1.pack_start(label, False, True, 0)
                 box1.name = sub["reponame"]
-                GLib.idle_add(self.SubCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
+                GLib.idle_add(
+                    self.SubCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE
+                )
             GLib.idle_add(self.SubCategoryFlowBox.show_all)
         else:
             self.pardusicb.set_visible(True)
@@ -1425,19 +1673,22 @@ class MainWindow(object):
             print("setting editor apps")
             for ediapp in self.Server.ediapplist:
                 if self.UserSettings.config_usi:
-                    edipixbuf = self.getServerAppIcon(ediapp['name'])
+                    edipixbuf = self.getServerAppIcon(ediapp["name"])
                 else:
-                    edipixbuf = self.getSystemAppIcon(ediapp['name'])
+                    edipixbuf = self.getSystemAppIcon(ediapp["name"])
                 ediappname = ediapp["name"]
                 ediprettyname = ediapp["prettyname"][self.locale]
                 if ediprettyname == "" or ediprettyname is None:
                     ediprettyname = ediapp["prettyname"]["en"]
                 edicategory = ""
-                for i in ediapp['category']:
+                for i in ediapp["category"]:
                     edicategory += i[self.locale] + ","
                 edicategory = edicategory.rstrip(",")
                 edicategorynumber = self.get_category_number(edicategory)
-                GLib.idle_add(self.addToEditorApps, [edipixbuf, ediappname, edicategorynumber, ediprettyname])
+                GLib.idle_add(
+                    self.addToEditorApps,
+                    [edipixbuf, ediappname, edicategorynumber, ediprettyname],
+                )
 
     def addToEditorApps(self, list):
         self.EditorListStore.append(list)
@@ -1458,12 +1709,16 @@ class MainWindow(object):
                 label.set_max_width_chars(10)
                 label.name = mda["name"]
 
-                downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
+                downicon = Gtk.Image.new_from_icon_name(
+                    "document-save-symbolic", Gtk.IconSize.BUTTON
+                )
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(mda["download"]))
 
-                rateicon = Gtk.Image.new_from_icon_name("star-new-symbolic", Gtk.IconSize.BUTTON)
+                rateicon = Gtk.Image.new_from_icon_name(
+                    "star-new-symbolic", Gtk.IconSize.BUTTON
+                )
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mda["rate"])))
@@ -1496,9 +1751,13 @@ class MainWindow(object):
                 frame.get_style_context().add_class("pardus-software-frame")
                 frame.add(listbox)
 
-                self.MostDownFlowBox.get_style_context().add_class("pardus-software-flowbox")
+                self.MostDownFlowBox.get_style_context().add_class(
+                    "pardus-software-flowbox"
+                )
 
-                GLib.idle_add(self.MostDownFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+                GLib.idle_add(
+                    self.MostDownFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE
+                )
 
             for mra in self.Server.mostrateapplist:
                 icon = Gtk.Image.new()
@@ -1513,12 +1772,16 @@ class MainWindow(object):
                 label.set_max_width_chars(10)
                 label.name = mra["name"]
 
-                downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
+                downicon = Gtk.Image.new_from_icon_name(
+                    "document-save-symbolic", Gtk.IconSize.BUTTON
+                )
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(mra["download"]))
 
-                rateicon = Gtk.Image.new_from_icon_name("star-new-symbolic", Gtk.IconSize.BUTTON)
+                rateicon = Gtk.Image.new_from_icon_name(
+                    "star-new-symbolic", Gtk.IconSize.BUTTON
+                )
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mra["rate"])))
@@ -1551,8 +1814,12 @@ class MainWindow(object):
                 frame.get_style_context().add_class("pardus-software-frame")
                 frame.add(listbox)
 
-                self.MostRateFlowBox.get_style_context().add_class("pardus-software-flowbox")
-                GLib.idle_add(self.MostRateFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+                self.MostRateFlowBox.get_style_context().add_class(
+                    "pardus-software-flowbox"
+                )
+                GLib.idle_add(
+                    self.MostRateFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE
+                )
 
             for la in self.Server.lastaddedapplist:
                 icon = Gtk.Image.new()
@@ -1567,12 +1834,16 @@ class MainWindow(object):
                 label.set_max_width_chars(10)
                 label.name = la["name"]
 
-                downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
+                downicon = Gtk.Image.new_from_icon_name(
+                    "document-save-symbolic", Gtk.IconSize.BUTTON
+                )
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(la["download"]))
 
-                rateicon = Gtk.Image.new_from_icon_name("star-new-symbolic", Gtk.IconSize.BUTTON)
+                rateicon = Gtk.Image.new_from_icon_name(
+                    "star-new-symbolic", Gtk.IconSize.BUTTON
+                )
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(la["rate"])))
@@ -1605,11 +1876,19 @@ class MainWindow(object):
                 frame.get_style_context().add_class("pardus-software-frame")
                 frame.add(listbox)
 
-                self.LastAddedFlowBox.get_style_context().add_class("pardus-software-flowbox")
-                GLib.idle_add(self.LastAddedFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+                self.LastAddedFlowBox.get_style_context().add_class(
+                    "pardus-software-flowbox"
+                )
+                GLib.idle_add(
+                    self.LastAddedFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE
+                )
 
-            self.hometotaldc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["downcount"]))
-            self.hometotalrc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["ratecount"]))
+            self.hometotaldc.set_markup(
+                "<small>{}</small>".format(self.Server.totalstatistics[0]["downcount"])
+            )
+            self.hometotalrc.set_markup(
+                "<small>{}</small>".format(self.Server.totalstatistics[0]["ratecount"])
+            )
 
         GLib.idle_add(self.MostDownFlowBox.show_all)
         GLib.idle_add(self.MostRateFlowBox.show_all)
@@ -1630,28 +1909,42 @@ class MainWindow(object):
 
     def getSystemCatIcon(self, cat, size=48):
         try:
-            caticon = Gtk.IconTheme.get_default().load_icon("applications-" + cat, size, Gtk.IconLookupFlags(16))
+            caticon = Gtk.IconTheme.get_default().load_icon(
+                "applications-" + cat, size, Gtk.IconLookupFlags(16)
+            )
         except:
             print("{} {}".format(cat, "category icon not found in system icons"))
             try:
                 if cat == "education":
-                    caticon = Gtk.IconTheme.get_default().load_icon("applications-science", size,
-                                                                    Gtk.IconLookupFlags(16))
+                    caticon = Gtk.IconTheme.get_default().load_icon(
+                        "applications-science", size, Gtk.IconLookupFlags(16)
+                    )
                 elif cat == "all":
-                    caticon = Gtk.IconTheme.get_default().load_icon("applications-other", size, Gtk.IconLookupFlags(16))
+                    caticon = Gtk.IconTheme.get_default().load_icon(
+                        "applications-other", size, Gtk.IconLookupFlags(16)
+                    )
                 elif cat == "pardus":
-                    caticon = Gtk.IconTheme.get_default().load_icon("emblem-pardus", size, Gtk.IconLookupFlags(16))
+                    caticon = Gtk.IconTheme.get_default().load_icon(
+                        "emblem-pardus", size, Gtk.IconLookupFlags(16)
+                    )
                 else:
                     try:
-                        caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                        Gtk.IconLookupFlags(16))
+                        caticon = Gtk.IconTheme.get_default().load_icon(
+                            "gtk-missing-image", size, Gtk.IconLookupFlags(16)
+                        )
                     except:
-                        caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                        caticon = Gtk.IconTheme.get_default().load_icon(
+                            "image-missing", size, Gtk.IconLookupFlags(16)
+                        )
             except:
                 try:
-                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                    caticon = Gtk.IconTheme.get_default().load_icon(
+                        "gtk-missing-image", size, Gtk.IconLookupFlags(16)
+                    )
                 except:
-                    caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                    caticon = Gtk.IconTheme.get_default().load_icon(
+                        "image-missing", size, Gtk.IconLookupFlags(16)
+                    )
         return caticon
 
     def getServerCatIcon(self, cat, size=48):
@@ -1665,47 +1958,62 @@ class MainWindow(object):
             print("{}".format(e))
         try:
             caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                self.Server.cachedir + icons + "/" + cat + ".svg", size, size)
+                self.Server.cachedir + icons + "/" + cat + ".svg", size, size
+            )
         except:
             # print("{} {}".format(cat, "icon not found in server cat icons"))
             try:
                 caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                    self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size)
+                    self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size
+                )
             except:
                 try:
-                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                    caticon = Gtk.IconTheme.get_default().load_icon(
+                        "gtk-missing-image", size, Gtk.IconLookupFlags(16)
+                    )
                 except:
-                    caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                    caticon = Gtk.IconTheme.get_default().load_icon(
+                        "image-missing", size, Gtk.IconLookupFlags(16)
+                    )
         return caticon
 
     def getSystemAppIcon(self, app, size=64, notify=False, myappicon=False):
         try:
-            appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
+            appicon = Gtk.IconTheme.get_default().load_icon(
+                app, size, Gtk.IconLookupFlags(16)
+            )
         except:
             try:
-                appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
+                appicon = self.parduspixbuf.load_icon(
+                    app, size, Gtk.IconLookupFlags(16)
+                )
             except:
                 if notify:
                     try:
-                        appicon = Gtk.IconTheme.get_default().load_icon("pardus-software", size,
-                                                                        Gtk.IconLookupFlags(16))
+                        appicon = Gtk.IconTheme.get_default().load_icon(
+                            "pardus-software", size, Gtk.IconLookupFlags(16)
+                        )
                     except:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "gtk-missing-image", size, Gtk.IconLookupFlags(16)
+                            )
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "image-missing", size, Gtk.IconLookupFlags(16)
+                            )
                 else:
                     if myappicon:
                         appicon = self.getMyAppIcon(app, size)
                     else:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "gtk-missing-image", size, Gtk.IconLookupFlags(16)
+                            )
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "image-missing", size, Gtk.IconLookupFlags(16)
+                            )
         return appicon
 
     def getServerAppIcon(self, app, size=64, notify=False, myappicon=False):
@@ -1718,36 +2026,45 @@ class MainWindow(object):
             icons = "appicons"
             print("{}".format(e))
         try:
-            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
-                                                             size)
+            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                self.Server.cachedir + icons + "/" + app + ".svg", size, size
+            )
         except:
             # print("{} {}".format(app, "icon not found in server app icons"))
             try:
-                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg",
-                                                                 size, size)
+                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    self.Server.cachedir + "appicons/" + app + ".svg", size, size
+                )
             except:
                 if notify:
                     try:
                         appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                            self.Server.cachedir + "appicons/pardus-software.svg", size, size)
+                            self.Server.cachedir + "appicons/pardus-software.svg",
+                            size,
+                            size,
+                        )
                     except:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "gtk-missing-image", size, Gtk.IconLookupFlags(16)
+                            )
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "image-missing", size, Gtk.IconLookupFlags(16)
+                            )
                 else:
                     if myappicon:
                         appicon = self.getMyAppIcon(app, size)
                         print(appicon)
                     else:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "gtk-missing-image", size, Gtk.IconLookupFlags(16)
+                            )
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
+                            appicon = Gtk.IconTheme.get_default().load_icon(
+                                "image-missing", size, Gtk.IconLookupFlags(16)
+                            )
         return appicon
 
     def getMyAppIcon(self, app, size=64):
@@ -1760,32 +2077,48 @@ class MainWindow(object):
             icons = "appicons"
             print("{}".format(e))
         try:
-            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
-                                                             size)
+            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                self.Server.cachedir + icons + "/" + app + ".svg", size, size
+            )
         except:
             try:
-                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg",
-                                                                 size, size)
+                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    self.Server.cachedir + "appicons/" + app + ".svg", size, size
+                )
             except:
                 try:
-                    appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
+                    appicon = Gtk.IconTheme.get_default().load_icon(
+                        app, size, Gtk.IconLookupFlags(16)
+                    )
                 except:
                     try:
-                        appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
+                        appicon = self.parduspixbuf.load_icon(
+                            app, size, Gtk.IconLookupFlags(16)
+                        )
                     except:
                         try:
-                            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(app, size, size)
+                            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                                app, size, size
+                            )
                         except:
                             try:
                                 appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                                    self.Server.cachedir + "appicons/pardus-software.svg", size, size)
+                                    self.Server.cachedir
+                                    + "appicons/pardus-software.svg",
+                                    size,
+                                    size,
+                                )
                             except:
                                 try:
-                                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                                    Gtk.IconLookupFlags(16))
+                                    appicon = Gtk.IconTheme.get_default().load_icon(
+                                        "gtk-missing-image",
+                                        size,
+                                        Gtk.IconLookupFlags(16),
+                                    )
                                 except:
-                                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                                    Gtk.IconLookupFlags(16))
+                                    appicon = Gtk.IconTheme.get_default().load_icon(
+                                        "image-missing", size, Gtk.IconLookupFlags(16)
+                                    )
 
         return appicon
 
@@ -1809,15 +2142,25 @@ class MainWindow(object):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if thatnumber == i:
-                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                       self.categories[i]["external"], self.categories[i]["subcategories"]
+                return (
+                    self.categories[i]["name"],
+                    self.categories[i]["icon"],
+                    self.categories[i]["subcats"],
+                    self.categories[i]["external"],
+                    self.categories[i]["subcategories"],
+                )
 
     def get_category_name_from_button(self, name):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if name == self.categories[i]["name"]:
-                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                       self.categories[i]["external"], self.categories[i]["subcategories"]
+                return (
+                    self.categories[i]["name"],
+                    self.categories[i]["icon"],
+                    self.categories[i]["subcats"],
+                    self.categories[i]["external"],
+                    self.categories[i]["subcategories"],
+                )
 
     def get_repo_category_number(self, thatcategory):
         repocatnumber = 404
@@ -1837,7 +2180,9 @@ class MainWindow(object):
             self.homestack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
             self.homestack.set_transition_duration(200)
 
-            self.pardusAppsStack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
+            self.pardusAppsStack.set_transition_type(
+                Gtk.StackTransitionType.SLIDE_UP_DOWN
+            )
             self.pardusAppsStack.set_transition_duration(200)
 
             self.searchstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
@@ -1846,7 +2191,9 @@ class MainWindow(object):
             self.rbotstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.rbotstack.set_transition_duration(200)
 
-            self.commentstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.commentstack.set_transition_type(
+                Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
+            )
             self.commentstack.set_transition_duration(200)
 
             self.gcStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
@@ -1858,31 +2205,43 @@ class MainWindow(object):
             self.appimage2stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
             self.appimage2stack.set_transition_duration(200)
 
-            self.activatestack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.activatestack.set_transition_type(
+                Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
+            )
             self.activatestack.set_transition_duration(200)
 
             self.updatestack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.updatestack.set_transition_duration(200)
 
-            self.tryfixstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.tryfixstack.set_transition_type(
+                Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
+            )
             self.tryfixstack.set_transition_duration(200)
 
             self.statstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
             self.statstack.set_transition_duration(200)
 
-            self.SuggestStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.SuggestStack.set_transition_type(
+                Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
+            )
             self.SuggestStack.set_transition_duration(200)
 
             self.prefstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.prefstack.set_transition_duration(200)
 
-            self.myappsstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.myappsstack.set_transition_type(
+                Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
+            )
             self.myappsstack.set_transition_duration(200)
 
-            self.myappsdetailsstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+            self.myappsdetailsstack.set_transition_type(
+                Gtk.StackTransitionType.CROSSFADE
+            )
             self.myappsdetailsstack.set_transition_duration(200)
 
-            self.ImagePopoverStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.ImagePopoverStack.set_transition_type(
+                Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
+            )
             self.ImagePopoverStack.set_transition_duration(200)
 
             self.bottomrevealer.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
@@ -2012,10 +2371,10 @@ class MainWindow(object):
                 else:
                     self.homestack.set_visible_child_name(self.prefback)
                 hsma = self.homestack.get_visible_child_name()
-                if  hsma == "pardushome":
+                if hsma == "pardushome":
                     self.set_stack_n_search(1)
                     self.menubackbutton.set_sensitive(False)
-                elif  hsma == "pardusapps" or hsma == "pardusappsdetail":
+                elif hsma == "pardusapps" or hsma == "pardusappsdetail":
                     self.set_stack_n_search(1)
                 elif hsma == "noserver":
                     self.set_stack_n_search(1)
@@ -2034,8 +2393,14 @@ class MainWindow(object):
             elif masname == "notfound":
                 self.myappsstack.set_visible_child_name("myapps")
 
-
-        elif hsname == "preferences" or hsname == "repohome" or hsname == "updates" or hsname == "suggestapp" or hsname == "queue" or hsname == "statistics":
+        elif (
+            hsname == "preferences"
+            or hsname == "repohome"
+            or hsname == "updates"
+            or hsname == "suggestapp"
+            or hsname == "queue"
+            or hsname == "statistics"
+        ):
 
             self.homestack.set_visible_child_name(self.prefback)
 
@@ -2284,7 +2649,9 @@ class MainWindow(object):
                 for row in self.searchstore:
                     if self.appname == row[0]:
                         self.RepoAppsTreeView.set_cursor(row.path)
-                        self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+                        self.on_RepoAppsTreeView_row_activated(
+                            self.RepoAppsTreeView, row.path, 0
+                        )
                 return False
 
             GLib.idle_add(self.homestack.set_visible_child_name, "pardusappsdetail")
@@ -2311,9 +2678,16 @@ class MainWindow(object):
                 self.dDescriptionLabel.set_text(self.description)
 
             if len(prettyname.split(" ")) > 3:
-                prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" + " ".join(prettyname.split(" ")[3:6]) + \
-                             "\n" + " ".join(prettyname.split(" ")[6:])
-            self.dName.set_markup("<span size='x-large'><b>" + prettyname + "</b></span>")
+                prettyname = (
+                    " ".join(prettyname.split(" ")[:3])
+                    + "\n"
+                    + " ".join(prettyname.split(" ")[3:6])
+                    + "\n"
+                    + " ".join(prettyname.split(" ")[6:])
+                )
+            self.dName.set_markup(
+                "<span size='x-large'><b>" + prettyname + "</b></span>"
+            )
             self.dName.set_tooltip_markup("<b>{}</b>".format(self.appname))
             self.dSection.set_markup("<i>" + self.section + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
@@ -2328,16 +2702,27 @@ class MainWindow(object):
                 self.licenseBody.set_text("")
             self.dCodename.set_markup(self.codenames)
             self.dMail.set_markup(
-                "<a title='{}' href='mailto:{}'>{}</a>".format(self.maintainer_mail, self.maintainer_mail, "E-Mail"))
+                "<a title='{}' href='mailto:{}'>{}</a>".format(
+                    self.maintainer_mail, self.maintainer_mail, "E-Mail"
+                )
+            )
             self.dWeb.set_markup(
-                "<a title='{}' href='{}'>{}</a>".format(self.maintainer_web, self.maintainer_web, "Website"))
-            self.dViewonweb.set_markup("{}<a href='https://apps.pardus.org.tr/app/{}'>apps.pardus.org.tr</a>{}".format(
-                _("View on "), self.appname, _(".")))
+                "<a title='{}' href='{}'>{}</a>".format(
+                    self.maintainer_web, self.maintainer_web, "Website"
+                )
+            )
+            self.dViewonweb.set_markup(
+                "{}<a href='https://apps.pardus.org.tr/app/{}'>apps.pardus.org.tr</a>{}".format(
+                    _("View on "), self.appname, _(".")
+                )
+            )
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
                 # ret = self.Package.required_changes(self.command)
-                sizethread = threading.Thread(target=self.size_worker_thread, daemon=True)
+                sizethread = threading.Thread(
+                    target=self.size_worker_thread, daemon=True
+                )
                 sizethread.start()
 
                 # self.dActionButton.set_sensitive(True)
@@ -2371,7 +2756,10 @@ class MainWindow(object):
 
                     self.dActionButton.set_label(_(" Uninstall"))
                     self.dActionButton.set_image(
-                        Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+                        Gtk.Image.new_from_icon_name(
+                            "user-trash-symbolic", Gtk.IconSize.BUTTON
+                        )
+                    )
 
                     if self.desktop_file != "" and self.desktop_file is not None:
                         self.dOpenButton.set_visible(True)
@@ -2385,12 +2773,18 @@ class MainWindow(object):
 
                     self.dActionButton.set_label(_(" Install"))
                     self.dActionButton.set_image(
-                        Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
+                        Gtk.Image.new_from_icon_name(
+                            "document-save-symbolic", Gtk.IconSize.BUTTON
+                        )
+                    )
 
                     self.dOpenButton.set_visible(False)
                     self.wpcformcontrolLabel.set_visible(True)
                     self.wpcformcontrolLabel.set_markup(
-                        "<span color='red'>{}</span>".format(_("You need to install the application")))
+                        "<span color='red'>{}</span>".format(
+                            _("You need to install the application")
+                        )
+                    )
 
                 if len(self.queue) > 0:
                     for qa in self.queue:
@@ -2400,7 +2794,10 @@ class MainWindow(object):
                             else:
                                 self.dActionButton.set_label(_(" Installing"))
                             self.dActionButton.set_image(
-                                Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
+                                Gtk.Image.new_from_icon_name(
+                                    "process-working-symbolic", Gtk.IconSize.BUTTON
+                                )
+                            )
                             self.dActionButton.set_sensitive(False)
                             self.dActionInfoButton.set_sensitive(False)
 
@@ -2412,7 +2809,10 @@ class MainWindow(object):
 
                 self.dActionButton.set_label(_(" Not Found"))
                 self.dActionButton.set_image(
-                    Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
+                    Gtk.Image.new_from_icon_name(
+                        "dialog-warning-symbolic", Gtk.IconSize.BUTTON
+                    )
+                )
 
                 # self.dActionButton.set_tooltip_text(None)
                 # self.RequiredChangesLabel.set_text("")
@@ -2430,7 +2830,10 @@ class MainWindow(object):
 
                 self.wpcformcontrolLabel.set_visible(True)
                 self.wpcformcontrolLabel.set_markup(
-                    "<span color='red'>{}</span>".format(_("You need to install the application")))
+                    "<span color='red'>{}</span>".format(
+                        _("You need to install the application")
+                    )
+                )
 
                 if self.external:
                     if self.external["externalrepo"]:
@@ -2438,7 +2841,10 @@ class MainWindow(object):
                         self.dActionButton.set_sensitive(True)
                         self.dActionButton.set_label(_("Enable Repo"))
                         self.dActionButton.set_image(
-                            Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON))
+                            Gtk.Image.new_from_icon_name(
+                                "list-add-symbolic", Gtk.IconSize.BUTTON
+                            )
+                        )
                         if self.component == "non-free":
                             self.dDisclaimerButton.set_visible(True)
                             type = _("Non-Free")
@@ -2476,7 +2882,9 @@ class MainWindow(object):
                 self.AppImage.fetch(self.Server.serverurl, self.screenshots[1], "#2")
 
             dic = {"mac": self.mac, "app": self.appname}
-            self.AppDetail.get("POST", self.Server.serverurl + "/api/v2/details", dic, self.appname)
+            self.AppDetail.get(
+                "POST", self.Server.serverurl + "/api/v2/details", dic, self.appname
+            )
 
             self.gc_limit_tr = 10
             self.gc_limit_en = 10
@@ -2484,20 +2892,45 @@ class MainWindow(object):
             self.pc_limit = 10
 
             pcom = {"mac": self.mac, "app": self.appname, "limit": self.pc_limit}
-            self.PardusComment.get("POST", self.Server.serverurl + self.Server.serverparduscomments, pcom, self.appname)
+            self.PardusComment.get(
+                "POST",
+                self.Server.serverurl + self.Server.serverparduscomments,
+                pcom,
+                self.appname,
+            )
 
             if self.UserSettings.config_sgc:
-                self.CommentsNotebook.get_nth_page(1).show()  # page_num 1 is Gnome Comments
+                self.CommentsNotebook.get_nth_page(
+                    1
+                ).show()  # page_num 1 is Gnome Comments
 
-                gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                           "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_tr}
-                self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, "tr")
+                gdic_tr = {
+                    "user_hash": "0000000000000000000000000000000000000000",
+                    "app_id": self.gnomename,
+                    "locale": "tr",
+                    "distro": "Pardus",
+                    "version": "unknown",
+                    "limit": self.gc_limit_tr,
+                }
+                self.GnomeComment.get(
+                    "POST", self.Server.gnomecommentserver, gdic_tr, self.appname, "tr"
+                )
 
-                gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename,
-                           "locale": "en", "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_en}
-                self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
+                gdic_en = {
+                    "user_hash": "0000000000000000000000000000000000000000",
+                    "app_id": self.gnomename,
+                    "locale": "en",
+                    "distro": "Pardus",
+                    "version": "unknown",
+                    "limit": self.gc_limit_en,
+                }
+                self.GnomeComment.get(
+                    "POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en"
+                )
             else:
-                self.CommentsNotebook.get_nth_page(1).hide()  # page_num 1 is Gnome Comments
+                self.CommentsNotebook.get_nth_page(
+                    1
+                ).hide()  # page_num 1 is Gnome Comments
                 print("gnome comments disabled")
 
     def clear_drequired_popup(self):
@@ -2529,37 +2962,61 @@ class MainWindow(object):
         self.dapp_packagename_label.set_markup("<b>{}</b>".format(self.appname))
 
         if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-            self.dapp_toremove_label.set_markup("{}".format(", ".join(self.ret["to_delete"])))
+            self.dapp_toremove_label.set_markup(
+                "{}".format(", ".join(self.ret["to_delete"]))
+            )
             self.dapp_toremove_box.set_visible(True)
         else:
             self.dapp_toremove_box.set_visible(False)
 
         if self.ret["to_install"] and self.ret["to_install"] is not None:
-            self.dapp_toinstall_label.set_markup("{}".format(", ".join(self.ret["to_install"])))
+            self.dapp_toinstall_label.set_markup(
+                "{}".format(", ".join(self.ret["to_install"]))
+            )
             self.dapp_toinstall_box.set_visible(True)
         else:
             self.dapp_toinstall_box.set_visible(False)
 
         if self.ret["broken"] and self.ret["broken"] is not None:
-            self.dapp_broken_label.set_markup("{}".format(", ".join(self.ret["broken"])))
+            self.dapp_broken_label.set_markup(
+                "{}".format(", ".join(self.ret["broken"]))
+            )
             self.dapp_broken_box.set_visible(True)
         else:
             self.dapp_broken_box.set_visible(False)
 
-        if self.ret["freed_size"] and self.ret["freed_size"] is not None and self.ret["freed_size"] > 0:
-            self.dapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
+        if (
+            self.ret["freed_size"]
+            and self.ret["freed_size"] is not None
+            and self.ret["freed_size"] > 0
+        ):
+            self.dapp_fsize_label.set_markup(
+                "{}".format(self.Package.beauty_size(self.ret["freed_size"]))
+            )
             self.dapp_fsize_box.set_visible(True)
         else:
             self.dapp_fsize_box.set_visible(False)
 
-        if self.ret["download_size"] and self.ret["download_size"] is not None and self.ret["download_size"] > 0:
-            self.dapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["download_size"])))
+        if (
+            self.ret["download_size"]
+            and self.ret["download_size"] is not None
+            and self.ret["download_size"] > 0
+        ):
+            self.dapp_dsize_label.set_markup(
+                "{}".format(self.Package.beauty_size(self.ret["download_size"]))
+            )
             self.dapp_dsize_box.set_visible(True)
         else:
             self.dapp_dsize_box.set_visible(False)
 
-        if self.ret["install_size"] and self.ret["install_size"] is not None and self.ret["install_size"] > 0:
-            self.dapp_isize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["install_size"])))
+        if (
+            self.ret["install_size"]
+            and self.ret["install_size"] is not None
+            and self.ret["install_size"] > 0
+        ):
+            self.dapp_isize_label.set_markup(
+                "{}".format(self.Package.beauty_size(self.ret["install_size"]))
+            )
             self.dapp_isize_box.set_visible(True)
         else:
             self.dapp_isize_box.set_visible(False)
@@ -2569,13 +3026,21 @@ class MainWindow(object):
         if isinstalled is not None:
             if isinstalled:
                 self.dSizeTitle.set_text(_("Installed Size"))
-                self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
+                self.dSize.set_text(
+                    "{}".format(self.Package.beauty_size(self.ret["freed_size"]))
+                )
                 self.dSizeGrid.set_tooltip_text(None)
             else:
                 self.dSizeTitle.set_text(_("Download Size"))
-                self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
-                self.dSizeGrid.set_tooltip_text("{}: {}".format(
-                    _("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
+                self.dSize.set_text(
+                    "{}".format(self.Package.beauty_size(self.ret["download_size"]))
+                )
+                self.dSizeGrid.set_tooltip_text(
+                    "{}: {}".format(
+                        _("Installed Size"),
+                        self.Package.beauty_size(self.ret["install_size"]),
+                    )
+                )
         else:
             self.dSize.set_markup(_("None"))
             self.dSizeTitle.set_text(_("Download Size"))
@@ -2621,7 +3086,6 @@ class MainWindow(object):
         #     self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
         #     self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
 
-
     def myapps_worker_thread(self):
         myapps = self.myapps_worker()
         GLib.idle_add(self.on_myapps_worker_done, myapps)
@@ -2636,16 +3100,25 @@ class MainWindow(object):
             # GLib.idle_add(self.addtoMyApps, pkg)
         GLib.idle_add(self.MyAppsListBox.show_all)
 
-
     def myappsdetail_worker_thread(self, app):
         myappdetails = self.myappsdetail_worker(app)
         GLib.idle_add(self.on_myappsdetail_worker_done, myappdetails)
 
     def myappsdetail_worker(self, app):
 
-        valid, myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
+        valid, myapp_details, myapp_package = self.Package.myapps_remove_details(
+            app["filename"]
+        )
         print(myapp_details)
-        return valid, myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
+        return (
+            valid,
+            myapp_details,
+            myapp_package,
+            app["name"],
+            app["icon"],
+            app["filename"],
+            app["description"],
+        )
 
     def on_myappsdetail_worker_done(self, myapp):
         # print("on_myappsdetail_worker_done")
@@ -2656,12 +3129,16 @@ class MainWindow(object):
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
             self.ui_myapps_uninstall_button.set_sensitive(True)
-            self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(name))
+            self.ui_myapps_app.set_markup(
+                "<span size='x-large'><b>{}</b></span>".format(name)
+            )
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
             self.ui_myapps_description.set_markup("{}".format(description))
             if details["to_delete"] and details["to_delete"] is not None:
-                self.ui_myapp_toremove_label.set_markup("{}".format(", ".join(details["to_delete"])))
+                self.ui_myapp_toremove_label.set_markup(
+                    "{}".format(", ".join(details["to_delete"]))
+                )
                 self.ui_myapp_toremove_box.set_visible(True)
                 self.myapp_toremove_list = details["to_delete"]
                 self.myapp_toremove = package
@@ -2670,31 +3147,53 @@ class MainWindow(object):
                 self.ui_myapp_toremove_box.set_visible(False)
 
             if details["to_install"] and details["to_install"] is not None:
-                self.ui_myapp_toinstall_label.set_markup("{}".format(", ".join(details["to_install"])))
+                self.ui_myapp_toinstall_label.set_markup(
+                    "{}".format(", ".join(details["to_install"]))
+                )
                 self.ui_myapp_toinstall_box.set_visible(True)
             else:
                 self.ui_myapp_toinstall_box.set_visible(False)
 
             if details["broken"] and details["broken"] is not None:
-                self.ui_myapp_broken_label.set_markup("{}".format(", ".join(details["broken"])))
+                self.ui_myapp_broken_label.set_markup(
+                    "{}".format(", ".join(details["broken"]))
+                )
                 self.ui_myapp_broken_box.set_visible(True)
             else:
                 self.ui_myapp_broken_box.set_visible(False)
 
-            if details["freed_size"] and details["freed_size"] is not None and details["freed_size"] > 0:
-                self.ui_myapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(details["freed_size"])))
+            if (
+                details["freed_size"]
+                and details["freed_size"] is not None
+                and details["freed_size"] > 0
+            ):
+                self.ui_myapp_fsize_label.set_markup(
+                    "{}".format(self.Package.beauty_size(details["freed_size"]))
+                )
                 self.ui_myapp_fsize_box.set_visible(True)
             else:
                 self.ui_myapp_fsize_box.set_visible(False)
 
-            if details["download_size"] and details["download_size"] is not None and details["download_size"] > 0:
-                self.ui_myapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(details["download_size"])))
+            if (
+                details["download_size"]
+                and details["download_size"] is not None
+                and details["download_size"] > 0
+            ):
+                self.ui_myapp_dsize_label.set_markup(
+                    "{}".format(self.Package.beauty_size(details["download_size"]))
+                )
                 self.ui_myapp_dsize_box.set_visible(True)
             else:
                 self.ui_myapp_dsize_box.set_visible(False)
 
-            if details["install_size"] and details["install_size"] is not None and details["install_size"] > 0:
-                self.ui_myapp_isize_label.set_markup("{}".format(self.Package.beauty_size(details["install_size"])))
+            if (
+                details["install_size"]
+                and details["install_size"] is not None
+                and details["install_size"] > 0
+            ):
+                self.ui_myapp_isize_label.set_markup(
+                    "{}".format(self.Package.beauty_size(details["install_size"]))
+                )
                 self.ui_myapp_isize_box.set_visible(True)
             else:
                 self.ui_myapp_isize_box.set_visible(False)
@@ -2709,8 +3208,12 @@ class MainWindow(object):
                 self.ui_myapps_notfoundname_box.set_visible(False)
             else:
                 self.ui_myapps_notfoundname_box.set_visible(True)
-                self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
-                self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(name))
+                self.ui_myapps_notfoundname_image.set_from_pixbuf(
+                    self.getMyAppIcon(icon, size=64)
+                )
+                self.ui_myapps_notfoundname_name.set_markup(
+                    "<big>{}</big>".format(name)
+                )
 
     def setPardusCommentStar(self, rate):
         self.cs1 = Gtk.Image.new()
@@ -2855,8 +3358,14 @@ class MainWindow(object):
                     if comment["appversion"] is None or comment["appversion"] == "":
                         comment["appversion"] = _("unknown")
 
-                    self.box.set_tooltip_markup("<b>{}</b> : {}\n<b>{}</b> : {}".format(
-                        _("Distro"), comment["distro"], _("App Version"), comment["appversion"]))
+                    self.box.set_tooltip_markup(
+                        "<b>{}</b> : {}\n<b>{}</b> : {}".format(
+                            _("Distro"),
+                            comment["distro"],
+                            _("App Version"),
+                            comment["appversion"],
+                        )
+                    )
 
                     self.PardusCommentListBox.add(self.box)
 
@@ -2879,9 +3388,15 @@ class MainWindow(object):
                     self.rate_comment = response["rating"]["rate"]["comment"]
 
                     self.setAppStar(self.rate_average)
-                    self.dtAverageRating.set_markup("<big>{:.1f}</big>".format(float(self.rate_average)))
-                    self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), self.rate_individual))
-                    self.dtTotalRating.set_markup("( {} )".format(response["rating"]["rate"]["count"]))
+                    self.dtAverageRating.set_markup(
+                        "<big>{:.1f}</big>".format(float(self.rate_average))
+                    )
+                    self.dtUserRating.set_markup(
+                        "{} {}".format(_("Your Rate"), self.rate_individual)
+                    )
+                    self.dtTotalRating.set_markup(
+                        "( {} )".format(response["rating"]["rate"]["count"])
+                    )
 
                     if response["rating"]["rate"]["recommentable"]:
                         self.addCommentButton.set_visible(True)
@@ -2896,7 +3411,6 @@ class MainWindow(object):
                     else:
                         self.wpcCommentBox.set_visible(True)
                         self.addCommentButton.set_label(_("Edit Comment"))
-
 
                     if response["rating"]["justrate"]:
 
@@ -2913,11 +3427,15 @@ class MainWindow(object):
                             #     self.commentstack.set_visible_child_name("alreadysent")
 
                             self.setWpcStar(response["rating"]["rate"]["individual"])
-                            self.wpcAuthor.set_text(str(response["rating"]["rate"]["author"]))
+                            self.wpcAuthor.set_text(
+                                str(response["rating"]["rate"]["author"])
+                            )
                             start, end = self.wpcComment.get_buffer().get_bounds()
                             self.wpcComment.get_buffer().delete(start, end)
-                            self.wpcComment.get_buffer().insert(self.wpcComment.get_buffer().get_end_iter(),
-                                                                "{}".format(response["rating"]["rate"]["comment"]))
+                            self.wpcComment.get_buffer().insert(
+                                self.wpcComment.get_buffer().get_end_iter(),
+                                "{}".format(response["rating"]["rate"]["comment"]),
+                            )
 
                             self.CommentsNotebook.set_current_page(2)
                             self.wpcComment.grab_focus()
@@ -2926,20 +3444,29 @@ class MainWindow(object):
 
                         else:
                             self.commentstack.set_visible_child_name("alreadysent")
-                            self.wpcgetnameLabel.set_text(str(response["rating"]["rate"]["author"]))
-                            self.wpcgetcommentLabel.set_text(str(response["rating"]["rate"]["comment"]))
+                            self.wpcgetnameLabel.set_text(
+                                str(response["rating"]["rate"]["author"])
+                            )
+                            self.wpcgetcommentLabel.set_text(
+                                str(response["rating"]["rate"]["comment"])
+                            )
 
                     else:
                         self.commentstack.set_visible_child_name("sendresult")
                         self.wpcresultLabel.set_text(
-                            _("Your comment has been sent successfully. It will be published after approval."))
+                            _(
+                                "Your comment has been sent successfully. It will be published after approval."
+                            )
+                        )
                 else:
                     if response["rating"]["justrate"]:
                         print("justrate error")
                     else:
                         self.wpcformcontrolLabel.set_visible(True)
                         if response["rating"]["flood"]:
-                            self.wpcformcontrolLabel.set_text(_("Please try again soon"))
+                            self.wpcformcontrolLabel.set_text(
+                                _("Please try again soon")
+                            )
                         else:
                             self.wpcformcontrolLabel.set_text(_("Error"))
 
@@ -2962,17 +3489,24 @@ class MainWindow(object):
         if status and appname == self.getActiveAppOnUI():
             # print(response)
             self.dtDownload.set_markup(
-                "{} {}".format(response["details"]["download"]["count"], _("Download")))
+                "{} {}".format(response["details"]["download"]["count"], _("Download"))
+            )
 
             self.dtTotalRating.set_markup(
-                "( {} )".format(response["details"]["rate"]["count"]))
+                "( {} )".format(response["details"]["rate"]["count"])
+            )
 
             self.dtAverageRating.set_markup(
-                "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
+                "<big>{:.1f}</big>".format(
+                    float(response["details"]["rate"]["average"])
+                )
+            )
 
             if response["details"]["rate"]["individual"] == 0:
                 self.rate_individual = _("is None")
-                self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), _("is None")))
+                self.dtUserRating.set_markup(
+                    "{} {}".format(_("Your Rate"), _("is None"))
+                )
                 self.commentstack.set_visible_child_name("sendcomment")
                 self.wpcgetnameLabel.set_text("")
                 self.wpcgetcommentLabel.set_text("")
@@ -2981,10 +3515,18 @@ class MainWindow(object):
                 self.rate_author = response["details"]["individual"]["author"]
                 self.rate_comment = response["details"]["individual"]["comment"]
 
-                self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), response["details"]["rate"]["individual"]))
+                self.dtUserRating.set_markup(
+                    "{} {}".format(
+                        _("Your Rate"), response["details"]["rate"]["individual"]
+                    )
+                )
                 self.commentstack.set_visible_child_name("alreadysent")
-                self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
-                self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
+                self.wpcgetnameLabel.set_text(
+                    str(response["details"]["individual"]["author"])
+                )
+                self.wpcgetcommentLabel.set_text(
+                    str(response["details"]["individual"]["comment"])
+                )
 
                 if response["details"]["individual"]["recommentable"]:
                     self.addCommentButton.set_visible(True)
@@ -3003,10 +3545,15 @@ class MainWindow(object):
             self.rate_average = response["details"]["rate"]["average"]
             self.setAppStar(response["details"]["rate"]["average"])
 
-            self.setPardusRatings(response["details"]["rate"]["count"], response["details"]["rate"]["average"],
-                                  response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
-                                  response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
-                                  response["details"]["rate"]["rates"]["5"])
+            self.setPardusRatings(
+                response["details"]["rate"]["count"],
+                response["details"]["rate"]["average"],
+                response["details"]["rate"]["rates"]["1"],
+                response["details"]["rate"]["rates"]["2"],
+                response["details"]["rate"]["rates"]["3"],
+                response["details"]["rate"]["rates"]["4"],
+                response["details"]["rate"]["rates"]["5"],
+            )
 
             # self.setPardusComments(response["details"]["comment"])
 
@@ -3077,7 +3624,9 @@ class MainWindow(object):
             print("star error")
 
     def setPardusRatings(self, tr, r, r1, r2, r3, r4, r5):
-        self.dPardusRating.set_markup("<span size='xx-large'><b>{:.1f}</b></span>".format(float(r)))
+        self.dPardusRating.set_markup(
+            "<span size='xx-large'><b>{:.1f}</b></span>".format(float(r))
+        )
         self.dPardusBarLabel1.set_markup("{}".format(r1))
         self.dPardusBarLabel2.set_markup("{}".format(r2))
         self.dPardusBarLabel3.set_markup("{}".format(r3))
@@ -3101,10 +3650,17 @@ class MainWindow(object):
         if gr != "":
             # print(gr)
 
-            average = (gr["star1"] * 1 + gr["star2"] * 2 + gr["star3"] * 3 + gr["star4"] * 4 + gr["star5"] * 5) / gr[
-                "total"]
+            average = (
+                gr["star1"] * 1
+                + gr["star2"] * 2
+                + gr["star3"] * 3
+                + gr["star4"] * 4
+                + gr["star5"] * 5
+            ) / gr["total"]
 
-            self.dGnomeRating.set_markup("<span size='xx-large'><b>{:.1f}</b></span>".format(float(average)))
+            self.dGnomeRating.set_markup(
+                "<span size='xx-large'><b>{:.1f}</b></span>".format(float(average))
+            )
             self.dGnomeBarLabel1.set_markup("{}".format(gr["star1"]))
             self.dGnomeBarLabel2.set_markup("{}".format(gr["star2"]))
             self.dGnomeBarLabel3.set_markup("{}".format(gr["star3"]))
@@ -3124,7 +3680,9 @@ class MainWindow(object):
                 self.dGnomeBar4.set_fraction(0)
                 self.dGnomeBar5.set_fraction(0)
         else:
-            self.dGnomeRating.set_markup("<span size='xx-large'><b>{}</b></span>".format(0.0))
+            self.dGnomeRating.set_markup(
+                "<span size='xx-large'><b>{}</b></span>".format(0.0)
+            )
             self.dGnomeBarLabel1.set_markup("{}".format(0))
             self.dGnomeBarLabel2.set_markup("{}".format(0))
             self.dGnomeBarLabel3.set_markup("{}".format(0))
@@ -3139,7 +3697,7 @@ class MainWindow(object):
     def isCommentClean(self, content):
         if self.Server.connection and self.Server.badwords and content:
             for badword in self.Server.badwords:
-                if re.search(r'\b' + badword["word"] + r'\b', content):
+                if re.search(r"\b" + badword["word"] + r"\b", content):
                     return False
         return True
 
@@ -3171,14 +3729,25 @@ class MainWindow(object):
                 else:
                     self.gcMoreButtonEN.set_visible(False)
             for comment in comments:
-                if "rating" and "user_display" and "date_created" and "summary" and "description" in comment:
-                    if self.isCommentClean(comment["summary"]) and self.isCommentClean(
-                            comment["description"]) and self.isCommentClean(comment["user_display"]):
+                if (
+                    "rating"
+                    and "user_display"
+                    and "date_created"
+                    and "summary"
+                    and "description" in comment
+                ):
+                    if (
+                        self.isCommentClean(comment["summary"])
+                        and self.isCommentClean(comment["description"])
+                        and self.isCommentClean(comment["user_display"])
+                    ):
                         self.setGnomeCommentStar(comment["rating"] / 20)
                         label1 = Gtk.Label.new()
                         label1.set_markup("<b>" + str(comment["user_display"]) + "</b>")
                         labeldate = Gtk.Label.new()
-                        labeldate.set_text(str(datetime.fromtimestamp(comment["date_created"])))
+                        labeldate.set_text(
+                            str(datetime.fromtimestamp(comment["date_created"]))
+                        )
                         box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                         box1.pack_start(self.gcs1, False, True, 0)
                         box1.pack_start(self.gcs2, False, True, 0)
@@ -3188,7 +3757,9 @@ class MainWindow(object):
                         box1.pack_start(label1, False, True, 10)
                         box1.pack_end(labeldate, False, True, 0)
                         label2 = Gtk.Label.new()
-                        label2.set_text(str(comment["summary"]) + "\n" + str(comment["description"]))
+                        label2.set_text(
+                            str(comment["summary"]) + "\n" + str(comment["description"])
+                        )
                         label2.set_selectable(True)
                         label2.set_line_wrap(True)
                         label2.set_line_wrap_mode(2)  # WORD_CHAR
@@ -3206,8 +3777,11 @@ class MainWindow(object):
                             self.GnomeCommentListBoxEN.add(box)
                     else:
                         try:
-                            print("Comment is not clean, app_id: {}, review_id : {}".format(
-                                comment["app_id"], comment["review_id"]))
+                            print(
+                                "Comment is not clean, app_id: {}, review_id : {}".format(
+                                    comment["app_id"], comment["review_id"]
+                                )
+                            )
                         except Exception as e:
                             print("{}".format(e))
 
@@ -3258,7 +3832,9 @@ class MainWindow(object):
 
     def on_starEvent_leave_notify_event(self, widget, event):
         self.setAppStar(self.rate_average)
-        self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), self.rate_individual))
+        self.dtUserRating.set_markup(
+            "{} {}".format(_("Your Rate"), self.rate_individual)
+        )
 
     def on_starEvent_button_press_event(self, widget, event):
         installed = self.Package.isinstalled(self.appname)
@@ -3269,12 +3845,29 @@ class MainWindow(object):
             version = self.Package.installedVersion(self.appname)
             if version is None:
                 version = ""
-            dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
-                   "installed": installed, "comment": "", "appversion": version, "distro": self.UserSettings.userdistro,
-                   "justrate": True}
-            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
+            dic = {
+                "app": self.appname,
+                "mac": self.mac,
+                "value": widget.get_name()[-1],
+                "author": self.Server.username,
+                "installed": installed,
+                "comment": "",
+                "appversion": version,
+                "distro": self.UserSettings.userdistro,
+                "justrate": True,
+            }
+            self.AppRequest.send(
+                "POST",
+                self.Server.serverurl + self.Server.serversendrate,
+                dic,
+                self.appname,
+            )
         else:
-            self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
+            self.dtUserRating.set_markup(
+                "<span color='red'>{}</span>".format(
+                    _("You need to install the application")
+                )
+            )
 
     def Pixbuf(self, status, pixbuf, i):
         self.appimage1stack.set_visible_child_name("loaded")
@@ -3314,14 +3907,18 @@ class MainWindow(object):
                 hsize = size.height - size.height / 1.55
                 w = (hsize * self.pixbuf1.get_width()) / self.pixbuf1.get_height()
 
-            self.dImage1.set_from_pixbuf(self.pixbuf1.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR))
+            self.dImage1.set_from_pixbuf(
+                self.pixbuf1.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR)
+            )
 
             phsize = (pw * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
             if phsize + 110 > size.height:
                 phsize = size.height - 110
                 pw = (phsize * self.pixbuf1.get_width()) / self.pixbuf1.get_height()
 
-            self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
+            self.pop1Image.set_from_pixbuf(
+                self.pixbuf1.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR)
+            )
 
         if self.pixbuf2:
             hsize = (w * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
@@ -3329,14 +3926,18 @@ class MainWindow(object):
                 hsize = size.height - size.height / 1.55
                 w = (hsize * self.pixbuf2.get_width()) / self.pixbuf2.get_height()
 
-            self.dImage2.set_from_pixbuf(self.pixbuf2.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR))
+            self.dImage2.set_from_pixbuf(
+                self.pixbuf2.scale_simple(w, hsize, GdkPixbuf.InterpType.BILINEAR)
+            )
 
             phsize = (pw * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
             if phsize + 110 > size.height:
                 phsize = size.height - 110
                 pw = (phsize * self.pixbuf2.get_width()) / self.pixbuf2.get_height()
 
-            self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR))
+            self.pop2Image.set_from_pixbuf(
+                self.pixbuf2.scale_simple(pw, phsize, GdkPixbuf.InterpType.BILINEAR)
+            )
 
     def resizePopImage(self, fullscreen=False):
 
@@ -3352,17 +3953,29 @@ class MainWindow(object):
             hsize = (basewidth * self.pixbuf1.get_height()) / self.pixbuf1.get_width()
             if hsize + 110 > size.height:
                 hsize = size.height - 110
-                basewidth = (hsize * self.pixbuf1.get_width()) / self.pixbuf1.get_height()
+                basewidth = (
+                    hsize * self.pixbuf1.get_width()
+                ) / self.pixbuf1.get_height()
 
-            self.pop1Image.set_from_pixbuf(self.pixbuf1.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
+            self.pop1Image.set_from_pixbuf(
+                self.pixbuf1.scale_simple(
+                    basewidth, hsize, GdkPixbuf.InterpType.BILINEAR
+                )
+            )
 
         if self.pixbuf2:
             hsize = (basewidth * self.pixbuf2.get_height()) / self.pixbuf2.get_width()
             if hsize + 110 > size.height:
                 hsize = size.height - 110
-                basewidth = (hsize * self.pixbuf2.get_width()) / self.pixbuf2.get_height()
+                basewidth = (
+                    hsize * self.pixbuf2.get_width()
+                ) / self.pixbuf2.get_height()
 
-            self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
+            self.pop2Image.set_from_pixbuf(
+                self.pixbuf2.scale_simple(
+                    basewidth, hsize, GdkPixbuf.InterpType.BILINEAR
+                )
+            )
 
     # def on_wpcStarE1_button_press_event(self, widget, event):
     #     self.setWpcStar(1)
@@ -3389,7 +4002,9 @@ class MainWindow(object):
         self.wpcAuthor.set_text(self.rate_author)
         start, end = self.wpcComment.get_buffer().get_bounds()
         self.wpcComment.get_buffer().delete(start, end)
-        self.wpcComment.get_buffer().insert(self.wpcComment.get_buffer().get_end_iter(), self.rate_comment)
+        self.wpcComment.get_buffer().insert(
+            self.wpcComment.get_buffer().get_end_iter(), self.rate_comment
+        )
 
         self.commentstack.set_visible_child_name("sendcomment")
 
@@ -3412,11 +4027,24 @@ class MainWindow(object):
                 version = self.Package.installedVersion(self.appname)
                 if version is None:
                     version = ""
-                dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
-                       "installed": installed, "appversion": version, "distro": self.UserSettings.userdistro,
-                       "justrate": False}
+                dic = {
+                    "mac": self.mac,
+                    "author": author,
+                    "comment": comment,
+                    "value": value,
+                    "app": self.appname,
+                    "installed": installed,
+                    "appversion": version,
+                    "distro": self.UserSettings.userdistro,
+                    "justrate": False,
+                }
                 try:
-                    self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
+                    self.AppRequest.send(
+                        "POST",
+                        self.Server.serverurl + self.Server.serversendrate,
+                        dic,
+                        self.appname,
+                    )
                 except Exception as e:
                     status = False
                     self.commentstack.set_visible_child_name("sendresult")
@@ -3428,7 +4056,10 @@ class MainWindow(object):
             else:
                 self.wpcformcontrolLabel.set_visible(True)
                 self.wpcformcontrolLabel.set_markup(
-                    "<span color='red'>{}</span>".format(_("You need to install the application")))
+                    "<span color='red'>{}</span>".format(
+                        _("You need to install the application")
+                    )
+                )
 
     def setWpcStar(self, rate):
 
@@ -3510,9 +4141,13 @@ class MainWindow(object):
                     pn_tr = i["prettyname"]["tr"]
                     desc_en = i["description"]["en"]
                     desc_tr = i["description"]["tr"]
-            if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
-                    or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en.lower() \
-                    or search_entry_text.lower() in desc_tr.lower():
+            if (
+                search_entry_text.lower() in appname.lower()
+                or search_entry_text.lower() in pn_en.lower()
+                or search_entry_text.lower() in pn_tr.lower()
+                or search_entry_text.lower() in desc_en.lower()
+                or search_entry_text.lower() in desc_tr.lower()
+            ):
                 if self.pardusicb.get_active():
                     if self.Package.isinstalled(appname):
                         return True
@@ -3531,7 +4166,10 @@ class MainWindow(object):
                                     return True
 
             else:
-                if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
+                if (
+                    self.PardusCurrentCategoryString == "all"
+                    or self.PardusCurrentCategoryString == "tümü"
+                ):
                     if self.pardusicb.get_active():
                         if self.Package.isinstalled(appname):
                             return True
@@ -3542,21 +4180,36 @@ class MainWindow(object):
                         if self.pardusicb.get_active():
                             if self.Package.isinstalled(appname):
                                 if self.SubCatCombo.get_active_text() is not None:
-                                    if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
+                                    if (
+                                        self.SubCatCombo.get_active_text().lower()
+                                        == "all"
+                                        or self.SubCatCombo.get_active_text().lower()
+                                        == "tümü"
+                                    ):
                                         return True
                                     else:
                                         if self.PardusCurrentCategorySubCategories:
-                                            if self.SubCatCombo.get_active_text().lower() in subcategory:
+                                            if (
+                                                self.SubCatCombo.get_active_text().lower()
+                                                in subcategory
+                                            ):
                                                 return True
                                 else:
                                     return True
                         else:
                             if self.SubCatCombo.get_active_text() is not None:
-                                if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
+                                if (
+                                    self.SubCatCombo.get_active_text().lower() == "all"
+                                    or self.SubCatCombo.get_active_text().lower()
+                                    == "tümü"
+                                ):
                                     return True
                                 else:
                                     if self.PardusCurrentCategorySubCategories:
-                                        if self.SubCatCombo.get_active_text().lower() in subcategory:
+                                        if (
+                                            self.SubCatCombo.get_active_text().lower()
+                                            in subcategory
+                                        ):
                                             return True
                             else:
                                 return True
@@ -3652,20 +4305,33 @@ class MainWindow(object):
 
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
-            self.applist = sorted(self.applist, key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
+            self.applist = sorted(
+                self.applist, key=lambda x: locale.strxfrm(x["prettyname"][self.locale])
+            )
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 1:  # sort by download
-            self.applist = sorted(self.applist, key=lambda x: (x["download"], x["rate_average"]), reverse=True)
+            self.applist = sorted(
+                self.applist,
+                key=lambda x: (x["download"], x["rate_average"]),
+                reverse=True,
+            )
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 2:  # sort by rating
-            self.applist = sorted(self.applist, key=lambda x: (x["rate_average"], x["download"]), reverse=True)
+            self.applist = sorted(
+                self.applist,
+                key=lambda x: (x["rate_average"], x["download"]),
+                reverse=True,
+            )
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 3:  # sort by last added
-            self.applist = sorted(self.applist, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"),
-                                  reverse=True)
+            self.applist = sorted(
+                self.applist,
+                key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"),
+                reverse=True,
+            )
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
 
@@ -3689,8 +4355,14 @@ class MainWindow(object):
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
-        self.mostappname = child.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[
-            1].name
+        self.mostappname = (
+            child.get_children()[0]
+            .get_children()[0]
+            .get_children()[0]
+            .get_children()[0]
+            .get_children()[1]
+            .name
+        )
         self.fromqueue = False
         self.frommyapps = False
 
@@ -3716,12 +4388,23 @@ class MainWindow(object):
         self.isPardusSearching = False
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
-        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
-        self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name(self.PardusCurrentCategory)
+        (
+            self.PardusCurrentCategoryString,
+            self.PardusCurrentCategoryIcon,
+            self.PardusCurrentCategorySubCats,
+            self.PardusCurrentCategoryExternal,
+            self.PardusCurrentCategorySubCategories,
+        ) = self.get_category_name(self.PardusCurrentCategory)
 
-        print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal,
-                                                    self.PardusCurrentCategorySubCategories))
+        print(
+            "HomeCategory: {} {} {} {} {}".format(
+                self.PardusCurrentCategory,
+                self.PardusCurrentCategoryString,
+                self.PardusCurrentCategorySubCats,
+                self.PardusCurrentCategoryExternal,
+                self.PardusCurrentCategorySubCategories,
+            )
+        )
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -3752,9 +4435,13 @@ class MainWindow(object):
                     for cat in i["category"]:
                         if cat[self.locale] == self.PardusCurrentCategoryString:
                             subcats.append(
-                                {"en": i["external"]["repoprettyen"], "tr": i["external"]["repoprettytr"],
-                                 "reponame": i["external"]["reponame"]})
-            subcats = list({u['reponame']: u for u in subcats}.values())
+                                {
+                                    "en": i["external"]["repoprettyen"],
+                                    "tr": i["external"]["repoprettytr"],
+                                    "reponame": i["external"]["reponame"],
+                                }
+                            )
+            subcats = list({u["reponame"]: u for u in subcats}.values())
             for sub in subcats:
                 caticon = Gtk.Image.new()
                 caticon.set_from_pixbuf(self.getServerCatIcon(sub["reponame"]))
@@ -3765,7 +4452,9 @@ class MainWindow(object):
                 box1.pack_start(caticon, False, True, 0)
                 box1.pack_start(label, False, True, 0)
                 box1.name = sub["reponame"]
-                GLib.idle_add(self.SubCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE)
+                GLib.idle_add(
+                    self.SubCategoryFlowBox.insert, box1, GLib.PRIORITY_DEFAULT_IDLE
+                )
             GLib.idle_add(self.SubCategoryFlowBox.show_all)
         else:
             self.pardusicb.set_visible(True)
@@ -3801,7 +4490,9 @@ class MainWindow(object):
 
             if self.RepoCurrentCategory != "all" or self.RepoCurrentCategory != "tümü":
 
-                self.RepoAppsTreeView.set_model(self.storedict[self.RepoCurrentCategory])
+                self.RepoAppsTreeView.set_model(
+                    self.storedict[self.RepoCurrentCategory]
+                )
                 self.RepoAppsTreeView.show_all()
 
             else:
@@ -3821,7 +4512,15 @@ class MainWindow(object):
                     else:
                         installtext = "Install"
                     self.store.append(
-                        [i["name"], i["category"], 0, installstatus, installtext, self.Package.summary(i["name"])])
+                        [
+                            i["name"],
+                            i["category"],
+                            0,
+                            installstatus,
+                            installtext,
+                            self.Package.summary(i["name"]),
+                        ]
+                    )
 
                 # print(self.repoapps[self.RepoCurrentCategory])
 
@@ -3865,22 +4564,43 @@ class MainWindow(object):
     def on_gcMoreButtonTR_clicked(self, button):
         self.gcMoreButtonTR.set_sensitive(False)
         self.gc_limit_tr = self.gc_limit_tr + 10
-        gdic_tr = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "tr",
-                   "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_tr}
-        self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_tr, self.appname, lang="tr")
+        gdic_tr = {
+            "user_hash": "0000000000000000000000000000000000000000",
+            "app_id": self.gnomename,
+            "locale": "tr",
+            "distro": "Pardus",
+            "version": "unknown",
+            "limit": self.gc_limit_tr,
+        }
+        self.GnomeComment.get(
+            "POST", self.Server.gnomecommentserver, gdic_tr, self.appname, lang="tr"
+        )
 
     def on_gcMoreButtonEN_clicked(self, button):
         self.gcMoreButtonEN.set_sensitive(False)
         self.gc_limit_en = self.gc_limit_en + 10
-        gdic_en = {"user_hash": "0000000000000000000000000000000000000000", "app_id": self.gnomename, "locale": "en",
-                   "distro": "Pardus", "version": "unknown", "limit": self.gc_limit_en}
-        self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, lang="en")
+        gdic_en = {
+            "user_hash": "0000000000000000000000000000000000000000",
+            "app_id": self.gnomename,
+            "locale": "en",
+            "distro": "Pardus",
+            "version": "unknown",
+            "limit": self.gc_limit_en,
+        }
+        self.GnomeComment.get(
+            "POST", self.Server.gnomecommentserver, gdic_en, self.appname, lang="en"
+        )
 
     def on_pcMoreButton_clicked(self, button):
         self.pcMoreButton.set_sensitive(False)
         self.pc_limit = self.pc_limit + 10
         pcom = {"mac": self.mac, "app": self.appname, "limit": self.pc_limit}
-        self.PardusComment.get("POST", self.Server.serverurl + self.Server.serverparduscomments, pcom, self.appname)
+        self.PardusComment.get(
+            "POST",
+            self.Server.serverurl + self.Server.serverparduscomments,
+            pcom,
+            self.appname,
+        )
 
     def on_dDisclaimerButton_clicked(self, button):
         self.DisclaimerPopover.popup()
@@ -3932,13 +4652,20 @@ class MainWindow(object):
             self.dAptUpdateButton.set_sensitive(False)
             self.dAptUpdateInfoLabel.set_visible(True)
             self.dAptUpdateInfoLabel.set_text(_("Updating"))
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "update"]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
+                "update",
+            ]
             self.uppid = self.startSysProcess(command)
         else:
             self.dAptUpdateBox.set_visible(True)
             self.dAptUpdateInfoLabel.set_visible(True)
             self.dAptUpdateInfoLabel.set_markup(
-                "<span color='red'>{}</span>".format(_("Package manager is busy, try again later.")))
+                "<span color='red'>{}</span>".format(
+                    _("Package manager is busy, try again later.")
+                )
+            )
 
     def on_activate_yes_button_clicked(self, button):
 
@@ -3949,8 +4676,13 @@ class MainWindow(object):
             self.actionEnablePackage(self.appname)
         else:
             self.activate_info_label.set_visible(True)
-            self.activate_info_label.set_markup("<b><span color='red'>{}</span></b>".format(
-                _("Please try again after the processes in the queue are completed.")))
+            self.activate_info_label.set_markup(
+                "<b><span color='red'>{}</span></b>".format(
+                    _(
+                        "Please try again after the processes in the queue are completed."
+                    )
+                )
+            )
 
     def on_activate_no_button_clicked(self, button):
         self.externalactioned = False
@@ -4003,7 +4735,9 @@ class MainWindow(object):
             # control for active actioned app
 
             if self.repoappclicked:
-                self.RepoAppsTreeView.row_activated(self.activerepopath, self.RepoAppsTreeView.get_column(0))
+                self.RepoAppsTreeView.row_activated(
+                    self.activerepopath, self.RepoAppsTreeView.get_column(0)
+                )
 
                 # Updating status tick of repo apps
                 try:
@@ -4031,18 +4765,26 @@ class MainWindow(object):
 
         appicon = Gtk.Image.new()
         if self.UserSettings.config_usi:
-            appicon.set_from_pixbuf(self.getServerAppIcon(self.appname, myappicon=myappicon))
+            appicon.set_from_pixbuf(
+                self.getServerAppIcon(self.appname, myappicon=myappicon)
+            )
         else:
-            appicon.set_from_pixbuf(self.getSystemAppIcon(self.appname, myappicon=myappicon))
+            appicon.set_from_pixbuf(
+                self.getSystemAppIcon(self.appname, myappicon=myappicon)
+            )
         label = Gtk.Label.new()
         label.set_text(self.getPrettyName(self.appname, split=False))
         actlabel = Gtk.Label.new()
 
         isinstalled = self.Package.isinstalled(self.appname)
         if isinstalled:
-            actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Will be removed")))
+            actlabel.set_markup(
+                "<span color='#e01b24'>{}</span>".format(_("Will be removed"))
+            )
         else:
-            actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Will be installed")))
+            actlabel.set_markup(
+                "<span color='#3584e4'>{}</span>".format(_("Will be installed"))
+            )
 
         button = Gtk.Button.new()
         button.name = self.appname
@@ -4050,14 +4792,22 @@ class MainWindow(object):
         button.props.valign = Gtk.Align.CENTER
         button.props.halign = Gtk.Align.CENTER
         button.props.always_show_image = True
-        button.set_image(Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON))
+        button.set_image(
+            Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON)
+        )
         if len(self.queue) == 1:
             button.set_sensitive(False)
-            button.set_tooltip_text(_("You cannot cancel because the application is in progress."))
+            button.set_tooltip_text(
+                _("You cannot cancel because the application is in progress.")
+            )
             if isinstalled:
-                actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
+                actlabel.set_markup(
+                    "<span color='#e01b24'>{}</span>".format(_("Removing"))
+                )
             else:
-                actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
+                actlabel.set_markup(
+                    "<span color='#3584e4'>{}</span>".format(_("Installing"))
+                )
         box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
         box.set_margin_top(5)
         box.set_margin_bottom(5)
@@ -4077,7 +4827,14 @@ class MainWindow(object):
                 if row.get_index() != 0:
                     self.QueueListBox.remove(row)
                     # removing from queue list too
-                    index = next((index for (index, app) in enumerate(self.queue) if app["name"] == button.name), None)
+                    index = next(
+                        (
+                            index
+                            for (index, app) in enumerate(self.queue)
+                            if app["name"] == button.name
+                        ),
+                        None,
+                    )
                     self.queue.pop(index)
 
     def addtoMyApps(self, app):
@@ -4094,18 +4851,26 @@ class MainWindow(object):
         # sizelabel.props.valign = Gtk.Align.CENTER
 
         summarylabel = Gtk.Label.new()
-        summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(app["description"], -1)))
+        summarylabel.set_markup(
+            "<small>{}</small>".format(GLib.markup_escape_text(app["description"], -1))
+        )
         summarylabel.set_line_wrap(True)
         summarylabel.set_line_wrap_mode(2)  # WORD_CHAR
         summarylabel.props.halign = Gtk.Align.START
 
         uninstallbutton = Gtk.Button.new()
-        uninstallbutton.name = {"name": app["name"], "filename": app["filename"], "icon": app["icon"],
-                                "description": app["description"]}
+        uninstallbutton.name = {
+            "name": app["name"],
+            "filename": app["filename"],
+            "icon": app["icon"],
+            "description": app["description"],
+        }
         uninstallbutton.props.valign = Gtk.Align.CENTER
         uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
-        uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+        uninstallbutton.set_image(
+            Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON)
+        )
         uninstallbutton.set_label("")
         uninstallbutton.set_tooltip_text(_("Uninstall"))
         uninstallbutton.get_style_context().add_class("destructive-action")
@@ -4116,7 +4881,11 @@ class MainWindow(object):
         openbutton.props.valign = Gtk.Align.CENTER
         openbutton.props.halign = Gtk.Align.CENTER
         openbutton.props.always_show_image = True
-        openbutton.set_image(Gtk.Image.new_from_icon_name("media-playback-start-symbolic", Gtk.IconSize.BUTTON))
+        openbutton.set_image(
+            Gtk.Image.new_from_icon_name(
+                "media-playback-start-symbolic", Gtk.IconSize.BUTTON
+            )
+        )
         openbutton.set_label("")
         openbutton.set_tooltip_text(_("Open"))
         openbutton.connect("clicked", self.open_from_myapps)
@@ -4146,7 +4915,9 @@ class MainWindow(object):
         self.myappsstack.set_visible_child_name("details")
         self.myappsdetailsstack.set_visible_child_name("spinner")
         self.ui_myapps_spinner.start()
-        myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(button.name,), daemon=True)
+        myappsdetailsthread = threading.Thread(
+            target=self.myappsdetail_worker_thread, args=(button.name,), daemon=True
+        )
         myappsdetailsthread.start()
 
     def open_from_myapps(self, button):
@@ -4163,13 +4934,18 @@ class MainWindow(object):
         self.myappsdetailsstack.set_visible_child_name("details")
 
     def on_ui_myapps_uninstall_button_clicked(self, button):
-        importants =  [i for i in self.important_packages if i in self.myapp_toremove_list]
+        importants = [
+            i for i in self.important_packages if i in self.myapp_toremove_list
+        ]
         if importants:
             self.myappsdetailsstack.set_visible_child_name("disclaimer")
-            self.ui_myapps_disclaimer_label.set_markup("<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
-                _("The following important packages will also be removed."),
-                ", ".join(importants),
-            _("Are you sure you accept this?")))
+            self.ui_myapps_disclaimer_label.set_markup(
+                "<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
+                    _("The following important packages will also be removed."),
+                    ", ".join(importants),
+                    _("Are you sure you accept this?"),
+                )
+            )
         else:
             print("not important package")
             self.ui_myapps_uninstall()
@@ -4198,12 +4974,19 @@ class MainWindow(object):
         myapp_name = row.get_children()[0].get_children()[3].name
         # print(myapp_name)
         search = self.myapps_searchentry.get_text().lower()
-        if search in myapp_name["name"].lower() or search in myapp_name["description"].lower():
+        if (
+            search in myapp_name["name"].lower()
+            or search in myapp_name["description"].lower()
+        ):
             return True
 
     def on_MyAppsListBox_row_activated(self, list_box, row):
         desktopfilename = row.get_children()[0].name
-        myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread, args=(desktopfilename,), daemon=True)
+        myappspackagethread = threading.Thread(
+            target=self.myappspackage_worker_thread,
+            args=(desktopfilename,),
+            daemon=True,
+        )
         myappspackagethread.start()
 
     def myappspackage_worker_thread(self, desktopfilename):
@@ -4228,7 +5011,11 @@ class MainWindow(object):
                 self.myappname = package
                 self.on_PardusAppsIconView_selection_changed(package)
             else:
-                command = any(package in e["command"][self.locale] for e in self.fullapplist if e["command"])
+                command = any(
+                    package in e["command"][self.locale]
+                    for e in self.fullapplist
+                    if e["command"]
+                )
                 if command:
                     appname = None
                     for app in self.fullapplist:
@@ -4246,7 +5033,11 @@ class MainWindow(object):
                     else:
                         self.open_myapps_detailspage_from_desktopfile(desktopfilename)
                 else:
-                    print("{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(desktopfilename, package))
+                    print(
+                        "{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(
+                            desktopfilename, package
+                        )
+                    )
                     self.open_myapps_detailspage_from_desktopfile(desktopfilename)
 
         else:
@@ -4264,7 +5055,9 @@ class MainWindow(object):
             self.myappsstack.set_visible_child_name("details")
             self.myappsdetailsstack.set_visible_child_name("spinner")
             self.ui_myapps_spinner.start()
-            myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(dic,), daemon=True)
+            myappsdetailsthread = threading.Thread(
+                target=self.myappsdetail_worker_thread, args=(dic,), daemon=True
+            )
             myappsdetailsthread.start()
         else:
             self.myappsstack.set_visible_child_name("notfound")
@@ -4272,8 +5065,12 @@ class MainWindow(object):
                 self.ui_myapps_notfoundname_box.set_visible(False)
             else:
                 self.ui_myapps_notfoundname_box.set_visible(True)
-                self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(dic["icon"], size=64))
-                self.ui_myapps_notfoundname_name.set_markup("<big>{}</big>".format(dic["name"]))
+                self.ui_myapps_notfoundname_image.set_from_pixbuf(
+                    self.getMyAppIcon(dic["icon"], size=64)
+                )
+                self.ui_myapps_notfoundname_name.set_markup(
+                    "<big>{}</big>".format(dic["name"])
+                )
 
     def on_myapps_searchentry_search_changed(self, entry_search):
         self.homestack.set_visible_child_name("myapps")
@@ -4343,7 +5140,15 @@ class MainWindow(object):
                 else:
                     installtext = "Install"
                 self.searchstore.append(
-                    [i["name"], i["category"], 0, installstatus, installtext, self.Package.summary(i["name"])])
+                    [
+                        i["name"],
+                        i["category"],
+                        0,
+                        installstatus,
+                        installtext,
+                        self.Package.summary(i["name"]),
+                    ]
+                )
 
         self.RepoAppsTreeView.set_model(self.searchstore)
         self.RepoAppsTreeView.show_all()
@@ -4385,13 +5190,21 @@ class MainWindow(object):
                     self.raction.get_style_context().remove_class("suggested-action")
                 self.raction.get_style_context().add_class("destructive-action")
                 self.raction.set_label(_(" Uninstall"))
-                self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+                self.raction.set_image(
+                    Gtk.Image.new_from_icon_name(
+                        "user-trash-symbolic", Gtk.IconSize.BUTTON
+                    )
+                )
             else:
                 if self.raction.get_style_context().has_class("destructive-action"):
                     self.raction.get_style_context().remove_class("destructive-action")
                 self.raction.get_style_context().add_class("suggested-action")
                 self.raction.set_label(_(" Install"))
-                self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
+                self.raction.set_image(
+                    Gtk.Image.new_from_icon_name(
+                        "document-save-symbolic", Gtk.IconSize.BUTTON
+                    )
+                )
         else:
             self.raction.set_sensitive(False)
             if self.raction.get_style_context().has_class("destructive-action"):
@@ -4400,7 +5213,11 @@ class MainWindow(object):
                 self.raction.get_style_context().remove_class("suggested-action")
 
             self.raction.set_label(_(" Not Found"))
-            self.raction.set_image(Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
+            self.raction.set_image(
+                Gtk.Image.new_from_icon_name(
+                    "dialog-warning-symbolic", Gtk.IconSize.BUTTON
+                )
+            )
 
         if len(self.queue) > 0:
             for qa in self.queue:
@@ -4437,14 +5254,19 @@ class MainWindow(object):
 
     def on_main_key_press_event(self, widget, event):
         if self.mainstack.get_visible_child_name() == "home":
-            if self.homestack.get_visible_child_name() == "pardushome" or self.homestack.get_visible_child_name() == "pardusapps":
+            if (
+                self.homestack.get_visible_child_name() == "pardushome"
+                or self.homestack.get_visible_child_name() == "pardusapps"
+            ):
                 if not self.topsearchbutton.get_active():
                     if event.string.isdigit() or event.string.isalpha():
                         self.pardussearchbar.get_buffer().delete_text(0, -1)
                         self.pardussearchbar.grab_focus()
                         self.topsearchbutton.set_active(True)
                         self.toprevealer.set_reveal_child(True)
-                        self.pardussearchbar.get_buffer().insert_text(1, event.string, 1)
+                        self.pardussearchbar.get_buffer().insert_text(
+                            1, event.string, 1
+                        )
                         self.pardussearchbar.set_position(2)
                         return True
                 else:
@@ -4453,14 +5275,19 @@ class MainWindow(object):
                         self.topsearchbutton.set_active(False)
                         self.toprevealer.set_reveal_child(False)
                         return True
-            elif self.homestack.get_visible_child_name() == "myapps" and self.myappsstack.get_visible_child_name() == "myapps":
+            elif (
+                self.homestack.get_visible_child_name() == "myapps"
+                and self.myappsstack.get_visible_child_name() == "myapps"
+            ):
                 if not self.topsearchbutton.get_active():
                     if event.string.isdigit() or event.string.isalpha():
                         self.myapps_searchentry.get_buffer().delete_text(0, -1)
                         self.myapps_searchentry.grab_focus()
                         self.topsearchbutton.set_active(True)
                         self.toprevealer.set_reveal_child(True)
-                        self.myapps_searchentry.get_buffer().insert_text(1, event.string, 1)
+                        self.myapps_searchentry.get_buffer().insert_text(
+                            1, event.string, 1
+                        )
                         self.myapps_searchentry.set_position(2)
                         return True
                 else:
@@ -4486,8 +5313,11 @@ class MainWindow(object):
         self.switchSGC.set_state(self.UserSettings.config_sgc)
         self.switchUDT.set_state(self.UserSettings.config_udt)
         self.switchAPTU.set_state(self.UserSettings.config_aptup)
-        self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
-            _("Server Address"), self.Server.serverurl))
+        self.prefServerLabel.set_markup(
+            "<small><span weight='light'>{} : {}</span></small>".format(
+                _("Server Address"), self.Server.serverurl
+            )
+        )
         self.topbutton2.get_style_context().remove_class("suggested-action")
         self.topbutton1.get_style_context().remove_class("suggested-action")
         self.queuebutton.get_style_context().remove_class("suggested-action")
@@ -4501,7 +5331,11 @@ class MainWindow(object):
 
     def control_groups(self):
         try:
-            self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.username in g.gr_mem]
+            self.usergroups = [
+                g.gr_name
+                for g in grp.getgrall()
+                if self.UserSettings.username in g.gr_mem
+            ]
         except Exception as e:
             print("control_groups: {}".format(e))
             self.usergroups = []
@@ -4606,11 +5440,21 @@ class MainWindow(object):
 
     def setStatistics(self):
         if not self.statisticsSetted:
-            self.statstotaldc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["downcount"]))
-            self.statstotalrc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["ratecount"]))
+            self.statstotaldc.set_markup(
+                "<small><b>{}</b></small>".format(
+                    self.Server.totalstatistics[0]["downcount"]
+                )
+            )
+            self.statstotalrc.set_markup(
+                "<small><b>{}</b></small>".format(
+                    self.Server.totalstatistics[0]["ratecount"]
+                )
+            )
             self.statsweblabel.set_markup(
                 "<small>{}<a href='https://apps.pardus.org.tr/statistics' title='https://apps.pardus.org.tr/statistics'>apps.pardus.org.tr</a>{}</small>".format(
-                    _("View on "), _(".")))
+                    _("View on "), _(".")
+                )
+            )
             dates = []
             downs = []
             for data in self.Server.dailydowns:
@@ -4636,11 +5480,16 @@ class MainWindow(object):
 
             explode = (0.1, 0.3, 0.4, 0.5)
             fig2, ax2 = plt.subplots()
-            p2 = ax2.pie(osdowns, labels=osnames, colors=self.Server.oscolors, explode=explode,
-                         autopct=lambda p: f'{p * sum(osdowns) / 100 :.0f} (%{p:.2f})')
+            p2 = ax2.pie(
+                osdowns,
+                labels=osnames,
+                colors=self.Server.oscolors,
+                explode=explode,
+                autopct=lambda p: f"{p * sum(osdowns) / 100 :.0f} (%{p:.2f})",
+            )
             # plt.setp(p2[1], size="small", weight="bold")
             # plt.setp(p2[2], size="small", weight="bold")
-            ax2.axis('equal')
+            ax2.axis("equal")
             plt.title(_("Used Operating Systems (For App Download)"))
             plt.tight_layout()
             canvas2 = FigureCanvas(fig2)
@@ -4655,7 +5504,14 @@ class MainWindow(object):
                     appnames.append(appdata["name_en"])
                 appdowns.append(appdata["count"])
             fig3, ax3 = plt.subplots()
-            p3 = ax3.bar(appnames, appdowns, width=0.9, edgecolor="white", linewidth=1, color=self.Server.appcolors)
+            p3 = ax3.bar(
+                appnames,
+                appdowns,
+                width=0.9,
+                edgecolor="white",
+                linewidth=1,
+                color=self.Server.appcolors,
+            )
             plt.title(_("Top 30 App Downloads"))
             plt.xticks(size="small")
             plt.tight_layout()
@@ -4716,16 +5572,21 @@ class MainWindow(object):
         self.sug_category = self.SuggestCat.get_active_text()
 
         desc_tr_buffer = self.SuggestDescTR.get_buffer()
-        self.sug_desc_tr = desc_tr_buffer.get_text(desc_tr_buffer.get_start_iter(), desc_tr_buffer.get_end_iter(), True)
+        self.sug_desc_tr = desc_tr_buffer.get_text(
+            desc_tr_buffer.get_start_iter(), desc_tr_buffer.get_end_iter(), True
+        )
 
         desc_en_buffer = self.SuggestDescEN.get_buffer()
-        self.sug_desc_en = desc_en_buffer.get_text(desc_en_buffer.get_start_iter(), desc_en_buffer.get_end_iter(), True)
+        self.sug_desc_en = desc_en_buffer.get_text(
+            desc_en_buffer.get_start_iter(), desc_en_buffer.get_end_iter(), True
+        )
 
         self.sug_license = self.SuggestLicense.get_text()
 
         copyright_buffer = self.SuggestCopyright.get_buffer()
-        self.sug_copyright = copyright_buffer.get_text(copyright_buffer.get_start_iter(),
-                                                       copyright_buffer.get_end_iter(), True)
+        self.sug_copyright = copyright_buffer.get_text(
+            copyright_buffer.get_start_iter(), copyright_buffer.get_end_iter(), True
+        )
 
         self.sug_website = self.SuggestWeb.get_text()
         self.sug_icon = self.SuggestIconChooser.get_filename()
@@ -4746,17 +5607,31 @@ class MainWindow(object):
             if img_valid:
                 self.SuggestSend.set_sensitive(False)
                 self.SuggestInfoLabel.set_text("")
-                dic = {"appname": self.controlText(self.sug_appname), "category": self.controlText(self.sug_category),
-                       "desc_tr": self.controlText(self.sug_desc_tr), "desc_en": self.controlText(self.sug_desc_en),
-                       "license": self.controlText(self.sug_license), "copyright": self.controlText(self.sug_copyright),
-                       "website": self.controlText(self.sug_website), "icon": self.sug_icon_raw,
-                       "inrepo": self.sug_inrepo, "name": self.controlText(self.sug_name),
-                       "mail": self.controlText(self.sug_mail), "mac": self.mac}
-                self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendsuggestapp, dic)
+                dic = {
+                    "appname": self.controlText(self.sug_appname),
+                    "category": self.controlText(self.sug_category),
+                    "desc_tr": self.controlText(self.sug_desc_tr),
+                    "desc_en": self.controlText(self.sug_desc_en),
+                    "license": self.controlText(self.sug_license),
+                    "copyright": self.controlText(self.sug_copyright),
+                    "website": self.controlText(self.sug_website),
+                    "icon": self.sug_icon_raw,
+                    "inrepo": self.sug_inrepo,
+                    "name": self.controlText(self.sug_name),
+                    "mail": self.controlText(self.sug_mail),
+                    "mac": self.mac,
+                }
+                self.AppRequest.send(
+                    "POST",
+                    self.Server.serverurl + self.Server.serversendsuggestapp,
+                    dic,
+                )
             else:
                 self.SuggestInfoLabel.set_text("{}".format(img_message))
         else:
-            self.SuggestInfoLabel.set_text("{} : {} {}".format(_("Error"), message, _("is empty")))
+            self.SuggestInfoLabel.set_text(
+                "{} : {} {}".format(_("Error"), message, _("is empty"))
+            )
 
     def controlText(self, text):
 
@@ -4826,13 +5701,19 @@ class MainWindow(object):
 
     def resetSuggestAppForm(self):
         self.SuggestAppName.set_text("")
-        self.SuggestDescTR.get_buffer().delete(self.SuggestDescTR.get_buffer().get_start_iter(),
-                                               self.SuggestDescTR.get_buffer().get_end_iter())
-        self.SuggestDescEN.get_buffer().delete(self.SuggestDescEN.get_buffer().get_start_iter(),
-                                               self.SuggestDescEN.get_buffer().get_end_iter())
+        self.SuggestDescTR.get_buffer().delete(
+            self.SuggestDescTR.get_buffer().get_start_iter(),
+            self.SuggestDescTR.get_buffer().get_end_iter(),
+        )
+        self.SuggestDescEN.get_buffer().delete(
+            self.SuggestDescEN.get_buffer().get_start_iter(),
+            self.SuggestDescEN.get_buffer().get_end_iter(),
+        )
         self.SuggestLicense.set_text("")
-        self.SuggestCopyright.get_buffer().delete(self.SuggestCopyright.get_buffer().get_start_iter(),
-                                                  self.SuggestCopyright.get_buffer().get_end_iter())
+        self.SuggestCopyright.get_buffer().delete(
+            self.SuggestCopyright.get_buffer().get_start_iter(),
+            self.SuggestCopyright.get_buffer().get_end_iter(),
+        )
         self.SuggestWeb.set_text("")
         self.SuggestName.set_text("")
         self.SuggestMail.set_text("")
@@ -4843,10 +5724,17 @@ class MainWindow(object):
         self.prefTipLabel.set_max_width_chars(-1)
         if button.get_name() == "tip_usi":
             self.PopoverPrefTip.set_relative_to(self.tip_usi)
-            self.prefTipLabel.set_text("{}\n{}\n{}".format(
-                _("If you use the server icons, the application icons will be pulled from the server completely."),
-                _("If you turn this option off, application icons will be pulled from your system,"),
-                _("which may cause some application icons to appear blank.")))
+            self.prefTipLabel.set_text(
+                "{}\n{}\n{}".format(
+                    _(
+                        "If you use the server icons, the application icons will be pulled from the server completely."
+                    ),
+                    _(
+                        "If you turn this option off, application icons will be pulled from your system,"
+                    ),
+                    _("which may cause some application icons to appear blank."),
+                )
+            )
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_ea":
             self.PopoverPrefTip.set_relative_to(self.tip_ea)
@@ -4854,80 +5742,121 @@ class MainWindow(object):
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_soaa":
             self.PopoverPrefTip.set_relative_to(self.tip_soaa)
-            self.prefTipLabel.set_text("{} {} {}\n{}\n{}".format(
-                _("Show only available applications in"), self.UserSettings.usercodename, _("repository."),
-                _("If you turn this option off, all apps will be shown, but"),
-                _("'Not Found' will be displayed for apps not available in the repository.")))
+            self.prefTipLabel.set_text(
+                "{} {} {}\n{}\n{}".format(
+                    _("Show only available applications in"),
+                    self.UserSettings.usercodename,
+                    _("repository."),
+                    _("If you turn this option off, all apps will be shown, but"),
+                    _(
+                        "'Not Found' will be displayed for apps not available in the repository."
+                    ),
+                )
+            )
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_hera":
             self.PopoverPrefTip.set_relative_to(self.tip_hera)
-            self.prefTipLabel.set_text("{}\n{}".format(
-                _("Hide applications offered from external repositories (other than Official Pardus repository)."),
-                _("For example, publisher's applications in the Publishers category.")
-            ))
+            self.prefTipLabel.set_text(
+                "{}\n{}".format(
+                    _(
+                        "Hide applications offered from external repositories (other than Official Pardus repository)."
+                    ),
+                    _(
+                        "For example, publisher's applications in the Publishers category."
+                    ),
+                )
+            )
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_icons":
             self.PopoverPrefTip.set_relative_to(self.tip_icons)
-            self.prefTipLabel.set_markup("{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}".format(
-                _("Default icons use Papirus icon theme."),
-                ("<a href='https://github.com/PapirusDevelopmentTeam/papirus-icon-theme'>Site</a>"),
-                _("Candy is Candy icon theme."),
-                ("<a href='https://github.com/EliverLara/candy-icons/'>Site</a>"),
-                _("Flat is Flat Remix icon theme."),
-                ("<a href='https://github.com/daniruiz/Flat-Remix'>Site</a>"),
-                _("Flatery is Flatery icon theme."),
-                ("<a href='https://github.com/cbrnix/Flatery'>Site</a>"),
-                _("Kora is Kora icon theme."),
-                ("<a href='https://github.com/bikass/kora'>Site</a>"),
-                _("Numix is Numix Circle icon theme."),
-                ("<a href='https://github.com/numixproject/numix-icon-theme-circle'>Site</a>"),
-                _("Oranchelo is Oranchelo icon theme."),
-                ("<a href='https://github.com/OrancheloTeam/oranchelo-icon-theme'>Site</a>"),
-                _("Tela is Tela icon theme."),
-                ("<a href='https://github.com/vinceliuice/Tela-icon-theme'>Site</a>"),
-                _("Zafiro is Zafiro icon theme."),
-                ("<a href='https://github.com/zayronxio/Zafiro-icons'>Site</a>")
-            ))
+            self.prefTipLabel.set_markup(
+                "{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}\n{} {}".format(
+                    _("Default icons use Papirus icon theme."),
+                    (
+                        "<a href='https://github.com/PapirusDevelopmentTeam/papirus-icon-theme'>Site</a>"
+                    ),
+                    _("Candy is Candy icon theme."),
+                    ("<a href='https://github.com/EliverLara/candy-icons/'>Site</a>"),
+                    _("Flat is Flat Remix icon theme."),
+                    ("<a href='https://github.com/daniruiz/Flat-Remix'>Site</a>"),
+                    _("Flatery is Flatery icon theme."),
+                    ("<a href='https://github.com/cbrnix/Flatery'>Site</a>"),
+                    _("Kora is Kora icon theme."),
+                    ("<a href='https://github.com/bikass/kora'>Site</a>"),
+                    _("Numix is Numix Circle icon theme."),
+                    (
+                        "<a href='https://github.com/numixproject/numix-icon-theme-circle'>Site</a>"
+                    ),
+                    _("Oranchelo is Oranchelo icon theme."),
+                    (
+                        "<a href='https://github.com/OrancheloTeam/oranchelo-icon-theme'>Site</a>"
+                    ),
+                    _("Tela is Tela icon theme."),
+                    (
+                        "<a href='https://github.com/vinceliuice/Tela-icon-theme'>Site</a>"
+                    ),
+                    _("Zafiro is Zafiro icon theme."),
+                    ("<a href='https://github.com/zayronxio/Zafiro-icons'>Site</a>"),
+                )
+            )
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_sgc":
             self.PopoverPrefTip.set_relative_to(self.tip_sgc)
-            self.prefTipLabel.set_markup("{}\n{}".format(
-                _("Show gnome comments in app comments."),
-                _("GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>.")
-            ))
+            self.prefTipLabel.set_markup(
+                "{}\n{}".format(
+                    _("Show gnome comments in app comments."),
+                    _(
+                        "GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>."
+                    ),
+                )
+            )
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_udt":
             self.PopoverPrefTip.set_relative_to(self.tip_udt)
-            self.prefTipLabel.set_markup("{}\n{}".format(
-                _("Whether the application prefers to use a dark theme."),
-                _("If a GTK+ theme includes a dark variant, it will be used instead of the configured theme.")
-            ))
+            self.prefTipLabel.set_markup(
+                "{}\n{}".format(
+                    _("Whether the application prefers to use a dark theme."),
+                    _(
+                        "If a GTK+ theme includes a dark variant, it will be used instead of the configured theme."
+                    ),
+                )
+            )
             self.PopoverPrefTip.popup()
         elif button.get_name() == "tip_aptu":
             if self.UserSettings.config_forceaptuptime != 0:
-                force = "{} ( {} )".format(_("The value in your configuration file is used as the wait time."),
-                                           self.displayTime(self.UserSettings.config_forceaptuptime))
+                force = "{} ( {} )".format(
+                    _("The value in your configuration file is used as the wait time."),
+                    self.displayTime(self.UserSettings.config_forceaptuptime),
+                )
             else:
                 force = False
             self.PopoverPrefTip.set_relative_to(self.tip_aptu)
             self.prefTipLabel.set_max_width_chars(60)
             if force is False:
-                self.prefTipLabel.set_markup("{} {} {}\n<u>{}:</u> <b>{}</b>".format(
-                    _("Allows the package manager cache to be updated again on the next application start if"),
-                    self.displayTime(self.Server.aptuptime),
-                    _("have passed since the last successful update."),
-                    _("Last successful update time is"),
-                    datetime.fromtimestamp(self.UserSettings.config_lastaptup)
-                ))
+                self.prefTipLabel.set_markup(
+                    "{} {} {}\n<u>{}:</u> <b>{}</b>".format(
+                        _(
+                            "Allows the package manager cache to be updated again on the next application start if"
+                        ),
+                        self.displayTime(self.Server.aptuptime),
+                        _("have passed since the last successful update."),
+                        _("Last successful update time is"),
+                        datetime.fromtimestamp(self.UserSettings.config_lastaptup),
+                    )
+                )
             else:
-                self.prefTipLabel.set_markup("{} {} {}\n<u>{}:</u> <b>{}</b>\n\n<span color='red'>{}</span>".format(
-                    _("Allows the package manager cache to be updated again on the next application start if"),
-                    self.displayTime(self.Server.aptuptime),
-                    _("have passed since the last successful update."),
-                    _("Last successful update time is"),
-                    datetime.fromtimestamp(self.UserSettings.config_lastaptup),
-                    force
-                ))
+                self.prefTipLabel.set_markup(
+                    "{} {} {}\n<u>{}:</u> <b>{}</b>\n\n<span color='red'>{}</span>".format(
+                        _(
+                            "Allows the package manager cache to be updated again on the next application start if"
+                        ),
+                        self.displayTime(self.Server.aptuptime),
+                        _("have passed since the last successful update."),
+                        _("Last successful update time is"),
+                        datetime.fromtimestamp(self.UserSettings.config_lastaptup),
+                        force,
+                    )
+                )
             self.PopoverPrefTip.popup()
 
     def displayTime(self, seconds, granularity=5):
@@ -4944,30 +5873,47 @@ class MainWindow(object):
             if value:
                 seconds -= value * count
                 if value == 1:
-                    name = name.rstrip('s')
+                    name = name.rstrip("s")
                 result.append("{} {}".format(value, name))
-        return ', '.join(result[:granularity])
+        return ", ".join(result[:granularity])
 
     def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
         if state != user_config_usi:
             print("Updating user icon state")
             try:
-                self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.writeConfig(
+                    state,
+                    self.UserSettings.config_ea,
+                    self.UserSettings.config_saa,
+                    self.UserSettings.config_hera,
+                    self.UserSettings.config_icon,
+                    self.UserSettings.config_sgc,
+                    self.UserSettings.config_udt,
+                    self.UserSettings.config_aptup,
+                    self.UserSettings.config_lastaptup,
+                    self.UserSettings.config_forceaptuptime,
+                )
                 self.usersettings()
                 GLib.idle_add(self.clearBoxes)
                 if state:
                     self.Server.getIcons(
-                        self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
-                        self.Server.serverappicons, fromsettings=True)
+                        self.Server.serverurl
+                        + self.Server.serverfiles
+                        + self.Server.serverappicons
+                        + self.Server.serverarchive,
+                        self.Server.serverappicons,
+                        fromsettings=True,
+                    )
 
                     self.Server.getIcons(
-                        self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
-                        self.Server.servercaticons, fromsettings=True)
+                        self.Server.serverurl
+                        + self.Server.serverfiles
+                        + self.Server.servercaticons
+                        + self.Server.serverarchive,
+                        self.Server.servercaticons,
+                        fromsettings=True,
+                    )
                 else:
                     self.setPardusApps()
                     self.setPardusCategories()
@@ -4983,11 +5929,18 @@ class MainWindow(object):
         if state != user_config_ea:
             print("Updating user animation state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.writeConfig(
+                    self.UserSettings.config_usi,
+                    state,
+                    self.UserSettings.config_saa,
+                    self.UserSettings.config_hera,
+                    self.UserSettings.config_icon,
+                    self.UserSettings.config_sgc,
+                    self.UserSettings.config_udt,
+                    self.UserSettings.config_aptup,
+                    self.UserSettings.config_lastaptup,
+                    self.UserSettings.config_forceaptuptime,
+                )
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
@@ -4998,13 +5951,22 @@ class MainWindow(object):
         if state != user_config_saa:
             print("Updating show available apps state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.writeConfig(
+                    self.UserSettings.config_usi,
+                    self.UserSettings.config_ea,
+                    state,
+                    self.UserSettings.config_hera,
+                    self.UserSettings.config_icon,
+                    self.UserSettings.config_sgc,
+                    self.UserSettings.config_udt,
+                    self.UserSettings.config_aptup,
+                    self.UserSettings.config_lastaptup,
+                    self.UserSettings.config_forceaptuptime,
+                )
                 self.usersettings()
-                self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
+                self.setAvailableApps(
+                    available=state, hideextapps=self.UserSettings.config_hera
+                )
             except Exception as e:
                 self.preflabel_settext("{}".format(e))
 
@@ -5019,13 +5981,22 @@ class MainWindow(object):
         if state != user_config_hera:
             print("Updating hide external apps state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                              self.UserSettings.config_saa, state, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.writeConfig(
+                    self.UserSettings.config_usi,
+                    self.UserSettings.config_ea,
+                    self.UserSettings.config_saa,
+                    state,
+                    self.UserSettings.config_icon,
+                    self.UserSettings.config_sgc,
+                    self.UserSettings.config_udt,
+                    self.UserSettings.config_aptup,
+                    self.UserSettings.config_lastaptup,
+                    self.UserSettings.config_forceaptuptime,
+                )
                 self.usersettings()
-                self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
+                self.setAvailableApps(
+                    available=self.UserSettings.config_saa, hideextapps=state
+                )
             except Exception as e:
                 self.preflabel_settext("{}".format(e))
 
@@ -5040,11 +6011,18 @@ class MainWindow(object):
         active = combo_box.get_active_id()
         if active != user_config_icon and active is not None:
             print("changing icons to " + str(combo_box.get_active_id()))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera, active,
-                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(
+                self.UserSettings.config_usi,
+                self.UserSettings.config_ea,
+                self.UserSettings.config_saa,
+                self.UserSettings.config_hera,
+                active,
+                self.UserSettings.config_sgc,
+                self.UserSettings.config_udt,
+                self.UserSettings.config_aptup,
+                self.UserSettings.config_lastaptup,
+                self.UserSettings.config_forceaptuptime,
+            )
             self.usersettings()
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
@@ -5056,22 +6034,36 @@ class MainWindow(object):
         user_config_sgc = self.UserSettings.config_sgc
         if state != user_config_sgc:
             print("Updating show gnome apps state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(
+                self.UserSettings.config_usi,
+                self.UserSettings.config_ea,
+                self.UserSettings.config_saa,
+                self.UserSettings.config_hera,
+                self.UserSettings.config_icon,
+                state,
+                self.UserSettings.config_udt,
+                self.UserSettings.config_aptup,
+                self.UserSettings.config_lastaptup,
+                self.UserSettings.config_forceaptuptime,
+            )
             self.usersettings()
 
     def on_switchUDT_state_set(self, switch, state):
         user_config_udt = self.UserSettings.config_udt
         if state != user_config_udt:
             print("Updating use dark theme state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(
+                self.UserSettings.config_usi,
+                self.UserSettings.config_ea,
+                self.UserSettings.config_saa,
+                self.UserSettings.config_hera,
+                self.UserSettings.config_icon,
+                self.UserSettings.config_sgc,
+                state,
+                self.UserSettings.config_aptup,
+                self.UserSettings.config_lastaptup,
+                self.UserSettings.config_forceaptuptime,
+            )
         if state:
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
         else:
@@ -5083,11 +6075,18 @@ class MainWindow(object):
         user_config_aptup = self.UserSettings.config_aptup
         if state != user_config_aptup:
             print("Updating auto apt update state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
-                                          self.UserSettings.config_udt, state,
-                                          self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(
+                self.UserSettings.config_usi,
+                self.UserSettings.config_ea,
+                self.UserSettings.config_saa,
+                self.UserSettings.config_hera,
+                self.UserSettings.config_icon,
+                self.UserSettings.config_sgc,
+                self.UserSettings.config_udt,
+                state,
+                self.UserSettings.config_lastaptup,
+                self.UserSettings.config_forceaptuptime,
+            )
             self.usersettings()
 
     def clearBoxes(self):
@@ -5146,7 +6145,9 @@ class MainWindow(object):
         if state:
             self.prefcachebutton.set_sensitive(False)
             self.prefcachebutton.set_label(_("Cleared"))
-            self.preflabel_settext(_("Cache files cleared, please close and reopen the application"))
+            self.preflabel_settext(
+                _("Cache files cleared, please close and reopen the application")
+            )
         else:
             self.prefcachebutton.set_sensitive(True)
             self.prefcachebutton.set_label(_("Error"))
@@ -5159,8 +6160,11 @@ class MainWindow(object):
         self.prefstack.set_visible_child_name("main")
 
     def on_prefconfirm_acceptbutton_clicked(self, button):
-        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
-                   "correctsourceslist"]
+        command = [
+            "/usr/bin/pkexec",
+            os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
+            "correctsourceslist",
+        ]
 
         self.startSysProcess(command)
         self.prefstack.set_visible_child_name("main")
@@ -5182,11 +6186,19 @@ class MainWindow(object):
         self.preflabel_settext("")
         self.grouperrormessage = ""
         if "pardus-software" in self.usergroups:
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "del",
-                       self.UserSettings.username]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/Group.py",
+                "del",
+                self.UserSettings.username,
+            ]
         else:
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
-                       self.UserSettings.username]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/Group.py",
+                "add",
+                self.UserSettings.username,
+            ]
         self.startGroupProcess(command)
 
     def on_bottomerrorbutton_clicked(self, button):
@@ -5204,7 +6216,11 @@ class MainWindow(object):
             self.updatecontrolbutton.set_sensitive(False)
             self.updatespinner.start()
             self.updatestack.set_visible_child_name("output")
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "update"]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                "update",
+            ]
             self.pid = self.startProcess(command)
             print("PID : {}".format(self.pid))
         else:
@@ -5221,7 +6237,11 @@ class MainWindow(object):
             self.updatecontrolbutton.set_sensitive(False)
             self.updatespinner.start()
             self.updatestack.set_visible_child_name("output")
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "removeauto"]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                "removeauto",
+            ]
             self.pid = self.startProcess(command)
             print("PID : {}".format(self.pid))
         else:
@@ -5235,8 +6255,12 @@ class MainWindow(object):
             self.updatecontrolbutton.set_sensitive(False)
             self.updatespinner.start()
             self.updatestack.set_visible_child_name("output")
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "removeresidual",
-                       " ".join(self.Package.residual())]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                "removeresidual",
+                " ".join(self.Package.residual()),
+            ]
             # print(command)
             self.pid = self.startProcess(command)
             print("PID : {}".format(self.pid))
@@ -5347,10 +6371,18 @@ class MainWindow(object):
 
         if ui_appname == appname:
             self.dActionButton.set_sensitive(False)
-            self.dActionButton.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
+            self.dActionButton.set_image(
+                Gtk.Image.new_from_icon_name(
+                    "process-working-symbolic", Gtk.IconSize.BUTTON
+                )
+            )
             self.dActionInfoButton.set_sensitive(False)
             self.raction.set_sensitive(False)
-            self.raction.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
+            self.raction.set_image(
+                Gtk.Image.new_from_icon_name(
+                    "process-working-symbolic", Gtk.IconSize.BUTTON
+                )
+            )
 
         self.actionedappname = appname
         self.actionedcommand = command
@@ -5361,14 +6393,22 @@ class MainWindow(object):
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Removing"))
                 self.raction.set_label(_(" Removing"))
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
-                       self.actionedcommand]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                "remove",
+                self.actionedcommand,
+            ]
         elif self.isinstalled is False:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Installing"))
                 self.raction.set_label(_(" Installing"))
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
-                       self.actionedcommand]
+            command = [
+                "/usr/bin/pkexec",
+                os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                "install",
+                self.actionedcommand,
+            ]
         else:
             print("actionPackage func error")
 
@@ -5379,15 +6419,29 @@ class MainWindow(object):
         self.actionedenablingappdesktop = self.desktop_file
         self.actionedenablingappcommand = self.command
         self.dActionButton.set_label(_(" Activating"))
-        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "externalrepo",
-                   self.external["repokey"], self.external["reposlist"], self.external["reponame"]]
+        command = [
+            "/usr/bin/pkexec",
+            os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
+            "externalrepo",
+            self.external["repokey"],
+            self.external["reposlist"],
+            self.external["reponame"],
+        ]
         self.expid = self.startSysProcess(command)
 
     def startProcess(self, params):
-        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                                      standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onProcessStderr)
+        pid, stdin, stdout, stderr = GLib.spawn_async(
+            params,
+            flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            standard_output=True,
+            standard_error=True,
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onProcessStdout
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onProcessStderr
+        )
         GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onProcessExit)
 
         return pid
@@ -5399,8 +6453,12 @@ class MainWindow(object):
         line = source.readline()
         print(line)
         if self.updateclicked:
-            self.updatetextview.get_buffer().insert(self.updatetextview.get_buffer().get_end_iter(), line)
-            self.updatetextview.scroll_to_iter(self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0)
+            self.updatetextview.get_buffer().insert(
+                self.updatetextview.get_buffer().get_end_iter(), line
+            )
+            self.updatetextview.scroll_to_iter(
+                self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0
+            )
         return True
 
     def onProcessStderr(self, source, condition):
@@ -5415,15 +6473,24 @@ class MainWindow(object):
             if "dlstatus" in line:
                 percent = line.split(":")[2].split(".")[0]
                 self.progresstextlabel.set_text(
-                    "{} | {} : {} %".format(self.actionedappname, _("Downloading"), percent))
+                    "{} | {} : {} %".format(
+                        self.actionedappname, _("Downloading"), percent
+                    )
+                )
             elif "pmstatus" in line:
                 percent = line.split(":")[2].split(".")[0]
                 if self.isinstalled:
                     self.progresstextlabel.set_text(
-                        "{} | {} : {} %".format(self.actionedappname, _("Removing"), percent))
+                        "{} | {} : {} %".format(
+                            self.actionedappname, _("Removing"), percent
+                        )
+                    )
                 else:
                     self.progresstextlabel.set_text(
-                        "{} | {} : {} %".format(self.actionedappname, _("Installing"), percent))
+                        "{} | {} : {} %".format(
+                            self.actionedappname, _("Installing"), percent
+                        )
+                    )
             elif "E:" in line and ".deb" in line:
                 print("connection error")
                 self.error = True
@@ -5449,17 +6516,29 @@ class MainWindow(object):
             if not self.error:
                 if status == 0:
                     if self.isinstalled:
-                        self.progresstextlabel.set_text(self.actionedappname + _(" | Removed : 100 %"))
+                        self.progresstextlabel.set_text(
+                            self.actionedappname + _(" | Removed : 100 %")
+                        )
                     else:
-                        self.progresstextlabel.set_text(self.actionedappname + _(" | Installed : 100 %"))
+                        self.progresstextlabel.set_text(
+                            self.actionedappname + _(" | Installed : 100 %")
+                        )
                 else:
-                    self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
+                    self.progresstextlabel.set_text(
+                        self.actionedappname + _(" | " + " Not Completed")
+                    )
             else:
-                self.errormessage = _("<b><span color='red'>Connection Error !</span></b>")
+                self.errormessage = _(
+                    "<b><span color='red'>Connection Error !</span></b>"
+                )
                 if self.dpkglockerror:
-                    self.errormessage = _("<b><span color='red'>Dpkg Lock Error !</span></b>")
+                    self.errormessage = _(
+                        "<b><span color='red'>Dpkg Lock Error !</span></b>"
+                    )
                 elif self.dpkgconferror:
-                    self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
+                    self.errormessage = _(
+                        "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
+                    )
 
             cachestatus = self.Package.updatecache()
 
@@ -5473,9 +6552,17 @@ class MainWindow(object):
                     if self.isinstalled:
                         self.notify()
 
-            self.control_myapps(self.actionedappname, self.actionedappdesktop, status, self.error, cachestatus)
+            self.control_myapps(
+                self.actionedappname,
+                self.actionedappdesktop,
+                status,
+                self.error,
+                cachestatus,
+            )
 
-            self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
+            self.controlView(
+                self.actionedappname, self.actionedappdesktop, self.actionedcommand
+            )
 
             ui_appname = self.getActiveAppOnUI()
             if ui_appname == self.actionedappname:
@@ -5494,14 +6581,28 @@ class MainWindow(object):
             if len(self.queue) > 0:
                 self.actionPackage(self.queue[0]["name"], self.queue[0]["command"])
                 # Update QueueListBox's first element too
-                queuecancelbutton = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[3]
+                queuecancelbutton = (
+                    self.QueueListBox.get_row_at_index(0)
+                    .get_children()[0]
+                    .get_children()[3]
+                )
                 queuecancelbutton.set_sensitive(False)
-                queuecancelbutton.set_tooltip_text(_("You cannot cancel because the application is in progress."))
-                queueactlabel = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[2]
+                queuecancelbutton.set_tooltip_text(
+                    _("You cannot cancel because the application is in progress.")
+                )
+                queueactlabel = (
+                    self.QueueListBox.get_row_at_index(0)
+                    .get_children()[0]
+                    .get_children()[2]
+                )
                 if self.Package.isinstalled(self.actionedappname):
-                    queueactlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
+                    queueactlabel.set_markup(
+                        "<span color='#e01b24'>{}</span>".format(_("Removing"))
+                    )
                 else:
-                    queueactlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
+                    queueactlabel.set_markup(
+                        "<span color='#3584e4'>{}</span>".format(_("Installing"))
+                    )
             else:
                 self.bottomrevealer.set_reveal_child(False)
                 if not self.error:
@@ -5511,24 +6612,32 @@ class MainWindow(object):
             if self.error:
                 self.bottomrevealer.set_reveal_child(True)
                 self.bottomstack.set_visible_child_name("error")
-                self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
+                self.bottomerrorlabel.set_markup(
+                    "<span color='red'>{}</span>".format(self.errormessage)
+                )
 
             self.error = False
             self.dpkglockerror = False
             self.dpkgconferror = False
 
             if status == 256:
-                self.errormessage = _("Only one software management tool is allowed to run at the same time.\n"
-                                      "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first.")
+                self.errormessage = _(
+                    "Only one software management tool is allowed to run at the same time.\n"
+                    "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first."
+                )
                 self.bottomrevealer.set_reveal_child(True)
                 self.bottomstack.set_visible_child_name("error")
-                self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
+                self.bottomerrorlabel.set_markup(
+                    "<span color='red'>{}</span>".format(self.errormessage)
+                )
 
         else:
             self.updateclicked = False
             self.updatecontrolbutton.set_sensitive(True)
             self.updatespinner.stop()
-            self.updatetextview.scroll_to_iter(self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0)
+            self.updatetextview.scroll_to_iter(
+                self.updatetextview.get_buffer().get_end_iter(), 0.0, False, 0.0, 0.0
+            )
             if status == 0:
                 self.Package.updatecache()
 
@@ -5540,19 +6649,29 @@ class MainWindow(object):
                     self.residualtextview.get_buffer().set_text(_("No action required"))
                     self.residualbutton.set_sensitive(False)
                 else:
-                    self.residualtextview.get_buffer().set_text("\n".join(self.Package.residual()))
+                    self.residualtextview.get_buffer().set_text(
+                        "\n".join(self.Package.residual())
+                    )
                     self.residualbutton.set_sensitive(True)
                 if len(removable) == 0:
-                    self.removabletextview.get_buffer().set_text(_("No action required"))
+                    self.removabletextview.get_buffer().set_text(
+                        _("No action required")
+                    )
                     self.autoremovebutton.set_sensitive(False)
                 else:
-                    self.removabletextview.get_buffer().set_text("\n".join(self.Package.autoremovable()))
+                    self.removabletextview.get_buffer().set_text(
+                        "\n".join(self.Package.autoremovable())
+                    )
                     self.autoremovebutton.set_sensitive(True)
                 if len(upgradable) == 0:
-                    self.upgradabletextview.get_buffer().set_text(_("All packages are up to date"))
+                    self.upgradabletextview.get_buffer().set_text(
+                        _("All packages are up to date")
+                    )
                     self.upgradebutton.set_sensitive(False)
                 else:
-                    self.upgradabletextview.get_buffer().set_text("\n".join(self.Package.upgradable()))
+                    self.upgradabletextview.get_buffer().set_text(
+                        "\n".join(self.Package.upgradable())
+                    )
                     self.upgradebutton.set_sensitive(True)
 
                 self.updatestack.set_visible_child_name("list")
@@ -5568,36 +6687,50 @@ class MainWindow(object):
             appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
             print("in controlView " + appname)
             if appname == actionedappname:
-                self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+                self.updateActionButtons(
+                    1, actionedappname, actionedappdesktop, actionedappcommand
+                )
 
         if len(editor_selected_items) == 1:
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             appname = self.EditorListStore.get(treeiter, 1)[0]
             print("in controlView " + appname)
             if appname == actionedappname:
-                self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+                self.updateActionButtons(
+                    1, actionedappname, actionedappdesktop, actionedappcommand
+                )
 
         if self.frommostapps:
             if self.mostappname:
                 if self.mostappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+                    self.updateActionButtons(
+                        1, actionedappname, actionedappdesktop, actionedappcommand
+                    )
             else:
                 if self.detailsappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+                    self.updateActionButtons(
+                        1, actionedappname, actionedappdesktop, actionedappcommand
+                    )
 
         if self.fromqueue:
             if self.queueappname:
                 if self.queueappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+                    self.updateActionButtons(
+                        1, actionedappname, actionedappdesktop, actionedappcommand
+                    )
 
         if self.frommyapps:
             if self.myappname:
                 if self.myappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
+                    self.updateActionButtons(
+                        1, actionedappname, actionedappdesktop, actionedappcommand
+                    )
 
         if self.fromrepoapps:
             if self.repoappname == actionedappname:
-                self.updateActionButtons(2, actionedappname, actionedappdesktop, actionedappcommand)
+                self.updateActionButtons(
+                    2, actionedappname, actionedappdesktop, actionedappcommand
+                )
 
             # Updating status tick of repo apps
             try:
@@ -5607,7 +6740,9 @@ class MainWindow(object):
             except:
                 pass
 
-    def updateActionButtons(self, repo, actionedappname, actionedappdesktop, actionedappcommand):
+    def updateActionButtons(
+        self, repo, actionedappname, actionedappdesktop, actionedappcommand
+    ):
         if repo == 1:  # pardus apps
             self.fromexternal = False
             if self.Package.isinstalled(actionedappname) is True:
@@ -5617,7 +6752,11 @@ class MainWindow(object):
                 self.set_button_class(self.dActionInfoButton, 1)
 
                 self.dActionButton.set_label(_(" Uninstall"))
-                self.dActionButton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+                self.dActionButton.set_image(
+                    Gtk.Image.new_from_icon_name(
+                        "user-trash-symbolic", Gtk.IconSize.BUTTON
+                    )
+                )
 
                 if actionedappdesktop != "" and actionedappdesktop is not None:
                     self.dOpenButton.set_visible(True)
@@ -5625,7 +6764,9 @@ class MainWindow(object):
                 self.wpcformcontrolLabel.set_visible(False)
                 self.wpcformcontrolLabel.set_markup("")
 
-                sizethread1 = threading.Thread(target=self.size_worker_thread, daemon=True)
+                sizethread1 = threading.Thread(
+                    target=self.size_worker_thread, daemon=True
+                )
                 sizethread1.start()
 
             elif self.Package.isinstalled(actionedappname) is False:
@@ -5634,18 +6775,27 @@ class MainWindow(object):
                 self.set_button_class(self.dActionButton, 0)
                 self.set_button_class(self.dActionInfoButton, 0)
 
-
                 self.dActionButton.set_label(_(" Install"))
                 self.dActionButton.set_image(
-                    Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
+                    Gtk.Image.new_from_icon_name(
+                        "document-save-symbolic", Gtk.IconSize.BUTTON
+                    )
+                )
 
                 self.dOpenButton.set_visible(False)
 
                 self.wpcformcontrolLabel.set_visible(True)
                 self.wpcformcontrolLabel.set_markup(
-                    "<span color='red'>{}</span>".format(_("You need to install the application")))
+                    "<span color='red'>{}</span>".format(
+                        _("You need to install the application")
+                    )
+                )
 
-                sizethread2 = threading.Thread(target=self.size_worker_thread, daemon=True, args=(actionedappcommand, ))
+                sizethread2 = threading.Thread(
+                    target=self.size_worker_thread,
+                    daemon=True,
+                    args=(actionedappcommand,),
+                )
                 sizethread2.start()
 
             else:
@@ -5655,7 +6805,10 @@ class MainWindow(object):
                         self.dActionButton.set_sensitive(True)
                         self.dActionButton.set_label(_("Enable Repo"))
                         self.dActionButton.set_image(
-                            Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON))
+                            Gtk.Image.new_from_icon_name(
+                                "list-add-symbolic", Gtk.IconSize.BUTTON
+                            )
+                        )
                 else:
                     self.dAptUpdateButton.set_visible(True)
                     if self.aptupdateclicked:
@@ -5664,7 +6817,10 @@ class MainWindow(object):
 
                     self.dActionButton.set_label(_(" Not Found"))
                     self.dActionButton.set_image(
-                        Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
+                        Gtk.Image.new_from_icon_name(
+                            "dialog-warning-symbolic", Gtk.IconSize.BUTTON
+                        )
+                    )
                     self.dOpenButton.set_visible(False)
 
                     # self.dActionButton.set_sensitive(False)
@@ -5686,15 +6842,25 @@ class MainWindow(object):
                     self.raction.get_style_context().remove_class("suggested-action")
                 self.raction.get_style_context().add_class("destructive-action")
                 self.raction.set_label(_(" Uninstall"))
-                self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+                self.raction.set_image(
+                    Gtk.Image.new_from_icon_name(
+                        "user-trash-symbolic", Gtk.IconSize.BUTTON
+                    )
+                )
             else:
                 if self.raction.get_style_context().has_class("destructive-action"):
                     self.raction.get_style_context().remove_class("destructive-action")
                 self.raction.get_style_context().add_class("suggested-action")
                 self.raction.set_label(_(" Install"))
-                self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
+                self.raction.set_image(
+                    Gtk.Image.new_from_icon_name(
+                        "document-save-symbolic", Gtk.IconSize.BUTTON
+                    )
+                )
 
-    def control_myapps(self, actionedappname, actionedappdesktop, status, error, cachestatus):
+    def control_myapps(
+        self, actionedappname, actionedappdesktop, status, error, cachestatus
+    ):
         print("in control_myapps")
         if self.homestack.get_visible_child_name() == "myapps":
             if status == 0 and not error and cachestatus:
@@ -5702,11 +6868,17 @@ class MainWindow(object):
                 for row in self.MyAppsListBox:
                     if row.get_children()[0].name == actionedappdesktop:
                         self.MyAppsListBox.remove(row)
-                if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                if (
+                    self.myappsstack.get_visible_child_name() == "details"
+                    and actionedappname == self.myapp_toremove
+                ):
                     print("in myappsstack details actionedappname status=0")
                     self.ui_myapps_uninstall_button.set_sensitive(False)
             else:
-                if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                if (
+                    self.myappsstack.get_visible_child_name() == "details"
+                    and actionedappname == self.myapp_toremove
+                ):
                     print("in myappsstack details actionedappname status!=0")
                     self.ui_myapps_uninstall_button.set_sensitive(True)
 
@@ -5719,18 +6891,27 @@ class MainWindow(object):
                 Notify.init(self.actionedappname)
                 if self.isinstalled:
                     notification = Notify.Notification.new(
-                        self.getPrettyName(self.actionedappname, False) + _(" Removed"))
+                        self.getPrettyName(self.actionedappname, False) + _(" Removed")
+                    )
                 else:
                     notification = Notify.Notification.new(
-                        self.getPrettyName(self.actionedappname, False) + _(" Installed"))
+                        self.getPrettyName(self.actionedappname, False)
+                        + _(" Installed")
+                    )
                 if self.UserSettings.config_usi:
-                    pixbuf = self.getServerAppIcon(self.actionedappname, 96, notify=True)
+                    pixbuf = self.getServerAppIcon(
+                        self.actionedappname, 96, notify=True
+                    )
                 else:
-                    pixbuf = self.getSystemAppIcon(self.actionedappname, 96, notify=True)
+                    pixbuf = self.getSystemAppIcon(
+                        self.actionedappname, 96, notify=True
+                    )
                 notification.set_icon_from_pixbuf(pixbuf)
             else:
                 Notify.init(message_summary)
-                notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
+                notification = Notify.Notification.new(
+                    message_summary, message_body, "pardus-software"
+                )
             notification.show()
         except Exception as e:
             print("{}".format(e))
@@ -5743,17 +6924,32 @@ class MainWindow(object):
             version = self.Package.installedVersion(appname)
             if version is None:
                 version = ""
-            dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
-                   "distro": self.UserSettings.userdistro}
-            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
+            dic = {
+                "mac": self.mac,
+                "app": appname,
+                "installed": installed,
+                "appversion": version,
+                "distro": self.UserSettings.userdistro,
+            }
+            self.AppRequest.send(
+                "POST", self.Server.serverurl + self.Server.serversenddownload, dic
+            )
         except Exception as e:
             print("sendDownloaded Error: {}".format(e))
 
     def startSysProcess(self, params):
-        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                                      standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onSysProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onSysProcessStderr)
+        pid, stdin, stdout, stderr = GLib.spawn_async(
+            params,
+            flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            standard_output=True,
+            standard_error=True,
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onSysProcessStdout
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onSysProcessStderr
+        )
         GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onSysProcessExit)
 
         return pid
@@ -5790,14 +6986,25 @@ class MainWindow(object):
             self.Package.updatecache()
 
             if status == 0 and not self.error:
-                self.notify(message_summary=_("Pardus Software Center"), message_body=_("Repo Activation Completed"))
+                self.notify(
+                    message_summary=_("Pardus Software Center"),
+                    message_body=_("Repo Activation Completed"),
+                )
 
-            self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop, self.actionedenablingappcommand)
+            self.controlView(
+                self.actionedenablingappname,
+                self.actionedenablingappdesktop,
+                self.actionedenablingappcommand,
+            )
 
         if self.correctsourcesclicked and status == 0:
-            self.preflabel_settext("<span weight='bold'>{}\n{}</span>".format(
-                _("Fixing of system package manager sources list is done."),
-                _("You can now update package manager cache.")), updatebutton=True)
+            self.preflabel_settext(
+                "<span weight='bold'>{}\n{}</span>".format(
+                    _("Fixing of system package manager sources list is done."),
+                    _("You can now update package manager cache."),
+                ),
+                updatebutton=True,
+            )
             self.Package.updatecache()
             self.prefupdatebutton.set_visible(True)
 
@@ -5821,17 +7028,35 @@ class MainWindow(object):
             else:
                 self.dAptUpdateBox.set_visible(True)
                 self.dAptUpdateInfoLabel.set_visible(True)
-                self.dAptUpdateInfoLabel.set_markup("<span color='red'>{}{}</span>".format(
-                    _("An error occurred while updating the package cache. Exit Code : "), status))
+                self.dAptUpdateInfoLabel.set_markup(
+                    "<span color='red'>{}{}</span>".format(
+                        _(
+                            "An error occurred while updating the package cache. Exit Code : "
+                        ),
+                        status,
+                    )
+                )
             self.aptupdateclicked = False
 
         print("SysProcess Exit Code : {}".format(status))
 
     def startAptUpdateProcess(self, params):
-        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                                      standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onAptUpdateProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onAptUpdateProcessStderr)
+        pid, stdin, stdout, stderr = GLib.spawn_async(
+            params,
+            flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            standard_output=True,
+            standard_error=True,
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stdout),
+            GLib.IO_IN | GLib.IO_HUP,
+            self.onAptUpdateProcessStdout,
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stderr),
+            GLib.IO_IN | GLib.IO_HUP,
+            self.onAptUpdateProcessStderr,
+        )
         GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onAptUpdateProcessExit)
 
         return pid
@@ -5860,17 +7085,32 @@ class MainWindow(object):
             except Exception as e:
                 print("timestamp Error: {}".format(e))
                 timestamp = 0
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
-                                          self.UserSettings.config_udt, self.UserSettings.config_aptup,
-                                          timestamp, self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(
+                self.UserSettings.config_usi,
+                self.UserSettings.config_ea,
+                self.UserSettings.config_saa,
+                self.UserSettings.config_hera,
+                self.UserSettings.config_icon,
+                self.UserSettings.config_sgc,
+                self.UserSettings.config_udt,
+                self.UserSettings.config_aptup,
+                timestamp,
+                self.UserSettings.config_forceaptuptime,
+            )
 
     def startGroupProcess(self, params):
-        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                                      standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStderr)
+        pid, stdin, stdout, stderr = GLib.spawn_async(
+            params,
+            flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            standard_output=True,
+            standard_error=True,
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStdout
+        )
+        GLib.io_add_watch(
+            GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStderr
+        )
         GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onGroupProcessExit)
 
         return pid
@@ -5894,17 +7134,24 @@ class MainWindow(object):
     def onGroupProcessExit(self, pid, status):
         print("onGroupProcessExit - status: {}".format(status))
         self.control_groups()
-        if status == 32256: # operation cancelled | Request dismissed
+        if status == 32256:  # operation cancelled | Request dismissed
             self.preflabel_settext("")
         else:
-            self.preflabel_settext("<small><span color='red' weight='light'>{}</span></small>".format(self.grouperrormessage))
+            self.preflabel_settext(
+                "<small><span color='red' weight='light'>{}</span></small>".format(
+                    self.grouperrormessage
+                )
+            )
 
     def on_tryfixButton_clicked(self, button):
         self.tryfixstack.set_visible_child_name("info")
 
     def on_tryfixconfirm_clicked(self, button):
-        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
-                   "fixapt"]
+        command = [
+            "/usr/bin/pkexec",
+            os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
+            "fixapt",
+        ]
         self.tryfixstack.set_visible_child_name("main")
         self.tryfixButton.set_sensitive(False)
         self.tryfixSpinner.start()
@@ -5919,8 +7166,9 @@ class MainWindow(object):
     def vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
             if event.button.button == 3:
-                widget.popup_for_device(None, None, None, None, None,
-                                        event.button.button, event.time)
+                widget.popup_for_device(
+                    None, None, None, None, None, event.button.button, event.time
+                )
                 return True
         return False
 
@@ -5961,11 +7209,12 @@ class MainWindow(object):
         pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
         term.set_pty(pty)
         term.connect("child-exited", self.onVteDone)
-        return term.spawn_sync(Vte.PtyFlags.DEFAULT,
-                               os.environ['HOME'],
-                               command,
-                               [],
-                               GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                               None,
-                               None,
-                               )
+        return term.spawn_sync(
+            Vte.PtyFlags.DEFAULT,
+            os.environ["HOME"],
+            command,
+            [],
+            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            None,
+            None,
+        )

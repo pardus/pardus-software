@@ -10,6 +10,7 @@ import apt, apt_pkg
 import time, os, locale, subprocess, re
 from gi.repository import Gio
 
+
 class Package(object):
     def __init__(self):
 
@@ -45,9 +46,7 @@ class Package(object):
             self.cache.open()
         except:
             return False
-        if self.cache.broken_count > 0:
-            return False
-        return True
+        return self.cache.broken_count <= 0
 
     def getApps(self):
         for mypkg in self.cache:
@@ -71,18 +70,14 @@ class Package(object):
             package = self.cache[packagename]
         except:
             return None
-        if package.is_installed:
-            return True
-        else:
-            return False
+        return bool(package.is_installed)
 
     def missingdeps(self, packagename):
         package = self.cache[packagename]
-        for rd in package.candidate.get_dependencies("Depends"):
-            if not rd.installed_target_versions:
-                return True
-                break
-        return False
+        return any(
+            not rd.installed_target_versions
+            for rd in package.candidate.get_dependencies("Depends")
+        )
 
     # print(package.versions[0].get_dependencies("Depends"))
 
@@ -123,14 +118,14 @@ class Package(object):
             # print long_desc
             # do some regular expression magic on the description
             # Add a newline before each bullet
-            p = re.compile(r'^(\s|\t)*(\*|0|-)', re.MULTILINE)
-            long_desc = p.sub('\n*', long_desc)
+            p = re.compile(r"^(\s|\t)*(\*|0|-)", re.MULTILINE)
+            long_desc = p.sub("\n*", long_desc)
             # replace all newlines by spaces
-            p = re.compile(r'\n', re.MULTILINE)
+            p = re.compile(r"\n", re.MULTILINE)
             long_desc = p.sub(" ", long_desc)
             # replace all multiple spaces by
             # newlines
-            p = re.compile(r'\s\s+', re.MULTILINE)
+            p = re.compile(r"\s\s+", re.MULTILINE)
             long_desc = p.sub("\n", long_desc)
             long_desc = long_desc.rstrip("\n")
             # print(summary)
@@ -196,31 +191,33 @@ class Package(object):
         broken = []
         inst_recommends = True
         packagenames = packagenames.split(" ")
-        ret = {"download_size": None, "freed_size": None, "install_size": None, "to_install": None, "to_delete": None,
-               "broken": None}
+        ret = {
+            "download_size": None,
+            "freed_size": None,
+            "install_size": None,
+            "to_install": None,
+            "to_delete": None,
+            "broken": None,
+        }
 
         if "--no-install-recommends" in packagenames:
             inst_recommends = False
             packagenames.remove("--no-install-recommends")
         if "--no-install-suggests" in packagenames:
-            # inst_recommends = False
             packagenames.remove("--no-install-suggests")
-
         for packagename in packagenames:
-            # print(packagename)
             try:
                 package = self.cache[packagename]
             except Exception as e:
-                print("{}".format(e))
+                print(f"{e}")
                 return ret
             try:
                 if package.is_installed:
                     package.mark_delete(True, True)
+                elif inst_recommends:
+                    package.mark_install(True, True)
                 else:
-                    if inst_recommends:
-                        package.mark_install(True, True)
-                    else:
-                        package.mark_install(True, False)
+                    package.mark_install(True, False)
             except:
                 if packagename not in broken:
                     broken.append(packagename)
@@ -232,7 +229,6 @@ class Package(object):
                 elif package.marked_delete:
                     if package.name not in to_delete:
                         to_delete.append(package.name)
-
         download_size = self.cache.required_download
         space = self.cache.required_space
         if space < 0:
@@ -241,35 +237,32 @@ class Package(object):
         else:
             freed_size = 0
             install_size = space
-
         ret["download_size"] = download_size
         ret["freed_size"] = freed_size
         ret["install_size"] = install_size
         ret["to_install"] = to_install
         ret["to_delete"] = to_delete
         ret["broken"] = broken
-
-        # print("freed_size {}".format(ret["freed_size"]))
-        # print("download_size {}".format(ret["download_size"]))
-        # print("install_size {}".format(ret["install_size"]))
-        # print("to_install {}".format(ret["to_install"]))
-        # print("to_delete {}".format(ret["to_delete"]))
-
         return ret
 
     def myapps_remove_details(self, desktopname):
         # self.updatecache()
         try:
-            process = subprocess.run(["dpkg", "-S", desktopname], stdout=subprocess.PIPE)
+            process = subprocess.run(
+                ["dpkg", "-S", desktopname], stdout=subprocess.PIPE
+            )
             output = process.stdout.decode("utf-8")
-            package = output[:output.find(":")].split(",")[0]
+            package = output[: output.find(":")].split(",")[0]
             if package:
                 return True, self.required_changes(package, sleep=False), package
             else:
                 # try get package name from basename
-                process = subprocess.run(["dpkg", "-S", os.path.basename(desktopname)], stdout=subprocess.PIPE)
+                process = subprocess.run(
+                    ["dpkg", "-S", os.path.basename(desktopname)],
+                    stdout=subprocess.PIPE,
+                )
                 output = process.stdout.decode("utf-8")
-                package = output[:output.find(":")].split(",")[0]
+                package = output[: output.find(":")].split(",")[0]
                 if package:
                     return True, self.required_changes(package, sleep=False), package
                 else:
@@ -280,20 +273,23 @@ class Package(object):
 
     def get_appname_from_desktopfile(self, desktopname):
         try:
-            process = subprocess.run(["dpkg", "-S", desktopname], stdout=subprocess.PIPE)
+            process = subprocess.run(
+                ["dpkg", "-S", desktopname], stdout=subprocess.PIPE
+            )
             output = process.stdout.decode("utf-8")
-            package = output[:output.find(":")].split(",")[0]
-            if package:
+            if package := output[: output.find(":")].split(",")[0]:
                 return True, package
-            else:
-                # try get package name from basename
-                process = subprocess.run(["dpkg", "-S", os.path.basename(desktopname)], stdout=subprocess.PIPE)
-                output = process.stdout.decode("utf-8")
-                package = output[:output.find(":")].split(",")[0]
-                if package:
-                    return True, package
-                else:
-                    return False, ""
+            process = subprocess.run(
+                ["dpkg", "-S", os.path.basename(desktopname)], stdout=subprocess.PIPE
+            )
+
+            output = process.stdout.decode("utf-8")
+            return (
+                (True, package)
+                if (package := output[: output.find(":")].split(",")[0])
+                else (False, "")
+            )
+
         except Exception as e:
             print("Error on get_appname_from_desktopfile: {}".format(e))
             return False, ""
@@ -473,39 +469,69 @@ class Package(object):
             name = app.get_name()
             executable = app.get_executable()
             nodisplay = app.get_nodisplay()
-            icon = app.get_string('Icon')
-            description = app.get_description() or app.get_generic_name() or app.get_name()
+            icon = app.get_string("Icon")
+            description = (
+                app.get_description() or app.get_generic_name() or app.get_name()
+            )
             filename = app.get_filename()
 
-            if os.path.dirname(filename) == "/usr/share/applications" and executable and not nodisplay:
-                apps.append({"id": id, "name": name, "icon": icon, "description": description, "filename": filename})
+            if (
+                os.path.dirname(filename) == "/usr/share/applications"
+                and executable
+                and not nodisplay
+            ):
+                apps.append(
+                    {
+                        "id": id,
+                        "name": name,
+                        "icon": icon,
+                        "description": description,
+                        "filename": filename,
+                    }
+                )
 
-        apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: locale.strxfrm(x["name"]))
+        apps = sorted(
+            dict((v["name"], v) for v in apps).values(),
+            key=lambda x: locale.strxfrm(x["name"]),
+        )
 
         return apps
 
     def parse_desktopfile(self, desktopfilename):
         try:
-            app = Gio.DesktopAppInfo.new(desktopfilename)
-            if app:
+            if app := Gio.DesktopAppInfo.new(desktopfilename):
                 id = app.get_id()
                 name = app.get_name()
-                # executable = app.get_executable()
-                # nodisplay = app.get_nodisplay()
-                icon = app.get_string('Icon')
-                description = app.get_description() or app.get_generic_name() or app.get_name()
+                icon = app.get_string("Icon")
+                description = (
+                    app.get_description() or app.get_generic_name() or app.get_name()
+                )
                 filename = app.get_filename()
                 print(filename)
                 if os.path.dirname(filename) == "/usr/share/applications":
-                    return True, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
+                    return True, {
+                        "id": id,
+                        "name": name,
+                        "icon": icon,
+                        "description": description,
+                        "filename": filename,
+                    }
+
                 else:
-                    return False, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
+                    return False, {
+                        "id": id,
+                        "name": name,
+                        "icon": icon,
+                        "description": description,
+                        "filename": filename,
+                    }
+
             else:
-                print("parse_desktopfile: {} app not exists".format(desktopfilename))
+                print(f"parse_desktopfile: {desktopfilename} app not exists")
                 return False, None
         except Exception as e:
-            print("{}".format(e))
-            print("parse_desktopfile: {} app not exists".format(desktopfilename))
+            print(f"{e}")
+            print(f"parse_desktopfile: {desktopfilename} app not exists")
             return False, None
 
     def origins(self, packagename):
@@ -522,40 +548,45 @@ class Package(object):
     def residual(self):
         residual = []
         try:
-            for pkg in self.cache:
-                if self.cache[pkg.name].has_config_files and not self.cache[pkg.name].is_installed:
-                    residual.append(pkg.name)
-        except Exception as e:
-            print("Package residual Error: {}".format(e))
+            residual.extend(
+                pkg.name
+                for pkg in self.cache
+                if self.cache[pkg.name].has_config_files
+                and not self.cache[pkg.name].is_installed
+            )
 
+        except Exception as e:
+            print(f"Package residual Error: {e}")
         return residual
 
     def autoremovable(self):
         autoremovable = []
         try:
-            for pkg in self.cache:
-                if self.cache[pkg.name].is_auto_removable:
-                    autoremovable.append(pkg.name)
+            autoremovable.extend(
+                pkg.name for pkg in self.cache if self.cache[pkg.name].is_auto_removable
+            )
+
         except Exception as e:
-            print("Package autoremovable Error: {}".format(e))
+            print(f"Package autoremovable Error: {e}")
         return autoremovable
 
     def upgradable(self):
         upgradable = []
         try:
-            for pkg in self.cache:
-                if self.cache[pkg.name].is_upgradable:
-                    upgradable.append(pkg.name)
+            upgradable.extend(
+                pkg.name for pkg in self.cache if self.cache[pkg.name].is_upgradable
+            )
+
         except Exception as e:
-            print("Package upgradable Error: {}".format(e))
+            print(f"Package upgradable Error: {e}")
         return upgradable
 
     def versionCompare(self, version1, version2):
         vc = apt_pkg.version_compare(version1, version2)
         if vc > 0:
-            print("user version: {} > server version: {}".format(version1, version2))
+            print(f"user version: {version1} > server version: {version2}")
         elif vc == 0:
-            print("user version: {} == server version: {}".format(version1, version2))
+            print(f"user version: {version1} == server version: {version2}")
         elif vc < 0:
-            print("user version: {} < server version: {}".format(version1, version2))
+            print(f"user version: {version1} < server version: {version2}")
         return vc

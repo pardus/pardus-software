@@ -9,14 +9,18 @@ Created on Fri Sep 18 14:53:00 2020
 import gi, sys
 from MainWindow import MainWindow
 
-gi.require_version('Gtk', '3.0')
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GLib
 
 
 class Application(Gtk.Application):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, application_id="tr.org.pardus.software",
-                         flags=Gio.ApplicationFlags(8), **kwargs)
+        super().__init__(
+            *args,
+            application_id="tr.org.pardus.software",
+            flags=Gio.ApplicationFlags(8),
+            **kwargs
+        )
         self.window = None
 
         self.add_main_option(

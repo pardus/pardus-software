@@ -16,9 +16,10 @@ def main():
         cache.open()
         cache.update()
     except Exception as e:
-        print(str(e))
-        subprocess.call(["apt", "update"],
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+        print(e)
+        subprocess.call(
+            ["apt", "update"], env={**os.environ, "DEBIAN_FRONTEND": "noninteractive"}
+        )
 
 
 if __name__ == "__main__":

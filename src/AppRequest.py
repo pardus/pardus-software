@@ -9,7 +9,7 @@ Created on Fri Sep 18 14:53:00 2020
 import gi, json
 
 gi.require_version("GLib", "2.0")
-gi.require_version('Soup', '2.4')
+gi.require_version("Soup", "2.4")
 from gi.repository import GLib, Gio, Soup
 
 
@@ -23,16 +23,20 @@ class AppRequest(object):
         message = Soup.Message.new(method, uri)
 
         if method == "POST":
-            message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
+            message.set_request(
+                "Content-type:application/json",
+                Soup.MemoryUse.COPY,
+                json.dumps(dic).encode("utf-8"),
+            )
 
-        message.request_headers.append('Content-type', 'application/json')
+        message.request_headers.append("Content-type", "application/json")
         self.session.send_async(message, None, self.on_finished, message, appname)
 
     def on_finished(self, session, result, message, appname):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
-            print("AppRequest stream Error: {}, {}".format(error.domain, error.message))
+            print(f"AppRequest stream Error: {error.domain}, {error.message}")
             self.Request(False, None)  # Send to MainWindow
             return False
 
@@ -51,11 +55,11 @@ class AppRequest(object):
         try:
             session.close_finish(result)
         except GLib.Error as error:
-            print("AppRequest Close Error: {}, {}".format(error.domain, error.message))
+            print(f"AppRequest Close Error: {error.domain}, {error.message}")
 
     def control(self, uri):
         message = Soup.Message.new("POST", uri)
-        message.request_headers.append('Content-type', 'application/json')
+        message.request_headers.append("Content-type", "application/json")
         self.session.send_async(message, None, self.on_control_finished, message)
 
     def on_control_finished(self, session, result, message):
@@ -66,7 +70,9 @@ class AppRequest(object):
         except GLib.Error:
             return False
 
-        input_stream.close_async(GLib.PRIORITY_LOW, None, self._control_close_stream, None)
+        input_stream.close_async(
+            GLib.PRIORITY_LOW, None, self._control_close_stream, None
+        )
 
     def _control_close_stream(self, session, result, data):
         try:

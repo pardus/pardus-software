@@ -7,7 +7,7 @@
 import gi, json
 
 gi.require_version("GLib", "2.0")
-gi.require_version('Soup', '2.4')
+gi.require_version("Soup", "2.4")
 from gi.repository import GLib, Gio, Soup
 
 
@@ -21,25 +21,29 @@ class GnomeComment(object):
         message = Soup.Message.new(method, uri)
 
         if method == "POST":
-            message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
+            message.set_request(
+                "Content-type:application/json",
+                Soup.MemoryUse.COPY,
+                json.dumps(dic).encode("utf-8"),
+            )
 
-        message.request_headers.append('Content-type', 'application/json')
+        message.request_headers.append("Content-type", "application/json")
         self.session.send_async(message, None, self.on_finished, message, appname, lang)
 
     def on_finished(self, session, result, message, appname, lang):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
-            print("GnomeComment stream Error: {}, {}".format(error.domain, error.message))
+            print(f"GnomeComment stream Error: {error.domain}, {error.message}")
             self.gComment(False, None)  # Send to MainWindow
             return False
 
         status_code = message.status_code
-        print("gnome comments server status code : {}, lang : {}".format(status_code, lang))
+        print(f"gnome comments server status code : {status_code}, lang : {lang}")
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)
-            lines = list()
+            lines = []
             while True:
                 line, length = data_input_stream.read_line_utf8()
                 if line is None:
@@ -47,8 +51,8 @@ class GnomeComment(object):
                     break
                 else:
                     lines.append(line)
-            content = "".join(lines)
             if status_code == 200:
+                content = "".join(lines)
                 self.gComment(True, json.loads(content), appname, lang)
             else:
                 self.gComment(False, None)
@@ -58,4 +62,4 @@ class GnomeComment(object):
         try:
             session.close_finish(result)
         except GLib.Error as error:
-            print("GnomeComments Close Error: {}, {}".format(error.domain, error.message))
+            print(f"GnomeComments Close Error: {error.domain}, {error.message}")

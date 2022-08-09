@@ -10,9 +10,7 @@ import subprocess
 import sys
 
 
-
 def main():
-
     def addtogroup(user):
         subprocess.call(["adduser", user, "pardus-software"])
 

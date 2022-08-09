@@ -27,28 +27,27 @@ class AppImage(object):
         try:
             stream = img_file.read_finish(result)
         except GLib.Error as error:
-            print("_open_stream Error: {}, {}".format(error.domain, error.message))
+            print(f"_open_stream Error: {error.domain}, {error.message}")
             self.Pixbuf(False, None, None)  # Send to MainWindow
             return False
 
-        GdkPixbuf.Pixbuf.new_from_stream_async(stream, None, self._pixbuf_loaded, fileuri)
+        GdkPixbuf.Pixbuf.new_from_stream_async(
+            stream, None, self._pixbuf_loaded, fileuri
+        )
 
     def _pixbuf_loaded(self, stream, result, data):
         try:
             pixbuf = GdkPixbuf.Pixbuf.new_from_stream_finish(result)
         except GLib.Error as error:
-            print("_pixbuf_loaded Error: {}, {}".format(error.domain, error.message))
-            self.Pixbuf(False, None, None)  # Send to MainWindow
+            print(f"_pixbuf_loaded Error: {error.domain}, {error.message}")
+            self.Pixbuf(False, None, None)
             return False
-
         stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
-
-        self.Pixbuf(True, pixbuf, data)  # Send to MainWindow
-
+        self.Pixbuf(True, pixbuf, data)
         self.imgcache[data] = pixbuf
 
     def _close_stream(self, stream, result, data):
         try:
             stream.close_finish(result)
         except GLib.Error as error:
-            print("Error: {}, {}".format(error.domain, error.message))
+            print(f"Error: {error.domain}, {error.message}")
