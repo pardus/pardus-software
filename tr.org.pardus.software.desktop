@@ -1,9 +1,12 @@
 [Desktop Entry]
 Name=Pardus Software Center
+Name[pt]=Centro de Software Pardus
 Name[tr]=Pardus Yazılım Merkezi
 GenericName=Software Center
+GenericName[pt]=Centro de Software
 GenericName[tr]=Yazılım Merkezi
 Comment=Add, remove, update applications
+Comment[pt]=Adicionar, remover, atualizar aplicações
 Comment[tr]=Uygulamaları yükleyin, kaldırın, güncelleyin
 Exec=pardus-software
 Icon=pardus-software
@@ -12,4 +15,5 @@ Type=Application
 Categories=GTK;System;PackageManager;
 StartupNotify=true
 Keywords=install;uninstall;package;application;update;upgrade;software;store;
+Keywords[pt]=instalar;desinstalar;pacote;aplicação;atualizar;software;loja;
 Keywords[tr]=yükle;kaldır;paket;uygulama;güncelleştirme;yükseltme;yazılım;mağaza;
