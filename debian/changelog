@@ -1,3 +1,17 @@
+pardus-software (0.3.1) unstable; urgency=medium
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+  * Update tr.org.pardus.software-open.desktop
+  * Update tr.org.pardus.software.desktop
+
+  [ Fatih Altun ]
+  * Update rate average to popularity
+  * Update pot file
+  * Update Turkish translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 24 Nov 2022 15:31:18 +0300
+
 pardus-software (0.3.0) unstable; urgency=medium
 
   [ Fatih Altun ]
