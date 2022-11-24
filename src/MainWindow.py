@@ -3659,8 +3659,10 @@ class MainWindow(object):
             self.applist = sorted(self.applist, key=lambda x: (x["download"], x["rate_average"]), reverse=True)
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
-        elif combo_box.get_active() == 2:  # sort by rating
-            self.applist = sorted(self.applist, key=lambda x: (x["rate_average"], x["download"]), reverse=True)
+        elif combo_box.get_active() == 2:  # sort by popularity
+            self.applist = sorted(self.applist,
+                                  key=lambda x: (x["popularity"] if "popularity" in x.keys() else x["rate_average"],
+                                                 x["download"]), reverse=True)
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
         elif combo_box.get_active() == 3:  # sort by last added

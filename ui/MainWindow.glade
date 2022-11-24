@@ -1085,7 +1085,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">Most Rated Apps</property>
+                                                        <property name="label" translatable="yes">Popular Apps</property>
                                                         <attributes>
                                                           <attribute name="weight" value="bold"/>
                                                         </attributes>
@@ -1689,7 +1689,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <items>
                                   <item id="0" translatable="yes">Sort by Name</item>
                                   <item id="1" translatable="yes">Sort by Download</item>
-                                  <item id="2" translatable="yes">Sort by Rating</item>
+                                  <item id="2" translatable="yes">Sort by Popularity</item>
                                   <item id="3" translatable="yes">Sort by Last Added</item>
                                 </items>
                                 <signal name="changed" handler="on_sortPardusAppsCombo_changed" swapped="no"/>
