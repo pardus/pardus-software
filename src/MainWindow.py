@@ -1528,11 +1528,11 @@ class MainWindow(object):
                 box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
                 box3 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
 
-                box2.pack_start(rateicon, False, True, 0)
-                box2.pack_start(ratelabel, False, True, 0)
+                box2.pack_start(downicon, False, True, 0)
+                box2.pack_start(downlabel, False, True, 0)
 
-                box3.pack_start(downicon, False, True, 0)
-                box3.pack_start(downlabel, False, True, 0)
+                box3.pack_start(rateicon, False, True, 0)
+                box3.pack_start(ratelabel, False, True, 0)
 
                 box1.set_homogeneous(True)
                 box1.pack_start(box2, False, True, 0)
