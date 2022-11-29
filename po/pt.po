@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pardus-software\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-20 20:25+0300\n"
-"PO-Revision-Date: 2022-07-22 10:40+0100\n"
+"POT-Creation-Date: 2022-11-24 15:27+0300\n"
+"PO-Revision-Date: 2022-11-27 22:47+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
 "Language: pt\n"
@@ -17,13 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 
 #: ui/MainWindow.glade:82
 msgid "Add, remove, update applications"
 msgstr "Adicionar, remover, atualizar aplicações"
 
-#: ui/MainWindow.glade:84 ui/MainWindow.glade:7114 src/MainWindow.py:4791
+#: ui/MainWindow.glade:84 ui/MainWindow.glade:7114 src/MainWindow.py:4793
 msgid "Website"
 msgstr "Website"
 
@@ -89,8 +89,8 @@ msgid "Most Downloaded Apps"
 msgstr "Aplicações mais transferidas"
 
 #: ui/MainWindow.glade:1088
-msgid "Most Rated Apps"
-msgstr "Aplicações mais avaliadas"
+msgid "Popular Apps"
+msgstr "Aplicações populares"
 
 #: ui/MainWindow.glade:1160
 msgid "Last Added Apps"
@@ -117,7 +117,7 @@ msgstr "Nenhum pacote está selecionado."
 #: ui/MainWindow.glade:2698 ui/MainWindow.glade:2737 ui/MainWindow.glade:2799
 #: ui/MainWindow.glade:2843 ui/MainWindow.glade:2882 src/MainWindow.py:2421
 #: src/MainWindow.py:2422 src/MainWindow.py:2425 src/MainWindow.py:2426
-#: src/MainWindow.py:2580 src/MainWindow.py:5679
+#: src/MainWindow.py:2580 src/MainWindow.py:5681
 msgid "None"
 msgstr "Nenhuma"
 
@@ -138,8 +138,8 @@ msgid "Sort by Download"
 msgstr "Ordenar por transferência"
 
 #: ui/MainWindow.glade:1692
-msgid "Sort by Rating"
-msgstr "Ordenar por avaliação"
+msgid "Sort by Popularity"
+msgstr "Ordenar por popularidade"
 
 #: ui/MainWindow.glade:1693
 msgid "Sort by Last Added"
@@ -153,7 +153,7 @@ msgstr "<small>A sua avaliação</small>"
 msgid "<small>Download</small>"
 msgstr "<small>Transferência</small>"
 
-#: ui/MainWindow.glade:2201 src/MainWindow.py:4121
+#: ui/MainWindow.glade:2201 src/MainWindow.py:4123
 msgid "Open"
 msgstr "Abrir"
 
@@ -209,7 +209,7 @@ msgid "Version"
 msgstr "Versão"
 
 #: ui/MainWindow.glade:2645 src/MainWindow.py:2423 src/MainWindow.py:2575
-#: src/MainWindow.py:2581 src/MainWindow.py:5680
+#: src/MainWindow.py:2581 src/MainWindow.py:5682
 msgid "Download Size"
 msgstr "Tamanho da transferência"
 
@@ -217,11 +217,11 @@ msgstr "Tamanho da transferência"
 msgid "Type"
 msgstr "Tipo"
 
-#: ui/MainWindow.glade:2723 ui/MainWindow.glade:6863 src/MainWindow.py:4776
+#: ui/MainWindow.glade:2723 ui/MainWindow.glade:6863 src/MainWindow.py:4778
 msgid "Category"
 msgstr "Categoria"
 
-#: ui/MainWindow.glade:2785 ui/MainWindow.glade:7017 src/MainWindow.py:4785
+#: ui/MainWindow.glade:2785 ui/MainWindow.glade:7017 src/MainWindow.py:4787
 msgid "License"
 msgstr "Licença"
 
@@ -389,7 +389,7 @@ msgstr "Ícones"
 msgid "Clear Cache Files"
 msgstr "Limpar ficheiros da cache"
 
-#: ui/MainWindow.glade:6033 src/MainWindow.py:4495
+#: ui/MainWindow.glade:6033 src/MainWindow.py:4497
 msgid "Clear"
 msgstr "Limpar"
 
@@ -469,19 +469,19 @@ msgstr ""
 msgid "Residual Packages"
 msgstr "Pacotes residuais"
 
-#: ui/MainWindow.glade:6824 ui/MainWindow.glade:8233 src/MainWindow.py:4773
+#: ui/MainWindow.glade:6824 ui/MainWindow.glade:8233 src/MainWindow.py:4775
 msgid "Application Name"
 msgstr "Nome da aplicação"
 
-#: ui/MainWindow.glade:6901 src/MainWindow.py:4779
+#: ui/MainWindow.glade:6901 src/MainWindow.py:4781
 msgid "Description ( Turkish )"
 msgstr "Descrição ( Turco )"
 
-#: ui/MainWindow.glade:6959 src/MainWindow.py:4782
+#: ui/MainWindow.glade:6959 src/MainWindow.py:4784
 msgid "Description ( English )"
 msgstr "Descrição ( Inglês )"
 
-#: ui/MainWindow.glade:7056 src/MainWindow.py:4788
+#: ui/MainWindow.glade:7056 src/MainWindow.py:4790
 msgid "Copyright Text"
 msgstr "Texto de direitos de autor"
 
@@ -614,7 +614,7 @@ msgstr "Espaço necessário em disco :"
 msgid "Back"
 msgstr "Voltar"
 
-#: ui/MainWindow.glade:8719 src/MainWindow.py:4110
+#: ui/MainWindow.glade:8719 src/MainWindow.py:4112
 msgid "Uninstall"
 msgstr "Desinstalar"
 
@@ -644,7 +644,7 @@ msgstr ""
 msgid "Back to My Apps"
 msgstr "Voltar às minhas aplicações"
 
-#: ui/MainWindow.glade:8979 src/MainWindow.py:344 src/MainWindow.py:5793
+#: ui/MainWindow.glade:8979 src/MainWindow.py:344 src/MainWindow.py:5795
 msgid "Pardus Software Center"
 msgstr "Centro de Software Pardus"
 
@@ -756,7 +756,7 @@ msgstr "Imagem"
 msgid "Status"
 msgstr "Estado"
 
-#: src/MainWindow.py:1006 src/MainWindow.py:4797
+#: src/MainWindow.py:1006 src/MainWindow.py:4799
 msgid "Name"
 msgstr "Nome"
 
@@ -784,7 +784,7 @@ msgstr "Os ícones da categoria não puderam ser recuperados do servidor"
 msgid "Getting icons from server"
 msgstr "A obter ícones do servidor"
 
-#: src/MainWindow.py:1382 src/MainWindow.py:3735
+#: src/MainWindow.py:1382 src/MainWindow.py:3737
 msgid "All"
 msgstr "Tudo"
 
@@ -792,11 +792,11 @@ msgstr "Tudo"
 msgid "Size"
 msgstr "Tamanho"
 
-#: src/MainWindow.py:2335 src/MainWindow.py:4613
+#: src/MainWindow.py:2335 src/MainWindow.py:4615
 msgid "View on "
 msgstr "Ver em "
 
-#: src/MainWindow.py:2335 src/MainWindow.py:4613
+#: src/MainWindow.py:2335 src/MainWindow.py:4615
 msgid "."
 msgstr "."
 
@@ -808,36 +808,36 @@ msgstr "Não-Livre"
 msgid "Open Source"
 msgstr "Código aberto"
 
-#: src/MainWindow.py:2372 src/MainWindow.py:4387 src/MainWindow.py:5619
-#: src/MainWindow.py:5688
+#: src/MainWindow.py:2372 src/MainWindow.py:4389 src/MainWindow.py:5621
+#: src/MainWindow.py:5690
 msgid " Uninstall"
 msgstr " Desinstalar"
 
-#: src/MainWindow.py:2386 src/MainWindow.py:4393 src/MainWindow.py:5638
-#: src/MainWindow.py:5694
+#: src/MainWindow.py:2386 src/MainWindow.py:4395 src/MainWindow.py:5640
+#: src/MainWindow.py:5696
 msgid " Install"
 msgstr " Instalar"
 
 #: src/MainWindow.py:2393 src/MainWindow.py:2433 src/MainWindow.py:3277
-#: src/MainWindow.py:3431 src/MainWindow.py:5646
+#: src/MainWindow.py:3431 src/MainWindow.py:5648
 msgid "You need to install the application"
 msgstr "Precisa de instalar a aplicação"
 
-#: src/MainWindow.py:2399 src/MainWindow.py:4409 src/MainWindow.py:5362
-#: src/MainWindow.py:5363
+#: src/MainWindow.py:2399 src/MainWindow.py:4411 src/MainWindow.py:5364
+#: src/MainWindow.py:5365
 msgid " Removing"
 msgstr " A remover"
 
-#: src/MainWindow.py:2401 src/MainWindow.py:4411 src/MainWindow.py:5368
-#: src/MainWindow.py:5369
+#: src/MainWindow.py:2401 src/MainWindow.py:4413 src/MainWindow.py:5370
+#: src/MainWindow.py:5371
 msgid " Installing"
 msgstr " A instalar"
 
-#: src/MainWindow.py:2413 src/MainWindow.py:4402 src/MainWindow.py:5665
+#: src/MainWindow.py:2413 src/MainWindow.py:4404 src/MainWindow.py:5667
 msgid " Not Found"
 msgstr " Não encontrado"
 
-#: src/MainWindow.py:2439 src/MainWindow.py:5656
+#: src/MainWindow.py:2439 src/MainWindow.py:5658
 msgid "Enable Repo"
 msgstr "Ativar Repo"
 
@@ -878,7 +878,7 @@ msgid "Please try again soon"
 msgstr "Tente novamente em breve"
 
 #: src/MainWindow.py:2944 src/MainWindow.py:2957 src/MainWindow.py:2959
-#: src/MainWindow.py:3427 src/MainWindow.py:4759 src/MainWindow.py:5152
+#: src/MainWindow.py:3427 src/MainWindow.py:4761 src/MainWindow.py:5154
 msgid "Error"
 msgstr "Erro"
 
@@ -890,109 +890,109 @@ msgstr "Transferir"
 msgid "Cannot be null"
 msgstr "Não pode ser nulo"
 
-#: src/MainWindow.py:3934
+#: src/MainWindow.py:3936
 msgid "Updating"
 msgstr "A atualizar"
 
-#: src/MainWindow.py:3941
+#: src/MainWindow.py:3943
 msgid "Package manager is busy, try again later."
 msgstr "O gestor do pacotes está ocupado. Tente novamente mais tarde."
 
-#: src/MainWindow.py:3953
+#: src/MainWindow.py:3955
 msgid "Please try again after the processes in the queue are completed."
 msgstr ""
 "Tente novamente depois que os processos em espera estiverem concluídos."
 
-#: src/MainWindow.py:4043
+#: src/MainWindow.py:4045
 msgid "Will be removed"
 msgstr "Será removido"
 
-#: src/MainWindow.py:4045
+#: src/MainWindow.py:4047
 msgid "Will be installed"
 msgstr "Será instalado"
 
-#: src/MainWindow.py:4056 src/MainWindow.py:5499
+#: src/MainWindow.py:4058 src/MainWindow.py:5501
 msgid "You cannot cancel because the application is in progress."
 msgstr "Não pode cancelar porque a aplicação está em curso."
 
-#: src/MainWindow.py:4058 src/MainWindow.py:5423 src/MainWindow.py:5502
+#: src/MainWindow.py:4060 src/MainWindow.py:5425 src/MainWindow.py:5504
 msgid "Removing"
 msgstr "A remover"
 
-#: src/MainWindow.py:4060 src/MainWindow.py:5426 src/MainWindow.py:5504
+#: src/MainWindow.py:4062 src/MainWindow.py:5428 src/MainWindow.py:5506
 msgid "Installing"
 msgstr "A instalar"
 
-#: src/MainWindow.py:4170
+#: src/MainWindow.py:4172
 msgid "The following important packages will also be removed."
 msgstr "Os seguintes pacotes importantes serão também removidos."
 
-#: src/MainWindow.py:4172
+#: src/MainWindow.py:4174
 msgid "Are you sure you accept this?"
 msgstr "Tem a certeza que aceita isto?"
 
-#: src/MainWindow.py:4321 src/MainWindow.py:5291 src/MainWindow.py:5312
-#: src/MainWindow.py:5333
+#: src/MainWindow.py:4323 src/MainWindow.py:5293 src/MainWindow.py:5314
+#: src/MainWindow.py:5335
 msgid "all"
 msgstr "tudo"
 
-#: src/MainWindow.py:4490
+#: src/MainWindow.py:4492
 msgid "Server Address"
 msgstr "Endereço do servidor"
 
-#: src/MainWindow.py:4512
+#: src/MainWindow.py:4514
 msgid "Deactivate"
 msgstr "Desativar"
 
-#: src/MainWindow.py:4514
+#: src/MainWindow.py:4516
 msgid "Activate"
 msgstr "Ativar"
 
-#: src/MainWindow.py:4524
+#: src/MainWindow.py:4526
 msgid "Default"
 msgstr "Predefinido"
 
-#: src/MainWindow.py:4621
+#: src/MainWindow.py:4623
 msgid "Daily App Download Counts (Last 30 Days)"
 msgstr "Contagem diária de transferências de aplicações (últimos 30 dias)"
 
-#: src/MainWindow.py:4644
+#: src/MainWindow.py:4646
 msgid "Used Operating Systems (For App Download)"
 msgstr "Sistemas operativos utilizados (para transferência de aplicações)"
 
-#: src/MainWindow.py:4659
+#: src/MainWindow.py:4661
 msgid "Top 30 App Downloads"
 msgstr "Top 30 das aplicações transferidas"
 
-#: src/MainWindow.py:4700
+#: src/MainWindow.py:4702
 msgid "Select Category"
 msgstr "Selecionar categoria"
 
-#: src/MainWindow.py:4759
+#: src/MainWindow.py:4761
 msgid "is empty"
 msgstr "está vazio"
 
-#: src/MainWindow.py:4800
+#: src/MainWindow.py:4802
 msgid "Mail"
 msgstr "Correio"
 
-#: src/MainWindow.py:4807
+#: src/MainWindow.py:4809
 msgid "Icon not found"
 msgstr "Ícone não encontrado"
 
-#: src/MainWindow.py:4810
+#: src/MainWindow.py:4812
 msgid "Icon size must be less than 1 MB"
 msgstr "O tamanho do ícone deve ser inferior a 1 MB"
 
-#: src/MainWindow.py:4815
+#: src/MainWindow.py:4817
 msgid "Icon file read error"
 msgstr "Erro de leitura do ficheiro do ícone"
 
-#: src/MainWindow.py:4820 src/MainWindow.py:4823
+#: src/MainWindow.py:4822 src/MainWindow.py:4825
 msgid "Icon file must be svg"
 msgstr "O ficheiro do ícone deve ser svg"
 
-#: src/MainWindow.py:4847
+#: src/MainWindow.py:4849
 msgid ""
 "If you use the server icons, the application icons will be pulled from the "
 "server completely."
@@ -1000,40 +1000,40 @@ msgstr ""
 "Se usar os ícones do servidor, os ícones da aplicação serão retirados "
 "completamente do servidor."
 
-#: src/MainWindow.py:4848
+#: src/MainWindow.py:4850
 msgid ""
 "If you turn this option off, application icons will be pulled from your "
 "system,"
 msgstr ""
 "Se desativar esta opção, os ícones da aplicação serão retirados do sistema,"
 
-#: src/MainWindow.py:4849
+#: src/MainWindow.py:4851
 msgid "which may cause some application icons to appear blank."
 msgstr ""
 "o que pode fazer com que alguns ícones de aplicações apareçam em branco."
 
-#: src/MainWindow.py:4853
+#: src/MainWindow.py:4855
 msgid "Transition animations in the application."
 msgstr "Animações de transição na aplicação."
 
-#: src/MainWindow.py:4858
+#: src/MainWindow.py:4860
 msgid "Show only available applications in"
 msgstr "Mostrar apenas aplicações disponíveis em"
 
-#: src/MainWindow.py:4858
+#: src/MainWindow.py:4860
 msgid "repository."
 msgstr "repositório."
 
-#: src/MainWindow.py:4859
+#: src/MainWindow.py:4861
 msgid "If you turn this option off, all apps will be shown, but"
 msgstr "Se desativar esta opção, todas as aplicações serão exibidas, mas"
 
-#: src/MainWindow.py:4860
+#: src/MainWindow.py:4862
 msgid "'Not Found' will be displayed for apps not available in the repository."
 msgstr ""
 "'Não encontrado' será exibido para aplicações não disponíveis no repositório."
 
-#: src/MainWindow.py:4865
+#: src/MainWindow.py:4867
 msgid ""
 "Hide applications offered from external repositories (other than Official "
 "Pardus repository)."
@@ -1041,51 +1041,51 @@ msgstr ""
 "Ocultar aplicações oferecidas a partir de repositórios externos (que não "
 "sejam repositórios oficiais do Pardus)."
 
-#: src/MainWindow.py:4866
+#: src/MainWindow.py:4868
 msgid "For example, publisher's applications in the Publishers category."
 msgstr "Por exemplo, aplicações de editores na categoria Editores."
 
-#: src/MainWindow.py:4872
+#: src/MainWindow.py:4874
 msgid "Default icons use Papirus icon theme."
 msgstr "Os ícones predefinidos usam o tema do ícones Papirus."
 
-#: src/MainWindow.py:4874
+#: src/MainWindow.py:4876
 msgid "Candy is Candy icon theme."
 msgstr "Candy é o tema do ícones Candy."
 
-#: src/MainWindow.py:4876
+#: src/MainWindow.py:4878
 msgid "Flat is Flat Remix icon theme."
 msgstr "Flat é o tema do ícones Flat Remix."
 
-#: src/MainWindow.py:4878
+#: src/MainWindow.py:4880
 msgid "Flatery is Flatery icon theme."
 msgstr "Flatery é o tema do ícones Flatery."
 
-#: src/MainWindow.py:4880
+#: src/MainWindow.py:4882
 msgid "Kora is Kora icon theme."
 msgstr "Kora é o tema do ícones Kora."
 
-#: src/MainWindow.py:4882
+#: src/MainWindow.py:4884
 msgid "Numix is Numix Circle icon theme."
 msgstr "Numix é o tema do ícones Numix Circle."
 
-#: src/MainWindow.py:4884
+#: src/MainWindow.py:4886
 msgid "Oranchelo is Oranchelo icon theme."
 msgstr "Oranchelo é o tema do ícones Oranchelo."
 
-#: src/MainWindow.py:4886
+#: src/MainWindow.py:4888
 msgid "Tela is Tela icon theme."
 msgstr "Tela é o tema do ícones Tela."
 
-#: src/MainWindow.py:4888
+#: src/MainWindow.py:4890
 msgid "Zafiro is Zafiro icon theme."
 msgstr "Zafiro é o tema do ícones Zafiro."
 
-#: src/MainWindow.py:4895
+#: src/MainWindow.py:4897
 msgid "Show gnome comments in app comments."
 msgstr "Mostra comentários do gnome nos comentários da aplicação."
 
-#: src/MainWindow.py:4896
+#: src/MainWindow.py:4898
 msgid ""
 "GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</"
 "a>."
@@ -1093,11 +1093,11 @@ msgstr ""
 "Os comentários do GNOME são retirados do <a href='https://odrs.gnome."
 "org'>GNOME ODRS</a>."
 
-#: src/MainWindow.py:4902
+#: src/MainWindow.py:4904
 msgid "Whether the application prefers to use a dark theme."
 msgstr "Se a aplicação optar por usar um tema escuro."
 
-#: src/MainWindow.py:4903
+#: src/MainWindow.py:4905
 msgid ""
 "If a GTK+ theme includes a dark variant, it will be used instead of the "
 "configured theme."
@@ -1105,12 +1105,12 @@ msgstr ""
 "Se um tema GTK+ incluir uma variante escura, o mesmo será usado em vez do "
 "tema configurado."
 
-#: src/MainWindow.py:4908
+#: src/MainWindow.py:4910
 msgid "The value in your configuration file is used as the wait time."
 msgstr ""
 "O valor no seu ficheiro de configuração é utilizado como o tempo de espera."
 
-#: src/MainWindow.py:4916 src/MainWindow.py:4924
+#: src/MainWindow.py:4918 src/MainWindow.py:4926
 msgid ""
 "Allows the package manager cache to be updated again on the next application "
 "start if"
@@ -1118,79 +1118,79 @@ msgstr ""
 "Permite que a cache do gestor de pacotes seja atualizada novamente no início "
 "da próxima aplicação, se"
 
-#: src/MainWindow.py:4918 src/MainWindow.py:4926
+#: src/MainWindow.py:4920 src/MainWindow.py:4928
 msgid "have passed since the last successful update."
 msgstr "passaram desde a última atualização bem sucedida."
 
-#: src/MainWindow.py:4919 src/MainWindow.py:4927
+#: src/MainWindow.py:4921 src/MainWindow.py:4929
 msgid "Last successful update time is"
 msgstr "A última hora de atualização bem sucedida é"
 
-#: src/MainWindow.py:4936
+#: src/MainWindow.py:4938
 msgid "weeks"
 msgstr "semanas"
 
-#: src/MainWindow.py:4937
+#: src/MainWindow.py:4939
 msgid "days"
 msgstr "dias"
 
-#: src/MainWindow.py:4938
+#: src/MainWindow.py:4940
 msgid "hours"
 msgstr "horas"
 
-#: src/MainWindow.py:4939
+#: src/MainWindow.py:4941
 msgid "minutes"
 msgstr "minutos"
 
-#: src/MainWindow.py:4940
+#: src/MainWindow.py:4942
 msgid "seconds"
 msgstr "segundos"
 
-#: src/MainWindow.py:5148
+#: src/MainWindow.py:5150
 msgid "Cleared"
 msgstr "Limpo"
 
-#: src/MainWindow.py:5149
+#: src/MainWindow.py:5151
 msgid "Cache files cleared, please close and reopen the application"
 msgstr "Ficheiros de cache limpos. Termine e abra novamente a aplicação"
 
-#: src/MainWindow.py:5212 src/MainWindow.py:5229 src/MainWindow.py:5245
+#: src/MainWindow.py:5214 src/MainWindow.py:5231 src/MainWindow.py:5247
 msgid "Package manager is busy"
 msgstr "O gestor de pacotes está ocupado"
 
-#: src/MainWindow.py:5381
+#: src/MainWindow.py:5383
 msgid " Activating"
 msgstr " Ativar"
 
-#: src/MainWindow.py:5418
+#: src/MainWindow.py:5420
 msgid "Downloading"
 msgstr "A transferir"
 
-#: src/MainWindow.py:5452
+#: src/MainWindow.py:5454
 msgid " | Removed : 100 %"
 msgstr " | Removido : 100 %"
 
-#: src/MainWindow.py:5454
+#: src/MainWindow.py:5456
 msgid " | Installed : 100 %"
 msgstr " | Instalado : 100 %"
 
-#: src/MainWindow.py:5456
+#: src/MainWindow.py:5458
 msgid " |  Not Completed"
 msgstr " |  Não concluído"
 
-#: src/MainWindow.py:5458
+#: src/MainWindow.py:5460
 msgid "<b><span color='red'>Connection Error !</span></b>"
 msgstr "<b><span color='red'>Erro de ligação !</span></b>"
 
-#: src/MainWindow.py:5460
+#: src/MainWindow.py:5462
 msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
 msgstr "<b><span color='red'>Erro de bloqueio do dpkg !</span></b>"
 
-#: src/MainWindow.py:5462
+#: src/MainWindow.py:5464
 msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
 msgstr "<b><span color='red'>Erro de interrupção do dpkg !</span></b>"
 
-#: src/MainWindow.py:5521
+#: src/MainWindow.py:5523
 msgid ""
 "Only one software management tool is allowed to run at the same time.\n"
 "Please close the other application e.g. 'Update Manager', 'aptitude' or "
@@ -1201,38 +1201,44 @@ msgstr ""
 "Primeiro termine a outra aplicação, por exemplo, o 'Gestor de atualizações', "
 "'aptitude' ou 'Synaptic'."
 
-#: src/MainWindow.py:5540 src/MainWindow.py:5546
+#: src/MainWindow.py:5542 src/MainWindow.py:5548
 msgid "No action required"
 msgstr "Nenhuma ação necessária"
 
-#: src/MainWindow.py:5552
+#: src/MainWindow.py:5554
 msgid "All packages are up to date"
 msgstr "Todos os pacotes estão atualizados"
 
-#: src/MainWindow.py:5722
+#: src/MainWindow.py:5724
 msgid " Removed"
 msgstr " Removido"
 
-#: src/MainWindow.py:5725
+#: src/MainWindow.py:5727
 msgid " Installed"
 msgstr " Instalado"
 
-#: src/MainWindow.py:5793
+#: src/MainWindow.py:5795
 msgid "Repo Activation Completed"
 msgstr "Ativação do Repo concluída"
 
-#: src/MainWindow.py:5799
+#: src/MainWindow.py:5801
 msgid "Fixing of system package manager sources list is done."
 msgstr ""
 "A correção da lista de fontes do gestor de pacotes do sistema está concluída."
 
-#: src/MainWindow.py:5800
+#: src/MainWindow.py:5802
 msgid "You can now update package manager cache."
 msgstr "Pode agora atualizar a cache do gestor de pacotes."
 
-#: src/MainWindow.py:5825
+#: src/MainWindow.py:5827
 msgid "An error occurred while updating the package cache. Exit Code : "
 msgstr "Ocorreu um erro ao atualizar a cache dos pacotes. Resultado : "
+
+#~ msgid "Most Rated Apps"
+#~ msgstr "Aplicações mais avaliadas"
+
+#~ msgid "Sort by Rating"
+#~ msgstr "Ordenar por avaliação"
 
 #~ msgid "Show all"
 #~ msgstr "Mostrar tudo"
