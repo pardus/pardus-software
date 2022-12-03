@@ -303,7 +303,7 @@ so that the OS has nothing to do with the health of the application.</property>
                   <object class="GtkImage" id="pop1Image">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">gtk-missing-image</property>
+                    <property name="icon-name">image-missing</property>
                     <property name="icon_size">6</property>
                   </object>
                   <packing>
@@ -315,7 +315,7 @@ so that the OS has nothing to do with the health of the application.</property>
                   <object class="GtkImage" id="pop2Image">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">gtk-missing-image</property>
+                    <property name="icon-name">image-missing</property>
                     <property name="icon_size">6</property>
                   </object>
                   <packing>
