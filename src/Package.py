@@ -476,9 +476,11 @@ class Package(object):
             icon = app.get_string('Icon')
             description = app.get_description() or app.get_generic_name() or app.get_name()
             filename = app.get_filename()
+            keywords = " ".join(app.get_keywords())
 
             if os.path.dirname(filename) == "/usr/share/applications" and executable and not nodisplay:
-                apps.append({"id": id, "name": name, "icon": icon, "description": description, "filename": filename})
+                apps.append({"id": id, "name": name, "icon": icon, "description": description, "filename": filename,
+                             "keywords": keywords, "executable": executable})
 
         apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: locale.strxfrm(x["name"]))
 

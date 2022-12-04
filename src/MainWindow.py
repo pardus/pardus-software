@@ -4109,7 +4109,7 @@ class MainWindow(object):
 
         uninstallbutton = Gtk.Button.new()
         uninstallbutton.name = {"name": app["name"], "filename": app["filename"], "icon": app["icon"],
-                                "description": app["description"]}
+                                "description": app["description"], "keywords": app["keywords"], "executable": app["executable"]}
         uninstallbutton.props.valign = Gtk.Align.CENTER
         uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
@@ -4206,7 +4206,8 @@ class MainWindow(object):
         myapp_name = row.get_children()[0].get_children()[3].name
         # print(myapp_name)
         search = self.myapps_searchentry.get_text().lower()
-        if search in myapp_name["name"].lower() or search in myapp_name["description"].lower():
+        if search in myapp_name["name"].lower() or search in myapp_name["description"].lower() or \
+                search in myapp_name["keywords"].lower() or search in myapp_name["executable"].lower():
             return True
 
     def on_MyAppsListBox_row_activated(self, list_box, row):
@@ -5080,12 +5081,10 @@ class MainWindow(object):
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
                                           self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                           self.UserSettings.config_forceaptuptime)
-        if state:
-            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
-        else:
-            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = False
 
-        self.usersettings()
+            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = state
+
+            self.usersettings()
 
     def on_switchAPTU_state_set(self, switch, state):
         user_config_aptup = self.UserSettings.config_aptup
