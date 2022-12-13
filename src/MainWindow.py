@@ -1277,6 +1277,7 @@ class MainWindow(object):
             print("gnomeratings not successful")
 
     def setPardusApps(self):
+        self.PardusAppListStore.clear()
         if self.Server.connection:
             for app in self.applist:
                 if self.UserSettings.config_usi:
@@ -1303,6 +1304,7 @@ class MainWindow(object):
         self.PardusAppListStore.append(list)
 
     def setPardusCategories(self):
+        self.HomeCategoryFlowBox.foreach(lambda child: self.HomeCategoryFlowBox.remove(child))
         if self.Server.connection:
             self.catbuttons = []
             self.categories = []
@@ -1421,6 +1423,7 @@ class MainWindow(object):
             self.PardusCategoryFilter.refilter()
 
     def setEditorApps(self):
+        self.EditorListStore.clear()
         if self.Server.connection:
             print("setting editor apps")
             for ediapp in self.Server.ediapplist:
@@ -1443,6 +1446,9 @@ class MainWindow(object):
         self.EditorListStore.append(list)
 
     def setMostApps(self):
+        self.MostDownFlowBox.foreach(lambda child: self.MostDownFlowBox.remove(child))
+        self.MostRateFlowBox.foreach(lambda child: self.MostRateFlowBox.remove(child))
+        self.LastAddedFlowBox.foreach(lambda child: self.LastAddedFlowBox.remove(child))
         if self.Server.connection:
             print("setting mostapps")
             for mda in self.Server.mostdownapplist:
