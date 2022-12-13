@@ -70,10 +70,10 @@ class MainWindow(object):
         self.dpkgconferror = False
 
         try:
-            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
+            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
                                                                         Gtk.IconLookupFlags(16))
         except:
-            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
+            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
                                                                         Gtk.IconLookupFlags(16))
 
         self.staron = GdkPixbuf.Pixbuf.new_from_file_at_size(
@@ -1655,15 +1655,15 @@ class MainWindow(object):
                     caticon = Gtk.IconTheme.get_default().load_icon("emblem-pardus", size, Gtk.IconLookupFlags(16))
                 else:
                     try:
-                        caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                        caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                         Gtk.IconLookupFlags(16))
                     except:
-                        caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                        caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
             except:
                 try:
-                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
-                except:
                     caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                except:
+                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
         return caticon
 
     def getServerCatIcon(self, cat, size=48):
@@ -1685,9 +1685,9 @@ class MainWindow(object):
                     self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size)
             except:
                 try:
-                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
-                except:
                     caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
+                except:
+                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
         return caticon
 
     def getSystemAppIcon(self, app, size=64, notify=False, myappicon=False):
@@ -1703,20 +1703,20 @@ class MainWindow(object):
                                                                         Gtk.IconLookupFlags(16))
                     except:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                             Gtk.IconLookupFlags(16))
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
                                                                             Gtk.IconLookupFlags(16))
                 else:
                     if myappicon:
                         appicon = self.getMyAppIcon(app, size)
                     else:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                             Gtk.IconLookupFlags(16))
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
                                                                             Gtk.IconLookupFlags(16))
         return appicon
 
@@ -1744,10 +1744,10 @@ class MainWindow(object):
                             self.Server.cachedir + "appicons/pardus-software.svg", size, size)
                     except:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                             Gtk.IconLookupFlags(16))
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
                                                                             Gtk.IconLookupFlags(16))
                 else:
                     if myappicon:
@@ -1755,10 +1755,10 @@ class MainWindow(object):
                         print(appicon)
                     else:
                         try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                             Gtk.IconLookupFlags(16))
                         except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
                                                                             Gtk.IconLookupFlags(16))
         return appicon
 
@@ -1793,10 +1793,10 @@ class MainWindow(object):
                                     self.Server.cachedir + "appicons/pardus-software.svg", size, size)
                             except:
                                 try:
-                                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                                     Gtk.IconLookupFlags(16))
                                 except:
-                                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
+                                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
                                                                                     Gtk.IconLookupFlags(16))
 
         return appicon
