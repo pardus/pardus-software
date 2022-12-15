@@ -1280,7 +1280,7 @@ class MainWindow(object):
             print("gnomeratings not successful")
 
     def setPardusApps(self):
-        self.PardusAppListStore.clear()
+        GLib.idle_add(self.PardusAppListStore.clear)
         if self.Server.connection:
             for app in self.applist:
                 if self.UserSettings.config_usi:
@@ -1426,7 +1426,7 @@ class MainWindow(object):
             self.PardusCategoryFilter.refilter()
 
     def setEditorApps(self):
-        self.EditorListStore.clear()
+        GLib.idle_add(self.EditorListStore.clear)
         if self.Server.connection:
             print("setting editor apps")
             for ediapp in self.Server.ediapplist:
