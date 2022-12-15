@@ -18,8 +18,6 @@ import locale
 from locale import gettext as _
 from locale import getlocale
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
 
 locale.bindtextdomain('pardus-software', '/usr/share/locale')
 locale.textdomain('pardus-software')
@@ -429,9 +427,13 @@ class MainWindow(object):
         self.GnomeENCommentScroll = self.GtkBuilder.get_object("GnomeENCommentScroll")
 
         self.statstack = self.GtkBuilder.get_object("statstack")
+        self.statmainstack = self.GtkBuilder.get_object("statmainstack")
+        self.stat_spinner = self.GtkBuilder.get_object("stat_spinner")
+        self.stat_ilabel = self.GtkBuilder.get_object("stat_ilabel")
         self.stats1ViewPort = self.GtkBuilder.get_object("stats1ViewPort")
         self.stats2ViewPort = self.GtkBuilder.get_object("stats2ViewPort")
         self.stats3ViewPort = self.GtkBuilder.get_object("stats3ViewPort")
+        self.matplot_error = _("matplotlib is not found")
 
         self.PardusCurrentCategory = -1
         if self.locale == "tr":
@@ -515,6 +517,7 @@ class MainWindow(object):
         self.la_clicked = False
 
         self.statisticsSetted = False
+        self.matplot_install_clicked = False
 
         self.repoappsinit = False
 
@@ -4620,12 +4623,54 @@ class MainWindow(object):
             self.setStatistics()
 
     def setStatistics(self):
-        if not self.statisticsSetted:
-            self.statstotaldc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["downcount"]))
-            self.statstotalrc.set_markup("<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["ratecount"]))
+
+        if not self.statisticsSetted or self.matplot_install_clicked:
+
+            self.statstotaldc.set_markup(
+                "<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["downcount"]))
+            self.statstotalrc.set_markup(
+                "<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["ratecount"]))
             self.statsweblabel.set_markup(
                 "<small>{}<a href='https://apps.pardus.org.tr/statistics' title='https://apps.pardus.org.tr/statistics'>apps.pardus.org.tr</a>{}</small>".format(
                     _("View on "), _(".")))
+
+            self.statmainstack.set_visible_child_name("splash")
+            self.stat_spinner.start()
+
+            statsthread = threading.Thread(target=self.stats_worker_thread, daemon=True)
+            statsthread.start()
+
+            self.statisticsSetted = True
+
+            if self.matplot_install_clicked:
+                installed = self.Package.isinstalled("python3-matplotlib")
+                if installed is not None:
+                    if installed:
+                        self.matplot_install_clicked = False
+        else:
+            self.statmainstack.set_visible_child_name("stats")
+
+    def stats_worker_thread(self):
+        libfound = self.stats_worker()
+        GLib.idle_add(self.on_stats_worker_done, libfound)
+
+    def stats_worker(self):
+        try:
+            import matplotlib.pyplot as plt
+            from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
+            return True
+        except ModuleNotFoundError as e:
+            print("{}".format(e))
+            self.matplot_error = "{}\n\n{}".format(e,
+                                                   _("The python3-matplotlib library is required to view statistics."))
+            return False
+
+    def on_stats_worker_done(self, libfound):
+
+        if libfound:
+            import matplotlib.pyplot as plt
+            from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
+
             dates = []
             downs = []
             for data in self.Server.dailydowns:
@@ -4679,11 +4724,30 @@ class MainWindow(object):
             canvas3 = FigureCanvas(fig3)
             self.stats3ViewPort.add(canvas3)
 
-            self.stats1ViewPort.show_all()
-            self.stats2ViewPort.show_all()
-            self.stats3ViewPort.show_all()
+            GLib.idle_add(self.stats1ViewPort.show_all)
+            GLib.idle_add(self.stats2ViewPort.show_all)
+            GLib.idle_add(self.stats3ViewPort.show_all)
+            GLib.idle_add(self.statmainstack.set_visible_child_name, "stats")
 
-            self.statisticsSetted = True
+            self.statmainstack.set_visible_child_name("stats")
+
+        else:
+            self.statmainstack.set_visible_child_name("info")
+            self.stat_ilabel.set_text("{}".format(self.matplot_error))
+            print("matplotlib is not found")
+
+        self.stat_spinner.stop()
+
+    def on_install_matplotlib_button_clicked(self, button):
+        self.matplot_install_clicked = True
+        app = "python3-matplotlib"
+        self.reposearchbar.set_text(app)
+        self.on_topbutton2_clicked(None)
+        self.on_reposearchbutton_clicked(self.reposearchbutton)
+        for row in self.searchstore:
+            if app == row[0]:
+                self.RepoAppsTreeView.set_cursor(row.path)
+                self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
 
     def on_menu_updates_clicked(self, button):
         self.prefback = self.homestack.get_visible_child_name()
