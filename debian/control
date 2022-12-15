@@ -21,11 +21,11 @@ Depends: ${misc:Depends},
          python3-apt,
          python3-cairo,
          python3-distro,
-         python3-matplotlib,
          python3-netifaces,
          python3-psutil,
          python3-requests
-Recommends: shared-mime-info,
-            desktop-file-utils
+Recommends: desktop-file-utils,
+            python3-matplotlib,
+            shared-mime-info
 Description: Pardus Software Center
  Add, remove, update applications
