@@ -1486,17 +1486,23 @@ class MainWindow(object):
 
                 box2.pack_start(downicon, False, True, 0)
                 box2.pack_start(downlabel, False, True, 0)
+                box2.set_spacing(3)
 
                 box3.pack_start(rateicon, False, True, 0)
                 box3.pack_start(ratelabel, False, True, 0)
+                box3.set_spacing(3)
 
                 box1.set_homogeneous(True)
                 box1.pack_start(box2, False, True, 0)
                 box1.pack_start(box3, False, True, 0)
 
-                box.pack_start(icon, False, True, 10)
+                box.pack_start(icon, False, True, 0)
                 box.pack_start(label, False, True, 0)
-                box.pack_end(box1, False, True, 10)
+                box.pack_end(box1, False, True, 0)
+                box.set_margin_start(8)
+                box.set_margin_end(8)
+                box.set_spacing(8)
+
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
@@ -1543,17 +1549,22 @@ class MainWindow(object):
 
                 box2.pack_start(downicon, False, True, 0)
                 box2.pack_start(downlabel, False, True, 0)
+                box2.set_spacing(3)
 
                 box3.pack_start(rateicon, False, True, 0)
                 box3.pack_start(ratelabel, False, True, 0)
+                box3.set_spacing(3)
 
                 box1.set_homogeneous(True)
                 box1.pack_start(box2, False, True, 0)
                 box1.pack_start(box3, False, True, 0)
 
-                box.pack_start(icon, False, True, 10)
+                box.pack_start(icon, False, True, 0)
                 box.pack_start(label, False, True, 0)
-                box.pack_end(box1, False, True, 10)
+                box.pack_end(box1, False, True, 0)
+                box.set_margin_start(8)
+                box.set_margin_end(8)
+                box.set_spacing(8)
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
@@ -1599,17 +1610,22 @@ class MainWindow(object):
 
                 box2.pack_start(downicon, False, True, 0)
                 box2.pack_start(downlabel, False, True, 0)
+                box2.set_spacing(3)
 
                 box3.pack_start(rateicon, False, True, 0)
                 box3.pack_start(ratelabel, False, True, 0)
+                box3.set_spacing(3)
 
                 box1.set_homogeneous(True)
                 box1.pack_start(box2, False, True, 0)
                 box1.pack_start(box3, False, True, 0)
 
-                box.pack_start(icon, False, True, 10)
+                box.pack_start(icon, False, True, 0)
                 box.pack_start(label, False, True, 0)
-                box.pack_end(box1, False, True, 10)
+                box.pack_end(box1, False, True, 0)
+                box.set_margin_start(8)
+                box.set_margin_end(8)
+                box.set_spacing(8)
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
