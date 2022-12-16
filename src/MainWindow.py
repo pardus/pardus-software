@@ -1468,13 +1468,11 @@ class MainWindow(object):
                 label.name = mda["name"]
 
                 downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
-                downicon.set_opacity(0.75)
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(mda["download"]))
 
                 rateicon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
-                rateicon.set_opacity(0.75)
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mda["rate"])))
@@ -1531,13 +1529,11 @@ class MainWindow(object):
                 label.name = mra["name"]
 
                 downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
-                downicon.set_opacity(0.75)
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(mra["download"]))
 
                 rateicon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
-                rateicon.set_opacity(0.75)
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(mra["rate"])))
@@ -1592,13 +1588,11 @@ class MainWindow(object):
                 label.name = la["name"]
 
                 downicon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
-                downicon.set_opacity(0.75)
 
                 downlabel = Gtk.Label.new()
                 downlabel.set_markup("<small>{}</small>".format(la["download"]))
 
                 rateicon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
-                rateicon.set_opacity(0.75)
 
                 ratelabel = Gtk.Label.new()
                 ratelabel.set_markup("<small>{:.1f}</small>".format(float(la["rate"])))
