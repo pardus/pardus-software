@@ -4683,7 +4683,7 @@ class MainWindow(object):
     def stats_worker_thread(self):
         GLib.usleep(1000000 * 0.5)
         libfound = self.stats_worker()
-        GLib.idle_add(self.stats_sleep, 0.25)
+        GLib.idle_add(self.stats_sleep, 0.5)
         GLib.idle_add(self.on_stats_worker_done, libfound)
 
     def stats_sleep(self, second):
