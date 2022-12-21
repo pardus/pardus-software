@@ -4666,8 +4666,6 @@ class MainWindow(object):
             statsthread = threading.Thread(target=self.stats_worker_thread, daemon=True)
             statsthread.start()
 
-            self.statisticsSetted = True
-
             if self.matplot_install_clicked:
                 installed = self.Package.isinstalled("python3-matplotlib")
                 if installed is not None:
@@ -4677,8 +4675,13 @@ class MainWindow(object):
             self.statmainstack.set_visible_child_name("stats")
 
     def stats_worker_thread(self):
+        GLib.usleep(1000000 * 0.5)
         libfound = self.stats_worker()
+        GLib.idle_add(self.stats_sleep, 0.5)
         GLib.idle_add(self.on_stats_worker_done, libfound)
+
+    def stats_sleep(self, second):
+        GLib.usleep(1000000 * second)
 
     def stats_worker(self):
         try:
@@ -4692,7 +4695,7 @@ class MainWindow(object):
             return False
 
     def on_stats_worker_done(self, libfound):
-
+        GLib.usleep(1000000 * 0.25)
         if libfound:
             import matplotlib.pyplot as plt
             from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
@@ -4756,6 +4759,8 @@ class MainWindow(object):
             GLib.idle_add(self.statmainstack.set_visible_child_name, "stats")
 
             self.statmainstack.set_visible_child_name("stats")
+
+            self.statisticsSetted = True
 
         else:
             self.statmainstack.set_visible_child_name("info")
