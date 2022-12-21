@@ -7762,6 +7762,7 @@ Use with caution. Are you sure you want to continue?</property>
                           <object class="GtkStack" id="statmainstack">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="transition-duration">250</property>
                             <property name="transition-type">crossfade</property>
                             <child>
                               <object class="GtkBox" id="StatisticsSplash">
@@ -7940,6 +7941,7 @@ Use with caution. Are you sure you want to continue?</property>
                                   <object class="GtkStack" id="statstack">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
+                                    <property name="transition-duration">250</property>
                                     <property name="transition-type">crossfade</property>
                                     <child>
                                       <object class="GtkScrolledWindow">

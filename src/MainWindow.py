@@ -1909,7 +1909,10 @@ class MainWindow(object):
             self.tryfixstack.set_transition_duration(200)
 
             self.statstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-            self.statstack.set_transition_duration(200)
+            self.statstack.set_transition_duration(250)
+
+            self.statmainstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+            self.statmainstack.set_transition_duration(250)
 
             self.SuggestStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.SuggestStack.set_transition_duration(200)
@@ -1977,6 +1980,9 @@ class MainWindow(object):
 
             self.statstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.statstack.set_transition_duration(0)
+
+            self.statmainstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.statmainstack.set_transition_duration(0)
 
             self.SuggestStack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.SuggestStack.set_transition_duration(0)
@@ -4677,7 +4683,7 @@ class MainWindow(object):
     def stats_worker_thread(self):
         GLib.usleep(1000000 * 0.5)
         libfound = self.stats_worker()
-        GLib.idle_add(self.stats_sleep, 0.5)
+        GLib.idle_add(self.stats_sleep, 0.25)
         GLib.idle_add(self.on_stats_worker_done, libfound)
 
     def stats_sleep(self, second):
