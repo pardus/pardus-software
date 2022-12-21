@@ -471,7 +471,6 @@ class MainWindow(object):
         self.appimage1stack = self.GtkBuilder.get_object("appimage1stack")
         self.appimage2stack = self.GtkBuilder.get_object("appimage2stack")
         self.fullscreen_image = self.GtkBuilder.get_object("fullscreen_image")
-        # self.getDisplay()
 
         self.mac = self.getMac()
 
@@ -479,7 +478,7 @@ class MainWindow(object):
 
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
-
+        self.controlDisplay()
         self.mainstack.set_visible_child_name("splash")
 
         self.HeaderBarMenuButton.set_sensitive(False)
@@ -676,13 +675,30 @@ class MainWindow(object):
             user_locale = "en"
         return user_locale
 
-    def getDisplay(self):
-        # defwindow = Gdk.get_default_root_window()
-        display = Gdk.Display.get_default()
-        monitor = display.get_primary_monitor()
-        geometry = monitor.get_geometry()
-        self.s_width = geometry.width
-        self.s_height = geometry.height
+    def controlDisplay(self):
+        width = 857
+        height = 657
+        s = 1
+        w = 1920
+        h = 1080
+        try:
+            display = Gdk.Display.get_default()
+            monitor = display.get_primary_monitor()
+            geometry = monitor.get_geometry()
+            w = geometry.width
+            h = geometry.height
+            s = Gdk.Monitor.get_scale_factor(monitor)
+
+            if w > 1920 or h > 1080:
+                width = int(w / 2.24)
+                height = int(h / 1.643)
+
+            self.MainWindow.resize(width, height)
+
+        except Exception as e:
+            print("Error in controlDisplay: {}".format(e))
+
+        print("window w:{} h:{} | monitor w:{} h:{} s:{}".format(width, height, w, h, s))
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
