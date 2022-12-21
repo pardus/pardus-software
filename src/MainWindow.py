@@ -1935,12 +1935,6 @@ class MainWindow(object):
             self.toprevealer.set_transition_type(Gtk.StackTransitionType.SLIDE_DOWN)
             self.toprevealer.set_transition_duration(200)
 
-            self.PopoverMenu.set_transitions_enabled(True)
-            self.DisclaimerPopover.set_transitions_enabled(True)
-            self.ImagePopover.set_transitions_enabled(True)
-            self.licensePopover.set_transitions_enabled(True)
-            self.PopoverPrefTip.set_transitions_enabled(True)
-
         else:
             self.mainstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.mainstack.set_transition_duration(0)
@@ -2005,11 +1999,12 @@ class MainWindow(object):
             self.toprevealer.set_transition_type(Gtk.StackTransitionType.NONE)
             self.toprevealer.set_transition_duration(0)
 
-            self.PopoverMenu.set_transitions_enabled(False)
-            self.DisclaimerPopover.set_transitions_enabled(False)
-            self.ImagePopover.set_transitions_enabled(False)
-            self.licensePopover.set_transitions_enabled(False)
-            self.PopoverPrefTip.set_transitions_enabled(False)
+        self.PopoverMenu.set_transitions_enabled(self.UserSettings.config_ea)
+        self.DisclaimerPopover.set_transitions_enabled(self.UserSettings.config_ea)
+        self.ImagePopover.set_transitions_enabled(self.UserSettings.config_ea)
+        self.licensePopover.set_transitions_enabled(self.UserSettings.config_ea)
+        self.PopoverPrefTip.set_transitions_enabled(self.UserSettings.config_ea)
+        self.RequiredChangesPopover.set_transitions_enabled(self.UserSettings.config_ea)
 
     def on_menubackbutton_clicked(self, widget):
         print("menuback")
