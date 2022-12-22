@@ -4692,6 +4692,10 @@ class MainWindow(object):
             self.matplot_error = "{}\n\n{}".format(e,
                                                    _("The python3-matplotlib library is required to view statistics."))
             return False
+        except Exception as e:
+            self.matplot_error = "{}\n\n{}".format(e,
+                                                   _("Try again by closing and reopening the application."))
+            return False
 
     def on_stats_worker_done(self, libfound):
         if libfound:
