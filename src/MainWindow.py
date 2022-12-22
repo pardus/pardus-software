@@ -10,6 +10,8 @@ import os
 import re
 import subprocess
 import threading
+import time
+
 import netifaces
 import psutil
 from datetime import datetime
@@ -4676,15 +4678,11 @@ class MainWindow(object):
             self.statmainstack.set_visible_child_name("stats")
 
     def stats_worker_thread(self):
-        GLib.usleep(1000000 * 0.5)
         libfound = self.stats_worker()
-        GLib.idle_add(self.stats_sleep, 0.5)
         GLib.idle_add(self.on_stats_worker_done, libfound)
 
-    def stats_sleep(self, second):
-        GLib.usleep(1000000 * second)
-
     def stats_worker(self):
+        time.sleep(0.25)
         try:
             import matplotlib.pyplot as plt
             from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
