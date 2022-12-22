@@ -4694,7 +4694,6 @@ class MainWindow(object):
             return False
 
     def on_stats_worker_done(self, libfound):
-        GLib.usleep(1000000 * 0.25)
         if libfound:
             import matplotlib.pyplot as plt
             from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
@@ -4711,7 +4710,7 @@ class MainWindow(object):
             # ax.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
             fig1.autofmt_xdate(rotation=60)
             canvas1 = FigureCanvas(fig1)
-            self.stats1ViewPort.add(canvas1)
+            GLib.idle_add(self.stats1ViewPort.add, canvas1)
 
             osnames = []
             osdowns = []
@@ -4732,7 +4731,7 @@ class MainWindow(object):
             plt.title(_("Used Operating Systems (For App Download)"))
             plt.tight_layout()
             canvas2 = FigureCanvas(fig2)
-            self.stats2ViewPort.add(canvas2)
+            GLib.idle_add(self.stats2ViewPort.add, canvas2)
 
             appnames = []
             appdowns = []
@@ -4750,23 +4749,21 @@ class MainWindow(object):
             # ax.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
             fig3.autofmt_xdate(rotation=45)
             canvas3 = FigureCanvas(fig3)
-            self.stats3ViewPort.add(canvas3)
+            GLib.idle_add(self.stats3ViewPort.add, canvas3)
 
             GLib.idle_add(self.stats1ViewPort.show_all)
             GLib.idle_add(self.stats2ViewPort.show_all)
             GLib.idle_add(self.stats3ViewPort.show_all)
             GLib.idle_add(self.statmainstack.set_visible_child_name, "stats")
 
-            self.statmainstack.set_visible_child_name("stats")
-
             self.statisticsSetted = True
 
         else:
-            self.statmainstack.set_visible_child_name("info")
-            self.stat_ilabel.set_text("{}".format(self.matplot_error))
+            GLib.idle_add(self.statmainstack.set_visible_child_name, "info")
+            GLib.idle_add(self.stat_ilabel.set_text, "{}".format(self.matplot_error))
             print("matplotlib is not found")
 
-        self.stat_spinner.stop()
+        GLib.idle_add(self.stat_spinner.stop)
 
     def on_install_matplotlib_button_clicked(self, button):
         self.matplot_install_clicked = True
