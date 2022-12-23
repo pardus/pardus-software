@@ -4649,7 +4649,7 @@ class MainWindow(object):
         self.queuebutton.get_style_context().remove_class("suggested-action")
 
         if self.Server.connection:
-            self.setStatistics()
+            GLib.idle_add(self.setStatistics)
 
     def setStatistics(self):
 
