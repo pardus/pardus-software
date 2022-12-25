@@ -80,6 +80,8 @@ class MainWindow(object):
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 24, 24)
         self.staroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 24, 24)
+        self.staron_half = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-half.svg", 24, 24)
 
         self.staronhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
             os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover.svg", 24, 24)
@@ -3079,38 +3081,38 @@ class MainWindow(object):
             self.setPardusComments(comments=None)
 
     def setAppStar(self, average):
+        point = int("{:.1f}".format(average).split(".")[1])
         average = int(average)
-
         if average == 0:
-            self.dtStar1.set_from_pixbuf(self.staroff)
+            self.dtStar1.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
             self.dtStar2.set_from_pixbuf(self.staroff)
             self.dtStar3.set_from_pixbuf(self.staroff)
             self.dtStar4.set_from_pixbuf(self.staroff)
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 1:
             self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staroff)
+            self.dtStar2.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
             self.dtStar3.set_from_pixbuf(self.staroff)
             self.dtStar4.set_from_pixbuf(self.staroff)
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 2:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staroff)
+            self.dtStar3.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
             self.dtStar4.set_from_pixbuf(self.staroff)
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 3:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
             self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.staroff)
+            self.dtStar4.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 4:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
             self.dtStar3.set_from_pixbuf(self.staron)
             self.dtStar4.set_from_pixbuf(self.staron)
-            self.dtStar5.set_from_pixbuf(self.staroff)
+            self.dtStar5.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
         elif average == 5:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
