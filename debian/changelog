@@ -1,3 +1,44 @@
+pardus-software (0.4.0) unstable; urgency=medium
+
+  [ Fatih Altun ]
+  * Update rate and down icon location on popular apps
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translation
+
+  [ Fatih Altun ]
+  * Update homepage rateicon and add opacity
+  * Update gtk-missing-image to image-missing
+  * Add keywords and exec search keys to myapps
+  * Fix multiple widget create problem
+  * Update gtk-missing-image as image-missing
+  * Add threading to statistics page loading
+  * Update python3-matplotlib as Recommends
+  * Ad GLib.idle to ListStore clearing
+  * Update spacing values of homepage most apps
+  * Update opacity values to defaults
+  * Add dynamic default window size
+  * Ad GLib usleep to statistics thread
+  * Update stats stacks animation times
+  * Fix stats usleep time value
+  * Update setAnimations function
+  * Update GLib usleep as time sleep
+  * Add Glib idle to other stats funcs too
+  * Add another exception to matplotlib control
+  * Add GLib idle to main statistics func
+  * Add rating-half icon
+  * Add half star view to app detail page
+  * Add new rating icons
+  * Add fractional star view to app detail page
+  * Update pot file
+  * Update Turkish translations
+  * Add 22x22 rating icons
+  * Add new rating icons to setup.py
+  * Add missing icon to setup.py
+  * Update copyright year to 2023
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 26 Dec 2022 19:11:52 +0300
+
 pardus-software (0.3.1) unstable; urgency=medium
 
   [ Hugo Carvalho ]
