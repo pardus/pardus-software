@@ -77,31 +77,36 @@ class MainWindow(object):
                                                                         Gtk.IconLookupFlags(16))
 
         self.staron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 24, 24)
         self.staroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 24, 24)
-        self.staron_half = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-half.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 24, 24)
+
+        self.staron_03 = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0-3.svg", 24, 24)
+        self.staron_05 = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0-5.svg", 24, 24)
+        self.staron_08 = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0-8.svg", 24, 24)
 
         self.staronhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover-full.svg", 24, 24)
         self.staroffhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated-hover.svg", 24, 24)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover-empty.svg", 24, 24)
 
         self.cstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 16, 16)
         self.cstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 16, 16)
 
         self.gcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 16, 16)
         self.gcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 16, 16)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 16, 16)
 
         self.wpcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating.svg", 38, 38)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 38, 38)
         self.wpcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-unrated.svg", 38, 38)
+            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 38, 38)
 
         self.isPardusSearching = False
         self.isRepoSearching = False
@@ -3080,39 +3085,49 @@ class MainWindow(object):
         else:
             self.setPardusComments(comments=None)
 
+    def get_star_subpoint(self, fraction):
+        if fraction >= 8:
+            return self.staron_08
+        elif fraction >= 5:
+            return self.staron_05
+        elif fraction >= 3:
+            return self.staron_03
+        else:
+            return self.staroff
+
     def setAppStar(self, average):
         point = int("{:.1f}".format(average).split(".")[1])
         average = int(average)
         if average == 0:
-            self.dtStar1.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
+            self.dtStar1.set_from_pixbuf(self.get_star_subpoint(point))
             self.dtStar2.set_from_pixbuf(self.staroff)
             self.dtStar3.set_from_pixbuf(self.staroff)
             self.dtStar4.set_from_pixbuf(self.staroff)
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 1:
             self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
+            self.dtStar2.set_from_pixbuf(self.get_star_subpoint(point))
             self.dtStar3.set_from_pixbuf(self.staroff)
             self.dtStar4.set_from_pixbuf(self.staroff)
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 2:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
+            self.dtStar3.set_from_pixbuf(self.get_star_subpoint(point))
             self.dtStar4.set_from_pixbuf(self.staroff)
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 3:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
             self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
+            self.dtStar4.set_from_pixbuf(self.get_star_subpoint(point))
             self.dtStar5.set_from_pixbuf(self.staroff)
         elif average == 4:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
             self.dtStar3.set_from_pixbuf(self.staron)
             self.dtStar4.set_from_pixbuf(self.staron)
-            self.dtStar5.set_from_pixbuf(self.staroff if point <= 4 else self.staron_half)
+            self.dtStar5.set_from_pixbuf(self.get_star_subpoint(point))
         elif average == 5:
             self.dtStar1.set_from_pixbuf(self.staron)
             self.dtStar2.set_from_pixbuf(self.staron)
