@@ -78,7 +78,7 @@
     <property name="type-hint">dialog</property>
     <property name="program-name">Pardus Software Center</property>
     <property name="version">0.1.0~alpha1</property>
-    <property name="copyright">© 2022 Pardus</property>
+    <property name="copyright">© 2023 Pardus</property>
     <property name="comments" translatable="yes">Add, remove, update applications</property>
     <property name="website">https://www.pardus.org.tr</property>
     <property name="website-label" translatable="yes">Website</property>
@@ -532,7 +532,7 @@ so that the OS has nothing to do with the health of the application.</property>
                     <property name="can-focus">False</property>
                     <property name="margin-top">3</property>
                     <property name="margin-bottom">3</property>
-                    <property name="label">TÜBİTAK ULAKBİM | 2022</property>
+                    <property name="label">TÜBİTAK ULAKBİM | 2023</property>
                     <attributes>
                       <attribute name="weight" value="thin"/>
                     </attributes>
@@ -7882,7 +7882,7 @@ Use with caution. Are you sure you want to continue?</property>
                                         <property name="can-focus">False</property>
                                         <property name="margin-top">3</property>
                                         <property name="margin-bottom">3</property>
-                                        <property name="label">TÜBİTAK ULAKBİM | 2022</property>
+                                        <property name="label">TÜBİTAK ULAKBİM | 2023</property>
                                         <attributes>
                                           <attribute name="weight" value="thin"/>
                                         </attributes>
