@@ -530,8 +530,8 @@ so that the OS has nothing to do with the health of the application.</property>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-top">3</property>
-                    <property name="margin-bottom">3</property>
+                    <property name="margin-top">8</property>
+                    <property name="margin-bottom">8</property>
                     <property name="label">TÜBİTAK ULAKBİM | 2023</property>
                     <attributes>
                       <attribute name="weight" value="thin"/>
@@ -859,18 +859,15 @@ so that the OS has nothing to do with the health of the application.</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">13</property>
                         <property name="margin-end">13</property>
+                        <property name="margin-top">8</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">8</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="margin-top">7</property>
                             <property name="orientation">vertical</property>
                             <property name="spacing">5</property>
-                            <child>
-                              <placeholder/>
-                            </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
@@ -1218,11 +1215,8 @@ so that the OS has nothing to do with the health of the application.</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="margin-bottom">7</property>
+                                <property name="margin-bottom">8</property>
                                 <property name="orientation">vertical</property>
-                                <child>
-                                  <placeholder/>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1322,9 +1316,6 @@ so that the OS has nothing to do with the health of the application.</property>
                                     <property name="fill">True</property>
                                     <property name="position">1</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                               <packing>
@@ -7880,8 +7871,8 @@ Use with caution. Are you sure you want to continue?</property>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="margin-top">3</property>
-                                        <property name="margin-bottom">3</property>
+                                        <property name="margin-top">8</property>
+                                        <property name="margin-bottom">8</property>
                                         <property name="label">TÜBİTAK ULAKBİM | 2023</property>
                                         <attributes>
                                           <attribute name="weight" value="thin"/>
@@ -7911,6 +7902,7 @@ Use with caution. Are you sure you want to continue?</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="orientation">vertical</property>
+                                <property name="spacing">8</property>
                                 <child>
                                   <object class="GtkPaned">
                                     <property name="visible">True</property>
@@ -8023,7 +8015,7 @@ Use with caution. Are you sure you want to continue?</property>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="margin-bottom">13</property>
+                                        <property name="margin-bottom">8</property>
                                         <property name="orientation">vertical</property>
                                         <child>
                                           <object class="GtkBox">
