@@ -67,6 +67,5 @@ class Application(Gtk.Application):
         return 0
 
 
-if __name__ == "__main__":
-    app = Application()
-    app.run(sys.argv)
+app = Application()
+app.run(sys.argv)
