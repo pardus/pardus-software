@@ -492,16 +492,18 @@ class Package(object):
             if app:
                 id = app.get_id()
                 name = app.get_name()
-                # executable = app.get_executable()
+                executable = app.get_executable()
                 # nodisplay = app.get_nodisplay()
                 icon = app.get_string('Icon')
                 description = app.get_description() or app.get_generic_name() or app.get_name()
                 filename = app.get_filename()
-                print(filename)
+                keywords = " ".join(app.get_keywords())
                 if os.path.dirname(filename) == "/usr/share/applications":
-                    return True, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
+                    return True, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename,
+                                  "keywords": keywords, "executable": executable}
                 else:
-                    return False, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename}
+                    return False, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename,
+                                   "keywords": "", "executable": ""}
             else:
                 print("parse_desktopfile: {} app not exists".format(desktopfilename))
                 return False, None
