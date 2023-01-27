@@ -1,3 +1,19 @@
+pardus-software (0.5.0) unstable; urgency=medium
+
+  * Add license to main.py
+  * Fix space values of copyright section
+  * Add myapps to headerbar and Update headerbar ui
+  * Update suggestapp page, fixes #8
+  * Update bin script and main
+  * Add title to MainWindow
+  * Update pot file
+  * Update Turkish translations
+  * Fix typo
+  * Update screenshots
+  * Update README.md
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sat, 28 Jan 2023 01:12:30 +0300
+
 pardus-software (0.4.0) unstable; urgency=medium
 
   [ Fatih Altun ]
