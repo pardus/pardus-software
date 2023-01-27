@@ -6,15 +6,17 @@ It is currently a work in progress. Maintenance is done by <a href="https://www.
 
 You can see the web interface of the application center at <a href="https://apps.pardus.org.tr/">Pardus Apps</a>.
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/pardus-software.svg)](https://repology.org/project/pardus-software/versions)
+
 ## Dependencies:
 
 * This application is developed based on Python3 and GTK+ 3. Dependencies:
-   - ```gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-notify-0.7 gir1.2-soup-2.4 gir1.2-vte-2.91 gvfs gvfs-backends python3-apt python3-cairo python3-distro python3-matplotlib python3-netifaces python3-psutil python3-requests```
+   - ```gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-notify-0.7 gir1.2-soup-2.4 gir1.2-vte-2.91 gvfs gvfs-backends python3-apt python3-cairo python3-distro python3-netifaces python3-psutil python3-requests```
 
 ## Run Application from Source
 
 * Install dependencies :
-    * ```sudo apt install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-notify-0.7 gir1.2-soup-2.4 gir1.2-vte-2.91 gvfs gvfs-backends python3-apt python3-cairo python3-distro python3-matplotlib python3-netifaces python3-psutil python3-requests```
+    * ```sudo apt install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-notify-0.7 gir1.2-soup-2.4 gir1.2-vte-2.91 gvfs gvfs-backends python3-apt python3-cairo python3-distro python3-netifaces python3-psutil python3-requests```
 * Clone the repository :
     * ```git clone https://github.com/pardus/pardus-software.git ~/pardus-software```
 * Run application :
@@ -39,3 +41,5 @@ You can see the web interface of the application center at <a href="https://apps
 ![Pardus Software Center 5](screenshots/pardus-software-5.png)
 
 ![Pardus Software Center 6](screenshots/pardus-software-6.png)
+
+![Pardus Software Center 7](screenshots/pardus-software-7.png)
