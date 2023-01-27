@@ -487,6 +487,7 @@ class MainWindow(object):
 
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
+        self.MainWindow.set_title(_("Pardus Software Center"))
         self.controlDisplay()
         self.mainstack.set_visible_child_name("splash")
 
