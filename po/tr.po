@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-27 23:35+0300\n"
-"PO-Revision-Date: 2023-01-27 23:38+0300\n"
+"PO-Revision-Date: 2023-01-27 23:50+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <dev@pardus.org.tr>\n"
 "Language: tr\n"
@@ -512,7 +512,7 @@ msgstr "İkon seçiniz"
 
 #: ui/MainWindow.glade:7184
 msgid "Your Name (*)"
-msgstr "Adınız : (*)"
+msgstr "Adınız (*)"
 
 #: ui/MainWindow.glade:7224
 msgid "Your E-Mail Address (*)"
