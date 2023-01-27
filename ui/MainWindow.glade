@@ -6812,7 +6812,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Application Name</property>
+                                                <property name="label" translatable="yes">Application Name (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -6851,7 +6851,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Category</property>
+                                                <property name="label" translatable="yes">Category (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -6889,7 +6889,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Description ( Turkish )</property>
+                                                <property name="label" translatable="yes">Description ( Turkish ) (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -6947,7 +6947,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Description ( English )</property>
+                                                <property name="label" translatable="yes">Description ( English ) (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -7005,7 +7005,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">License</property>
+                                                <property name="label" translatable="yes">License (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -7102,7 +7102,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Website</property>
+                                                <property name="label" translatable="yes">Website (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -7181,7 +7181,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Your Name</property>
+                                                <property name="label" translatable="yes">Your Name (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -7221,7 +7221,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Your E-Mail Address</property>
+                                                <property name="label" translatable="yes">Your E-Mail Address (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -7256,9 +7256,22 @@ This application served from Pardus non-free package repositories, so that the O
                                             <property name="can-focus">False</property>
                                             <property name="halign">center</property>
                                             <property name="spacing">8</property>
+                                            <property name="homogeneous">True</property>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="halign">start</property>
+                                                <property name="label" translatable="yes">Is the application available in Pardus repositories?</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
                                             <child>
                                               <object class="GtkCheckButton" id="SuggestInRepo">
-                                                <property name="label" translatable="yes">Is the application available in Pardus repositories?</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">True</property>
                                                 <property name="receives-default">False</property>
@@ -7267,7 +7280,7 @@ This application served from Pardus non-free package repositories, so that the O
                                               <packing>
                                                 <property name="expand">False</property>
                                                 <property name="fill">True</property>
-                                                <property name="position">0</property>
+                                                <property name="position">1</property>
                                               </packing>
                                             </child>
                                           </object>
@@ -7281,23 +7294,18 @@ This application served from Pardus non-free package repositories, so that the O
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
+                                            <property name="spacing">8</property>
                                             <child>
                                               <object class="GtkLabel" id="SuggestInfoLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                  <attribute name="foreground" value="#ffff00000000"/>
-                                                </attributes>
+                                                <property name="label" translatable="yes">* Required fields</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
                                                 <property name="fill">True</property>
                                                 <property name="position">0</property>
                                               </packing>
-                                            </child>
-                                            <child>
-                                              <placeholder/>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="SuggestSend">
@@ -7319,7 +7327,7 @@ This application served from Pardus non-free package repositories, so that the O
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">True</property>
-                                            <property name="position">13</property>
+                                            <property name="position">14</property>
                                           </packing>
                                         </child>
                                       </object>
@@ -9196,7 +9204,7 @@ Use with caution. Are you sure you want to continue?</property>
                 <property name="layout-style">expand</property>
                 <child>
                   <object class="GtkButton" id="topbutton1">
-                    <property name="label">Store</property>
+                    <property name="label" translatable="yes">Store</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
@@ -9224,7 +9232,7 @@ Use with caution. Are you sure you want to continue?</property>
                 </child>
                 <child>
                   <object class="GtkButton" id="topbutton3">
-                    <property name="label">My Apps</property>
+                    <property name="label" translatable="yes">My Apps</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>

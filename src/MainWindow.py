@@ -3023,9 +3023,11 @@ class MainWindow(object):
                     self.resetSuggestAppForm()
                 else:
                     if response["suggestapp"]["flood"]:
-                        self.SuggestInfoLabel.set_text(_("Please try again soon"))
+                        self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
+                            _("Please try again soon")))
                     else:
-                        self.SuggestInfoLabel.set_text(_("Error"))
+                        self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
+                            _("Error")))
         else:
             self.wpcresultLabel.set_text(_("Error"))
 
@@ -4868,9 +4870,10 @@ class MainWindow(object):
                        "mail": self.controlText(self.sug_mail), "mac": self.mac}
                 self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendsuggestapp, dic)
             else:
-                self.SuggestInfoLabel.set_text("{}".format(img_message))
+                self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(img_message))
         else:
-            self.SuggestInfoLabel.set_text("{} : {} {}".format(_("Error"), message, _("is empty")))
+            self.SuggestInfoLabel.set_markup("<b><span color='red'>{} : {} {}</span></b>".format(
+                _("Error"), message, _("is empty")))
 
     def controlText(self, text):
 
@@ -4898,8 +4901,8 @@ class MainWindow(object):
         if self.sug_license.strip() == "":
             return False, _("License")
 
-        if self.sug_copyright.strip() == "":
-            return False, _("Copyright Text")
+        # if self.sug_copyright.strip() == "":
+        #     return False, _("Copyright Text")
 
         if self.sug_website.strip() == "":
             return False, _("Website")
