@@ -9,19 +9,19 @@ msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-27 23:35+0300\n"
-"PO-Revision-Date: 2023-01-27 23:50+0300\n"
-"Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
+"PO-Revision-Date: 2023-01-30 00:35+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <dev@pardus.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Gtranslator 3.38.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: ui/MainWindow.glade:82
-msgid "Add, remove, update applications"
-msgstr "Uygulamaları yükleyin, kaldırın, güncelleyin"
+msgid "Install, remove, update applications"
+msgstr "Uygulamaları kurun, kaldırın, güncelleyin"
 
 #: ui/MainWindow.glade:84 src/MainWindow.py:4909
 msgid "Website"
@@ -42,8 +42,7 @@ msgstr ""
 "uygulamadır.\n"
 "Bu sebeple uygulamanın performansı, kararlılığı ve özelliklerinin Pardus "
 "dağıtımıyla\n"
-"ilgisi bulunmamaktadır. Lütfen uygulamayı bu durumu dikkate alarak "
-"yükleyiniz."
+"ilgisi bulunmamaktadır. Lütfen uygulamayı bu durumu dikkate alarak kurunuz."
 
 #: ui/MainWindow.glade:239
 msgid "Image 1"
@@ -127,11 +126,11 @@ msgstr "Yok"
 
 #: ui/MainWindow.glade:1656
 msgid "Show only installed apps"
-msgstr "Sadece yüklü uygulamaları göster"
+msgstr "Sadece kurulu uygulamaları göster"
 
 #: ui/MainWindow.glade:1663
 msgid "Show installed apps"
-msgstr "Yüklü uygulamaları göster"
+msgstr "Kurulu uygulamaları göster"
 
 #: ui/MainWindow.glade:1681
 msgid "Sort by Name"
@@ -176,7 +175,7 @@ msgstr ""
 "olup Pardus ekibinin çalışmaları dışında sunulan hazır ve bağımsız bir "
 "uygulamadır. Bu sebeple uygulamanın performansı, kararlılığı ve "
 "özelliklerinin Pardus dağıtımıyla ilgisi bulunmamaktadır. Lütfen uygulamayı "
-"bu durumu dikkate alarak yükleyiniz."
+"bu durumu dikkate alarak kurunuz."
 
 #: ui/MainWindow.glade:2338
 msgid "Disclaimer"
@@ -607,7 +606,7 @@ msgstr "<small>apps.pardus.org.tr ' de görüntüle</small>"
 
 #: ui/MainWindow.glade:8208
 msgid "Click for install"
-msgstr "Yüklemek için tıklayın"
+msgstr "Kurulum için tıklayın"
 
 #: ui/MainWindow.glade:8351
 msgid "Loading package details"
@@ -665,7 +664,7 @@ msgstr "<b><big>Uygulama kaldırılamadı.</big></b>"
 msgid ""
 "- Application uninstalling process is only valid for applications that the "
 "package manager (apt) supports.\n"
-"<i><small>( installed from repositories or via the .deb package )</small></"
+"<i><small>(installed from repositories or via the .deb package)</small></"
 "i>\n"
 "\n"
 "- For applications installed using tools such as Flatpak, Snap, Wine, you "
@@ -673,10 +672,10 @@ msgid ""
 msgstr ""
 "- Uygulama kaldırma işlemi sadece paket yöneticisinin (apt) desteklediği "
 "uygulamalar için geçerlidir.\n"
-"<i><small>( depolardan veya .deb paketi aracılığı ile yüklenenler )</small></"
+"<i><small>(depolardan veya .deb paketi aracılığı ile kurulanlar)</small></"
 "i>\n"
 "\n"
-"- Flatpak, Snap, Wine gibi araçlar kullanarak yüklenen uygulamalar için "
+"- Flatpak, Snap, Wine gibi araçlar kullanarak kurulan uygulamalar için "
 "ilgili uygulamanın kaldırma yönergelerini inceleyebilirsiniz. "
 
 #: ui/MainWindow.glade:9132
@@ -737,7 +736,7 @@ msgstr "Kaldırılacak paketler"
 
 #: ui/MainWindow.glade:9959
 msgid "Packages to install"
-msgstr "Yüklenecek paketler"
+msgstr "Kurulacak paketler"
 
 #: ui/MainWindow.glade:10023
 msgid "Broken packages"
@@ -865,12 +864,12 @@ msgstr " Kaldır"
 #: src/MainWindow.py:2457 src/MainWindow.py:4504 src/MainWindow.py:5754
 #: src/MainWindow.py:5810
 msgid " Install"
-msgstr " Yükle"
+msgstr " Kur"
 
 #: src/MainWindow.py:2464 src/MainWindow.py:2504 src/MainWindow.py:3361
 #: src/MainWindow.py:3515 src/MainWindow.py:5762
 msgid "You need to install the application"
-msgstr "Uygulamayı yüklemeniz gerekiyor"
+msgstr "Uygulamayı kurmanız gerekiyor"
 
 #: src/MainWindow.py:2470 src/MainWindow.py:4520 src/MainWindow.py:5478
 #: src/MainWindow.py:5479
@@ -880,7 +879,7 @@ msgstr " Kaldırılıyor"
 #: src/MainWindow.py:2472 src/MainWindow.py:4522 src/MainWindow.py:5484
 #: src/MainWindow.py:5485
 msgid " Installing"
-msgstr " Yükleniyor"
+msgstr " Kuruluyor"
 
 #: src/MainWindow.py:2484 src/MainWindow.py:4513 src/MainWindow.py:5781
 msgid " Not Found"
@@ -956,7 +955,7 @@ msgstr "Kaldırılacak"
 
 #: src/MainWindow.py:4154
 msgid "Will be installed"
-msgstr "Yüklenecek"
+msgstr "Kurulacak"
 
 #: src/MainWindow.py:4165 src/MainWindow.py:5615
 msgid "You cannot cancel because the application is in progress."
@@ -968,7 +967,7 @@ msgstr "Kaldırılıyor"
 
 #: src/MainWindow.py:4169 src/MainWindow.py:5542 src/MainWindow.py:5620
 msgid "Installing"
-msgstr "Yükleniyor"
+msgstr "Kuruluyor"
 
 #: src/MainWindow.py:4279
 msgid "The following important packages will also be removed."
@@ -1273,7 +1272,7 @@ msgstr " Kaldırıldı"
 
 #: src/MainWindow.py:5860
 msgid " Installed"
-msgstr " Yüklendi"
+msgstr " Kuruldu"
 
 #: src/MainWindow.py:5928
 msgid "Repo Activation Completed"
