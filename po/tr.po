@@ -304,16 +304,16 @@ msgstr ""
 "ekleyebilirsiniz."
 
 #: ui/MainWindow.glade:5024
-msgid "Your Name :"
-msgstr "Adınız :"
+msgid "Your Name:"
+msgstr "Adınız:"
 
 #: ui/MainWindow.glade:5038
 msgid "Write your name"
 msgstr "Adınızı yazınız"
 
 #: ui/MainWindow.glade:5064
-msgid "Your Comment :"
-msgstr "Yorumunuz :"
+msgid "Your Comment:"
+msgstr "Yorumunuz:"
 
 #: ui/MainWindow.glade:5125 ui/MainWindow.glade:7312
 msgid "Send"
@@ -483,12 +483,12 @@ msgid "Category (*)"
 msgstr "Kategori (*)"
 
 #: ui/MainWindow.glade:6892
-msgid "Description ( Turkish ) (*)"
-msgstr "Açıklama ( Türkçe ) (*)"
+msgid "Description (Turkish) (*)"
+msgstr "Açıklama (Türkçe) (*)"
 
 #: ui/MainWindow.glade:6950
-msgid "Description ( English ) (*)"
-msgstr "Açıklama ( İngilizce ) (*)"
+msgid "Description (English) (*)"
+msgstr "Açıklama (İngilizce) (*)"
 
 #: ui/MainWindow.glade:7008
 msgid "License (*)"
@@ -503,8 +503,8 @@ msgid "Website (*)"
 msgstr "Web sitesi (*)"
 
 #: ui/MainWindow.glade:7145
-msgid "Icon ( svg )"
-msgstr "İkon ( svg )"
+msgid "Icon (svg)"
+msgstr "İkon (svg)"
 
 #: ui/MainWindow.glade:7158
 msgid "Select Icon"
@@ -527,7 +527,7 @@ msgid "* Required fields"
 msgstr "* Zorunlu alanlar"
 
 #: ui/MainWindow.glade:7365
-msgid "Your application suggestion has been successfully submitted. "
+msgid "Your application suggestion has been successfully submitted."
 msgstr "Uygulama öneriniz başarıyla gönderildi."
 
 #: ui/MainWindow.glade:7414
@@ -571,7 +571,7 @@ msgid "Go to Homepage"
 msgstr "Ana Sayfaya Git"
 
 #: ui/MainWindow.glade:7610
-msgid "You can check the terminal output below. "
+msgid "You can check the terminal output below."
 msgstr "Aşağıdaki terminal çıktısını kontrol edebilirsiniz."
 
 #: ui/MainWindow.glade:7639
@@ -626,28 +626,28 @@ msgid "description"
 msgstr "açıklama"
 
 #: ui/MainWindow.glade:8533
-msgid "Packages to remove :"
-msgstr "Kaldırılacak paketler :"
+msgid "Packages to remove:"
+msgstr "Kaldırılacak paketler:"
 
 #: ui/MainWindow.glade:8597
-msgid "Packages to install :"
-msgstr "Yüklenecek paketler :"
+msgid "Packages to install:"
+msgstr "Kurulacak paketler:"
 
 #: ui/MainWindow.glade:8661
-msgid "Broken packages :"
-msgstr "Bozuk paketler :"
+msgid "Broken packages:"
+msgstr "Bozuk paketler:"
 
 #: ui/MainWindow.glade:8725
-msgid "Disk space to be freed :"
-msgstr "Boşalacak disk alanı :"
+msgid "Disk space to be freed:"
+msgstr "Boşalacak disk alanı:"
 
 #: ui/MainWindow.glade:8789
-msgid "Download size :"
-msgstr "İndirme boyutu :"
+msgid "Download size:"
+msgstr "İndirme boyutu:"
 
 #: ui/MainWindow.glade:8853
-msgid "Required disk space :"
-msgstr "Gerekli disk alanı :"
+msgid "Required disk space:"
+msgstr "Gerekli disk alanı:"
 
 #: ui/MainWindow.glade:8917 ui/MainWindow.glade:8990
 msgid "Back"
@@ -1029,12 +1029,12 @@ msgid "is empty"
 msgstr "boş"
 
 #: src/MainWindow.py:4897
-msgid "Description ( Turkish )"
-msgstr "Açıklama ( Türkçe )"
+msgid "Description (Turkish)"
+msgstr "Açıklama (Türkçe)"
 
 #: src/MainWindow.py:4900
-msgid "Description ( English )"
-msgstr "Açıklama ( İngilizce )"
+msgid "Description (English)"
+msgstr "Açıklama (İngilizce)"
 
 #: src/MainWindow.py:4918
 msgid "Mail"
@@ -1152,7 +1152,7 @@ msgid ""
 "GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</"
 "a>."
 msgstr ""
-"GNOME yorumları <a href='https://odrs.gnome.org'>GNOME ODRS</a> ' den "
+"GNOME yorumları <a href='https://odrs.gnome.org'>GNOME ODRS</a>ʼden "
 "çekilmektedir."
 
 #: src/MainWindow.py:5020
@@ -1226,28 +1226,28 @@ msgid "Downloading"
 msgstr "İndiriliyor"
 
 #: src/MainWindow.py:5568
-msgid " | Removed : 100 %"
-msgstr " | Kaldırıldı : 100 %"
+msgid " | Removed: 100%"
+msgstr " | Kaldırıldı: 100%"
 
 #: src/MainWindow.py:5570
-msgid " | Installed : 100 %"
-msgstr " | Yüklendi : 100 %"
+msgid " | Installed: 100%"
+msgstr " | Kuruldu: 100%"
 
 #: src/MainWindow.py:5572
-msgid " |  Not Completed"
-msgstr " |  Tamamlanamadı"
+msgid " | Not Completed"
+msgstr " | Tamamlanamadı"
 
 #: src/MainWindow.py:5574
-msgid "<b><span color='red'>Connection Error !</span></b>"
-msgstr "<b><span color='red'>Bağlantı Hatası !</span></b>"
+msgid "<b><span color='red'>Connection Error!</span></b>"
+msgstr "<b><span color='red'>Bağlantı Hatası!</span></b>"
 
 #: src/MainWindow.py:5576
-msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
-msgstr "<b><span color='red'>Dpkg Kilitleme Hatası !</span></b>"
+msgid "<b><span color='red'>Dpkg Lock Error!</span></b>"
+msgstr "<b><span color='red'>Dpkg Kilitleme Hatası!</span></b>"
 
 #: src/MainWindow.py:5578
-msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
-msgstr "<b><span color='red'>Dpkg Kesinti Hatası !</span></b>"
+msgid "<b><span color='red'>Dpkg Interrupt Error!</span></b>"
+msgstr "<b><span color='red'>Dpkg Kesinti Hatası!</span></b>"
 
 #: src/MainWindow.py:5637
 msgid ""
@@ -1288,8 +1288,8 @@ msgid "You can now update package manager cache."
 msgstr "Artık paket yöneticisi önbelleğini güncelleyebilirsiniz."
 
 #: src/MainWindow.py:5960
-msgid "An error occurred while updating the package cache. Exit Code : "
-msgstr "Paket önbelleği güncellenirken bir hata oluştu. Çıkış Kodu :"
+msgid "An error occurred while updating the package cache. Exit Code: "
+msgstr "Paket önbelleği güncellenirken bir hata oluştu. Çıkış Kodu:"
 
 #~ msgid "Most Rated Apps"
 #~ msgstr "Oylaması En Yüksek Uygulamalar"

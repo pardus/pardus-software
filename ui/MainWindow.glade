@@ -5021,7 +5021,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="width-request">175</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Your Name :</property>
+                                                            <property name="label" translatable="yes">Your Name:</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -5061,7 +5061,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="valign">center</property>
-                                                            <property name="label" translatable="yes">Your Comment :</property>
+                                                            <property name="label" translatable="yes">Your Comment:</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -6889,7 +6889,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Description ( Turkish ) (*)</property>
+                                                <property name="label" translatable="yes">Description (Turkish) (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -6947,7 +6947,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Description ( English ) (*)</property>
+                                                <property name="label" translatable="yes">Description (English) (*)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -7142,7 +7142,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Icon ( svg )</property>
+                                                <property name="label" translatable="yes">Icon (svg)</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -7362,7 +7362,7 @@ This application served from Pardus non-free package repositories, so that the O
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">Your application suggestion has been successfully submitted. </property>
+                                            <property name="label" translatable="yes">Your application suggestion has been successfully submitted.</property>
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
                                             </attributes>
@@ -7607,7 +7607,7 @@ Use with caution. Are you sure you want to continue?</property>
                                   <object class="GtkLabel">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">You can check the terminal output below. </property>
+                                    <property name="label" translatable="yes">You can check the terminal output below.</property>
                                     <attributes>
                                       <attribute name="weight" value="thin"/>
                                     </attributes>
@@ -8530,7 +8530,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Packages to remove :</property>
+                                                            <property name="label" translatable="yes">Packages to remove:</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -8594,7 +8594,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Packages to install :</property>
+                                                            <property name="label" translatable="yes">Packages to install:</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -8658,7 +8658,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Broken packages :</property>
+                                                            <property name="label" translatable="yes">Broken packages:</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -8722,7 +8722,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Disk space to be freed :</property>
+                                                            <property name="label" translatable="yes">Disk space to be freed:</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -8786,7 +8786,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Download size :</property>
+                                                            <property name="label" translatable="yes">Download size:</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -8850,7 +8850,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Required disk space :</property>
+                                                            <property name="label" translatable="yes">Required disk space:</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -9115,7 +9115,7 @@ Use with caution. Are you sure you want to continue?</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="label" translatable="yes">- Application uninstalling process is only valid for applications that the package manager (apt) supports.
-&lt;i&gt;&lt;small&gt;( installed from repositories or via the .deb package )&lt;/small&gt;&lt;/i&gt;
+&lt;i&gt;&lt;small&gt;(installed from repositories or via the .deb package)&lt;/small&gt;&lt;/i&gt;
 
 - For applications installed using tools such as Flatpak, Snap, Wine, you can review the removal instructions of the relevant application.</property>
                                     <property name="use-markup">True</property>

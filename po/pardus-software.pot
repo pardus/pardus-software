@@ -284,7 +284,7 @@ msgid ""
 msgstr ""
 
 #: ui/MainWindow.glade:5024
-msgid "Your Name :"
+msgid "Your Name:"
 msgstr ""
 
 #: ui/MainWindow.glade:5038
@@ -292,7 +292,7 @@ msgid "Write your name"
 msgstr ""
 
 #: ui/MainWindow.glade:5064
-msgid "Your Comment :"
+msgid "Your Comment:"
 msgstr ""
 
 #: ui/MainWindow.glade:5125 ui/MainWindow.glade:7312
@@ -457,11 +457,11 @@ msgid "Category (*)"
 msgstr ""
 
 #: ui/MainWindow.glade:6892
-msgid "Description ( Turkish ) (*)"
+msgid "Description (Turkish) (*)"
 msgstr ""
 
 #: ui/MainWindow.glade:6950
-msgid "Description ( English ) (*)"
+msgid "Description (English) (*)"
 msgstr ""
 
 #: ui/MainWindow.glade:7008
@@ -477,7 +477,7 @@ msgid "Website (*)"
 msgstr ""
 
 #: ui/MainWindow.glade:7145
-msgid "Icon ( svg )"
+msgid "Icon (svg)"
 msgstr ""
 
 #: ui/MainWindow.glade:7158
@@ -501,7 +501,7 @@ msgid "* Required fields"
 msgstr ""
 
 #: ui/MainWindow.glade:7365
-msgid "Your application suggestion has been successfully submitted. "
+msgid "Your application suggestion has been successfully submitted."
 msgstr ""
 
 #: ui/MainWindow.glade:7414
@@ -535,7 +535,7 @@ msgid "Go to Homepage"
 msgstr ""
 
 #: ui/MainWindow.glade:7610
-msgid "You can check the terminal output below. "
+msgid "You can check the terminal output below."
 msgstr ""
 
 #: ui/MainWindow.glade:7639
@@ -588,27 +588,27 @@ msgid "description"
 msgstr ""
 
 #: ui/MainWindow.glade:8533
-msgid "Packages to remove :"
+msgid "Packages to remove:"
 msgstr ""
 
 #: ui/MainWindow.glade:8597
-msgid "Packages to install :"
+msgid "Packages to install:"
 msgstr ""
 
 #: ui/MainWindow.glade:8661
-msgid "Broken packages :"
+msgid "Broken packages:"
 msgstr ""
 
 #: ui/MainWindow.glade:8725
-msgid "Disk space to be freed :"
+msgid "Disk space to be freed:"
 msgstr ""
 
 #: ui/MainWindow.glade:8789
-msgid "Download size :"
+msgid "Download size:"
 msgstr ""
 
 #: ui/MainWindow.glade:8853
-msgid "Required disk space :"
+msgid "Required disk space:"
 msgstr ""
 
 #: ui/MainWindow.glade:8917 ui/MainWindow.glade:8990
@@ -627,7 +627,7 @@ msgstr ""
 msgid ""
 "- Application uninstalling process is only valid for applications that the "
 "package manager (apt) supports.\n"
-"<i><small>( installed from repositories or via the .deb package )</small></"
+"<i><small>(installed from repositories or via the .deb package)</small></"
 "i>\n"
 "\n"
 "- For applications installed using tools such as Flatpak, Snap, Wine, you "
@@ -979,11 +979,11 @@ msgid "is empty"
 msgstr ""
 
 #: src/MainWindow.py:4897
-msgid "Description ( Turkish )"
+msgid "Description (Turkish)"
 msgstr ""
 
 #: src/MainWindow.py:4900
-msgid "Description ( English )"
+msgid "Description (English)"
 msgstr ""
 
 #: src/MainWindow.py:4918
@@ -1167,27 +1167,27 @@ msgid "Downloading"
 msgstr ""
 
 #: src/MainWindow.py:5568
-msgid " | Removed : 100 %"
+msgid " | Removed: 100%"
 msgstr ""
 
 #: src/MainWindow.py:5570
-msgid " | Installed : 100 %"
+msgid " | Installed: 100%"
 msgstr ""
 
 #: src/MainWindow.py:5572
-msgid " |  Not Completed"
+msgid " | Not Completed"
 msgstr ""
 
 #: src/MainWindow.py:5574
-msgid "<b><span color='red'>Connection Error !</span></b>"
+msgid "<b><span color='red'>Connection Error!</span></b>"
 msgstr ""
 
 #: src/MainWindow.py:5576
-msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
+msgid "<b><span color='red'>Dpkg Lock Error!</span></b>"
 msgstr ""
 
 #: src/MainWindow.py:5578
-msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
+msgid "<b><span color='red'>Dpkg Interrupt Error!</span></b>"
 msgstr ""
 
 #: src/MainWindow.py:5637
@@ -1226,5 +1226,5 @@ msgid "You can now update package manager cache."
 msgstr ""
 
 #: src/MainWindow.py:5960
-msgid "An error occurred while updating the package cache. Exit Code : "
+msgid "An error occurred while updating the package cache. Exit Code: "
 msgstr ""
