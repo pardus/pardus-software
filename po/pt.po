@@ -20,8 +20,8 @@ msgstr ""
 "X-Generator: Poedit 3.2\n"
 
 #: ui/MainWindow.glade:82
-msgid "Add, remove, update applications"
-msgstr "Adicionar, remover, atualizar aplicações"
+msgid "Install, remove, update applications"
+msgstr "Instalar, remover, atualizar aplicações"
 
 #: ui/MainWindow.glade:84 ui/MainWindow.glade:7114 src/MainWindow.py:4793
 msgid "Website"
