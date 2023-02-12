@@ -24,33 +24,33 @@ def main():
 
     def install(packages):
         packagelist = packages.split(" ")
-        subprocess.call(["apt", "install", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
+        subprocess.call(["apt-get", "install", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def reinstall(debianpackage):
-        subprocess.call(["apt", "install", "--reinstall", debianpackage, "-yq", "-o", "APT::Status-Fd=2"],
+        subprocess.call(["apt-get", "install", "--reinstall", debianpackage, "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def remove(packages):
         packagelist = packages.split(" ")
-        subprocess.call(["apt", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
+        subprocess.call(["apt-get", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def downgrade(packagename):
-        subprocess.call(["apt", "install", "--allow-downgrades", packagename, "-yq", "-o", "APT::Status-Fd=2"],
+        subprocess.call(["apt-get", "install", "--allow-downgrades", packagename, "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def update():
-        subprocess.call(["apt", "update", "-o", "APT::Status-Fd=2"],
+        subprocess.call(["apt-get", "update", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def removeresidual(packages):
         packagelist = packages.split(" ")
-        subprocess.call(["apt", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
+        subprocess.call(["apt-get", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def removeauto():
-        subprocess.call(["apt", "autoremove", "-yq", "-o", "APT::Status-Fd=2"],
+        subprocess.call(["apt-get", "autoremove", "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def externalrepo(keyfile, slistfile):
