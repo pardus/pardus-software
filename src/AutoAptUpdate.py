@@ -17,7 +17,7 @@ def main():
         cache.update()
     except Exception as e:
         print(str(e))
-        subprocess.call(["apt", "update"],
+        subprocess.call(["apt-get", "update"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
 
