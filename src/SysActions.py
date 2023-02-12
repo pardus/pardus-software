@@ -28,11 +28,11 @@ def main():
             subupdate()
 
     def subupdate():
-        subprocess.call(["apt", "update"],
+        subprocess.call(["apt-get", "update"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def fixbroken():
-        subprocess.call(["apt", "install", "--fix-broken", "-yq"],
+        subprocess.call(["apt-get", "install", "--fix-broken", "-yq"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def dpkgconfigure():
@@ -40,7 +40,7 @@ def main():
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def aptclean():
-        subprocess.call(["apt", "clean"],
+        subprocess.call(["apt-get", "clean"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def externalrepo(key, sources, name):
