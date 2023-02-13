@@ -298,16 +298,16 @@ msgstr ""
 "adicionar um comentário se quiser."
 
 #: ui/MainWindow.glade:5033
-msgid "Your Name :"
-msgstr "O seu nome :"
+msgid "Your Name:"
+msgstr "O seu nome:"
 
 #: ui/MainWindow.glade:5047
 msgid "Write your name"
 msgstr "Escreva o seu nome"
 
 #: ui/MainWindow.glade:5073
-msgid "Your Comment :"
-msgstr "O seu comentário :"
+msgid "Your Comment:"
+msgstr "O seu comentário:"
 
 #: ui/MainWindow.glade:5134 ui/MainWindow.glade:7313
 msgid "Send"
@@ -474,19 +474,19 @@ msgid "Application Name"
 msgstr "Nome da aplicação"
 
 #: ui/MainWindow.glade:6901 src/MainWindow.py:4781
-msgid "Description ( Turkish )"
-msgstr "Descrição ( Turco )"
+msgid "Description (Turkish)"
+msgstr "Descrição (Turco)"
 
 #: ui/MainWindow.glade:6959 src/MainWindow.py:4784
-msgid "Description ( English )"
-msgstr "Descrição ( Inglês )"
+msgid "Description (English)"
+msgstr "Descrição (Inglês)"
 
 #: ui/MainWindow.glade:7056 src/MainWindow.py:4790
 msgid "Copyright Text"
 msgstr "Texto de direitos de autor"
 
 #: ui/MainWindow.glade:7154
-msgid "Icon ( svg )"
+msgid "Icon (svg)"
 msgstr "Ícone (svg)"
 
 #: ui/MainWindow.glade:7167
@@ -502,8 +502,8 @@ msgid "Is the application available in Pardus repositories?"
 msgstr "A aplicação está disponível nos repositórios do Pardus?"
 
 #: ui/MainWindow.glade:7366
-msgid "Your application suggestion has been successfully submitted. "
-msgstr "A sua sugestão de aplicação foi submetida com sucesso. "
+msgid "Your application suggestion has been successfully submitted."
+msgstr "A sua sugestão de aplicação foi submetida com sucesso."
 
 #: ui/MainWindow.glade:7415
 msgid ""
@@ -545,8 +545,8 @@ msgid "Go to Homepage"
 msgstr "Ir para a página inicial"
 
 #: ui/MainWindow.glade:7611
-msgid "You can check the terminal output below. "
-msgstr "Pode verificar o resultado do terminal abaixo. "
+msgid "You can check the terminal output below."
+msgstr "Pode verificar o resultado do terminal abaixo."
 
 #: ui/MainWindow.glade:7640
 msgid "The error in the package manager could not be fixed."
@@ -587,28 +587,28 @@ msgid "description"
 msgstr "descrição"
 
 #: ui/MainWindow.glade:8321
-msgid "Packages to remove :"
-msgstr "Pacotes a remover :"
+msgid "Packages to remove:"
+msgstr "Pacotes a remover:"
 
 #: ui/MainWindow.glade:8385
-msgid "Packages to install :"
-msgstr "Pacotes a instalar :"
+msgid "Packages to install:"
+msgstr "Pacotes a instalar:"
 
 #: ui/MainWindow.glade:8449
-msgid "Broken packages :"
-msgstr "Pacotes quebrados :"
+msgid "Broken packages:"
+msgstr "Pacotes quebrados:"
 
 #: ui/MainWindow.glade:8513
-msgid "Disk space to be freed :"
-msgstr "Espaço em disco a ser libertado :"
+msgid "Disk space to be freed:"
+msgstr "Espaço em disco a ser libertado:"
 
 #: ui/MainWindow.glade:8577
-msgid "Download size :"
-msgstr "Tamanho da transferência :"
+msgid "Download size:"
+msgstr "Tamanho da transferência:"
 
 #: ui/MainWindow.glade:8641
-msgid "Required disk space :"
-msgstr "Espaço necessário em disco :"
+msgid "Required disk space:"
+msgstr "Espaço necessário em disco:"
 
 #: ui/MainWindow.glade:8705 ui/MainWindow.glade:8778
 msgid "Back"
@@ -626,7 +626,7 @@ msgstr "<b><big>Não foi possível desinstalar a aplicação.</big></b>"
 msgid ""
 "- Application uninstalling process is only valid for applications that the "
 "package manager (apt) supports.\n"
-"<i><small>( installed from repositories or via the .deb package )</small></"
+"<i><small>(installed from repositories or via the .deb package)</small></"
 "i>\n"
 "\n"
 "- For applications installed using tools such as Flatpak, Snap, Wine, you "
@@ -1167,28 +1167,28 @@ msgid "Downloading"
 msgstr "A transferir"
 
 #: src/MainWindow.py:5454
-msgid " | Removed : 100 %"
-msgstr " | Removido : 100 %"
+msgid " | Removed: 100%"
+msgstr " | Removido : 100%"
 
 #: src/MainWindow.py:5456
-msgid " | Installed : 100 %"
-msgstr " | Instalado : 100 %"
+msgid " | Installed: 100%"
+msgstr " | Instalado : 100%"
 
 #: src/MainWindow.py:5458
-msgid " |  Not Completed"
-msgstr " |  Não concluído"
+msgid " | Not Completed"
+msgstr " | Não concluído"
 
 #: src/MainWindow.py:5460
-msgid "<b><span color='red'>Connection Error !</span></b>"
-msgstr "<b><span color='red'>Erro de ligação !</span></b>"
+msgid "<b><span color='red'>Connection Error!</span></b>"
+msgstr "<b><span color='red'>Erro de ligação!</span></b>"
 
 #: src/MainWindow.py:5462
-msgid "<b><span color='red'>Dpkg Lock Error !</span></b>"
-msgstr "<b><span color='red'>Erro de bloqueio do dpkg !</span></b>"
+msgid "<b><span color='red'>Dpkg Lock Error!</span></b>"
+msgstr "<b><span color='red'>Erro de bloqueio do dpkg!</span></b>"
 
 #: src/MainWindow.py:5464
-msgid "<b><span color='red'>Dpkg Interrupt Error !</span></b>"
-msgstr "<b><span color='red'>Erro de interrupção do dpkg !</span></b>"
+msgid "<b><span color='red'>Dpkg Interrupt Error!</span></b>"
+msgstr "<b><span color='red'>Erro de interrupção do dpkg!</span></b>"
 
 #: src/MainWindow.py:5523
 msgid ""
@@ -1231,8 +1231,8 @@ msgid "You can now update package manager cache."
 msgstr "Pode agora atualizar a cache do gestor de pacotes."
 
 #: src/MainWindow.py:5827
-msgid "An error occurred while updating the package cache. Exit Code : "
-msgstr "Ocorreu um erro ao atualizar a cache dos pacotes. Resultado : "
+msgid "An error occurred while updating the package cache. Exit Code: "
+msgstr "Ocorreu um erro ao atualizar a cache dos pacotes. Resultado: "
 
 #~ msgid "Most Rated Apps"
 #~ msgstr "Aplicações mais avaliadas"

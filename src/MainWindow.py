@@ -4894,10 +4894,10 @@ class MainWindow(object):
             return False, _("Category")
 
         if self.sug_desc_tr.strip() == "":
-            return False, _("Description ( Turkish )")
+            return False, _("Description (Turkish)")
 
         if self.sug_desc_en.strip() == "":
-            return False, _("Description ( English )")
+            return False, _("Description (English)")
 
         if self.sug_license.strip() == "":
             return False, _("License")
@@ -5565,17 +5565,17 @@ class MainWindow(object):
             if not self.error:
                 if status == 0:
                     if self.isinstalled:
-                        self.progresstextlabel.set_text(self.actionedappname + _(" | Removed : 100 %"))
+                        self.progresstextlabel.set_text(self.actionedappname + _(" | Removed: 100%"))
                     else:
-                        self.progresstextlabel.set_text(self.actionedappname + _(" | Installed : 100 %"))
+                        self.progresstextlabel.set_text(self.actionedappname + _(" | Installed: 100%"))
                 else:
-                    self.progresstextlabel.set_text(self.actionedappname + _(" | " + " Not Completed"))
+                    self.progresstextlabel.set_text(self.actionedappname + _(" | Not Completed"))
             else:
-                self.errormessage = _("<b><span color='red'>Connection Error !</span></b>")
+                self.errormessage = _("<b><span color='red'>Connection Error!</span></b>")
                 if self.dpkglockerror:
-                    self.errormessage = _("<b><span color='red'>Dpkg Lock Error !</span></b>")
+                    self.errormessage = _("<b><span color='red'>Dpkg Lock Error!</span></b>")
                 elif self.dpkgconferror:
-                    self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error !</span></b>")
+                    self.errormessage = _("<b><span color='red'>Dpkg Interrupt Error!</span></b>")
 
             cachestatus = self.Package.updatecache()
 
@@ -5601,7 +5601,7 @@ class MainWindow(object):
                     self.raction.set_sensitive(True)
 
             self.topspinner.stop()
-            print("Exit Code : {}".format(status))
+            print("Exit Code: {}".format(status))
 
             self.inprogress = False
 
@@ -5957,10 +5957,10 @@ class MainWindow(object):
                 self.dAptUpdateBox.set_visible(True)
                 self.dAptUpdateInfoLabel.set_visible(True)
                 self.dAptUpdateInfoLabel.set_markup("<span color='red'>{}{}</span>".format(
-                    _("An error occurred while updating the package cache. Exit Code : "), status))
+                    _("An error occurred while updating the package cache. Exit Code: "), status))
             self.aptupdateclicked = False
 
-        print("SysProcess Exit Code : {}".format(status))
+        print("SysProcess Exit Code: {}".format(status))
 
     def startAptUpdateProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
