@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ui/MainWindow.glade:82
-msgid "Add, remove, update applications"
+msgid "Install, remove, update applications"
 msgstr ""
 
 #: ui/MainWindow.glade:84 src/MainWindow.py:4909

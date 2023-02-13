@@ -28,4 +28,4 @@ Recommends: desktop-file-utils,
             python3-matplotlib,
             shared-mime-info
 Description: Pardus Software Center
- Add, remove, update applications
+ Install, remove, update applications
