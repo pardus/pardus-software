@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-27 23:35+0300\n"
-"PO-Revision-Date: 2023-01-27 23:50+0300\n"
+"PO-Revision-Date: 2023-02-13 13:36+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <dev@pardus.org.tr>\n"
 "Language: tr\n"
@@ -631,7 +631,7 @@ msgstr "Kaldırılacak paketler:"
 
 #: ui/MainWindow.glade:8597
 msgid "Packages to install:"
-msgstr "Kurulacak paketler:"
+msgstr "Yüklenecek paketler:"
 
 #: ui/MainWindow.glade:8661
 msgid "Broken packages:"
@@ -892,7 +892,7 @@ msgstr "Depoyu Etkinleştir"
 
 #: src/MainWindow.py:2642 src/MainWindow.py:2649
 msgid "Installed Size"
-msgstr "Kurulu Boyut"
+msgstr "Yüklü Boyut"
 
 #: src/MainWindow.py:2925 src/MainWindow.py:2928
 msgid "unknown"
@@ -1231,7 +1231,7 @@ msgstr " | Kaldırıldı: 100%"
 
 #: src/MainWindow.py:5570
 msgid " | Installed: 100%"
-msgstr " | Kuruldu: 100%"
+msgstr " | Yüklendi: 100%"
 
 #: src/MainWindow.py:5572
 msgid " | Not Completed"
