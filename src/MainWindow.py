@@ -335,6 +335,8 @@ class MainWindow(object):
         self.ui_myapp_isize_box = self.GtkBuilder.get_object("ui_myapp_isize_box")
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
         self.MyAppsDetailsPopover.set_relative_to(self.MyAppsListBox)
+        self.myapps_apps_sw = self.GtkBuilder.get_object("myapps_apps_sw")
+
 
         # myapps remove popup
         self.ui_myapp_pop_stack = self.GtkBuilder.get_object("ui_myapp_pop_stack")
@@ -4197,6 +4199,8 @@ class MainWindow(object):
             self.topsearchbutton.set_sensitive(True)
             self.homestack.set_visible_child_name("myapps")
             self.myappsstack.set_visible_child_name("myapps")
+            # set scroll position to top (reset)
+            self.myapps_apps_sw.set_vadjustment(Gtk.Adjustment())
         else:
             print("myapps perm is 0 so you can not use myapps button")
 
@@ -4493,6 +4497,8 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("myapps")
         self.myappsstack.set_visible_child_name("myapps")
         self.MyAppsListBox.invalidate_filter()
+        # set scroll position to top (reset)
+        self.myapps_apps_sw.set_vadjustment(Gtk.Adjustment())
 
     def on_myapps_searchentry_button_press_event(self, widget, click):
         self.homestack.set_visible_child_name("myapps")

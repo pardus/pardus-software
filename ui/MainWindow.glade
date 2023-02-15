@@ -9050,7 +9050,7 @@ Use with caution. Are you sure you want to continue?</property>
                             <property name="can-focus">False</property>
                             <property name="transition-type">slide-left-right</property>
                             <child>
-                              <object class="GtkScrolledWindow" id="myapss_apps">
+                              <object class="GtkScrolledWindow" id="myapps_apps_sw">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="shadow-type">in</property>
