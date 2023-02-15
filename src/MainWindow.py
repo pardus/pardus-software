@@ -145,12 +145,11 @@ class MainWindow(object):
         """
         # caticon = Gtk.Image.new_from_icon_name("applications-other",0)
 
-        self.searchbar = self.GtkBuilder.get_object("searchbar")
-        self.pardussearchbar = self.GtkBuilder.get_object("pardussearchbar")
-        self.reposearchbar = self.GtkBuilder.get_object("reposearchbar")
+        self.pardus_searchentry = self.GtkBuilder.get_object("pardus_searchentry")
+        self.repo_searchentry = self.GtkBuilder.get_object("repo_searchentry")
         self.myapps_searchentry = self.GtkBuilder.get_object("myapps_searchentry")
+        self.repo_searchbutton = self.GtkBuilder.get_object("repo_searchbutton")
         self.topsearchbutton = self.GtkBuilder.get_object("topsearchbutton")
-        self.reposearchbutton = self.GtkBuilder.get_object("reposearchbutton")
         self.toprevealer = self.GtkBuilder.get_object("toprevealer")
         self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")
 
@@ -821,9 +820,9 @@ class MainWindow(object):
                     if app == "":
                         app = "{}".format(self.Application.args["details"].split(".desktop")[0])
 
-                    self.reposearchbar.set_text(app)
+                    self.repo_searchentry.set_text(app)
                     self.on_repo_button_clicked(None)
-                    self.on_reposearchbutton_clicked(self.reposearchbutton)
+                    self.on_repo_searchbutton_clicked(self.repo_searchbutton)
                     for row in self.searchstore:
                         if app == row[0]:
                             self.RepoAppsTreeView.set_cursor(row.path)
@@ -2367,9 +2366,9 @@ class MainWindow(object):
                     break
 
             if not found_pardusapp:
-                self.reposearchbar.set_text(self.appname)
+                self.repo_searchentry.set_text(self.appname)
                 self.on_repo_button_clicked(self.repo_button)
-                self.on_reposearchbutton_clicked(self.reposearchbutton)
+                self.on_repo_searchbutton_clicked(self.repo_searchbutton)
                 for row in self.searchstore:
                     if self.appname == row[0]:
                         self.RepoAppsTreeView.set_cursor(row.path)
@@ -3654,7 +3653,7 @@ class MainWindow(object):
             print("wpc star error")
 
     def PardusCategoryFilterFunction(self, model, iteration, data):
-        search_entry_text = self.pardussearchbar.get_text()
+        search_entry_text = self.pardus_searchentry.get_text()
         categorynumber = int(model[iteration][2])
         category = list(model[iteration][4].split(","))
         subcategory = list(model[iteration][5].split(","))
@@ -3835,7 +3834,7 @@ class MainWindow(object):
             self.setPardusApps()
 
     # def RepoCategoryFilterFunction(self, model, iteration, data):
-    #     search_entry_text = self.reposearchbar.get_text()
+    #     search_entry_text = self.repo_searchentry.get_text()
     #     appname = model[iteration][0]
     #     categorynumber = int(model[iteration][2])
     #     category = model[iteration][1]
@@ -4142,9 +4141,9 @@ class MainWindow(object):
 
     def on_store_button_clicked(self, button):
         self.set_stack_n_search(1)
-        if self.pardussearchbar.get_text().strip() != "":
+        if self.pardus_searchentry.get_text().strip() != "":
             self.store_button_clicked = True
-            self.pardussearchbar.set_text("")
+            self.pardus_searchentry.set_text("")
         self.topsearchbutton.set_active(False)
         if self.Server.connection:
             # self.searchstack.set_visible_child_name("pardus")
@@ -4180,7 +4179,7 @@ class MainWindow(object):
                     pass
 
             self.topsearchbutton.set_active(True)
-            self.reposearchbar.grab_focus()
+            self.repo_searchentry.grab_focus()
             self.topsearchbutton.set_sensitive(True)
         else:
             print("repo perm is 0 so you can not use repo button")
@@ -4510,8 +4509,8 @@ class MainWindow(object):
         self.myappsstack.set_visible_child_name("myapps")
         self.MyAppsListBox.invalidate_filter()
 
-    def on_pardussearchbar_search_changed(self, entry_search):
-        print("on_pardussearchbar_search_changed")
+    def on_pardus_searchentry_search_changed(self, entry_search):
+        print("on_pardus_searchentry_search_changed")
         self.isPardusSearching = True
         if not self.store_button_clicked:
             self.homestack.set_visible_child_name("pardusapps")
@@ -4519,15 +4518,15 @@ class MainWindow(object):
             self.PardusCategoryFilter.refilter()
         self.store_button_clicked = False
 
-    def on_pardussearchbar_button_press_event(self, widget, click):
-        print("on_searchbar_button_press_event")
+    def on_pardus_searchentry_button_press_event(self, widget, click):
+        print("on_pardus_searchentry_button_press_event")
         self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
         self.PardusCategoryFilter.refilter()
 
-    def on_pardussearchbar_focus_in_event(self, widget, click):
-        print("on_searchbar_focus_in_event")
+    def on_pardus_searchentry_focus_in_event(self, widget, click):
+        print("on_pardus_searchentry_focus_in_event")
         self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
@@ -4548,14 +4547,14 @@ class MainWindow(object):
 
         self.PardusCategoryFilter.refilter()
 
-    def on_reposearchbutton_clicked(self, button):
+    def on_repo_searchbutton_clicked(self, button):
         # self.RepoCategoryListBox.unselect_all()
         self.isRepoSearching = True
-        # print("on_reposearchbutton_clicked")
+        # print("on_repo_searchbutton_clicked")
 
         self.searchstore = Gtk.ListStore(str, str, int, bool, str, str)
         for i in self.Package.apps:
-            if self.reposearchbar.get_text() in i["name"]:
+            if self.repo_searchentry.get_text() in i["name"]:
                 installstatus = self.Package.isinstalled(i["name"])
                 if installstatus:
                     installtext = "Remove"
@@ -4638,10 +4637,10 @@ class MainWindow(object):
         if self.topsearchbutton.get_active():
             self.toprevealer.set_reveal_child(True)
             if self.searchstack.get_visible_child_name() == "pardus":
-                self.pardussearchbar.grab_focus()
+                self.pardus_searchentry.grab_focus()
                 print("in grab focus")
             elif self.searchstack.get_visible_child_name() == "repo":
-                self.reposearchbar.grab_focus()
+                self.repo_searchentry.grab_focus()
             elif self.searchstack.get_visible_child_name() == "myapps":
                 self.myapps_searchentry.grab_focus()
                 if not len(self.MyAppsListBox) > 0:
@@ -4658,16 +4657,16 @@ class MainWindow(object):
             if self.homestack.get_visible_child_name() == "pardushome" or self.homestack.get_visible_child_name() == "pardusapps":
                 if not self.topsearchbutton.get_active():
                     if event.string.isdigit() or event.string.isalpha():
-                        self.pardussearchbar.get_buffer().delete_text(0, -1)
-                        self.pardussearchbar.grab_focus()
+                        self.pardus_searchentry.get_buffer().delete_text(0, -1)
+                        self.pardus_searchentry.grab_focus()
                         self.topsearchbutton.set_active(True)
                         self.toprevealer.set_reveal_child(True)
-                        self.pardussearchbar.get_buffer().insert_text(1, event.string, 1)
-                        self.pardussearchbar.set_position(2)
+                        self.pardus_searchentry.get_buffer().insert_text(1, event.string, 1)
+                        self.pardus_searchentry.set_position(2)
                         return True
                 else:
                     if event.keyval == Gdk.KEY_Escape:
-                        self.pardussearchbar.get_buffer().delete_text(0, -1)
+                        self.pardus_searchentry.get_buffer().delete_text(0, -1)
                         self.topsearchbutton.set_active(False)
                         self.toprevealer.set_reveal_child(False)
                         return True
@@ -4884,9 +4883,9 @@ class MainWindow(object):
     def on_install_matplotlib_button_clicked(self, button):
         self.matplot_install_clicked = True
         app = "python3-matplotlib"
-        self.reposearchbar.set_text(app)
+        self.repo_searchentry.set_text(app)
         self.on_repo_button_clicked(None)
-        self.on_reposearchbutton_clicked(self.reposearchbutton)
+        self.on_repo_searchbutton_clicked(self.repo_searchbutton)
         for row in self.searchstore:
             if app == row[0]:
                 self.RepoAppsTreeView.set_cursor(row.path)

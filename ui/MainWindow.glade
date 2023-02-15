@@ -1511,59 +1511,59 @@ so that the OS has nothing to do with the health of the application.</property>
                     <property name="hexpand">True</property>
                     <property name="transition-type">slide-up</property>
                     <child>
-                      <object class="GtkSearchEntry" id="pardussearchbar">
+                      <object class="GtkSearchEntry" id="pardus_searchentry">
                         <property name="width-request">200</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="halign">center</property>
-                        <property name="hexpand">True</property>
                         <property name="primary-icon-name">edit-find-symbolic</property>
                         <property name="primary-icon-activatable">False</property>
                         <property name="primary-icon-sensitive">False</property>
                         <property name="placeholder-text" translatable="yes">Search an app</property>
-                        <signal name="button-press-event" handler="on_pardussearchbar_button_press_event" swapped="no"/>
-                        <signal name="focus-in-event" handler="on_pardussearchbar_focus_in_event" swapped="no"/>
-                        <signal name="search-changed" handler="on_pardussearchbar_search_changed" swapped="no"/>
+                        <signal name="button-press-event" handler="on_pardus_searchentry_button_press_event" swapped="no"/>
+                        <signal name="focus-in-event" handler="on_pardus_searchentry_focus_in_event" swapped="no"/>
+                        <signal name="search-changed" handler="on_pardus_searchentry_search_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="name">pardus</property>
                       </packing>
                     </child>
                     <child>
-                      <!-- n-columns=2 n-rows=1 -->
-                      <object class="GtkGrid">
+                      <object class="GtkBox" id="reposearch_box">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="column-spacing">5</property>
+                        <property name="halign">center</property>
+                        <property name="spacing">5</property>
                         <child>
-                          <object class="GtkSearchEntry" id="reposearchbar">
+                          <object class="GtkSearchEntry" id="repo_searchentry">
                             <property name="width-request">200</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="halign">center</property>
-                            <property name="hexpand">True</property>
                             <property name="primary-icon-name">edit-find-symbolic</property>
                             <property name="primary-icon-activatable">False</property>
                             <property name="primary-icon-sensitive">False</property>
                             <property name="placeholder-text" translatable="yes">Search an app in repo</property>
-                            <signal name="activate" handler="on_reposearchbutton_clicked" swapped="no"/>
+                            <signal name="activate" handler="on_repo_searchbutton_clicked" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="left-attach">0</property>
-                            <property name="top-attach">0</property>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="reposearchbutton">
+                          <object class="GtkButton" id="repo_searchbutton">
                             <property name="label" translatable="yes">Search</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <signal name="clicked" handler="on_reposearchbutton_clicked" swapped="no"/>
+                            <property name="halign">start</property>
+                            <signal name="clicked" handler="on_repo_searchbutton_clicked" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="left-attach">1</property>
-                            <property name="top-attach">0</property>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
@@ -1578,7 +1578,6 @@ so that the OS has nothing to do with the health of the application.</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="halign">center</property>
-                        <property name="hexpand">True</property>
                         <property name="primary-icon-name">edit-find-symbolic</property>
                         <property name="primary-icon-activatable">False</property>
                         <property name="primary-icon-sensitive">False</property>
