@@ -294,10 +294,11 @@ class MainWindow(object):
         self.rdetail = self.GtkBuilder.get_object("rdetail")
         self.rbotstack = self.GtkBuilder.get_object("rbotstack")
 
-        self.topbutton1 = self.GtkBuilder.get_object("topbutton1")
-        self.topbutton1.get_style_context().add_class("suggested-action")
-        self.topbutton2 = self.GtkBuilder.get_object("topbutton2")
-        self.queuebutton = self.GtkBuilder.get_object("queuebutton")
+        self.store_button = self.GtkBuilder.get_object("store_button")
+        self.store_button.get_style_context().add_class("suggested-action")
+        self.repo_button = self.GtkBuilder.get_object("repo_button")
+        self.myapps_button = self.GtkBuilder.get_object("myapps_button")
+        self.queue_button = self.GtkBuilder.get_object("queue_button")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
@@ -442,7 +443,6 @@ class MainWindow(object):
         self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
 
         self.menu_suggestapp = self.GtkBuilder.get_object("menu_suggestapp")
-        self.topbutton3 = self.GtkBuilder.get_object("topbutton3")
         self.menu_statistics = self.GtkBuilder.get_object("menu_statistics")
 
         self.SuggestAppName = self.GtkBuilder.get_object("SuggestAppName")
@@ -495,6 +495,8 @@ class MainWindow(object):
         self.repoappname = ""
         self.repoappclicked = False
 
+        self.store_button_clicked = False
+
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
         # self.PardusCategoryFilter.refilter()
@@ -528,9 +530,9 @@ class MainWindow(object):
 
         self.HeaderBarMenuButton.set_sensitive(False)
         self.menubackbutton.set_sensitive(False)
-        self.topbutton1.set_sensitive(False)
-        self.topbutton2.set_sensitive(False)
-        self.topbutton3.set_sensitive(False)
+        self.store_button.set_sensitive(False)
+        self.repo_button.set_sensitive(False)
+        self.myapps_button.set_sensitive(False)
         self.topsearchbutton.set_sensitive(False)
 
         self.fromexternal = False
@@ -588,8 +590,6 @@ class MainWindow(object):
                                    "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
 
         self.prefback = "pardushome"
-
-        self.statusoftopsearch = self.topsearchbutton.get_active()
 
         self.errormessage = ""
         self.grouperrormessage = ""
@@ -820,7 +820,7 @@ class MainWindow(object):
                         app = "{}".format(self.Application.args["details"].split(".desktop")[0])
 
                     self.reposearchbar.set_text(app)
-                    self.on_topbutton2_clicked(None)
+                    self.on_repo_button_clicked(None)
                     self.on_reposearchbutton_clicked(self.reposearchbutton)
                     for row in self.searchstore:
                         if app == row[0]:
@@ -848,14 +848,14 @@ class MainWindow(object):
                 GLib.idle_add(self.topsearchbutton.set_sensitive, True)
                 GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
                 if self.myapps_perm == 1:
-                    GLib.idle_add(self.topbutton3.set_sensitive, True)
+                    GLib.idle_add(self.myapps_button.set_sensitive, True)
                 else:
-                    GLib.idle_add(self.topbutton3.set_sensitive, False)
+                    GLib.idle_add(self.myapps_button.set_sensitive, False)
                 GLib.idle_add(self.menu_statistics.set_sensitive, True)
             else:
                 self.homestack.set_visible_child_name("fixapt")
                 GLib.idle_add(self.topsearchbutton.set_sensitive, False)
-                GLib.idle_add(self.topbutton3.set_sensitive, False)
+                GLib.idle_add(self.myapps_button.set_sensitive, False)
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
@@ -864,24 +864,24 @@ class MainWindow(object):
             GLib.idle_add(self.topsearchbutton.set_sensitive, False)
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
             if self.myapps_perm == 1:
-                GLib.idle_add(self.topbutton3.set_sensitive, True)
+                GLib.idle_add(self.myapps_button.set_sensitive, True)
             else:
-                GLib.idle_add(self.topbutton3.set_sensitive, False)
+                GLib.idle_add(self.myapps_button.set_sensitive, False)
             GLib.idle_add(self.menu_statistics.set_sensitive, False)
 
         self.splashspinner.stop()
         self.splashlabel.set_text("")
 
         GLib.idle_add(self.HeaderBarMenuButton.set_sensitive, True)
-        GLib.idle_add(self.topbutton1.set_sensitive, True)
+        GLib.idle_add(self.store_button.set_sensitive, True)
         if self.repo_perm == 1:
-            GLib.idle_add(self.topbutton2.set_sensitive, True)
+            GLib.idle_add(self.repo_button.set_sensitive, True)
         else:
-            GLib.idle_add(self.topbutton2.set_sensitive, False)
+            GLib.idle_add(self.repo_button.set_sensitive, False)
 
         if self.Server.connection and self.isbroken:
-            GLib.idle_add(self.topbutton1.set_sensitive, False)
-            GLib.idle_add(self.topbutton2.set_sensitive, False)
+            GLib.idle_add(self.store_button.set_sensitive, False)
+            GLib.idle_add(self.repo_button.set_sensitive, False)
 
         print("page setted to normal")
 
@@ -1096,7 +1096,7 @@ class MainWindow(object):
 
         elif self.repo_perm == 0:
             print("repo_perm is 0 so repo apps not setting")
-            self.topbutton2.set_sensitive(False)
+            self.repo_button.set_sensitive(False)
 
         # if self.useDynamicListStore:
         #
@@ -2084,6 +2084,7 @@ class MainWindow(object):
             elif self.frommyapps:
                 self.homestack.set_visible_child_name("myapps")
                 self.set_stack_n_search(3)
+                self.menubackbutton.set_sensitive(False)
             else:
                 if self.fromqueue:
                     self.homestack.set_visible_child_name("queue")
@@ -2095,42 +2096,24 @@ class MainWindow(object):
         elif hsname == "myapps":
 
             self.set_stack_n_search(3)
+            self.menubackbutton.set_sensitive(False)
 
             masname = self.myappsstack.get_visible_child_name()
-            if masname == "myapps":
-                if self.prefback == "pardushome" and not self.Server.connection:
-                    self.homestack.set_visible_child_name("noserver")
-                else:
-                    self.homestack.set_visible_child_name(self.prefback)
-                hsma = self.homestack.get_visible_child_name()
-                if  hsma == "pardushome":
-                    self.set_stack_n_search(1)
-                    self.menubackbutton.set_sensitive(False)
-                elif  hsma == "pardusapps" or hsma == "pardusappsdetail":
-                    self.set_stack_n_search(1)
-                elif hsma == "noserver":
-                    self.set_stack_n_search(1)
-                    self.menubackbutton.set_sensitive(False)
-                    self.topsearchbutton.set_sensitive(False)
-                elif hsma == "repohome":
-                    self.set_stack_n_search(2)
-                elif hsma == "queue":
-                    self.set_stack_n_search(4)
-            elif masname == "details":
+            if masname == "details":
                 madsname = self.myappsdetailsstack.get_visible_child_name()
                 if madsname == "details":
                     self.myappsstack.set_visible_child_name("myapps")
                 elif madsname == "disclaimer":
                     self.myappsdetailsstack.set_visible_child_name("details")
+                    self.menubackbutton.set_sensitive(True)
             elif masname == "notfound":
+                self.menubackbutton.set_sensitive(True)
                 self.myappsstack.set_visible_child_name("myapps")
-
 
         elif hsname == "preferences" or hsname == "repohome" or hsname == "updates" or hsname == "suggestapp" or hsname == "queue" or hsname == "statistics":
 
             self.homestack.set_visible_child_name(self.prefback)
 
-            self.topsearchbutton.set_active(self.statusoftopsearch)
             if not self.isbroken:
                 self.topsearchbutton.set_sensitive(True)
 
@@ -2164,44 +2147,44 @@ class MainWindow(object):
         id:  1 = pardus, 2 = repo, 3 = myapps, 4 = queue
         '''
         if id == 1:
-            if not self.topbutton1.get_style_context().has_class("suggested-action"):
-                self.topbutton1.get_style_context().add_class("suggested-action")
+            if not self.store_button.get_style_context().has_class("suggested-action"):
+                self.store_button.get_style_context().add_class("suggested-action")
             self.searchstack.set_visible_child_name("pardus")
-            if self.topbutton2.get_style_context().has_class("suggested-action"):
-                self.topbutton2.get_style_context().remove_class("suggested-action")
-            if self.topbutton3.get_style_context().has_class("suggested-action"):
-                self.topbutton3.get_style_context().remove_class("suggested-action")
-            if self.queuebutton.get_style_context().has_class("suggested-action"):
-                self.queuebutton.get_style_context().remove_class("suggested-action")
+            if self.repo_button.get_style_context().has_class("suggested-action"):
+                self.repo_button.get_style_context().remove_class("suggested-action")
+            if self.myapps_button.get_style_context().has_class("suggested-action"):
+                self.myapps_button.get_style_context().remove_class("suggested-action")
+            if self.queue_button.get_style_context().has_class("suggested-action"):
+                self.queue_button.get_style_context().remove_class("suggested-action")
         elif id == 2:
-            if not self.topbutton2.get_style_context().has_class("suggested-action"):
-                self.topbutton2.get_style_context().add_class("suggested-action")
+            if not self.repo_button.get_style_context().has_class("suggested-action"):
+                self.repo_button.get_style_context().add_class("suggested-action")
             self.searchstack.set_visible_child_name("repo")
-            if self.topbutton1.get_style_context().has_class("suggested-action"):
-                self.topbutton1.get_style_context().remove_class("suggested-action")
-            if self.topbutton3.get_style_context().has_class("suggested-action"):
-                self.topbutton3.get_style_context().remove_class("suggested-action")
-            if self.queuebutton.get_style_context().has_class("suggested-action"):
-                self.queuebutton.get_style_context().remove_class("suggested-action")
+            if self.store_button.get_style_context().has_class("suggested-action"):
+                self.store_button.get_style_context().remove_class("suggested-action")
+            if self.myapps_button.get_style_context().has_class("suggested-action"):
+                self.myapps_button.get_style_context().remove_class("suggested-action")
+            if self.queue_button.get_style_context().has_class("suggested-action"):
+                self.queue_button.get_style_context().remove_class("suggested-action")
         elif id == 3:
-            if not self.topbutton3.get_style_context().has_class("suggested-action"):
-                self.topbutton3.get_style_context().add_class("suggested-action")
+            if not self.myapps_button.get_style_context().has_class("suggested-action"):
+                self.myapps_button.get_style_context().add_class("suggested-action")
             self.searchstack.set_visible_child_name("myapps")
-            if self.topbutton1.get_style_context().has_class("suggested-action"):
-                self.topbutton1.get_style_context().remove_class("suggested-action")
-            if self.topbutton2.get_style_context().has_class("suggested-action"):
-                self.topbutton2.get_style_context().remove_class("suggested-action")
-            if self.queuebutton.get_style_context().has_class("suggested-action"):
-                self.queuebutton.get_style_context().remove_class("suggested-action")
+            if self.store_button.get_style_context().has_class("suggested-action"):
+                self.store_button.get_style_context().remove_class("suggested-action")
+            if self.repo_button.get_style_context().has_class("suggested-action"):
+                self.repo_button.get_style_context().remove_class("suggested-action")
+            if self.queue_button.get_style_context().has_class("suggested-action"):
+                self.queue_button.get_style_context().remove_class("suggested-action")
         elif id == 4:
-            if not self.queuebutton.get_style_context().has_class("suggested-action"):
-                self.queuebutton.get_style_context().add_class("suggested-action")
-            if self.topbutton1.get_style_context().has_class("suggested-action"):
-                self.topbutton1.get_style_context().remove_class("suggested-action")
-            if self.topbutton2.get_style_context().has_class("suggested-action"):
-                self.topbutton2.get_style_context().remove_class("suggested-action")
-            if self.topbutton3.get_style_context().has_class("suggested-action"):
-                self.topbutton3.get_style_context().remove_class("suggested-action")
+            if not self.queue_button.get_style_context().has_class("suggested-action"):
+                self.queue_button.get_style_context().add_class("suggested-action")
+            if self.store_button.get_style_context().has_class("suggested-action"):
+                self.store_button.get_style_context().remove_class("suggested-action")
+            if self.repo_button.get_style_context().has_class("suggested-action"):
+                self.repo_button.get_style_context().remove_class("suggested-action")
+            if self.myapps_button.get_style_context().has_class("suggested-action"):
+                self.myapps_button.get_style_context().remove_class("suggested-action")
 
     def set_button_class(self, button, state):
         # state 0 = app is not installed
@@ -2383,7 +2366,7 @@ class MainWindow(object):
 
             if not found_pardusapp:
                 self.reposearchbar.set_text(self.appname)
-                self.on_topbutton2_clicked(self.topbutton2)
+                self.on_repo_button_clicked(self.repo_button)
                 self.on_reposearchbutton_clicked(self.reposearchbutton)
                 for row in self.searchstore:
                     if self.appname == row[0]:
@@ -2849,6 +2832,7 @@ class MainWindow(object):
             else:
                 self.myappsstack.set_visible_child_name("details")
                 self.myappsdetailsstack.set_visible_child_name("details")
+                self.menubackbutton.set_sensitive(True)
 
         else:
             print("package not found")
@@ -4154,38 +4138,37 @@ class MainWindow(object):
             self.inprogress = True
             print("action " + self.appname)
 
-    def on_topbutton1_clicked(self, button):
+    def on_store_button_clicked(self, button):
         self.set_stack_n_search(1)
+        if self.pardussearchbar.get_text().strip() != "":
+            self.store_button_clicked = True
+            self.pardussearchbar.set_text("")
+        self.topsearchbutton.set_active(False)
         if self.Server.connection:
             # self.searchstack.set_visible_child_name("pardus")
             self.homestack.set_visible_child_name("pardushome")
             self.EditorAppsIconView.unselect_all()
             self.PardusAppsIconView.unselect_all()
-            self.topsearchbutton.set_active(self.statusoftopsearch)
             self.topsearchbutton.set_sensitive(True)
         else:
             self.searchstack.set_visible_child_name("noserver")
             self.homestack.set_visible_child_name("noserver")
-            self.topsearchbutton.set_active(False)
             self.topsearchbutton.set_sensitive(False)
         self.menubackbutton.set_sensitive(False)
 
-    def on_topbutton2_clicked(self, button):
+
+    def on_repo_button_clicked(self, button):
         if self.repo_perm == 1:
-            if button is not None:
-                self.menubackbutton.set_sensitive(True)
-            else:
-                self.menubackbutton.set_sensitive(False)
+
+            self.menubackbutton.set_sensitive(False)
             self.prefback = self.homestack.get_visible_child_name()
 
             self.homestack.set_visible_child_name("repohome")
             self.set_stack_n_search(2)
 
             # control for active actioned app
-
             if self.repoappclicked:
                 self.RepoAppsTreeView.row_activated(self.activerepopath, self.RepoAppsTreeView.get_column(0))
-
                 # Updating status tick of repo apps
                 try:
                     for row in self.searchstore:
@@ -4194,36 +4177,30 @@ class MainWindow(object):
                 except:
                     pass
 
-            self.statusoftopsearch = self.topsearchbutton.get_active()
             self.topsearchbutton.set_active(True)
             self.reposearchbar.grab_focus()
-
             self.topsearchbutton.set_sensitive(True)
         else:
             print("repo perm is 0 so you can not use repo button")
 
-    def on_topbutton3_clicked(self, button):
-
+    def on_myapps_button_clicked(self, button):
         if self.myapps_perm == 1:
-
             if button is not None:
                 self.prefback = self.homestack.get_visible_child_name()
             else:
                 self.prefback = "pardushome"
+            self.menubackbutton.set_sensitive(False)
             self.set_stack_n_search(3)
+            if self.myapps_searchentry.get_text().strip() != "":
+                self.myapps_searchentry.set_text("")
+            self.topsearchbutton.set_active(False)
             self.topsearchbutton.set_sensitive(True)
-            self.topsearchbutton.set_active(self.statusoftopsearch)
-            if self.myapps_searchentry.get_text() != "":
-                self.topsearchbutton.set_active(True)
-            self.menubackbutton.set_sensitive(True)
             self.homestack.set_visible_child_name("myapps")
             self.myappsstack.set_visible_child_name("myapps")
-
         else:
             print("myapps perm is 0 so you can not use myapps button")
 
-
-    def on_queuebutton_clicked(self, button):
+    def on_queue_button_clicked(self, button):
         self.menubackbutton.set_sensitive(True)
         self.prefback = self.homestack.get_visible_child_name()
         self.homestack.set_visible_child_name("queue")
@@ -4366,10 +4343,11 @@ class MainWindow(object):
         self.openDesktop(os.path.basename(button.name))
 
     def on_ui_myapps_cancel_clicked(self, button):
+        self.menubackbutton.set_sensitive(False)
         self.myappsstack.set_visible_child_name("myapps")
         if not len(self.MyAppsListBox) > 0:
             print("MyAppsListBox creating")
-            GLib.idle_add(self.on_topbutton3_clicked, None)
+            GLib.idle_add(self.on_myapps_button_clicked, None)
 
     def on_ui_myapps_cancel_disclaimer_clicked(self, button):
         self.myappsdetailsstack.set_visible_child_name("details")
@@ -4527,39 +4505,38 @@ class MainWindow(object):
         self.MyAppsListBox.invalidate_filter()
 
     def on_pardussearchbar_search_changed(self, entry_search):
+        print("on_pardussearchbar_search_changed")
         self.isPardusSearching = True
-        self.homestack.set_visible_child_name("pardusapps")
-        self.menubackbutton.set_sensitive(True)
-        # self.SearchFilter.refilter()
-        self.PardusCategoryFilter.refilter()
+        if not self.store_button_clicked:
+            self.homestack.set_visible_child_name("pardusapps")
+            self.menubackbutton.set_sensitive(True)
+            self.PardusCategoryFilter.refilter()
+        self.store_button_clicked = False
 
     def on_pardussearchbar_button_press_event(self, widget, click):
+        print("on_searchbar_button_press_event")
         self.homestack.set_visible_child_name("pardusapps")
-        # self.SearchFilter.refilter()
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
-        print("on_searchbar_button_press_event")
         self.PardusCategoryFilter.refilter()
 
     def on_pardussearchbar_focus_in_event(self, widget, click):
+        print("on_searchbar_focus_in_event")
         self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
-        print("on_searchbar_focus_in_event")
         self.isPardusSearching = True
-        self.PardusAppsIconView.unselect_all()
 
+        self.PardusAppsIconView.unselect_all()
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon("all", 32)
         else:
             pixbuf = self.getSystemCatIcon("all", 32)
-
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(_("all").title())
         if self.locale == "tr":
             self.PardusCurrentCategoryString = "tümü"
         else:
             self.PardusCurrentCategoryString = "all"
-
         self.SubCatCombo.remove_all()
         self.SubCatCombo.set_visible(False)
 
@@ -4663,10 +4640,9 @@ class MainWindow(object):
                 self.myapps_searchentry.grab_focus()
                 if not len(self.MyAppsListBox) > 0:
                     print("MyAppsListBox creating")
-                    self.on_topbutton3_clicked(None)
+                    self.on_myapps_button_clicked(None)
         else:
             self.toprevealer.set_reveal_child(False)
-            self.statusoftopsearch = False
 
     # def on_HeaderBarMenuButton_toggled(self, button):
     #     self.HeaderBarMenuButton.grab_focus()
@@ -4724,10 +4700,10 @@ class MainWindow(object):
         self.switchAPTU.set_state(self.UserSettings.config_aptup)
         self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
             _("Server Address"), self.Server.serverurl))
-        self.topbutton1.get_style_context().remove_class("suggested-action")
-        self.topbutton2.get_style_context().remove_class("suggested-action")
-        self.topbutton3.get_style_context().remove_class("suggested-action")
-        self.queuebutton.get_style_context().remove_class("suggested-action")
+        self.store_button.get_style_context().remove_class("suggested-action")
+        self.repo_button.get_style_context().remove_class("suggested-action")
+        self.myapps_button.get_style_context().remove_class("suggested-action")
+        self.queue_button.get_style_context().remove_class("suggested-action")
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
         self.preflabel_settext("")
@@ -4773,10 +4749,10 @@ class MainWindow(object):
         self.topsearchbutton.set_sensitive(False)
         self.menubackbutton.set_sensitive(True)
         self.homestack.set_visible_child_name("statistics")
-        self.topbutton1.get_style_context().remove_class("suggested-action")
-        self.topbutton2.get_style_context().remove_class("suggested-action")
-        self.topbutton3.get_style_context().remove_class("suggested-action")
-        self.queuebutton.get_style_context().remove_class("suggested-action")
+        self.store_button.get_style_context().remove_class("suggested-action")
+        self.repo_button.get_style_context().remove_class("suggested-action")
+        self.myapps_button.get_style_context().remove_class("suggested-action")
+        self.queue_button.get_style_context().remove_class("suggested-action")
 
         if self.Server.connection:
             GLib.idle_add(self.setStatistics)
@@ -4903,7 +4879,7 @@ class MainWindow(object):
         self.matplot_install_clicked = True
         app = "python3-matplotlib"
         self.reposearchbar.set_text(app)
-        self.on_topbutton2_clicked(None)
+        self.on_repo_button_clicked(None)
         self.on_reposearchbutton_clicked(self.reposearchbutton)
         for row in self.searchstore:
             if app == row[0]:
@@ -4917,10 +4893,10 @@ class MainWindow(object):
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
         self.homestack.set_visible_child_name("updates")
-        self.topbutton1.get_style_context().remove_class("suggested-action")
-        self.topbutton2.get_style_context().remove_class("suggested-action")
-        self.topbutton3.get_style_context().remove_class("suggested-action")
-        self.queuebutton.get_style_context().remove_class("suggested-action")
+        self.store_button.get_style_context().remove_class("suggested-action")
+        self.repo_button.get_style_context().remove_class("suggested-action")
+        self.myapps_button.get_style_context().remove_class("suggested-action")
+        self.queue_button.get_style_context().remove_class("suggested-action")
         self.updateerrorlabel.set_text("")
 
     def on_menu_about_clicked(self, button):
@@ -4934,10 +4910,10 @@ class MainWindow(object):
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
-        self.topbutton1.get_style_context().remove_class("suggested-action")
-        self.topbutton2.get_style_context().remove_class("suggested-action")
-        self.topbutton3.get_style_context().remove_class("suggested-action")
-        self.queuebutton.get_style_context().remove_class("suggested-action")
+        self.store_button.get_style_context().remove_class("suggested-action")
+        self.repo_button.get_style_context().remove_class("suggested-action")
+        self.myapps_button.get_style_context().remove_class("suggested-action")
+        self.queue_button.get_style_context().remove_class("suggested-action")
         self.SuggestCat.remove_all()
         self.SuggestCat.append_text(_("Select Category"))
         self.SuggestCat.set_active(0)
@@ -6221,14 +6197,14 @@ class MainWindow(object):
                 self.Package.getApps()
                 GLib.idle_add(self.topsearchbutton.set_sensitive, True)
                 if self.myapps_perm == 1:
-                    GLib.idle_add(self.topbutton3.set_sensitive, True)
+                    GLib.idle_add(self.myapps_button.set_sensitive, True)
                 else:
-                    GLib.idle_add(self.topbutton3.set_sensitive, False)
-                GLib.idle_add(self.topbutton1.set_sensitive, True)
+                    GLib.idle_add(self.myapps_button.set_sensitive, False)
+                GLib.idle_add(self.store_button.set_sensitive, True)
                 if self.repo_perm == 1:
-                    GLib.idle_add(self.topbutton2.set_sensitive, True)
+                    GLib.idle_add(self.repo_button.set_sensitive, True)
                 else:
-                    GLib.idle_add(self.topbutton2.set_sensitive, False)
+                    GLib.idle_add(self.repo_button.set_sensitive, False)
             else:
                 self.tryfixstack.set_visible_child_name("error")
                 self.isbroken = True
