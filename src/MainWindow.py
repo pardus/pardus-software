@@ -2758,20 +2758,14 @@ class MainWindow(object):
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
         self.ui_myapps_spinner.stop()
-        if popup:
-            self.ui_myapp_pop_toremove_box.set_visible(False)
-            self.ui_myapp_pop_toinstall_box.set_visible(False)
-            self.ui_myapp_pop_broken_box.set_visible(False)
-            self.ui_myapp_pop_fsize_box.set_visible(False)
-            self.ui_myapp_pop_dsize_box.set_visible(False)
-            self.ui_myapp_pop_isize_box.set_visible(False)
-        else:
+        if not popup:
             self.ui_myapp_toremove_box.set_visible(False)
             self.ui_myapp_toinstall_box.set_visible(False)
             self.ui_myapp_broken_box.set_visible(False)
             self.ui_myapp_fsize_box.set_visible(False)
             self.ui_myapp_dsize_box.set_visible(False)
             self.ui_myapp_isize_box.set_visible(False)
+
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
             if popup:
@@ -4350,6 +4344,13 @@ class MainWindow(object):
 
     def remove_from_myapps(self, button):
         print(button.name)
+
+        self.ui_myapp_pop_toremove_box.set_visible(False)
+        self.ui_myapp_pop_toinstall_box.set_visible(False)
+        self.ui_myapp_pop_broken_box.set_visible(False)
+        self.ui_myapp_pop_fsize_box.set_visible(False)
+        self.ui_myapp_pop_dsize_box.set_visible(False)
+        self.ui_myapp_pop_isize_box.set_visible(False)
 
         self.ui_myapp_pop_spinner.start()
         self.ui_myapp_pop_stack.set_visible_child_name("spinner")
