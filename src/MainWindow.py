@@ -4552,16 +4552,30 @@ class MainWindow(object):
         self.isRepoSearching = True
         # print("on_repo_searchbutton_clicked")
 
+        reposearch_list_tmp = []
+        self.reposearch_list = []
+        text = self.repo_searchentry.get_text()
+
         self.searchstore = Gtk.ListStore(str, str, int, bool, str, str)
+
         for i in self.Package.apps:
-            if self.repo_searchentry.get_text() in i["name"]:
-                installstatus = self.Package.isinstalled(i["name"])
-                if installstatus:
-                    installtext = "Remove"
-                else:
-                    installtext = "Install"
-                self.searchstore.append(
-                    [i["name"], i["category"], 0, installstatus, installtext, self.Package.summary(i["name"])])
+            if text in i["name"]:
+                reposearch_list_tmp.append({"name": i["name"], "category": i["category"]})
+
+        for t in reposearch_list_tmp:
+            if t["name"].startswith(text):
+                self.reposearch_list.append({"name": t["name"], "category": t["category"]})
+
+        for tt in reposearch_list_tmp:
+            self.reposearch_list.append({"name": tt["name"], "category": tt["category"]})
+
+        self.reposearch_list = list({v["name"]: v for v in self.reposearch_list}.values())
+
+        for package in self.reposearch_list:
+            installstatus = self.Package.isinstalled(package["name"])
+            installtext = "Remove" if installstatus else "Install"
+            self.searchstore.append(
+                [package["name"], package["category"], 0, installstatus, installtext, self.Package.summary(package["name"])])
 
         self.RepoAppsTreeView.set_model(self.searchstore)
         self.RepoAppsTreeView.show_all()
