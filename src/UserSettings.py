@@ -20,10 +20,8 @@ class UserSettings(object):
         self.userdistro = ", ".join(filter(bool, distro.linux_distribution()))
 
         userhome = str(Path.home())
-        try:
-            self.username = userhome.split("/")[-1]
-        except:
-            self.username = ""
+        self.username = userhome.rsplit(“/”, maxsplit=1)[-1]
+
         self.configdir = userhome + "/.config/pardus-software/"
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser(strict=False)
