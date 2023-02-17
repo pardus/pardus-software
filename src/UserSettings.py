@@ -12,25 +12,12 @@ import configparser, distro
 
 class UserSettings(object):
     def __init__(self):
-
-        try:
-            self.userdistroid = distro.id().lower()
-        except:
-            self.userdistroid = ""
-        try:
-            self.userdistroversion = distro.major_version().lower()
-        except:
-            self.userdistroversion = ""
-        try:
-            self.usercodename = distro.codename().lower()
-            if self.usercodename == "etap":
-                self.usercodename = self.usercodename + self.userdistroversion
-        except:
-            self.usercodename = ""
-        try:
-            self.userdistro = ", ".join(distro.linux_distribution())
-        except:
-            self.userdistro = ""
+        self.userdistroid = distro.id()
+        self.userdistroversion = distro.major_version().lower()
+        self.usercodename = distro.codename().lower()
+        if self.usercodename == "etap":
+            self.usercodename = self.usercodename + self.userdistroversion
+        self.userdistro = ", ".join(filter(bool, distro.linux_distribution()))
 
         userhome = str(Path.home())
         try:
