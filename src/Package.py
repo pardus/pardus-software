@@ -71,10 +71,7 @@ class Package(object):
             package = self.cache[packagename]
         except:
             return None
-        if package.is_installed:
-            return True
-        else:
-            return False
+        return package.is_installed
 
     def missingdeps(self, packagename):
         package = self.cache[packagename]
@@ -141,18 +138,14 @@ class Package(object):
 
     def summary(self, packagename):
         # Return the short description (one line summary)
+        package = self.cache.get(packagename)
+        if package is None: return “”
         try:
-            package = self.cache[packagename]
-        except:
-            return ""
-        try:
-            summ = package.candidate.summary
-        except:
-            try:
-                summ = package.versions[0].summary
-            except:
-                summ = "Summary is not found"
-        return summ
+            return package.candidate.summary
+        except AttributeError:
+            sum = package.versions.get(0)
+        return sum.summary if hasattr(sum, "summary") else "Summary is not found"
+
 
     def version(self, packagename):
         package = self.cache[packagename]
