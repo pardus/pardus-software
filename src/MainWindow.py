@@ -289,9 +289,16 @@ class MainWindow(object):
         self.wpcstar = 0
 
         self.raction = self.GtkBuilder.get_object("raction")
+        self.rpackage = self.GtkBuilder.get_object("rpackage_name")
         self.rtitle = self.GtkBuilder.get_object("rtitle")
         self.rdetail = self.GtkBuilder.get_object("rdetail")
-        self.rbotstack = self.GtkBuilder.get_object("rbotstack")
+        self.r_maintainername = self.GtkBuilder.get_object("r_maintainername")
+        self.r_maintainermail = self.GtkBuilder.get_object("r_maintainermail")
+        self.r_homepage = self.GtkBuilder.get_object("r_homepage")
+        self.r_section = self.GtkBuilder.get_object("r_section")
+        self.r_size = self.GtkBuilder.get_object("r_size")
+        self.r_architecture = self.GtkBuilder.get_object("r_architecture")
+        self.rstack = self.GtkBuilder.get_object("rstack")
 
         self.store_button = self.GtkBuilder.get_object("store_button")
         self.store_button.get_style_context().add_class("suggested-action")
@@ -824,7 +831,7 @@ class MainWindow(object):
                     self.on_repo_button_clicked(None)
                     self.on_repo_searchbutton_clicked(self.repo_searchbutton)
                     for row in self.searchstore:
-                        if app == row[0]:
+                        if app == row[1]:
                             self.RepoAppsTreeView.set_cursor(row.path)
                             self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
             except Exception as e:
@@ -1061,21 +1068,21 @@ class MainWindow(object):
             if not self.repoappsinit:
                 renderer_toggle = Gtk.CellRendererToggle()
                 renderer_toggle.connect("toggled", self.on_cell_toggled)
-                column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=3)
+                column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=0)
                 column_toggle.set_resizable(True)
-                column_toggle.set_sort_column_id(3)
+                column_toggle.set_sort_column_id(0)
                 self.RepoAppsTreeView.append_column(column_toggle)
 
                 renderer = Gtk.CellRendererText()
-                column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=0)
+                column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=1)
                 column_name.set_resizable(True)
-                column_name.set_sort_column_id(0)
+                column_name.set_sort_column_id(1)
                 self.RepoAppsTreeView.append_column(column_name)
 
                 renderer = Gtk.CellRendererText()
-                column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=1)
+                column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=2)
                 column_cat.set_resizable(True)
-                column_cat.set_sort_column_id(1)
+                column_cat.set_sort_column_id(2)
                 self.RepoAppsTreeView.append_column(column_cat)
 
                 # renderer_btn = CellRendererButton()
@@ -1085,11 +1092,11 @@ class MainWindow(object):
                 # column_btn.set_sort_column_id(4)
                 # self.RepoAppsTreeView.append_column(column_btn)
 
-                renderer = Gtk.CellRendererText()
-                column_desc = Gtk.TreeViewColumn(_("Description"), renderer, text=5)
-                column_desc.set_resizable(True)
-                column_desc.set_sort_column_id(5)
-                self.RepoAppsTreeView.append_column(column_desc)
+                # renderer = Gtk.CellRendererText()
+                # column_desc = Gtk.TreeViewColumn(_("Description"), renderer, text=5)
+                # column_desc.set_resizable(True)
+                # column_desc.set_sort_column_id(5)
+                # self.RepoAppsTreeView.append_column(column_desc)
 
                 self.RepoAppsTreeView.show_all()
 
@@ -1930,8 +1937,8 @@ class MainWindow(object):
             self.searchstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.searchstack.set_transition_duration(200)
 
-            self.rbotstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
-            self.rbotstack.set_transition_duration(200)
+            self.rstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT)
+            self.rstack.set_transition_duration(200)
 
             self.commentstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.commentstack.set_transition_duration(200)
@@ -1994,8 +2001,8 @@ class MainWindow(object):
             self.searchstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.searchstack.set_transition_duration(0)
 
-            self.rbotstack.set_transition_type(Gtk.StackTransitionType.NONE)
-            self.rbotstack.set_transition_duration(0)
+            self.rstack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.rstack.set_transition_duration(0)
 
             self.commentstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.commentstack.set_transition_duration(0)
@@ -2370,7 +2377,7 @@ class MainWindow(object):
                 self.on_repo_button_clicked(self.repo_button)
                 self.on_repo_searchbutton_clicked(self.repo_searchbutton)
                 for row in self.searchstore:
-                    if self.appname == row[0]:
+                    if self.appname == row[1]:
                         self.RepoAppsTreeView.set_cursor(row.path)
                         self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
                 return False
@@ -3976,16 +3983,12 @@ class MainWindow(object):
 
             if self.RepoCurrentCategory != "all" or self.RepoCurrentCategory != "tümü":
 
-                self.store = Gtk.ListStore(str, str, int, bool, str, str)
+                self.store = Gtk.ListStore(bool, str, str, str)
 
                 for i in self.repoapps[self.RepoCurrentCategory]:
                     installstatus = self.Package.isinstalled(i["name"])
-                    if installstatus:
-                        installtext = "Remove"
-                    else:
-                        installtext = "Install"
                     self.store.append(
-                        [i["name"], i["category"], 0, installstatus, installtext, self.Package.summary(i["name"])])
+                        [installstatus, i["name"], i["category"], self.Package.summary(i["name"])])
 
                 # print(self.repoapps[self.RepoCurrentCategory])
 
@@ -4173,8 +4176,8 @@ class MainWindow(object):
                 # Updating status tick of repo apps
                 try:
                     for row in self.searchstore:
-                        installstatus = self.Package.isinstalled(row[0])
-                        row[3] = installstatus
+                        installstatus = self.Package.isinstalled(row[1])
+                        row[0] = installstatus
                 except:
                     pass
 
@@ -4556,7 +4559,7 @@ class MainWindow(object):
         self.reposearch_list = []
         text = self.repo_searchentry.get_text()
 
-        self.searchstore = Gtk.ListStore(str, str, int, bool, str, str)
+        self.searchstore = Gtk.ListStore(bool, str, str, str)
 
         for i in self.Package.apps:
             if text in i["name"]:
@@ -4573,9 +4576,8 @@ class MainWindow(object):
 
         for package in self.reposearch_list:
             installstatus = self.Package.isinstalled(package["name"])
-            installtext = "Remove" if installstatus else "Install"
             self.searchstore.append(
-                [package["name"], package["category"], 0, installstatus, installtext, self.Package.summary(package["name"])])
+                [installstatus, package["name"], package["category"], self.Package.summary(package["name"])])
 
         self.RepoAppsTreeView.set_model(self.searchstore)
         self.RepoAppsTreeView.show_all()
@@ -4603,7 +4605,8 @@ class MainWindow(object):
         self.activerepopath = path
 
         iter = self.searchstore.get_iter(path)
-        value = self.searchstore.get_value(iter, 0)
+        value = self.searchstore.get_value(iter, 1)
+        section = self.searchstore.get_value(iter, 2)
         # print(value)
 
         self.repoappname = value
@@ -4643,9 +4646,55 @@ class MainWindow(object):
                         self.raction.set_label(_(" Installing"))
                     self.raction.set_sensitive(False)
 
-        self.rbotstack.set_visible_child_name("page1")
-        self.rtitle.set_text(self.Package.summary(value))
-        self.rdetail.set_text(self.Package.description(value, False))
+        summary = self.Package.summary(value)
+        description = self.Package.adv_description(value)
+        maintainer_name, maintainer_mail, homepage, size, arch = self.Package.get_records(value)
+
+        self.rstack.set_visible_child_name("package")
+        self.rpackage.set_markup("<span size='x-large'><b>{}</b></span>".format(value))
+        self.rtitle.set_text(summary)
+        self.rtitle.set_tooltip_text("{}".format(summary))
+
+        if summary != description:
+            self.rdetail.set_text(description)
+        else:
+            self.rdetail.set_text("")
+
+        if maintainer_name != "":
+            self.r_maintainername.set_text(maintainer_name)
+        else:
+            self.r_maintainername.set_text("-")
+
+        if maintainer_mail != "":
+            self.r_maintainermail.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
+                    GLib.markup_escape_text(maintainer_mail, -1),
+                    GLib.markup_escape_text(maintainer_mail, -1),
+                    GLib.markup_escape_text(maintainer_mail, -1)))
+        else:
+            self.r_maintainermail.set_text("-")
+
+        if homepage != "":
+            self.r_homepage.set_markup("<a title='{}' href='{}'>{}</a>".format(
+                    GLib.markup_escape_text(homepage, -1),
+                    GLib.markup_escape_text(homepage, -1),
+                    GLib.markup_escape_text(homepage, -1)))
+        else:
+            self.r_homepage.set_text("-")
+
+        if section != "":
+            self.r_section.set_text(section)
+        else:
+            self.r_section.set_text("-")
+
+        if isinstance(size, int):
+            self.r_size.set_text(self.Package.beauty_size(size*1000))
+        else:
+            self.r_size.set_text("-")
+
+        if arch != "":
+            self.r_architecture.set_text(arch)
+        else:
+            self.r_architecture.set_text("-")
 
     def on_topsearchbutton_toggled(self, button):
         if self.topsearchbutton.get_active():
@@ -4901,7 +4950,7 @@ class MainWindow(object):
         self.on_repo_button_clicked(None)
         self.on_repo_searchbutton_clicked(self.repo_searchbutton)
         for row in self.searchstore:
-            if app == row[0]:
+            if app == row[1]:
                 self.RepoAppsTreeView.set_cursor(row.path)
                 self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
 
@@ -5838,8 +5887,8 @@ class MainWindow(object):
             # Updating status tick of repo apps
             try:
                 for row in self.searchstore:
-                    installstatus = self.Package.isinstalled(row[0])
-                    row[3] = installstatus
+                    installstatus = self.Package.isinstalled(row[1])
+                    row[0] = installstatus
             except:
                 pass
 

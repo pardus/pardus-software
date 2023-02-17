@@ -187,6 +187,51 @@ class Package(object):
                 size = ""
         return self.beauty_size(size)
 
+    def get_records(self, packagename):
+        try:
+            package = self.cache[packagename]
+        except:
+            return "", "", ""
+        try:
+            maintainer = package.candidate.record["Maintainer"]
+        except:
+            try:
+                maintainer = package.versions[0].record["Maintainer"]
+            except:
+                maintainer = ""
+        try:
+            homepage = package.candidate.record["Homepage"]
+        except:
+            try:
+                homepage = package.versions[0].record["Homepage"]
+            except:
+                homepage = ""
+        try:
+            size = int(package.candidate.record["Installed-Size"])
+        except:
+            try:
+                size = int(package.versions[0].record["Installed-Size"])
+            except:
+                size = ""
+
+        try:
+            arch = package.candidate.record["Architecture"]
+        except:
+            try:
+                arch = package.versions[0].record["Architecture"]
+            except:
+                arch = ""
+        try:
+            maintainer_name = maintainer.split(" <")[0]
+        except:
+            maintainer_name = ""
+        try:
+            maintainer_mail = maintainer.split(" <")[1].replace(">", "")
+        except:
+            maintainer_mail = ""
+
+        return maintainer_name, maintainer_mail, homepage, size, arch
+
     def required_changes(self, packagenames, sleep=True):
         if sleep:
             time.sleep(0.25)
