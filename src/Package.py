@@ -338,16 +338,15 @@ class Package(object):
 
     def beauty_size(self, size):
         # apt uses MB rather than MiB, so let's stay consistent
-        if type(size) is int:
-            size = size / 1000
-            if size > 1000000:
-                size = "{:.1f} GB".format(float(size / 1000000))
-            elif size > 1000:
-                size = "{:.1f} MB".format(float(size / 1000))
-            else:
-                size = "{:.1f} KB".format(float(size))
-            return size
-        return "size not found"
+        if not isinstance(size, int):
+            return "size not found"
+        size = size / 1000
+        if size > 1000000:
+            return f"{size / 1000000:.1f} GB"
+        if size > 1000:
+            return f"{size / 1000:.1f} MB"
+        return f"{size:.1f} KB"
+
 
     # old function
     # def installed_packages(self, lang="en"):
