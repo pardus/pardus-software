@@ -8,7 +8,7 @@ Created on Fri Sep 18 14:53:00 2020
 
 import apt, apt_pkg
 import time, os, locale, subprocess, re
-from gi.repository import Gio
+from gi.repository import Gio, GLib
 
 class Package(object):
     def __init__(self):
@@ -71,10 +71,7 @@ class Package(object):
             package = self.cache[packagename]
         except:
             return None
-        if package.is_installed:
-            return True
-        else:
-            return False
+        return package.is_installed
 
     def missingdeps(self, packagename):
         package = self.cache[packagename]
@@ -141,18 +138,14 @@ class Package(object):
 
     def summary(self, packagename):
         # Return the short description (one line summary)
+        package = self.cache.get(packagename)
+        if package is None: return ""
         try:
-            package = self.cache[packagename]
-        except:
-            return ""
-        try:
-            summ = package.candidate.summary
-        except:
-            try:
-                summ = package.versions[0].summary
-            except:
-                summ = "Summary is not found"
-        return summ
+            return package.candidate.summary
+        except AttributeError:
+            sum = package.versions.get(0)
+        return sum.summary if hasattr(sum, "summary") else "Summary is not found"
+
 
     def version(self, packagename):
         package = self.cache[packagename]
@@ -345,16 +338,9 @@ class Package(object):
 
     def beauty_size(self, size):
         # apt uses MB rather than MiB, so let's stay consistent
-        if type(size) is int:
-            size = size / 1000
-            if size > 1000000:
-                size = "{:.1f} GB".format(float(size / 1000000))
-            elif size > 1000:
-                size = "{:.1f} MB".format(float(size / 1000))
-            else:
-                size = "{:.1f} KB".format(float(size))
-            return size
-        return "size not found"
+        if not isinstance(size, int):
+            return "size not found"
+        return GLib.format_size(size)
 
     # old function
     # def installed_packages(self, lang="en"):
