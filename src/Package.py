@@ -8,7 +8,7 @@ Created on Fri Sep 18 14:53:00 2020
 
 import apt, apt_pkg
 import time, os, locale, subprocess, re
-from gi.repository import Gio
+from gi.repository import Gio, GLib
 
 class Package(object):
     def __init__(self):
@@ -340,13 +340,7 @@ class Package(object):
         # apt uses MB rather than MiB, so let's stay consistent
         if not isinstance(size, int):
             return "size not found"
-        size = size / 1000
-        if size > 1000000:
-            return f"{size / 1000000:.1f} GB"
-        if size > 1000:
-            return f"{size / 1000:.1f} MB"
-        return f"{size:.1f} KB"
-
+        return GLib.format_size(size)
 
     # old function
     # def installed_packages(self, lang="en"):
