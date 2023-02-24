@@ -139,7 +139,7 @@ class Package(object):
     def summary(self, packagename):
         # Return the short description (one line summary)
         package = self.cache.get(packagename)
-        if package is None: return “”
+        if package is None: return ""
         try:
             return package.candidate.summary
         except AttributeError:
