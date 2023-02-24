@@ -289,6 +289,9 @@ class MainWindow(object):
         self.wpcstar = 0
 
         self.raction = self.GtkBuilder.get_object("raction")
+        self.ractioninfo = self.GtkBuilder.get_object("ractioninfo")
+        self.raction_buttonbox = self.GtkBuilder.get_object("raction_buttonbox")
+        self.raction_buttonbox.set_homogeneous(False)
         self.rpackage = self.GtkBuilder.get_object("rpackage_name")
         self.rtitle = self.GtkBuilder.get_object("rtitle")
         self.rdetail = self.GtkBuilder.get_object("rdetail")
@@ -299,6 +302,23 @@ class MainWindow(object):
         self.r_size = self.GtkBuilder.get_object("r_size")
         self.r_architecture = self.GtkBuilder.get_object("r_architecture")
         self.rstack = self.GtkBuilder.get_object("rstack")
+
+        self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
+        self.rapp_packagename_box = self.GtkBuilder.get_object("rapp_packagename_box")
+        self.rapp_toremove_box = self.GtkBuilder.get_object("rapp_toremove_box")
+        self.rapp_toinstall_box = self.GtkBuilder.get_object("rapp_toinstall_box")
+        self.rapp_broken_box = self.GtkBuilder.get_object("rapp_broken_box")
+        self.rapp_size_box = self.GtkBuilder.get_object("rapp_size_box")
+        self.rapp_fsize_box = self.GtkBuilder.get_object("rapp_fsize_box")
+        self.rapp_dsize_box = self.GtkBuilder.get_object("rapp_dsize_box")
+        self.rapp_isize_box = self.GtkBuilder.get_object("rapp_isize_box")
+        self.rapp_packagename_label = self.GtkBuilder.get_object("rapp_packagename_label")
+        self.rapp_toremove_label = self.GtkBuilder.get_object("rapp_toremove_label")
+        self.rapp_toinstall_label = self.GtkBuilder.get_object("rapp_toinstall_label")
+        self.rapp_broken_label = self.GtkBuilder.get_object("rapp_broken_label")
+        self.rapp_fsize_label = self.GtkBuilder.get_object("rapp_fsize_label")
+        self.rapp_dsize_label = self.GtkBuilder.get_object("rapp_dsize_label")
+        self.rapp_isize_label = self.GtkBuilder.get_object("rapp_isize_label")
 
         self.store_button = self.GtkBuilder.get_object("store_button")
         self.store_button.get_style_context().add_class("suggested-action")
@@ -2606,6 +2626,57 @@ class MainWindow(object):
         self.dapp_dsize_label.set_text("{}".format(""))
         self.dapp_isize_label.set_text("{}".format(""))
 
+    def repo_required_worker_thread(self, package):
+        rc = self.repo_required_worker(package)
+        GLib.idle_add(self.on_required_worker_done, package, rc)
+
+    def repo_required_worker(self, package):
+        return self.Package.required_changes(package)
+
+    def on_required_worker_done(self, package, rc):
+
+        self.rapp_size_box.set_visible(True)
+        self.rapp_packagename_box.set_visible(True)
+
+        self.rapp_packagename_label.set_markup("<b>{}</b>".format(package))
+
+        if rc["to_delete"] and rc["to_delete"] is not None:
+            self.rapp_toremove_label.set_markup("{}".format(", ".join(rc["to_delete"])))
+            self.rapp_toremove_box.set_visible(True)
+        else:
+            self.rapp_toremove_box.set_visible(False)
+
+        if rc["to_install"] and rc["to_install"] is not None:
+            self.rapp_toinstall_label.set_markup("{}".format(", ".join(rc["to_install"])))
+            self.rapp_toinstall_box.set_visible(True)
+        else:
+            self.rapp_toinstall_box.set_visible(False)
+
+        if rc["broken"] and rc["broken"] is not None:
+            self.rapp_broken_label.set_markup("{}".format(", ".join(rc["broken"])))
+            self.rapp_broken_box.set_visible(True)
+        else:
+            self.rapp_broken_box.set_visible(False)
+
+        if rc["freed_size"] and rc["freed_size"] is not None and rc["freed_size"] > 0:
+            self.rapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(rc["freed_size"])))
+            self.rapp_fsize_box.set_visible(True)
+        else:
+            self.rapp_fsize_box.set_visible(False)
+
+        if rc["download_size"] and rc["download_size"] is not None and rc["download_size"] > 0:
+            self.rapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(rc["download_size"])))
+            self.rapp_dsize_box.set_visible(True)
+        else:
+            self.rapp_dsize_box.set_visible(False)
+
+        if rc["install_size"] and rc["install_size"] is not None and rc["install_size"] > 0:
+            self.rapp_isize_label.set_markup("{}".format(self.Package.beauty_size(rc["install_size"])))
+            self.rapp_isize_box.set_visible(True)
+        else:
+            self.rapp_isize_box.set_visible(False)
+
+
     def size_worker_thread(self, app=None):
         if app is None:
             self.size_worker()
@@ -4125,6 +4196,26 @@ class MainWindow(object):
         self.externalactioned = False
         self.activatestack.set_visible_child_name("main")
 
+    def on_ractioninfo_clicked(self, button):
+
+        self.rapp_packagename_box.set_visible(False)
+        self.rapp_toremove_box.set_visible(False)
+        self.rapp_toinstall_box.set_visible(False)
+        self.rapp_broken_box.set_visible(False)
+        self.rapp_size_box.set_visible(False)
+        self.rapp_fsize_box.set_visible(False)
+        self.rapp_dsize_box.set_visible(False)
+        self.rapp_isize_box.set_visible(False)
+
+        self.repo_required_changes_popover.popup()
+
+        path = self.RepoAppsTreeView.get_cursor().path
+        iter = self.searchstore.get_iter(path)
+        package = self.searchstore.get_value(iter, 1)
+
+        myappsdetailsthread = threading.Thread(target=self.repo_required_worker_thread, args=(package,), daemon=True)
+        myappsdetailsthread.start()
+
     def on_raction_clicked(self, button):
         self.fromexternal = False
         self.raction.set_sensitive(False)
@@ -4601,19 +4692,19 @@ class MainWindow(object):
         if isinstalled is not None:
             self.raction.set_sensitive(True)
             if isinstalled:
-                self.raction.get_style_context().remove_class("suggested-action")
-                self.raction.get_style_context().add_class("destructive-action")
+                self.set_button_class(self.raction, 1)
+                self.set_button_class(self.ractioninfo, 1)
                 self.raction.set_label(_(" Uninstall"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
             else:
-                self.raction.get_style_context().remove_class("destructive-action")
-                self.raction.get_style_context().add_class("suggested-action")
+                self.set_button_class(self.raction, 0)
+                self.set_button_class(self.ractioninfo, 0)
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
         else:
             self.raction.set_sensitive(False)
-            self.raction.get_style_context().remove_class("destructive-action")
-            self.raction.get_style_context().remove_class("suggested-action")
+            self.set_button_class(self.raction, 2)
+            self.set_button_class(self.ractioninfo, 2)
 
             self.raction.set_label(_(" Not Found"))
             self.raction.set_image(Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
@@ -5975,15 +6066,13 @@ class MainWindow(object):
 
         if repo == 2:  # repo apps
             if self.Package.isinstalled(actionedappname):
-                if self.raction.get_style_context().has_class("suggested-action"):
-                    self.raction.get_style_context().remove_class("suggested-action")
-                self.raction.get_style_context().add_class("destructive-action")
+                self.set_button_class(self.raction, 1)
+                self.set_button_class(self.ractioninfo, 1)
                 self.raction.set_label(_(" Uninstall"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
             else:
-                if self.raction.get_style_context().has_class("destructive-action"):
-                    self.raction.get_style_context().remove_class("destructive-action")
-                self.raction.get_style_context().add_class("suggested-action")
+                self.set_button_class(self.raction, 0)
+                self.set_button_class(self.ractioninfo, 0)
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
