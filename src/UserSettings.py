@@ -20,7 +20,7 @@ class UserSettings(object):
         self.userdistro = ", ".join(filter(bool, distro.linux_distribution()))
 
         userhome = str(Path.home())
-        self.username = userhome.rsplit(“/”, maxsplit=1)[-1]
+        self.username = userhome.rsplit("/", maxsplit=1)[-1]
 
         self.configdir = userhome + "/.config/pardus-software/"
         self.configfile = "settings.ini"
