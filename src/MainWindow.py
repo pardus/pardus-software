@@ -833,7 +833,7 @@ class MainWindow(object):
                     for row in self.searchstore:
                         if app == row[1]:
                             self.RepoAppsTreeView.set_cursor(row.path)
-                            self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+                            # self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
             except Exception as e:
                 print(str(e))
 
@@ -1097,6 +1097,8 @@ class MainWindow(object):
                 # column_desc.set_resizable(True)
                 # column_desc.set_sort_column_id(5)
                 # self.RepoAppsTreeView.append_column(column_desc)
+
+                self.RepoAppsTreeView.set_search_column(1)
 
                 self.RepoAppsTreeView.show_all()
 
@@ -2379,7 +2381,7 @@ class MainWindow(object):
                 for row in self.searchstore:
                     if self.appname == row[1]:
                         self.RepoAppsTreeView.set_cursor(row.path)
-                        self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+                        # self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
                 return False
 
             GLib.idle_add(self.homestack.set_visible_child_name, "pardusappsdetail")
@@ -4580,26 +4582,10 @@ class MainWindow(object):
                 [installstatus, package["name"], package["category"], self.Package.summary(package["name"])])
 
         self.RepoAppsTreeView.set_model(self.searchstore)
+        self.RepoAppsTreeView.set_search_column(1)
         self.RepoAppsTreeView.show_all()
 
-    def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
-
-        # if not self.isRepoSearching:
-        #     if self.useDynamicListStore:
-        #         if self.RepoCurrentCategory != "all":
-        #             iter = self.storedict[self.RepoCurrentCategory].get_iter(path)
-        #             value = self.storedict[self.RepoCurrentCategory].get_value(iter, 0)
-        #         else:
-        #             iter = self.RepoAppListStore.get_iter(path)
-        #             value = self.RepoAppListStore.get_value(iter, 0)
-        #     else:
-        #         if self.RepoCurrentCategory != "all":
-        #             iter = self.store.get_iter(path)
-        #             value = self.store.get_value(iter, 0)
-        #         else:
-        #             iter = self.RepoAppListStore.get_iter(path)
-        #             value = self.RepoAppListStore.get_value(iter, 0)
-        # else:
+    def repoapps_selection_changed(self, path):
         self.repoappclicked = True
         self.fromrepoapps = True
         self.activerepopath = path
@@ -4607,7 +4593,6 @@ class MainWindow(object):
         iter = self.searchstore.get_iter(path)
         value = self.searchstore.get_value(iter, 1)
         section = self.searchstore.get_value(iter, 2)
-        # print(value)
 
         self.repoappname = value
         self.appname = value
@@ -4616,23 +4601,19 @@ class MainWindow(object):
         if isinstalled is not None:
             self.raction.set_sensitive(True)
             if isinstalled:
-                if self.raction.get_style_context().has_class("suggested-action"):
-                    self.raction.get_style_context().remove_class("suggested-action")
+                self.raction.get_style_context().remove_class("suggested-action")
                 self.raction.get_style_context().add_class("destructive-action")
                 self.raction.set_label(_(" Uninstall"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
             else:
-                if self.raction.get_style_context().has_class("destructive-action"):
-                    self.raction.get_style_context().remove_class("destructive-action")
+                self.raction.get_style_context().remove_class("destructive-action")
                 self.raction.get_style_context().add_class("suggested-action")
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
         else:
             self.raction.set_sensitive(False)
-            if self.raction.get_style_context().has_class("destructive-action"):
-                self.raction.get_style_context().remove_class("destructive-action")
-            if self.raction.get_style_context().has_class("suggested-action"):
-                self.raction.get_style_context().remove_class("suggested-action")
+            self.raction.get_style_context().remove_class("destructive-action")
+            self.raction.get_style_context().remove_class("suggested-action")
 
             self.raction.set_label(_(" Not Found"))
             self.raction.set_image(Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
@@ -4695,6 +4676,33 @@ class MainWindow(object):
             self.r_architecture.set_text(arch)
         else:
             self.r_architecture.set_text("-")
+
+    def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
+        # print("on_RepoAppsTreeView_row_activated")
+        # if not self.isRepoSearching:
+        #     if self.useDynamicListStore:
+        #         if self.RepoCurrentCategory != "all":
+        #             iter = self.storedict[self.RepoCurrentCategory].get_iter(path)
+        #             value = self.storedict[self.RepoCurrentCategory].get_value(iter, 0)
+        #         else:
+        #             iter = self.RepoAppListStore.get_iter(path)
+        #             value = self.RepoAppListStore.get_value(iter, 0)
+        #     else:
+        #         if self.RepoCurrentCategory != "all":
+        #             iter = self.store.get_iter(path)
+        #             value = self.store.get_value(iter, 0)
+        #         else:
+        #             iter = self.RepoAppListStore.get_iter(path)
+        #             value = self.RepoAppListStore.get_value(iter, 0)
+        # else:
+
+        # self.repoapps_selection_changed(path)
+        pass
+
+    def on_RepoAppsTreeView_cursor_changed(self, tree_view):
+        path = tree_view.get_cursor().path
+        if path is not None:
+            self.repoapps_selection_changed(path)
 
     def on_topsearchbutton_toggled(self, button):
         if self.topsearchbutton.get_active():
@@ -4952,7 +4960,7 @@ class MainWindow(object):
         for row in self.searchstore:
             if app == row[1]:
                 self.RepoAppsTreeView.set_cursor(row.path)
-                self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+                # self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
 
     def on_menu_updates_clicked(self, button):
         self.prefback = self.homestack.get_visible_child_name()
