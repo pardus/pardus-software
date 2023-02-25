@@ -301,6 +301,7 @@ class MainWindow(object):
         self.r_section = self.GtkBuilder.get_object("r_section")
         self.r_size = self.GtkBuilder.get_object("r_size")
         self.r_architecture = self.GtkBuilder.get_object("r_architecture")
+        self.r_version = self.GtkBuilder.get_object("r_version")
         self.rstack = self.GtkBuilder.get_object("rstack")
 
         self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
@@ -793,7 +794,7 @@ class MainWindow(object):
 
     def controlPSUpdate(self):
         if self.Server.connection and self.UserSettings.usercodename == "yirmibir" and not self.isbroken:
-            user_version = self.Package.installedVersion("pardus-software")
+            user_version = self.Package.installed_version("pardus-software")
             server_version = self.Server.appversion
             if user_version is not None and server_version != "":
                 version = self.Package.versionCompare(user_version, server_version)
@@ -2460,7 +2461,7 @@ class MainWindow(object):
 
                 # self.dActionButton.set_sensitive(True)
 
-                version = self.Package.version(self.appname)
+                version = self.Package.candidate_version(self.appname)
                 # size = self.Package.size(self.appname)
                 origins = self.Package.origins(self.appname)
 
@@ -3500,7 +3501,7 @@ class MainWindow(object):
             installed = False
 
         if installed:
-            version = self.Package.installedVersion(self.appname)
+            version = self.Package.installed_version(self.appname)
             if version is None:
                 version = ""
             dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
@@ -3643,7 +3644,7 @@ class MainWindow(object):
             if installed is None:
                 installed = False
             if installed:
-                version = self.Package.installedVersion(self.appname)
+                version = self.Package.installed_version(self.appname)
                 if version is None:
                     version = ""
                 dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
@@ -4689,18 +4690,20 @@ class MainWindow(object):
                 self.set_button_class(self.ractioninfo, 1)
                 self.raction.set_label(_(" Uninstall"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+                version = self.Package.installed_version(self.appname)
             else:
                 self.set_button_class(self.raction, 0)
                 self.set_button_class(self.ractioninfo, 0)
                 self.raction.set_label(_(" Install"))
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
+                version = self.Package.candidate_version(self.appname)
         else:
             self.raction.set_sensitive(False)
             self.set_button_class(self.raction, 2)
             self.set_button_class(self.ractioninfo, 2)
-
             self.raction.set_label(_(" Not Found"))
             self.raction.set_image(Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
+            version = ""
 
         if len(self.queue) > 0:
             for qa in self.queue:
@@ -4760,6 +4763,11 @@ class MainWindow(object):
             self.r_architecture.set_text(arch)
         else:
             self.r_architecture.set_text("-")
+
+        if version is not None and version != "":
+            self.r_version.set_text(version)
+        else:
+            self.r_version.set_text("-")
 
     def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
         # print("on_RepoAppsTreeView_row_activated")
@@ -6153,7 +6161,7 @@ class MainWindow(object):
             installed = self.Package.isinstalled(appname)
             if installed is None:
                 installed = False
-            version = self.Package.installedVersion(appname)
+            version = self.Package.installed_version(appname)
             if version is None:
                 version = ""
             dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,

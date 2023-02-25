@@ -147,7 +147,7 @@ class Package(object):
         return sum.summary if hasattr(sum, "summary") else "Summary is not found"
 
 
-    def version(self, packagename):
+    def candidate_version(self, packagename):
         package = self.cache[packagename]
         try:
             version = package.candidate.version
@@ -155,10 +155,10 @@ class Package(object):
             try:
                 version = package.versions[0].version
             except:
-                version = "not found"
+                version = ""
         return version
 
-    def installedVersion(self, packagename):
+    def installed_version(self, packagename):
         try:
             package = self.cache[packagename]
         except:
