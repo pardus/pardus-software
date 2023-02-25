@@ -305,6 +305,7 @@ class MainWindow(object):
 
         self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
         self.rapp_packagename_box = self.GtkBuilder.get_object("rapp_packagename_box")
+        self.rapp_package_broken_box = self.GtkBuilder.get_object("rapp_package_broken_box")
         self.rapp_toremove_box = self.GtkBuilder.get_object("rapp_toremove_box")
         self.rapp_toinstall_box = self.GtkBuilder.get_object("rapp_toinstall_box")
         self.rapp_broken_box = self.GtkBuilder.get_object("rapp_broken_box")
@@ -2634,48 +2635,39 @@ class MainWindow(object):
         return self.Package.required_changes(package)
 
     def on_required_worker_done(self, package, rc):
-
-        self.rapp_size_box.set_visible(True)
         self.rapp_packagename_box.set_visible(True)
-
         self.rapp_packagename_label.set_markup("<b>{}</b>".format(package))
+
+        if rc["package_broken"] or rc["package_broken"] is None:
+            self.rapp_package_broken_box.set_visible(True)
+            self.raction.set_sensitive(False)
 
         if rc["to_delete"] and rc["to_delete"] is not None:
             self.rapp_toremove_label.set_markup("{}".format(", ".join(rc["to_delete"])))
             self.rapp_toremove_box.set_visible(True)
-        else:
-            self.rapp_toremove_box.set_visible(False)
 
         if rc["to_install"] and rc["to_install"] is not None:
             self.rapp_toinstall_label.set_markup("{}".format(", ".join(rc["to_install"])))
             self.rapp_toinstall_box.set_visible(True)
-        else:
-            self.rapp_toinstall_box.set_visible(False)
 
         if rc["broken"] and rc["broken"] is not None:
             self.rapp_broken_label.set_markup("{}".format(", ".join(rc["broken"])))
             self.rapp_broken_box.set_visible(True)
-        else:
-            self.rapp_broken_box.set_visible(False)
 
         if rc["freed_size"] and rc["freed_size"] is not None and rc["freed_size"] > 0:
             self.rapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(rc["freed_size"])))
             self.rapp_fsize_box.set_visible(True)
-        else:
-            self.rapp_fsize_box.set_visible(False)
+            self.rapp_size_box.set_visible(True)
 
         if rc["download_size"] and rc["download_size"] is not None and rc["download_size"] > 0:
             self.rapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(rc["download_size"])))
             self.rapp_dsize_box.set_visible(True)
-        else:
-            self.rapp_dsize_box.set_visible(False)
+            self.rapp_size_box.set_visible(True)
 
         if rc["install_size"] and rc["install_size"] is not None and rc["install_size"] > 0:
             self.rapp_isize_label.set_markup("{}".format(self.Package.beauty_size(rc["install_size"])))
             self.rapp_isize_box.set_visible(True)
-        else:
-            self.rapp_isize_box.set_visible(False)
-
+            self.rapp_size_box.set_visible(True)
 
     def size_worker_thread(self, app=None):
         if app is None:
@@ -4199,6 +4191,7 @@ class MainWindow(object):
     def on_ractioninfo_clicked(self, button):
 
         self.rapp_packagename_box.set_visible(False)
+        self.rapp_package_broken_box.set_visible(False)
         self.rapp_toremove_box.set_visible(False)
         self.rapp_toinstall_box.set_visible(False)
         self.rapp_broken_box.set_visible(False)

@@ -233,9 +233,10 @@ class Package(object):
         to_delete = []
         broken = []
         inst_recommends = True
+        package_broken = None
         packagenames = packagenames.split(" ")
         ret = {"download_size": None, "freed_size": None, "install_size": None, "to_install": None, "to_delete": None,
-               "broken": None}
+               "broken": None, "package_broken": None}
 
         if "--no-install-recommends" in packagenames:
             inst_recommends = False
@@ -263,13 +264,17 @@ class Package(object):
                 if packagename not in broken:
                     broken.append(packagename)
             changes = self.cache.get_changes()
-            for package in changes:
-                if package.marked_install:
-                    if package.name not in to_install:
-                        to_install.append(package.name)
-                elif package.marked_delete:
-                    if package.name not in to_delete:
-                        to_delete.append(package.name)
+            if changes:
+                package_broken = False
+                for package in changes:
+                    if package.marked_install:
+                        if package.name not in to_install:
+                            to_install.append(package.name)
+                    elif package.marked_delete:
+                        if package.name not in to_delete:
+                            to_delete.append(package.name)
+            else:
+                package_broken = True
 
         download_size = self.cache.required_download
         space = self.cache.required_space
@@ -286,6 +291,7 @@ class Package(object):
         ret["to_install"] = to_install
         ret["to_delete"] = to_delete
         ret["broken"] = broken
+        ret["package_broken"] = package_broken
 
         # print("freed_size {}".format(ret["freed_size"]))
         # print("download_size {}".format(ret["download_size"]))
