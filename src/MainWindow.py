@@ -149,6 +149,8 @@ class MainWindow(object):
         self.repo_searchentry = self.GtkBuilder.get_object("repo_searchentry")
         self.myapps_searchentry = self.GtkBuilder.get_object("myapps_searchentry")
         self.repo_searchbutton = self.GtkBuilder.get_object("repo_searchbutton")
+        self.reposearch_buttonbox = self.GtkBuilder.get_object("reposearch_buttonbox")
+        self.reposearch_buttonbox.set_homogeneous(False)
         self.topsearchbutton = self.GtkBuilder.get_object("topsearchbutton")
         self.toprevealer = self.GtkBuilder.get_object("toprevealer")
         self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")

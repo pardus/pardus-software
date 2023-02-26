@@ -1535,35 +1535,48 @@ so that the OS has nothing to do with the health of the application.</property>
                         <property name="halign">center</property>
                         <property name="spacing">5</property>
                         <child>
-                          <object class="GtkSearchEntry" id="repo_searchentry">
-                            <property name="width-request">200</property>
+                          <object class="GtkButtonBox" id="reposearch_buttonbox">
                             <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="primary-icon-name">edit-find-symbolic</property>
-                            <property name="primary-icon-activatable">False</property>
-                            <property name="primary-icon-sensitive">False</property>
-                            <property name="placeholder-text" translatable="yes">Search an app in repo</property>
-                            <signal name="activate" handler="on_repo_searchbutton_clicked" swapped="no"/>
+                            <property name="can-focus">False</property>
+                            <property name="layout-style">expand</property>
+                            <child>
+                              <object class="GtkSearchEntry" id="repo_searchentry">
+                                <property name="width-request">200</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="halign">end</property>
+                                <property name="primary-icon-name">edit-find-symbolic</property>
+                                <property name="primary-icon-activatable">False</property>
+                                <property name="primary-icon-sensitive">False</property>
+                                <property name="placeholder-text" translatable="yes">Search an app in repo</property>
+                                <signal name="activate" handler="on_repo_searchbutton_clicked" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="repo_searchbutton">
+                                <property name="label" translatable="yes">Search</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="halign">start</property>
+                                <signal name="clicked" handler="on_repo_searchbutton_clicked" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="repo_searchbutton">
-                            <property name="label" translatable="yes">Search</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">True</property>
-                            <property name="halign">start</property>
-                            <signal name="clicked" handler="on_repo_searchbutton_clicked" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
