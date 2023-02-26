@@ -2450,7 +2450,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="icon-name">view-list-bullet-symbolic</property>
+                                                <property name="icon-name">help-about-symbolic</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -2491,7 +2491,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="icon-name">view-grid-symbolic</property>
+                                                <property name="icon-name">application-certificate-symbolic</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -2500,7 +2500,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkLabel" id="r_section">
+                                              <object class="GtkLabel" id="r_origin">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
@@ -2532,7 +2532,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="icon-name">drive-harddisk-symbolic</property>
+                                                <property name="icon-name">view-grid-symbolic</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -2541,7 +2541,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkLabel" id="r_size">
+                                              <object class="GtkLabel" id="r_section">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
@@ -2601,7 +2601,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">True</property>
-                                            <property name="position">6</property>
+                                            <property name="position">7</property>
                                           </packing>
                                         </child>
                                       </object>

@@ -199,13 +199,13 @@ class Package(object):
                 homepage = package.versions[0].record["Homepage"]
             except:
                 homepage = ""
-        try:
-            size = int(package.candidate.record["Installed-Size"])
-        except:
-            try:
-                size = int(package.versions[0].record["Installed-Size"])
-            except:
-                size = ""
+        # try:
+        #     size = int(package.candidate.record["Installed-Size"])
+        # except:
+        #     try:
+        #         size = int(package.versions[0].record["Installed-Size"])
+        #     except:
+        #         size = ""
 
         try:
             arch = package.candidate.record["Architecture"]
@@ -223,7 +223,7 @@ class Package(object):
         except:
             maintainer_mail = ""
 
-        return maintainer_name, maintainer_mail, homepage, size, arch
+        return maintainer_name, maintainer_mail, homepage, arch
 
     def required_changes(self, packagenames, sleep=True):
         if sleep:

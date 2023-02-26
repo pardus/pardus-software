@@ -299,9 +299,9 @@ class MainWindow(object):
         self.r_maintainermail = self.GtkBuilder.get_object("r_maintainermail")
         self.r_homepage = self.GtkBuilder.get_object("r_homepage")
         self.r_section = self.GtkBuilder.get_object("r_section")
-        self.r_size = self.GtkBuilder.get_object("r_size")
         self.r_architecture = self.GtkBuilder.get_object("r_architecture")
         self.r_version = self.GtkBuilder.get_object("r_version")
+        self.r_origin = self.GtkBuilder.get_object("r_origin")
         self.rstack = self.GtkBuilder.get_object("rstack")
 
         self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
@@ -4716,7 +4716,8 @@ class MainWindow(object):
 
         summary = self.Package.summary(value)
         description = self.Package.adv_description(value)
-        maintainer_name, maintainer_mail, homepage, size, arch = self.Package.get_records(value)
+        maintainer_name, maintainer_mail, homepage, arch = self.Package.get_records(value)
+        origins = self.Package.origins(value)
 
         self.rstack.set_visible_child_name("package")
         self.rpackage.set_markup("<span size='x-large'><b>{}</b></span>".format(value))
@@ -4754,11 +4755,6 @@ class MainWindow(object):
         else:
             self.r_section.set_text("-")
 
-        if isinstance(size, int):
-            self.r_size.set_text(self.Package.beauty_size(size*1000))
-        else:
-            self.r_size.set_text("-")
-
         if arch != "":
             self.r_architecture.set_text(arch)
         else:
@@ -4768,6 +4764,11 @@ class MainWindow(object):
             self.r_version.set_text(version)
         else:
             self.r_version.set_text("-")
+
+        if origins is not None and origins != "":
+            self.r_origin.set_markup("{} {}".format(origins.origin, origins.component))
+        else:
+            self.r_origin.set_text("-")
 
     def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
         # print("on_RepoAppsTreeView_row_activated")
