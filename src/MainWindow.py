@@ -994,6 +994,8 @@ class MainWindow(object):
             os.path.splitext(os.path.basename(self.screenshots[self.down_image]))[0],
             datetime.now().strftime("%Y-%m-%d_%H-%M-%S")))
 
+        filesave_chooser.set_do_overwrite_confirmation(True)
+
         response = filesave_chooser.run()
         if response == Gtk.ResponseType.ACCEPT:
             file_path = filesave_chooser.get_filename()
