@@ -225,6 +225,20 @@ class Package(object):
 
         return maintainer_name, maintainer_mail, homepage, arch
 
+    def get_uri(self, packagename):
+        package = self.cache[packagename]
+        try:
+            package_uri = package.candidate.uri
+            package_downloadable = package.candidate.downloadable
+        except:
+            try:
+                package_uri = package.versions[0].uri
+                package_downloadable = package.versions[0].downloadable
+            except:
+                package_uri = ""
+                package_downloadable = False
+        return package_downloadable, package_uri
+
     def required_changes(self, packagenames, sleep=True):
         if sleep:
             time.sleep(0.25)

@@ -304,6 +304,7 @@ class MainWindow(object):
         self.r_architecture = self.GtkBuilder.get_object("r_architecture")
         self.r_version = self.GtkBuilder.get_object("r_version")
         self.r_origin = self.GtkBuilder.get_object("r_origin")
+        # self.r_url = self.GtkBuilder.get_object("r_url")
         self.rstack = self.GtkBuilder.get_object("rstack")
 
         self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
@@ -4720,6 +4721,7 @@ class MainWindow(object):
         description = self.Package.adv_description(value)
         maintainer_name, maintainer_mail, homepage, arch = self.Package.get_records(value)
         origins = self.Package.origins(value)
+        downloadable, r_uri = self.Package.get_uri(value)
 
         self.rstack.set_visible_child_name("package")
         self.rpackage.set_markup("<span size='x-large'><b>{}</b></span>".format(value))
@@ -4771,6 +4773,12 @@ class MainWindow(object):
             self.r_origin.set_markup("{} {}".format(origins.origin, origins.component))
         else:
             self.r_origin.set_text("-")
+
+        # if downloadable and r_uri != "":
+        #     self.r_url.set_markup(
+        #         "<a href='{}' title='{}'>{}</a>".format(r_uri, r_uri, _("Download")))
+        # else:
+        #     self.r_origin.set_text("-")
 
     def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
         # print("on_RepoAppsTreeView_row_activated")
