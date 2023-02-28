@@ -4580,7 +4580,7 @@ class MainWindow(object):
             self.upgrade_vte_sw.set_visible(False)
 
     def on_upgrade_info_back_button_clicked(self, button):
-        self.updatestack.set_visible_child_name("main")
+        self.upgrade_stack.set_visible_child_name("main")
 
     def on_upgrade_info_ok_button_clicked(self, button):
         self.set_stack_n_search(1)
