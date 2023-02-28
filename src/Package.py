@@ -19,6 +19,8 @@ class Package(object):
         self.secs = []
         self.sections = []
 
+        self.update_cache_error_msg = ""
+
         # self.uniqsections = sorted(list(set(self.secs)))
         #
         # lencat = len(self.uniqsections)
@@ -166,7 +168,7 @@ class Package(object):
         try:
             version = package.installed.version
         except:
-            version = None
+            version = ""
         return version
 
     def size(self, packagename):
@@ -238,6 +240,76 @@ class Package(object):
                 package_uri = ""
                 package_downloadable = False
         return package_downloadable, package_uri
+
+    def required_changes_upgrade(self, sleep=True):
+        if sleep:
+            time.sleep(0.25)
+        self.cache.clear()
+        to_upgrade = []
+        to_install = []
+        to_delete = []
+        to_keep = []
+        changes_available = None
+        rcu = {"download_size": None, "freed_size": None, "install_size": None, "to_upgrade": None, "to_install": None,
+               "to_delete": None, "to_keep": None, "changes_available": None, "cache_error": True}
+
+        try:
+            self.cache.upgrade(True)
+            cache_error = False
+            self.update_cache_error_msg = ""
+        except Exception as error:
+            print("cache.upgrade Error: {}".format(error))
+            self.update_cache_error_msg = "{}".format(error)
+            return rcu
+
+        to_keep = self.cache.keep_count
+        changes = self.cache.get_changes()
+        # print(changes)
+        if changes:
+            changes_available = True
+            for package in changes:
+                if package.is_installed:
+                    if package.marked_upgrade:
+                        to_upgrade.append(package.name)
+                    elif package.marked_delete:
+                        to_delete.append(package.name)
+                elif package.marked_install:
+                    to_install.append(package.name)
+        else:
+            changes_available = False
+
+        download_size = self.cache.required_download
+        space = self.cache.required_space
+        if space < 0:
+            freed_size = space * -1
+            install_size = 0
+        else:
+            freed_size = 0
+            install_size = space
+
+        to_upgrade = sorted(to_upgrade)
+        to_install = sorted(to_install)
+        to_delete = sorted(to_delete)
+
+        rcu["download_size"] = download_size
+        rcu["freed_size"] = freed_size
+        rcu["install_size"] = install_size
+        rcu["to_upgrade"] = to_upgrade
+        rcu["to_install"] = to_install
+        rcu["to_delete"] = to_delete
+        rcu["to_keep"] = to_keep
+        rcu["changes_available"] = changes_available
+        rcu["cache_error"] = cache_error
+
+        # print("freed_size {}".format(rcu["freed_size"]))
+        # print("download_size {}".format(rcu["download_size"]))
+        # print("install_size {}".format(rcu["install_size"]))
+        print("to_upgrade {}".format(rcu["to_upgrade"]))
+        print("to_install {}".format(rcu["to_install"]))
+        print("to_delete {}".format(rcu["to_delete"]))
+        print("changes_available {}".format(rcu["changes_available"]))
+        print("cache_error {}".format(rcu["cache_error"]))
+        return rcu
 
     def required_changes(self, packagenames, sleep=True):
         if sleep:
@@ -601,6 +673,18 @@ class Package(object):
             for pkg in self.cache:
                 if self.cache[pkg.name].is_upgradable:
                     upgradable.append(pkg.name)
+            upgradable = sorted(upgradable)
+        except Exception as e:
+            print("Package upgradable Error: {}".format(e))
+        return upgradable
+
+    def upgradable_full(self):
+        upgradable = []
+        try:
+            for pkg in self.cache:
+                if self.cache[pkg.name].is_upgradable:
+                    upgradable.append({"name": pkg.name, "summary": self.summary(pkg.name)})
+            upgradable = sorted(upgradable, key=lambda x: x["name"])
         except Exception as e:
             print("Package upgradable Error: {}".format(e))
         return upgradable

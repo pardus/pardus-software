@@ -29,7 +29,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Notify", "0.7")
 gi.require_version("GdkPixbuf", "2.0")
 gi.require_version("Vte", "2.91")
-from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk, Vte
+from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk, Vte, Pango
 
 from Package import Package
 from Server import Server
@@ -329,13 +329,39 @@ class MainWindow(object):
         self.store_button.get_style_context().add_class("suggested-action")
         self.repo_button = self.GtkBuilder.get_object("repo_button")
         self.myapps_button = self.GtkBuilder.get_object("myapps_button")
+        # self.updates_button = self.GtkBuilder.get_object("updates_button")
+        self.updates_button = Gtk.Button.new()
+        self.updates_button.set_label(_("Updates"))
+        self.updates_button.connect("clicked", self.on_updates_button_clicked)
         self.queue_button = self.GtkBuilder.get_object("queue_button")
+        self.header_buttonbox = self.GtkBuilder.get_object("header_buttonbox")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
         self.splashbarstatus = True
         # GLib.timeout_add(200, self.on_timeout, None)
+
+        self.upgrade_stack = self.GtkBuilder.get_object("upgrade_stack")
+        self.upgrade_stack_spinnner = self.GtkBuilder.get_object("upgrade_stack_spinnner")
+        self.upgradables_listbox = self.GtkBuilder.get_object("upgradables_listbox")
+        self.upgrade_vte_sw = self.GtkBuilder.get_object("upgrade_vte_sw")
+        self.upgrade_info_back_button = self.GtkBuilder.get_object("upgrade_info_back_button")
+        self.upgrade_info_ok_button = self.GtkBuilder.get_object("upgrade_info_ok_button")
+        self.upgrade_info_box = self.GtkBuilder.get_object("upgrade_info_box")
+        self.upgrade_info_label = self.GtkBuilder.get_object("upgrade_info_label")
+        self.upgrade_dsize_label = self.GtkBuilder.get_object("upgrade_dsize_label")
+        self.upgrade_isize_label = self.GtkBuilder.get_object("upgrade_isize_label")
+        self.upgrade_ucount_label = self.GtkBuilder.get_object("upgrade_ucount_label")
+        self.upgrade_ncount_label = self.GtkBuilder.get_object("upgrade_ncount_label")
+        self.upgrade_rcount_label = self.GtkBuilder.get_object("upgrade_rcount_label")
+        self.upgrade_kcount_label = self.GtkBuilder.get_object("upgrade_kcount_label")
+        self.upgrade_dsize_box = self.GtkBuilder.get_object("upgrade_dsize_box")
+        self.upgrade_isize_box = self.GtkBuilder.get_object("upgrade_isize_box")
+        self.upgrade_ucount_box = self.GtkBuilder.get_object("upgrade_ucount_box")
+        self.upgrade_ncount_box = self.GtkBuilder.get_object("upgrade_ncount_box")
+        self.upgrade_rcount_box = self.GtkBuilder.get_object("upgrade_rcount_box")
+        self.upgrade_kcount_box = self.GtkBuilder.get_object("upgrade_kcount_box")
 
         self.tryfixButton = self.GtkBuilder.get_object("tryfixButton")
         self.tryfixSpinner = self.GtkBuilder.get_object("tryfixSpinner")
@@ -608,10 +634,17 @@ class MainWindow(object):
         self.queueappname = None
         self.myappname = None
 
+        self.connection_error_after = False
+        self.auto_apt_update_finished = False
+        self.upgradables_page_setted = False
+        self.upgrade_inprogress = False
+        self.upgrades_completed = False
+
         self.applist = []
         self.fullapplist = []
         self.catlist = []
         self.fullcatlist = []
+        self.upgradable_packages = []
 
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
@@ -653,6 +686,7 @@ class MainWindow(object):
                                              Gtk.STYLE_PROVIDER_PRIORITY_USER)
         # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
 
+        # fix apt vte box
         self.vteterm = Vte.Terminal()
         self.vteterm.set_scrollback_lines(-1)
         menu = Gtk.Menu()
@@ -663,6 +697,17 @@ class MainWindow(object):
         self.vteterm.connect_object("event", self.vte_event, menu)
         vtebox = self.GtkBuilder.get_object("VteBox")
         vtebox.add(self.vteterm)
+
+        # upgrade vte box
+        self.upgrade_vteterm = Vte.Terminal()
+        self.upgrade_vteterm.set_scrollback_lines(-1)
+        upgrade_vte_menu = Gtk.Menu()
+        upgrade_vte_menu_items = Gtk.MenuItem(label=_("Copy selected text"))
+        upgrade_vte_menu.append(upgrade_vte_menu_items)
+        upgrade_vte_menu_items.connect("activate", self.upgrade_vte_menu_action, self.upgrade_vteterm)
+        upgrade_vte_menu_items.show()
+        self.upgrade_vteterm.connect_object("event", self.upgrade_vte_event, upgrade_vte_menu)
+        self.upgrade_vte_sw.add(self.upgrade_vteterm)
 
         self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
         self.GnomeCommentListBoxEN = self.GtkBuilder.get_object("GnomeCommentListBoxEN")
@@ -794,6 +839,10 @@ class MainWindow(object):
                 self.headerAptUpdateSpinner.start()
                 command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py"]
                 self.startAptUpdateProcess(command)
+            else:
+                self.auto_apt_update_finished = True
+        else:
+            self.auto_apt_update_finished = True
 
     def controlPSUpdate(self):
         if self.Server.connection and self.UserSettings.usercodename == "yirmibir" and not self.isbroken:
@@ -915,6 +964,14 @@ class MainWindow(object):
         if self.Server.connection and self.isbroken:
             GLib.idle_add(self.store_button.set_sensitive, False)
             GLib.idle_add(self.repo_button.set_sensitive, False)
+
+        if self.Package.upgradable():
+            GLib.idle_add(self.header_buttonbox.pack_start, self.updates_button, False, True, 0)
+            GLib.idle_add(self.updates_button.set_visible, True)
+            GLib.idle_add(self.updates_button.set_sensitive, True)
+        else:
+            GLib.idle_add(self.updates_button.set_visible, False)
+            GLib.idle_add(self.updates_button.set_sensitive, False)
 
         print("page setted to normal")
 
@@ -1159,6 +1216,33 @@ class MainWindow(object):
     def on_cell_clicked(self, path, button):
         print("cell clicked")
 
+    # def setUpgradableUI(self):
+    #     renderer_toggle = Gtk.CellRendererToggle()
+    #     renderer_toggle.connect("toggled", self.on_cell_toggled)
+    #     column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=0)
+    #     column_toggle.set_resizable(True)
+    #     column_toggle.set_sort_column_id(0)
+    #     self.upgradables_treeview.append_column(column_toggle)
+    #
+    #     renderer = Gtk.CellRendererText()
+    #     column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=1)
+    #     column_name.set_resizable(True)
+    #     column_name.set_sort_column_id(1)
+    #     self.upgradables_treeview.append_column(column_name)
+    #
+    #     renderer = Gtk.CellRendererText()
+    #     column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=2)
+    #     column_cat.set_resizable(True)
+    #     column_cat.set_sort_column_id(2)
+    #     self.upgradables_treeview.append_column(column_cat)
+    #
+    #     self.upgradables_treeview.set_search_column(1)
+    #     self.upgradables_liststore = Gtk.ListStore(bool, str, str)
+    #     self.upgradables_treeview.set_model(self.upgradables_liststore)
+    #
+    #     self.upgradables_treeview.show_all()
+
+
     def server(self):
         # self.splashbar.pulse()
         print("Getting applications from server")
@@ -1238,6 +1322,7 @@ class MainWindow(object):
         GLib.idle_add(self.setEditorApps)
         GLib.idle_add(self.setMostApps)
         GLib.idle_add(self.setRepoApps)
+        # GLib.idle_add(self.setUpgradableUI)
         GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlArgs)
         GLib.idle_add(self.controlPSUpdate)
@@ -1285,8 +1370,11 @@ class MainWindow(object):
                 self.Server.connection = True
                 self.getIcons()
         else:
-            self.Server.connection = False
-            self.afterServers()
+            if not self.connection_error_after:
+                self.Server.connection = False
+                self.afterServers()
+                self.connection_error_after = True
+
 
     def ServerIconsCB(self, status, type, fromsettings=False):
 
@@ -2181,7 +2269,7 @@ class MainWindow(object):
 
     def set_stack_n_search(self, id):
         '''
-        id:  1 = pardus, 2 = repo, 3 = myapps, 4 = queue
+        id:  1 = pardus, 2 = repo, 3 = myapps, 4 = queue, 5 = updates
         '''
         if id == 1:
             if not self.store_button.get_style_context().has_class("suggested-action"):
@@ -2193,6 +2281,8 @@ class MainWindow(object):
                 self.myapps_button.get_style_context().remove_class("suggested-action")
             if self.queue_button.get_style_context().has_class("suggested-action"):
                 self.queue_button.get_style_context().remove_class("suggested-action")
+            if self.updates_button.get_style_context().has_class("suggested-action"):
+                self.updates_button.get_style_context().remove_class("suggested-action")
         elif id == 2:
             if not self.repo_button.get_style_context().has_class("suggested-action"):
                 self.repo_button.get_style_context().add_class("suggested-action")
@@ -2203,6 +2293,8 @@ class MainWindow(object):
                 self.myapps_button.get_style_context().remove_class("suggested-action")
             if self.queue_button.get_style_context().has_class("suggested-action"):
                 self.queue_button.get_style_context().remove_class("suggested-action")
+            if self.updates_button.get_style_context().has_class("suggested-action"):
+                self.updates_button.get_style_context().remove_class("suggested-action")
         elif id == 3:
             if not self.myapps_button.get_style_context().has_class("suggested-action"):
                 self.myapps_button.get_style_context().add_class("suggested-action")
@@ -2213,6 +2305,8 @@ class MainWindow(object):
                 self.repo_button.get_style_context().remove_class("suggested-action")
             if self.queue_button.get_style_context().has_class("suggested-action"):
                 self.queue_button.get_style_context().remove_class("suggested-action")
+            if self.updates_button.get_style_context().has_class("suggested-action"):
+                self.updates_button.get_style_context().remove_class("suggested-action")
         elif id == 4:
             if not self.queue_button.get_style_context().has_class("suggested-action"):
                 self.queue_button.get_style_context().add_class("suggested-action")
@@ -2222,6 +2316,19 @@ class MainWindow(object):
                 self.repo_button.get_style_context().remove_class("suggested-action")
             if self.myapps_button.get_style_context().has_class("suggested-action"):
                 self.myapps_button.get_style_context().remove_class("suggested-action")
+            if self.updates_button.get_style_context().has_class("suggested-action"):
+                self.updates_button.get_style_context().remove_class("suggested-action")
+        elif id == 5:
+            if not self.updates_button.get_style_context().has_class("suggested-action"):
+                self.updates_button.get_style_context().add_class("suggested-action")
+            if self.store_button.get_style_context().has_class("suggested-action"):
+                self.store_button.get_style_context().remove_class("suggested-action")
+            if self.repo_button.get_style_context().has_class("suggested-action"):
+                self.repo_button.get_style_context().remove_class("suggested-action")
+            if self.myapps_button.get_style_context().has_class("suggested-action"):
+                self.myapps_button.get_style_context().remove_class("suggested-action")
+            if self.queue_button.get_style_context().has_class("suggested-action"):
+                self.queue_button.get_style_context().remove_class("suggested-action")
 
     def set_button_class(self, button, state):
         # state 0 = app is not installed
@@ -4298,6 +4405,191 @@ class MainWindow(object):
         else:
             print("myapps perm is 0 so you can not use myapps button")
 
+    def on_updates_button_clicked(self, button):
+
+        def start_thread():
+            self.upgradables_listbox.foreach(lambda child: self.upgradables_listbox.remove(child))
+            self.upgrade_dsize_box.set_visible(False)
+            self.upgrade_isize_box.set_visible(False)
+            self.upgrade_ucount_box.set_visible(False)
+            self.upgrade_ncount_box.set_visible(False)
+            self.upgrade_rcount_box.set_visible(False)
+            self.upgrade_kcount_box.set_visible(False)
+            self.topsearchbutton.set_active(False)
+            self.topsearchbutton.set_sensitive(False)
+            self.menubackbutton.set_sensitive(False)
+            GLib.idle_add(self.updates_button.set_sensitive, False)
+            GLib.idle_add(self.homestack.set_visible_child_name, "upgrade")
+            GLib.idle_add(self.upgrade_stack.set_visible_child_name, "spinner")
+            GLib.idle_add(self.upgrade_stack_spinnner.start)
+            self.set_stack_n_search(5)
+            upg_thread = threading.Thread(target=self.upgradables_worker_thread, daemon=True)
+            upg_thread.start()
+
+        def set_stack(stack_name):
+            self.topsearchbutton.set_active(False)
+            self.topsearchbutton.set_sensitive(False)
+            self.menubackbutton.set_sensitive(False)
+            GLib.idle_add(self.homestack.set_visible_child_name, "upgrade")
+            GLib.idle_add(self.upgrade_stack.set_visible_child_name, stack_name)
+            self.set_stack_n_search(5)
+
+        if self.upgrade_inprogress or self.upgrades_completed:
+            set_stack("upgrade")
+            return
+
+        if self.auto_apt_update_finished and self.upgradables_page_setted:
+            set_stack("main")
+        else:
+            start_thread()
+
+    def upgradables_worker_thread(self):
+        rcu = self.rcu_worker()
+        GLib.idle_add(self.on_upgradables_worker_done, rcu)
+
+    def rcu_worker(self):
+        return self.Package.required_changes_upgrade()
+
+    def on_upgradables_worker_done(self, requireds):
+
+        def add_to_listbox(package, state):
+
+            image = Gtk.Image.new_from_icon_name("go-up-symbolic" if state == 1 else "list-add-symbolic", Gtk.IconSize.BUTTON)
+            name = Gtk.Label.new()
+            name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(package, -1)))
+            name.props.halign = Gtk.Align.START
+
+            summarylabel = Gtk.Label.new()
+            summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(self.Package.summary(package), -1)))
+            summarylabel.set_ellipsize(Pango.EllipsizeMode.END)
+            summarylabel.props.halign = Gtk.Align.START
+
+            old_version = Gtk.Label.new()
+            old_version.set_markup("<span size='x-small'>{}</span>".format(GLib.markup_escape_text(self.Package.installed_version(package), -1)))
+            old_version.set_ellipsize(Pango.EllipsizeMode.END)
+
+            sep_label = Gtk.Label.new()
+            sep_label.set_markup("<span size='x-small'>>></span>")
+
+            new_version = Gtk.Label.new()
+            new_version.set_markup("<span size='x-small'>{}</span>".format(GLib.markup_escape_text(self.Package.candidate_version(package), -1)))
+            new_version.set_ellipsize(Pango.EllipsizeMode.END)
+
+            box_version = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 5)
+            box_version.pack_start(old_version, False, True, 0)
+            box_version.pack_start(sep_label, False, True, 0)
+            box_version.pack_start(new_version, False, True, 0)
+
+
+            box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
+            box1.pack_start(name, False, True, 0)
+            box1.pack_start(summarylabel, False, True, 0)
+            box1.pack_start(box_version, False, True, 0)
+            box1.props.valign = Gtk.Align.CENTER
+            box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+            box.set_margin_top(5)
+            box.set_margin_bottom(5)
+            box.set_margin_start(5)
+            box.set_margin_end(5)
+            box.pack_start(image, False, True, 5)
+            box.pack_start(box1, False, True, 5)
+            GLib.idle_add(self.upgradables_listbox.insert, box, GLib.PRIORITY_DEFAULT_IDLE)
+
+        if requireds["cache_error"]:
+            GLib.idle_add(self.upgrade_stack.set_visible_child_name, "upgrade")
+            GLib.idle_add(self.upgrade_info_label.set_markup,
+                          "<span color='red'>{}</span>".format(self.Package.update_cache_error_msg))
+            GLib.idle_add(self.upgrade_info_box.set_visible, True)
+            GLib.idle_add(self.upgrade_vte_sw.set_visible, False)
+            GLib.idle_add(self.upgrade_stack_spinnner.stop)
+            GLib.idle_add(self.updates_button.set_sensitive, True)
+            GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
+            GLib.idle_add(self.upgrade_info_ok_button.set_visible, False)
+            return
+
+        if not requireds["changes_available"]:
+            GLib.idle_add(self.upgrade_stack.set_visible_child_name, "upgrade")
+            GLib.idle_add(self.upgrade_info_label.set_markup,
+                          "<b>{}</b>".format(_("Updates are complete. Your system is up to date.")))
+            GLib.idle_add(self.upgrade_info_box.set_visible, True)
+            GLib.idle_add(self.upgrade_vte_sw.set_visible, False)
+            GLib.idle_add(self.upgrade_stack_spinnner.stop)
+            GLib.idle_add(self.updates_button.set_sensitive, True)
+            GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
+            GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
+            self.upgrades_completed = True
+            return
+
+        if requireds["to_upgrade"] and requireds["to_upgrade"] is not None:
+            for package in requireds["to_upgrade"]:
+                add_to_listbox(package, 1)
+
+        if requireds["to_install"] and requireds["to_install"] is not None:
+            for package in requireds["to_install"]:
+                add_to_listbox(package, 2)
+
+        GLib.idle_add(self.upgradables_listbox.show_all)
+        GLib.idle_add(self.upgrade_stack.set_visible_child_name, "main")
+        GLib.idle_add(self.upgrade_stack_spinnner.stop)
+        GLib.idle_add(self.updates_button.set_sensitive, True)
+
+        if requireds["download_size"] and requireds["download_size"] is not None:
+            GLib.idle_add(self.upgrade_dsize_label.set_markup,
+                          "{}".format(self.Package.beauty_size(requireds["download_size"])))
+            GLib.idle_add(self.upgrade_dsize_box.set_visible, True)
+
+        if requireds["install_size"] and requireds["install_size"] is not None and requireds["install_size"] > 0:
+            GLib.idle_add(self.upgrade_isize_label.set_markup,
+                          "{}".format(self.Package.beauty_size(requireds["install_size"])))
+            GLib.idle_add(self.upgrade_isize_box.set_visible, True)
+
+        if requireds["to_upgrade"] and requireds["to_upgrade"] is not None:
+            GLib.idle_add(self.upgrade_ucount_label.set_markup,
+                          "{}".format(len(requireds["to_upgrade"])))
+            GLib.idle_add(self.upgrade_ucount_box.set_visible, True)
+
+        if requireds["to_install"] and requireds["to_install"] is not None:
+            GLib.idle_add(self.upgrade_ncount_label.set_markup, "{}".format(len(requireds["to_install"])))
+            GLib.idle_add(self.upgrade_ncount_box.set_visible, True)
+
+        if requireds["to_delete"] and requireds["to_delete"] is not None:
+            GLib.idle_add(self.upgrade_rcount_label.set_markup, "{}".format(len(requireds["to_delete"])))
+            GLib.idle_add(self.upgrade_rcount_box.set_visible, True)
+
+        if requireds["to_keep"] and requireds["to_keep"] is not None:
+            GLib.idle_add(self.upgrade_kcount_label.set_markup, "{}".format(requireds["to_keep"]))
+            GLib.idle_add(self.upgrade_kcount_box.set_visible, True)
+
+        print("on_upgradables_worker_done")
+        self.upgradables_page_setted = True
+
+    def on_upgrade_button_clicked(self, button):
+        self.upgrade_info_box.set_visible(False)
+        self.upgrade_vte_sw.set_visible(True)
+        self.upgrade_info_back_button.set_visible(True)
+        self.upgrade_info_ok_button.set_visible(False)
+        self.upgrade_stack.set_visible_child_name("upgrade")
+        if len(self.queue) == 0:
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "upgrade"]
+            self.upgrade_vte_start_process(command)
+            self.upgrade_inprogress = True
+        else:
+            self.upgrade_info_label.set_markup(
+                "<span color='red'>{}</span>".format(_("Package manager is busy, try again later.")))
+            self.upgrade_info_box.set_visible(True)
+            self.upgrade_vte_sw.set_visible(False)
+
+    def on_upgrade_info_back_button_clicked(self, button):
+        self.updatestack.set_visible_child_name("main")
+
+    def on_upgrade_info_ok_button_clicked(self, button):
+        self.set_stack_n_search(1)
+        GLib.idle_add(self.updates_button.set_visible, False)
+        GLib.idle_add(self.menubackbutton.set_sensitive, False)
+        if self.Server.connection:
+            GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
+            self.topsearchbutton.set_sensitive(True)
+
     def on_queue_button_clicked(self, button):
         self.menubackbutton.set_sensitive(True)
         self.prefback = self.homestack.get_visible_child_name()
@@ -5668,6 +5960,7 @@ class MainWindow(object):
         return ui_appname
 
     def on_retrybutton_clicked(self, button):
+        self.connection_error_after = False
         self.mainstack.set_visible_child_name("splash")
         p1 = threading.Thread(target=self.worker)
         p1.daemon = True
@@ -6300,6 +6593,17 @@ class MainWindow(object):
                                           self.UserSettings.config_udt, self.UserSettings.config_aptup,
                                           timestamp, self.UserSettings.config_forceaptuptime)
 
+            if self.Package.upgradable():
+                if not self.updates_button.get_visible():
+                    GLib.idle_add(self.header_buttonbox.pack_start, self.updates_button, False, True, 0)
+                    GLib.idle_add(self.updates_button.set_visible, True)
+                    GLib.idle_add(self.updates_button.set_sensitive, True)
+            else:
+                GLib.idle_add(self.updates_button.set_visible, False)
+                GLib.idle_add(self.updates_button.set_sensitive, False)
+
+            self.auto_apt_update_finished = True
+
     def startGroupProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
@@ -6395,6 +6699,59 @@ class MainWindow(object):
         pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
         term.set_pty(pty)
         term.connect("child-exited", self.onVteDone)
+        return term.spawn_sync(Vte.PtyFlags.DEFAULT,
+                               os.environ['HOME'],
+                               command,
+                               [],
+                               GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                               None,
+                               None,
+                               )
+
+
+    def upgrade_vte_event(self, widget, event):
+        if event.type == Gdk.EventType.BUTTON_PRESS:
+            if event.button.button == 3:
+                widget.popup_for_device(None, None, None, None, None,
+                                        event.button.button, event.time)
+                return True
+        return False
+
+    def upgrade_vte_menu_action(self, widget, terminal):
+        terminal.copy_clipboard()
+
+    def upgrade_vte_start_process(self, params):
+        status, pid = self.upgrade_vte_run_command(self.upgrade_vteterm, params)
+        return pid
+
+    def upgrade_vte_on_done(self, obj, status):
+        print("upgrade_vte_on_done status: {}".format(status))
+        self.upgrade_inprogress = False
+        if status == 32256: # operation cancelled | Request dismissed
+            self.upgrade_stack.set_visible_child_name("main")
+        else:
+            if self.Package.updatecache():
+                self.upgradables_listbox.foreach(lambda child: self.upgradables_listbox.remove(child))
+                self.upgrade_dsize_box.set_visible(False)
+                self.upgrade_isize_box.set_visible(False)
+                self.upgrade_ucount_box.set_visible(False)
+                self.upgrade_ncount_box.set_visible(False)
+                self.upgrade_rcount_box.set_visible(False)
+                self.upgrade_kcount_box.set_visible(False)
+                self.topsearchbutton.set_active(False)
+                self.topsearchbutton.set_sensitive(False)
+                self.menubackbutton.set_sensitive(False)
+                GLib.idle_add(self.updates_button.set_sensitive, False)
+                GLib.idle_add(self.upgrade_stack.set_visible_child_name, "spinner")
+                GLib.idle_add(self.upgrade_stack_spinnner.start)
+                self.set_stack_n_search(5)
+                upg_thread = threading.Thread(target=self.upgradables_worker_thread, daemon=True)
+                upg_thread.start()
+
+    def upgrade_vte_run_command(self, term, command):
+        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
+        term.set_pty(pty)
+        term.connect("child-exited", self.upgrade_vte_on_done)
         return term.spawn_sync(Vte.PtyFlags.DEFAULT,
                                os.environ['HOME'],
                                command,
