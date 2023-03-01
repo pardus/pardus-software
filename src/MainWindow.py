@@ -308,6 +308,8 @@ class MainWindow(object):
         self.rstack = self.GtkBuilder.get_object("rstack")
 
         self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
+        self.repo_required_stack = self.GtkBuilder.get_object("repo_required_stack")
+        self.repo_required_spinner = self.GtkBuilder.get_object("repo_required_spinner")
         self.rapp_packagename_box = self.GtkBuilder.get_object("rapp_packagename_box")
         self.rapp_package_broken_box = self.GtkBuilder.get_object("rapp_package_broken_box")
         self.rapp_toremove_box = self.GtkBuilder.get_object("rapp_toremove_box")
@@ -2748,6 +2750,10 @@ class MainWindow(object):
         return self.Package.required_changes(package)
 
     def on_required_worker_done(self, package, rc):
+
+        self.repo_required_spinner.stop()
+        self.repo_required_stack.set_visible_child_name("details")
+
         self.rapp_packagename_box.set_visible(True)
         self.rapp_packagename_label.set_markup("<b>{}</b>".format(package))
 
@@ -4312,6 +4318,9 @@ class MainWindow(object):
         self.rapp_fsize_box.set_visible(False)
         self.rapp_dsize_box.set_visible(False)
         self.rapp_isize_box.set_visible(False)
+
+        self.repo_required_spinner.start()
+        self.repo_required_stack.set_visible_child_name("spinner")
 
         self.repo_required_changes_popover.popup()
 
