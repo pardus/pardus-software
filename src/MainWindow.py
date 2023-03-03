@@ -4573,6 +4573,7 @@ class MainWindow(object):
         self.upgradables_page_setted = True
 
     def on_upgrade_button_clicked(self, button):
+        self.upgrade_vteterm.reset(True, True)
         self.upgrade_info_box.set_visible(False)
         self.upgrade_vte_sw.set_visible(True)
         self.upgrade_info_back_button.set_visible(True)
