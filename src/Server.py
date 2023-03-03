@@ -6,7 +6,6 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import requests
 from pathlib import Path
 import tarfile
 from shutil import rmtree

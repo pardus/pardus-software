@@ -22,8 +22,7 @@ Depends: ${misc:Depends},
          python3-cairo,
          python3-distro,
          python3-netifaces,
-         python3-psutil,
-         python3-requests
+         python3-psutil
 Recommends: desktop-file-utils,
             python3-matplotlib,
             shared-mime-info
