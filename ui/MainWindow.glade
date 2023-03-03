@@ -881,7 +881,7 @@
     <property name="version">0.1.0~alpha1</property>
     <property name="copyright">© 2023 Pardus</property>
     <property name="comments" translatable="yes">Install, remove, update applications</property>
-    <property name="website">https://www.pardus.org.tr</property>
+    <property name="website">https://github.com/pardus/pardus-software</property>
     <property name="website-label" translatable="yes">Website</property>
     <property name="authors">Fatih Altun</property>
     <property name="translator-credits">Fatih Altun</property>
