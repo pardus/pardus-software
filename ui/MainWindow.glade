@@ -10706,6 +10706,20 @@ Use with caution. Are you sure you want to continue?</property>
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">21</property>
                                     <child>
+                                      <object class="GtkScrolledWindow" id="upgrade_vte_sw">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
                                       <object class="GtkBox" id="upgrade_info_box">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
@@ -10761,20 +10775,6 @@ Use with caution. Are you sure you want to continue?</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkScrolledWindow" id="upgrade_vte_sw">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">True</property>
-                                        <child>
-                                          <placeholder/>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
                                         <property name="fill">True</property>
                                         <property name="position">1</property>
                                       </packing>

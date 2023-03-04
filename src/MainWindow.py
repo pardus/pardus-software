@@ -640,7 +640,6 @@ class MainWindow(object):
         self.auto_apt_update_finished = False
         self.upgradables_page_setted = False
         self.upgrade_inprogress = False
-        self.upgrades_completed = False
 
         self.applist = []
         self.fullapplist = []
@@ -4443,7 +4442,7 @@ class MainWindow(object):
             GLib.idle_add(self.upgrade_stack.set_visible_child_name, stack_name)
             self.set_stack_n_search(5)
 
-        if self.upgrade_inprogress or self.upgrades_completed:
+        if self.upgrade_inprogress:
             set_stack("upgrade")
             return
 
@@ -4526,7 +4525,6 @@ class MainWindow(object):
             GLib.idle_add(self.updates_button.set_sensitive, True)
             GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
             GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
-            self.upgrades_completed = True
             return
 
         if requireds["to_upgrade"] and requireds["to_upgrade"] is not None:
@@ -4593,12 +4591,20 @@ class MainWindow(object):
         self.upgrade_stack.set_visible_child_name("main")
 
     def on_upgrade_info_ok_button_clicked(self, button):
-        self.set_stack_n_search(1)
-        GLib.idle_add(self.updates_button.set_visible, False)
-        GLib.idle_add(self.menubackbutton.set_sensitive, False)
-        if self.Server.connection:
-            GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
-            self.topsearchbutton.set_sensitive(True)
+        if self.Package.upgradable():
+            self.upgradables_page_setted = False
+            self.on_updates_button_clicked(None)
+        else:
+            self.set_stack_n_search(1)
+            GLib.idle_add(self.updates_button.set_visible, False)
+            GLib.idle_add(self.menubackbutton.set_sensitive, False)
+            if self.Server.connection:
+                GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
+                self.topsearchbutton.set_sensitive(True)
+            else:
+                self.searchstack.set_visible_child_name("noserver")
+                self.homestack.set_visible_child_name("noserver")
+                self.topsearchbutton.set_sensitive(False)
 
     def on_queue_button_clicked(self, button):
         self.menubackbutton.set_sensitive(True)
@@ -6718,7 +6724,6 @@ class MainWindow(object):
                                None,
                                )
 
-
     def upgrade_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
             if event.button.button == 3:
@@ -6730,43 +6735,37 @@ class MainWindow(object):
     def upgrade_vte_menu_action(self, widget, terminal):
         terminal.copy_clipboard()
 
-    def upgrade_vte_start_process(self, params):
-        status, pid = self.upgrade_vte_run_command(self.upgrade_vteterm, params)
-        return pid
+    def upgrade_vte_start_process(self, command):
+        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
+        self.upgrade_vteterm.set_pty(pty)
+        self.upgrade_vteterm.spawn_async(
+            Vte.PtyFlags.DEFAULT,
+            os.environ['HOME'],
+            command,
+            None,
+            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            None,
+            None,
+            -1,
+            None,
+            self.upgrade_vte_create_spawn_callback,
+            None
+            )
 
-    def upgrade_vte_on_done(self, obj, status):
+    def upgrade_vte_create_spawn_callback(self, terminal, pid, error, userdata):
+        self.upgrade_vteterm.connect("child-exited", self.upgrade_vte_on_done)
+
+    def upgrade_vte_on_done(self, terminal, status):
         print("upgrade_vte_on_done status: {}".format(status))
         self.upgrade_inprogress = False
         if status == 32256: # operation cancelled | Request dismissed
             self.upgrade_stack.set_visible_child_name("main")
         else:
-            if self.Package.updatecache():
-                self.upgradables_listbox.foreach(lambda child: self.upgradables_listbox.remove(child))
-                self.upgrade_dsize_box.set_visible(False)
-                self.upgrade_isize_box.set_visible(False)
-                self.upgrade_ucount_box.set_visible(False)
-                self.upgrade_ncount_box.set_visible(False)
-                self.upgrade_rcount_box.set_visible(False)
-                self.upgrade_kcount_box.set_visible(False)
-                self.topsearchbutton.set_active(False)
-                self.topsearchbutton.set_sensitive(False)
-                self.menubackbutton.set_sensitive(False)
-                GLib.idle_add(self.updates_button.set_sensitive, False)
-                GLib.idle_add(self.upgrade_stack.set_visible_child_name, "spinner")
-                GLib.idle_add(self.upgrade_stack_spinnner.start)
-                self.set_stack_n_search(5)
-                upg_thread = threading.Thread(target=self.upgradables_worker_thread, daemon=True)
-                upg_thread.start()
-
-    def upgrade_vte_run_command(self, term, command):
-        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
-        term.set_pty(pty)
-        term.connect("child-exited", self.upgrade_vte_on_done)
-        return term.spawn_sync(Vte.PtyFlags.DEFAULT,
-                               os.environ['HOME'],
-                               command,
-                               [],
-                               GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                               None,
-                               None,
-                               )
+            self.Package.updatecache()
+            self.upgradables_page_setted = False
+            if self.homestack.get_visible_child_name() == "upgrade":
+                GLib.idle_add(self.upgrade_info_label.set_markup,
+                              "<b>{}</b>".format(_("Process completed.")))
+                GLib.idle_add(self.upgrade_info_box.set_visible, True)
+                GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
+                GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
