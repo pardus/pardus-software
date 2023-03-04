@@ -348,6 +348,15 @@ class MainWindow(object):
         self.upgrade_stack_spinnner = self.GtkBuilder.get_object("upgrade_stack_spinnner")
         self.upgradables_listbox = self.GtkBuilder.get_object("upgradables_listbox")
         self.upgrade_vte_sw = self.GtkBuilder.get_object("upgrade_vte_sw")
+        self.upgrade_buttonbox = self.GtkBuilder.get_object("upgrade_buttonbox")
+        self.upgrade_buttonbox.set_homogeneous(False)
+        self.upgrade_options_popover = self.GtkBuilder.get_object("upgrade_options_popover")
+        self.upgrade_options_defaults_button = self.GtkBuilder.get_object("upgrade_options_defaults_button")
+        self.upgrade_new_conf_radiobutton = self.GtkBuilder.get_object("upgrade_new_conf_radiobutton")
+        self.upgrade_old_conf_radiobutton = self.GtkBuilder.get_object("upgrade_old_conf_radiobutton")
+        self.upgrade_ask_conf_radiobutton = self.GtkBuilder.get_object("upgrade_ask_conf_radiobutton")
+        self.upgrade_withyq_radiobutton = self.GtkBuilder.get_object("upgrade_withyq_radiobutton")
+        self.upgrade_withoutyq_radiobutton = self.GtkBuilder.get_object("upgrade_withoutyq_radiobutton")
         self.upgrade_info_back_button = self.GtkBuilder.get_object("upgrade_info_back_button")
         self.upgrade_info_ok_button = self.GtkBuilder.get_object("upgrade_info_ok_button")
         self.upgrade_info_box = self.GtkBuilder.get_object("upgrade_info_box")
@@ -4570,6 +4579,19 @@ class MainWindow(object):
         print("on_upgradables_worker_done")
         self.upgradables_page_setted = True
 
+    def on_upgrade_conf_radiobutton_toggled(self, button):
+        self.upgrade_options_defaults_button.set_visible(
+            not self.upgrade_new_conf_radiobutton.get_active() or not self.upgrade_withyq_radiobutton.get_active())
+
+    def on_upgrade_options_defaults_button_clicked(self, button):
+        self.upgrade_new_conf_radiobutton.set_active(True)
+        self.upgrade_withyq_radiobutton.set_active(True)
+
+    def on_upgrade_options_button_clicked(self, button):
+        self.upgrade_options_popover.popup()
+        self.upgrade_options_defaults_button.set_visible(
+            not self.upgrade_new_conf_radiobutton.get_active() or not self.upgrade_withyq_radiobutton.get_active())
+
     def on_upgrade_button_clicked(self, button):
         self.upgrade_vteterm.reset(True, True)
         self.upgrade_info_box.set_visible(False)
@@ -4577,8 +4599,25 @@ class MainWindow(object):
         self.upgrade_info_back_button.set_visible(True)
         self.upgrade_info_ok_button.set_visible(False)
         self.upgrade_stack.set_visible_child_name("upgrade")
+
+        yq_conf = ""
+        if self.upgrade_withyq_radiobutton.get_active():
+            yq_conf =  "-y -q"
+        elif self.upgrade_withoutyq_radiobutton.get_active():
+            yq_conf = ""
+
+        dpkg_conf = ""
+        if self.upgrade_new_conf_radiobutton.get_active():
+            dpkg_conf = "-o Dpkg::Options::=--force-confnew"
+        elif self.upgrade_old_conf_radiobutton.get_active():
+            dpkg_conf = "-o Dpkg::Options::=--force-confold"
+        elif self.upgrade_ask_conf_radiobutton.get_active():
+            dpkg_conf = ""
+
+        print("yq_conf: {}\ndpkg_conf: {}".format(yq_conf, dpkg_conf))
         if len(self.queue) == 0:
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "upgrade"]
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
+                       "upgrade", yq_conf, dpkg_conf]
             self.upgrade_vte_start_process(command)
             self.upgrade_inprogress = True
         else:

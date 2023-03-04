@@ -31,8 +31,10 @@ def main():
         subprocess.call(["apt", "update"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
-    def subupgrade():
-        subprocess.call(["apt", "full-upgrade", "-yq", "-o", "Dpkg::Options::=--force-confnew"],
+    def subupgrade(yq, dpkg_conf):
+        dpkg_conf_list = dpkg_conf.split(" ")
+        yq_list = yq.split(" ")
+        subprocess.call(["apt", "full-upgrade"] + yq_list + dpkg_conf_list,
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def fixbroken():
@@ -146,7 +148,7 @@ def main():
             dpkgconfigure()
         elif sys.argv[1] == "upgrade":
             subupdate()
-            subupgrade()
+            subupgrade(sys.argv[2], sys.argv[3])
         else:
             print("unknown argument error")
     else:
