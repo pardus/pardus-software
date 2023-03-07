@@ -649,6 +649,7 @@ class MainWindow(object):
         self.auto_apt_update_finished = False
         self.upgradables_page_setted = False
         self.upgrade_inprogress = False
+        self.keep_ok_clicked = False
 
         self.applist = []
         self.fullapplist = []
@@ -4526,8 +4527,15 @@ class MainWindow(object):
 
         if not requireds["changes_available"]:
             GLib.idle_add(self.upgrade_stack.set_visible_child_name, "upgrade")
-            GLib.idle_add(self.upgrade_info_label.set_markup,
-                          "<b>{}</b>".format(_("Updates are complete. Your system is up to date.")))
+            if requireds["to_keep"]:
+                GLib.idle_add(self.upgrade_info_label.set_markup,"<b>{}</b>\n\n{}:\n\n{}".format(
+                    _("Updates are complete. Your system is up to date."),
+                    _("List of packages on hold"),
+                    " ".join(self.Package.upgradable())))
+                self.keep_ok_clicked = True
+            else:
+                GLib.idle_add(self.upgrade_info_label.set_markup,
+                              "<b>{}</b>".format(_("Updates are complete. Your system is up to date.")))
             GLib.idle_add(self.upgrade_info_box.set_visible, True)
             GLib.idle_add(self.upgrade_vte_sw.set_visible, False)
             GLib.idle_add(self.upgrade_stack_spinnner.stop)
@@ -4630,7 +4638,7 @@ class MainWindow(object):
         self.upgrade_stack.set_visible_child_name("main")
 
     def on_upgrade_info_ok_button_clicked(self, button):
-        if self.Package.upgradable():
+        if self.Package.upgradable() and not self.keep_ok_clicked:
             self.upgradables_page_setted = False
             self.on_updates_button_clicked(None)
         else:
@@ -6720,9 +6728,19 @@ class MainWindow(object):
     def menu_action(self, widget, terminal):
         terminal.copy_clipboard()
 
-    def startVteProcess(self, params):
-        status, pid = self.runVteCommand(self.vteterm, params)
-        return pid
+    def startVteProcess(self, command):
+        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
+        self.vteterm.set_pty(pty)
+        self.vteterm.connect("child-exited", self.onVteDone)
+        self.vteterm.spawn_sync(
+            Vte.PtyFlags.DEFAULT,
+            os.environ['HOME'],
+            command,
+            [],
+            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            None,
+            None,
+            )
 
     def onVteDone(self, obj, status):
         self.tryfixSpinner.stop()
@@ -6750,19 +6768,6 @@ class MainWindow(object):
         else:
             print("onVteDone status: {}".format(status))
 
-    def runVteCommand(self, term, command):
-        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
-        term.set_pty(pty)
-        term.connect("child-exited", self.onVteDone)
-        return term.spawn_sync(Vte.PtyFlags.DEFAULT,
-                               os.environ['HOME'],
-                               command,
-                               [],
-                               GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                               None,
-                               None,
-                               )
-
     def upgrade_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
             if event.button.button == 3:
@@ -6777,18 +6782,32 @@ class MainWindow(object):
     def upgrade_vte_start_process(self, command):
         pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
         self.upgrade_vteterm.set_pty(pty)
-        self.upgrade_vteterm.spawn_async(
-            Vte.PtyFlags.DEFAULT,
-            os.environ['HOME'],
-            command,
-            None,
-            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-            None,
-            None,
-            -1,
-            None,
-            self.upgrade_vte_create_spawn_callback,
-            None
+        try:
+            self.upgrade_vteterm.spawn_async(
+                Vte.PtyFlags.DEFAULT,
+                os.environ['HOME'],
+                command,
+                None,
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
+                -1,
+                None,
+                self.upgrade_vte_create_spawn_callback,
+                None
+                )
+        except Exception as e:
+            # old version VTE doesn't have spawn_async so use spawn_sync
+            print("{}".format(e))
+            self.upgrade_vteterm.connect("child-exited", self.upgrade_vte_on_done)
+            self.upgrade_vteterm.spawn_sync(
+                Vte.PtyFlags.DEFAULT,
+                os.environ['HOME'],
+                command,
+                [],
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
             )
 
     def upgrade_vte_create_spawn_callback(self, terminal, pid, error, userdata):
