@@ -1,3 +1,57 @@
+pardus-software (0.6.0) unstable; urgency=medium
+
+  [ Sabri Ünal ]
+  * application: Correct some grammar errors
+  * Use "Install" instead of "Add"
+
+  [ Fatih Altun ]
+  * Update Turkish translation
+  * Add popover to myapps uninstall button
+  * Fix initial visible status of myapp popup widgets
+  * Update back button status and top button ids
+  * Fix scroll position of myapps
+  * Update search entry ids
+  * Add startswith priority to repo search results
+  * Update repo page ui and Add more information about package
+
+  [ Kerem Göksu ]
+  * Update Package.py to improve code quality
+  * Update beauty_size to be more optimal and readable
+  * Removed unnecessary code and fixed weird format
+  * Removed unnecessary try..except and Optimized
+
+  [ Fatih Altun ]
+  * Fix typo
+  * Fix typo
+  * Use GLib format_size for beautify size
+  * Add cursor_changed func to repo apps for better handling
+  * Add required changes info to repo action info button with popover
+  * Update package_broken control on repo app
+  * Add version info to repo apps
+  * Add origins info to repo apps
+  * Add button box to repo search button
+  * Add get_uri func to Package
+  * Add overwrite confirmation to image save dialog
+  * Add dynamic updates button to headerbar with new funcs and ui
+  * Fix typo
+  * Add spinner to repo action info button
+  * Fix translatable values
+  * Update pot file
+  * Update Turkish translations
+  * Rm python3-requests from depends
+  * Update README.md
+  * Update about page website
+  * Add reset upgrade_vte
+  * Update upgrade_vte and upgrade control funcs
+  * Add upgrade options
+  * Update pot file
+  * Update Turkish translations
+  * Fix vte spawn function and Add hold list to upgraded page
+  * Update pot file
+  * Update Turkish translations
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 07 Mar 2023 19:39:30 +0300
+
 pardus-software (0.5.0) unstable; urgency=medium
 
   * Add license to main.py
