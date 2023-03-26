@@ -56,6 +56,14 @@ def main():
     def externalrepo(keyfile, slistfile):
         subprocess.call(["apt-key", "add", keyfile])
         subprocess.call(["mv", slistfile, "/etc/apt/sources.list.d/"])
+    
+    def addrepo(repo):
+        echo = subprocess.Popen(["echo", repo], stdout=subprocess.PIPE)
+        tee = subprocess.check_output(["sudo", "tee", "-a","/etc/apt/sources.list"], stdin=echo.stdout)
+        echo.wait()
+
+    def removerepo(index):
+        subprocess.call(["sed", "-i", str(index)+"d", "/etc/apt/sources.list"])
 
     if len(sys.argv) > 1:
         if control_lock():
@@ -76,6 +84,12 @@ def main():
                 removeauto()
             elif sys.argv[1] == "externalrepo":
                 externalrepo(sys.argv[2], sys.argv[3])
+                update()
+            elif sys.argv[1] == "addrepo":
+                addrepo(sys.argv[2])
+                update()
+            elif sys.argv[1] == "removerepo":
+                removerepo(sys.argv[2])
                 update()
         else:
             print("lock error")

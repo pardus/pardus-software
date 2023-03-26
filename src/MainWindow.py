@@ -588,6 +588,10 @@ class MainWindow(object):
         self.appimage2stack = self.GtkBuilder.get_object("appimage2stack")
         self.fullscreen_image = self.GtkBuilder.get_object("fullscreen_image")
 
+        self.repo_list = self.GtkBuilder.get_object("repo_list")
+        self.repo_add_entry = self.GtkBuilder.get_object("repo_add_entry")
+        self.repo_index_list = []
+
         self.mac = self.getMac()
 
         self.par_desc_more = self.GtkBuilder.get_object("par_desc_more")
@@ -5907,6 +5911,51 @@ class MainWindow(object):
 
     def on_prefcorrectbutton_clicked(self, button):
         self.prefstack.set_visible_child_name("confirm")
+
+    def get_repos(self):
+        sourcesfile = open("/etc/apt/sources.list", "r")
+        repos = sourcesfile.read().split("\n")
+        sourcesfile.close()
+        returnlist = []
+        for i, repo in enumerate(repos):
+            if not repo.startswith("#") and repo != "":
+                returnlist.append([repo, i])
+        return returnlist
+    
+    def on_addrepobutton_clicked(self, button):
+        self.prefstack.set_visible_child_name("manage_ppa")
+        self.repo_list.foreach(lambda row: self.repo_list.remove(row))
+        self.repo_index_list = self.get_repos()
+        for repo in self.repo_index_list:
+            label = Gtk.Label(label=repo[0])
+            row = Gtk.ListBoxRow()
+            row.add(label)
+            self.repo_list.add(row)
+        self.repo_list.show_all()
+
+    def on_addrepo_clicked(self, button):
+        repo = self.repo_add_entry.get_text()
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "addrepo", repo]
+        code = subprocess.call(command)
+        if code == 0:
+            label = Gtk.Label(label=repo)
+            row = Gtk.ListBoxRow()
+            row.add(label)
+            self.repo_list.add(row)
+            self.repo_list.show_all()
+
+    def on_removerepo_clicked(self, button):
+        index = self.repo_index_list[self.repo_list.get_selected_row().get_index()][1]+1
+        if "depo.pardus.org.tr" in self.repo_index_list[self.repo_list.get_selected_row().get_index()][0]:
+            return
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "removerepo",
+                   str(index)]
+        code = subprocess.call(command)
+        if code == 0:
+            self.on_addrepobutton_clicked(None)
+
+    def on_repoexitbutton_clicked(self, button):
+        self.prefstack.set_visible_child_name("main")
 
     def on_prefconfirm_cancelbutton_clicked(self, button):
         self.prefstack.set_visible_child_name("main")
