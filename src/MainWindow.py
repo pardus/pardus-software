@@ -779,7 +779,7 @@ class MainWindow(object):
         for family in default_gateways:
             interface = default_gateways[family][1]  # 0 for gateway, 1 for interface
             if AF_LINK in netifaces.ifaddresses(interface):
-                mac = netifaces.ifaddresses(interface)[netifaces.AF_LINK][0]["addr"].upper()
+                mac = netifaces.ifaddresses(interface)[AF_LINK][0]["addr"].upper()
             break
         if mac is None or mac == "":
             print("mac address can not get from netifaces, trying psutil")
