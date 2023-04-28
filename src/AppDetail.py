@@ -6,7 +6,8 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import gi, json
+import gi
+import json
 
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')

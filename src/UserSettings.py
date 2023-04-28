@@ -6,8 +6,9 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
+import configparser
+import distro
 from pathlib import Path
-import configparser, distro
 
 
 class UserSettings(object):

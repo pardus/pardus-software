@@ -6,16 +6,17 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-from pathlib import Path
+import json
 import tarfile
-from shutil import rmtree
 from hashlib import md5
+from pathlib import Path
+from shutil import rmtree
 
-import gi, json
+import gi
 
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
-from gi.repository import GLib, Gio, Soup
+from gi.repository import GLib, Gio
 
 
 class Server(object):
@@ -121,66 +122,6 @@ class Server(object):
 
         self.ServerIconsCB(False, type, fromsettings)
 
-    # def getAppIcons(self, force_download=False):
-    #     if not self.isExists(self.cachedir + self.serverappicons) or force_download:
-    #         print("trying to downlad " + self.serverappicons)
-    #         try:
-    #             response = requests.get(self.serverurl + self.serverfiles + self.serverappicons + self.serverarchive)
-    #         except:
-    #             print(
-    #                 "server error getting " + self.serverurl + self.serverfiles + self.serverappicons + self.serverarchive)
-    #             return False
-    #         if response.status_code == 200:
-    #             if self.createDir(self.cachedir):
-    #                 with open(self.cachedir + self.serverappicons + self.serverarchive, "wb") as file:
-    #                     file.write(response.content)
-    #                 if self.controlMD5(self.serverappicons):
-    #                     if self.extractArchive(self.cachedir + self.serverappicons + self.serverarchive,
-    #                                            self.serverappicons):
-    #                         return True
-    #                     else:
-    #                         print("extract error")
-    #                         return False
-    #                 else:
-    #                     print("md5 value is different (controlMD5)")
-    #                     return False
-    #             return False
-    #         else:
-    #             print("{} : {}".format("error getting app icons, status code", response.status_code))
-    #             return False
-    #     else:
-    #         return True
-
-    # def getCategoryIcons(self, force_download=False):
-    #     if not self.isExists(self.cachedir + self.servercaticons) or force_download:
-    #         print("trying to downlad " + self.servercaticons)
-    #         try:
-    #             response = requests.get(self.serverurl + self.serverfiles + self.servercaticons + self.serverarchive)
-    #         except:
-    #             print(
-    #                 "server error getting " + self.serverurl + self.serverfiles + self.servercaticons + self.serverarchive)
-    #             return False
-    #         if response.status_code == 200:
-    #             if self.createDir(self.cachedir):
-    #                 with open(self.cachedir + self.servercaticons + self.serverarchive, "wb") as file:
-    #                     file.write(response.content)
-    #                 if self.controlMD5(self.servercaticons):
-    #                     if self.extractArchive(self.cachedir + self.servercaticons + self.serverarchive,
-    #                                            self.servercaticons):
-    #                         return True
-    #                     else:
-    #                         print("extract error")
-    #                         return False
-    #                 else:
-    #                     print("md5 value is different (controlMD5)")
-    #                     return False
-    #             return False
-    #         else:
-    #             print("{} : {}".format("error getting category icons, status code", response.status_code))
-    #             return False
-    #     else:
-    #         return True
-
     def controlIcons(self):
         redown_app_icons = False
         redown_cat_icons = False
@@ -214,25 +155,6 @@ class Server(object):
                 if localiconmd5 == self.servermd5[servertag]:
                     return True
         return False
-
-    # def getDefaultSettings(self):
-    #     if not self.isExists(self.configdir):
-    #         print("trying to get settings from server")
-    #         try:
-    #             response = requests.get(self.serverurl + self.serversettings)
-    #         except:
-    #             print("server error getting " + self.serverurl + self.serversettings)
-    #             return False
-    #         if response.status_code == 200:
-    #             if self.createDir(self.configdir):
-    #                 with open(self.configdir + self.settingsfile, "wb") as file:
-    #                     file.write(response.content)
-    #                     return True
-    #         else:
-    #             print("{} : {}".format("error getting settings, status code", response.status_code))
-    #             return False
-    #     else:
-    #         return True
 
     def createDir(self, dir):
         try:
@@ -274,20 +196,6 @@ class Server(object):
         else:
             print(dir + " not exists")
             return False
-
-    # def getGnomeRatings(self):
-    #     try:
-    #         request_gnome = requests.get(self.gnomeratingserver)
-    #     except Exception as e:
-    #         print(e)
-    #         print("Connection problem on gnome odrs / ratings")
-    #         self.gnomeconnection = False
-    #
-    #     if self.gnomeconnection:
-    #         if request_gnome.status_code == 200:
-    #             return request_gnome.json()
-    #         return False
-    #     return False
 
     def deleteCache(self):
         try:

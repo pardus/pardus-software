@@ -6,7 +6,9 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import os, subprocess
+import os
+import subprocess
+
 import apt
 
 

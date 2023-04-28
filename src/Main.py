@@ -18,7 +18,9 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import gi, sys
+import gi
+import sys
+
 from MainWindow import MainWindow
 
 gi.require_version('Gtk', '3.0')
