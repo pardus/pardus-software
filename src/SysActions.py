@@ -7,14 +7,16 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import os
+import random
+import string
 import subprocess
 import sys
-from shutil import rmtree
-from pathlib import Path
-import distro
 from datetime import datetime
+from pathlib import Path
+from shutil import rmtree
+
 import apt
-import random, string
+import distro
 
 
 def main():
