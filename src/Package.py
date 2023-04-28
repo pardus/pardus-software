@@ -6,40 +6,23 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import apt, apt_pkg
-import time, os, locale, subprocess, re
+import locale
+import os
+import re
+import subprocess
+import time
+
+import apt
+import apt_pkg
 from gi.repository import Gio, GLib
+
 
 class Package(object):
     def __init__(self):
-
-        # self.updatecache()
-
         self.apps = []
         self.secs = []
         self.sections = []
-
         self.update_cache_error_msg = ""
-
-        # self.uniqsections = sorted(list(set(self.secs)))
-        #
-        # lencat = len(self.uniqsections)
-        #
-        # self.sections.append({"name": "all", "number": 0})
-        # for i in range(0, lencat):
-        #     self.sections.append({"name": self.uniqsections[i], "number": i + 1})
-        #
-        # self.repoapps = {}
-        #
-        # lenuniqsec = len(self.uniqsections)
-        # lenapss = len(self.apps)
-        #
-        # for i in range(0, lenuniqsec):
-        #     temp = []
-        #     for j in range(0, lenapss):
-        #         if self.uniqsections[i] == self.apps[j]["category"]:
-        #             temp.append({"name": self.apps[j]["name"], "category": self.apps[j]["category"]})
-        #     self.repoapps[self.uniqsections[i]] = temp
 
     def updatecache(self):
         try:
@@ -59,7 +42,6 @@ class Package(object):
             except:
                 section = mypkg.versions[0].section.lower()
             self.apps.append({"name": name, "category": section})
-            # self.secs.append(section)
 
     def controlPackageCache(self, packagename):
         try:
@@ -82,8 +64,6 @@ class Package(object):
                 return True
                 break
         return False
-
-    # print(package.versions[0].get_dependencies("Depends"))
 
     def description(self, packagename, israw):
         try:
@@ -119,7 +99,6 @@ class Package(object):
                     long_desc += "\n"
                 else:
                     long_desc += tmp + "\n"
-            # print long_desc
             # do some regular expression magic on the description
             # Add a newline before each bullet
             p = re.compile(r'^(\s|\t)*(\*|0|-)', re.MULTILINE)
@@ -127,13 +106,10 @@ class Package(object):
             # replace all newlines by spaces
             p = re.compile(r'\n', re.MULTILINE)
             long_desc = p.sub(" ", long_desc)
-            # replace all multiple spaces by
-            # newlines
+            # replace all multiple spaces by newlines
             p = re.compile(r'\s\s+', re.MULTILINE)
             long_desc = p.sub("\n", long_desc)
             long_desc = long_desc.rstrip("\n")
-            # print(summary)
-            # print(long_desc)
             return long_desc
         except:
             return self.description(packagename, False)
@@ -147,7 +123,6 @@ class Package(object):
         except AttributeError:
             sum = package.versions.get(0)
         return sum.summary if hasattr(sum, "summary") else "Summary is not found"
-
 
     def candidate_version(self, packagename):
         package = self.cache[packagename]
@@ -201,14 +176,6 @@ class Package(object):
                 homepage = package.versions[0].record["Homepage"]
             except:
                 homepage = ""
-        # try:
-        #     size = int(package.candidate.record["Installed-Size"])
-        # except:
-        #     try:
-        #         size = int(package.versions[0].record["Installed-Size"])
-        #     except:
-        #         size = ""
-
         try:
             arch = package.candidate.record["Architecture"]
         except:
@@ -332,7 +299,6 @@ class Package(object):
             packagenames.remove("--no-install-suggests")
 
         for packagename in packagenames:
-            # print(packagename)
             try:
                 package = self.cache[packagename]
             except Exception as e:
@@ -434,160 +400,6 @@ class Package(object):
             return "size not found"
         return GLib.format_size(size)
 
-    # old function
-    # def installed_packages(self, lang="en"):
-    #
-    #     # apt list --installed   || very slow method
-    #     # applist = []
-    #     # for mypkg in self.cache:
-    #     #     if self.cache[mypkg.name].is_installed:
-    #     #         applist.append({"name": mypkg.name, "size": self.installed_size(mypkg.name), "summary": self.summary(mypkg.name)})
-    #
-    #     # apps that have desktop file in /usr/share/applications/  | slow method
-    #     # dloc = "/usr/share/applications/"
-    #     # desktop_dir = os.listdir(dloc)
-    #     # desktop_list = []
-    #     # applist = []
-    #     # for desktop in desktop_dir:
-    #     #     if desktop.endswith(".desktop") and "NoDisplay=true" not in open(os.path.join(dloc, desktop), "r").read():
-    #     #         desktop_list.append(desktop)
-    #     # for desktop in desktop_list:
-    #     #     process = subprocess.run(["dpkg", "-S", desktop], stdout=subprocess.PIPE)
-    #     #     output = process.stdout.decode("utf-8")
-    #     #     app = output[:output.find(":")].split(",")[0]
-    #     #     applist.append({"name": app, "size": self.installed_size(app), "summary": self.summary(app)})
-    #     # applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: x["name"])
-    #
-    #
-    #     # parse desktop file in /usr/share/applications/  | normal method
-    #     applist = []
-    #     dloc = "/usr/share/applications/"
-    #     desktop_listdir = os.listdir(dloc)
-    #     for desktop in desktop_listdir:
-    #         if desktop.endswith(".desktop"):
-    #             desktop_read = open(os.path.join(dloc, desktop), "r").read()
-    #             if "NoDisplay=true" not in desktop_read:
-    #                 name = ""
-    #                 icon = ""
-    #                 comment = ""
-    #                 name_tr = ""
-    #                 comment_tr = ""
-    #                 mainentry = ""
-    #                 if "Name=" in desktop_read:
-    #                     for line in desktop_read.splitlines():
-    #                         if line.startswith("["):
-    #                             mainentry = line.strip()[1:-1]
-    #                         if line.startswith("Name=") and mainentry == "Desktop Entry":
-    #                             name = line.split("Name=")[1].strip()
-    #                             break
-    #                 if "Icon=" in desktop_read:
-    #                     for line in desktop_read.splitlines():
-    #                         if line.startswith("["):
-    #                             mainentry = line.strip()[1:-1]
-    #                         if line.startswith("Icon=") and mainentry == "Desktop Entry":
-    #                             icon = line.split("Icon=")[1].strip()
-    #                             break
-    #                 if "Comment=" in desktop_read:
-    #                     for line in desktop_read.splitlines():
-    #                         if line.startswith("["):
-    #                             mainentry = line.strip()[1:-1]
-    #                         if line.startswith("Comment=") and mainentry == "Desktop Entry":
-    #                             comment = line.split("Comment=")[1].strip()
-    #                             break
-    #                 else:
-    #                     comment = name
-    #
-    #                 if lang == "tr":
-    #                     if "Name[tr]=" in desktop_read:
-    #                         for line in desktop_read.splitlines():
-    #                             if line.startswith("["):
-    #                                 mainentry = line.strip()[1:-1]
-    #                             if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
-    #                                 name_tr = line.split("Name[tr]=")[1].strip()
-    #                                 print("{} {}".format(mainentry, name_tr))
-    #                                 break
-    #                     if "Comment[tr]=" in desktop_read:
-    #                         for line in desktop_read.splitlines():
-    #                             if line.startswith("["):
-    #                                 mainentry = line.strip()[1:-1]
-    #                             if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
-    #                                 comment_tr = line.split("Comment[tr]=")[1].strip()
-    #                                 break
-    #                     if name_tr == "":
-    #                         name_tr = name
-    #                     if comment_tr == "":
-    #                         comment_tr = comment
-    #
-    #                 applist.append({"name": name_tr if lang == "tr" else name,
-    #                                 "comment": comment_tr if lang == "tr" else comment,
-    #                                 "desktop": os.path.join(dloc, desktop), "icon": icon})
-    #     applist = sorted(dict((v['name'], v) for v in applist).values(), key=lambda x: locale.strxfrm(x["name"]))
-    #
-    #     return applist
-
-    # old function
-    # def parse_desktopfile(self, desktop, lang):
-    #     dloc = "/usr/share/applications/"
-    #     if os.path.isfile(os.path.join(dloc, desktop)):
-    #         desktop_read = open(os.path.join(dloc, desktop), "r").read()
-    #         name = ""
-    #         icon = ""
-    #         comment = ""
-    #         name_tr = ""
-    #         comment_tr = ""
-    #         mainentry = ""
-    #         if "Name=" in desktop_read:
-    #             for line in desktop_read.splitlines():
-    #                 if line.startswith("["):
-    #                     mainentry = line.strip()[1:-1]
-    #                 if line.startswith("Name=") and mainentry == "Desktop Entry":
-    #                     name = line.split("Name=")[1].strip()
-    #                     break
-    #         if "Icon=" in desktop_read:
-    #             for line in desktop_read.splitlines():
-    #                 if line.startswith("["):
-    #                     mainentry = line.strip()[1:-1]
-    #                 if line.startswith("Icon=") and mainentry == "Desktop Entry":
-    #                     icon = line.split("Icon=")[1].strip()
-    #                     break
-    #         if "Comment=" in desktop_read:
-    #             for line in desktop_read.splitlines():
-    #                 if line.startswith("["):
-    #                     mainentry = line.strip()[1:-1]
-    #                 if line.startswith("Comment=") and mainentry == "Desktop Entry":
-    #                     comment = line.split("Comment=")[1].strip()
-    #                     break
-    #         else:
-    #             comment = name
-    #
-    #         if lang == "tr":
-    #             if "Name[tr]=" in desktop_read:
-    #                 for line in desktop_read.splitlines():
-    #                     if line.startswith("["):
-    #                         mainentry = line.strip()[1:-1]
-    #                     if line.startswith("Name[tr]=") and mainentry == "Desktop Entry":
-    #                         name_tr = line.split("Name[tr]=")[1].strip()
-    #                         print("{} {}".format(mainentry, name_tr))
-    #                         break
-    #             if "Comment[tr]=" in desktop_read:
-    #                 for line in desktop_read.splitlines():
-    #                     if line.startswith("["):
-    #                         mainentry = line.strip()[1:-1]
-    #                     if line.startswith("Comment[tr]=") and mainentry == "Desktop Entry":
-    #                         comment_tr = line.split("Comment[tr]=")[1].strip()
-    #                         break
-    #             if name_tr == "":
-    #                 name_tr = name
-    #             if comment_tr == "":
-    #                 comment_tr = comment
-    #
-    #         return {"name": name_tr if lang == "tr" else name, "comment": comment_tr if lang == "tr" else comment,
-    #                         "desktop": os.path.join(dloc, desktop), "icon": icon}
-    #
-    #     else:
-    #         print("{} file not exists on {} location".format(desktop, dloc))
-    #         return None
-
     def get_installed_apps(self):
         apps = []
         for app in Gio.DesktopAppInfo.get_all():
@@ -622,11 +434,11 @@ class Package(object):
                 filename = app.get_filename()
                 keywords = " ".join(app.get_keywords())
                 if os.path.dirname(filename) == "/usr/share/applications":
-                    return True, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename,
-                                  "keywords": keywords, "executable": executable}
+                    return True, {"id": id, "name": name, "icon": icon, "description": description,
+                                  "filename": filename, "keywords": keywords, "executable": executable}
                 else:
-                    return False, {"id": id, "name": name, "icon": icon, "description": description, "filename": filename,
-                                   "keywords": "", "executable": ""}
+                    return False, {"id": id, "name": name, "icon": icon, "description": description,
+                                   "filename": filename, "keywords": "", "executable": ""}
             else:
                 print("parse_desktopfile: {} app not exists".format(desktopfilename))
                 return False, None
