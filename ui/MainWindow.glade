@@ -2623,15 +2623,29 @@ so that the OS has nothing to do with the health of the application.</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="rdetail">
+                                      <object class="GtkScrolledWindow">
                                         <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="label">description</property>
-                                        <property name="wrap">True</property>
-                                        <property name="selectable">True</property>
+                                        <property name="can-focus">True</property>
+                                        <child>
+                                          <object class="GtkViewport">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="shadow-type">none</property>
+                                            <child>
+                                              <object class="GtkLabel" id="rdetail">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="valign">start</property>
+                                                <property name="label">description</property>
+                                                <property name="wrap">True</property>
+                                                <property name="selectable">True</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
+                                        <property name="expand">True</property>
                                         <property name="fill">True</property>
                                         <property name="position">4</property>
                                       </packing>
