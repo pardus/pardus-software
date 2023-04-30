@@ -2188,7 +2188,6 @@ so that the OS has nothing to do with the health of the application.</property>
                                     <property name="enable-tree-lines">True</property>
                                     <property name="activate-on-single-click">True</property>
                                     <signal name="cursor-changed" handler="on_RepoAppsTreeView_cursor_changed" swapped="no"/>
-                                    <signal name="row-activated" handler="on_RepoAppsTreeView_row_activated" swapped="no"/>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection"/>
                                     </child>

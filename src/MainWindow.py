@@ -6,20 +6,20 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
+import grp
+import locale
 import os
 import re
 import subprocess
 import threading
 import time
+from datetime import datetime
+from locale import getlocale
+from locale import gettext as _
 
+import gi
 import netifaces
 import psutil
-from datetime import datetime
-import gi, sys, grp
-import locale
-from locale import gettext as _
-from locale import getlocale
-
 
 locale.bindtextdomain('pardus-software', '/usr/share/locale')
 locale.textdomain('pardus-software')
@@ -29,7 +29,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Notify", "0.7")
 gi.require_version("GdkPixbuf", "2.0")
 gi.require_version("Vte", "2.91")
-from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gio, Gdk, Vte, Pango
+from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gdk, Vte, Pango
 
 from Package import Package
 from Server import Server
@@ -127,23 +127,6 @@ class MainWindow(object):
         self.statstotaldc = self.GtkBuilder.get_object("statstotaldc")
         self.statstotalrc = self.GtkBuilder.get_object("statstotalrc")
         self.statsweblabel = self.GtkBuilder.get_object("statsweblabel")
-        """
-        self.CategoryAllRow = Gtk.ListBoxRow.new()
-        self.CategoryListBox.add(self.CategoryAllRow)
-
-        grid = Gtk.Grid.new()
-        self.CategoryAllRow.add(grid)
-
-        icon = Gtk.Image.new_from_icon_name("applications-other",0)
-        icon.set_pixel_size(48)
-        
-        text = Gtk.Label.new()
-        text.set_text(" All")
-        
-        grid.add(icon)
-        grid.attach(text, 1, 0, 3, 1)
-        """
-        # caticon = Gtk.Image.new_from_icon_name("applications-other",0)
 
         self.pardus_searchentry = self.GtkBuilder.get_object("pardus_searchentry")
         self.repo_searchentry = self.GtkBuilder.get_object("repo_searchentry")
@@ -188,7 +171,6 @@ class MainWindow(object):
         self.dAptUpdateInfoLabel = self.GtkBuilder.get_object("dAptUpdateInfoLabel")
         self.dAptUpdateSpinner = self.GtkBuilder.get_object("dAptUpdateSpinner")
         self.dAptUpdateBox = self.GtkBuilder.get_object("dAptUpdateBox")
-        # self.dOpenButton.get_style_context().add_class("circular")
         self.dDisclaimerButton = self.GtkBuilder.get_object("dDisclaimerButton")
         self.DisclaimerPopover = self.GtkBuilder.get_object("DisclaimerPopover")
         self.RequiredChangesPopover = self.GtkBuilder.get_object("RequiredChangesPopover")
@@ -207,7 +189,6 @@ class MainWindow(object):
         self.dapp_dsize_label = self.GtkBuilder.get_object("dapp_dsize_label")
         self.dapp_isize_label = self.GtkBuilder.get_object("dapp_isize_label")
 
-        # self.RequiredChangesLabel = self.GtkBuilder.get_object("RequiredChangesLabel")
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
         self.dSection = self.GtkBuilder.get_object("dSection")
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
@@ -230,7 +211,6 @@ class MainWindow(object):
         self.dtUserRating = self.GtkBuilder.get_object("dtUserRating")
         self.dtAverageRating = self.GtkBuilder.get_object("dtAverageRating")
         self.dViewonweb = self.GtkBuilder.get_object("dViewonweb")
-
 
         self.dtStar1 = self.GtkBuilder.get_object("dtStar1")
         self.dtStar2 = self.GtkBuilder.get_object("dtStar2")
@@ -304,7 +284,6 @@ class MainWindow(object):
         self.r_architecture = self.GtkBuilder.get_object("r_architecture")
         self.r_version = self.GtkBuilder.get_object("r_version")
         self.r_origin = self.GtkBuilder.get_object("r_origin")
-        # self.r_url = self.GtkBuilder.get_object("r_url")
         self.rstack = self.GtkBuilder.get_object("rstack")
 
         self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
@@ -331,7 +310,6 @@ class MainWindow(object):
         self.store_button.get_style_context().add_class("suggested-action")
         self.repo_button = self.GtkBuilder.get_object("repo_button")
         self.myapps_button = self.GtkBuilder.get_object("myapps_button")
-        # self.updates_button = self.GtkBuilder.get_object("updates_button")
         self.updates_button = Gtk.Button.new()
         self.updates_button.set_label(_("Updates"))
         self.updates_button.connect("clicked", self.on_updates_button_clicked)
@@ -342,7 +320,6 @@ class MainWindow(object):
         self.splashbar = self.GtkBuilder.get_object("splashbar")
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
         self.splashbarstatus = True
-        # GLib.timeout_add(200, self.on_timeout, None)
 
         self.upgrade_stack = self.GtkBuilder.get_object("upgrade_stack")
         self.upgrade_stack_spinnner = self.GtkBuilder.get_object("upgrade_stack_spinnner")
@@ -405,7 +382,6 @@ class MainWindow(object):
         self.MyAppsDetailsPopover.set_relative_to(self.MyAppsListBox)
         self.myapps_apps_sw = self.GtkBuilder.get_object("myapps_apps_sw")
 
-
         # myapps remove popup
         self.ui_myapp_pop_stack = self.GtkBuilder.get_object("ui_myapp_pop_stack")
         self.ui_myapp_pop_spinner = self.GtkBuilder.get_object("ui_myapp_pop_spinner")
@@ -434,7 +410,6 @@ class MainWindow(object):
         self.ui_myapp_pop_fsize_box = self.GtkBuilder.get_object("ui_myapp_pop_fsize_box")
         self.ui_myapp_pop_dsize_box = self.GtkBuilder.get_object("ui_myapp_pop_dsize_box")
         self.ui_myapp_pop_isize_box = self.GtkBuilder.get_object("ui_myapp_pop_isize_box")
-
 
         self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
         self.PardusAppsIconView.set_pixbuf_column(0)
@@ -569,11 +544,6 @@ class MainWindow(object):
 
         self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
         self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
-        # self.PardusCategoryFilter.refilter()
-
-        # self.RepoCategoryFilter = self.GtkBuilder.get_object("RepoCategoryFilter")
-        # self.RepoCategoryFilter.set_visible_func(self.RepoCategoryFilterFunction)
-        # self.RepoCategoryFilter.refilter()
 
         self.dImage1 = self.GtkBuilder.get_object("dImage1")
         self.dImage2 = self.GtkBuilder.get_object("dImage2")
@@ -724,7 +694,6 @@ class MainWindow(object):
         self.GnomeCommentListBoxEN = self.GtkBuilder.get_object("GnomeCommentListBoxEN")
         self.GnomeCommentListBoxTR = self.GtkBuilder.get_object("GnomeCommentListBoxTR")
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
-
 
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
@@ -887,7 +856,8 @@ class MainWindow(object):
                 for apps in self.fullapplist:
                     if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or \
                             app == apps["gnomename"].split(".desktop")[0] or \
-                            any(app == e for e in apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
+                            any(app == e for e in
+                                apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
                         found = True
                         # self.set_stack_n_search(1)
                         self.topsearchbutton.set_active(False)
@@ -902,7 +872,8 @@ class MainWindow(object):
             try:
                 if not found:
                     if ".desktop" in self.Application.args["details"]:
-                        process = subprocess.run(["dpkg", "-S", self.Application.args["details"]], stdout=subprocess.PIPE)
+                        process = subprocess.run(["dpkg", "-S", self.Application.args["details"]],
+                                                 stdout=subprocess.PIPE)
                         output = process.stdout.decode("utf-8")
                         app = output[:output.find(":")].split(",")[0]
                     else:
@@ -954,7 +925,7 @@ class MainWindow(object):
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
                 "<b>{}\n\n{}\n\n{}: {}</b>".format(_("Could not connect to server."), self.Server.error_message,
-                                                 _("Server address"), self.Server.serverurl))
+                                                   _("Server address"), self.Server.serverurl))
             GLib.idle_add(self.topsearchbutton.set_sensitive, False)
             GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
             if self.myapps_perm == 1:
@@ -988,8 +959,6 @@ class MainWindow(object):
         print("page setted to normal")
 
     def package(self):
-        # self.splashspinner.start()
-        # self.splashbar.pulse()
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
         self.Package = Package()
         if self.Package.updatecache():
@@ -1127,38 +1096,7 @@ class MainWindow(object):
     def on_ImagePopover_closed(self, widget):
         self.imgfullscreen = False
 
-    def setRepoCategories(self):
-        # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Categories")))
-        # for i in self.Package.sections:
-        #     # row = Gtk.ListBoxRow.new()
-        #     # self.RepoCategoryListBox.add(row)
-        #     #
-        #     label = Gtk.Label.new()
-        #     label.set_text(" " + str(i["name"]).capitalize())
-        #     label.set_property("xalign", 0)
-        #
-        #     row = Gtk.ListBoxRow()
-        #     row.add(label)
-        #
-        #     self.RepoCategoryListBox.add(row)
-        #
-        # self.RepoCategoryListBox.show_all()
-        print("Repo Categories setted")
-
     def setRepoApps(self):
-        # self.splashlabel.set_markup("<b>{}</b>".format(_("Setting Repo Apps")))
-        # print("Repo apps setting")
-        # for app in self.Package.apps:
-        #     appname = app['name']
-        #     category = app['category']
-        #     # categorynumber = self.get_repo_category_number(app["category"])
-        #     installstatus = self.Package.isinstalled(appname)
-        #     if installstatus:
-        #         installtext = "Remove"
-        #     else:
-        #         installtext = "Install"
-        #     self.RepoAppListStore.append([appname, category, 0, installstatus, installtext, self.Package.summary(appname)])
-
         if self.repo_perm == 1:
 
             if not self.repoappsinit:
@@ -1181,19 +1119,6 @@ class MainWindow(object):
                 column_cat.set_sort_column_id(2)
                 self.RepoAppsTreeView.append_column(column_cat)
 
-                # renderer_btn = CellRendererButton()
-                # renderer_btn.connect("clicked", self.on_cell_clicked)
-                # column_btn = Gtk.TreeViewColumn("Action", renderer_btn, text=4)
-                # column_btn.set_resizable(True)
-                # column_btn.set_sort_column_id(4)
-                # self.RepoAppsTreeView.append_column(column_btn)
-
-                # renderer = Gtk.CellRendererText()
-                # column_desc = Gtk.TreeViewColumn(_("Description"), renderer, text=5)
-                # column_desc.set_resizable(True)
-                # column_desc.set_sort_column_id(5)
-                # self.RepoAppsTreeView.append_column(column_desc)
-
                 self.RepoAppsTreeView.set_search_column(1)
 
                 self.RepoAppsTreeView.show_all()
@@ -1204,62 +1129,12 @@ class MainWindow(object):
             print("repo_perm is 0 so repo apps not setting")
             self.repo_button.set_sensitive(False)
 
-        # if self.useDynamicListStore:
-        #
-        #     self.storedict = {}
-        #
-        #     for i in self.repoapps:
-        #         self.storedict[i] = Gtk.ListStore(str, str, int, bool, str, str)
-        #
-        #     for i in self.storedict:
-        #         for j in self.repoapps[i]:
-        #             installstatus = self.Package.isinstalled(j["name"])
-        #             if installstatus:
-        #                 installtext = "Remove"
-        #             else:
-        #                 installtext = "Install"
-        #             self.storedict[i].append(
-        #                 [j["name"], j["category"], 0, installstatus, installtext, self.Package.summary(j["name"])])
-
     def on_cell_toggled(self, widget, path):
-        # self.RepoAppListStore[path][3] = not self.RepoAppListStore[path][3]
         print("cell toggled")
 
-    def on_cell_clicked(self, path, button):
-        print("cell clicked")
-
-    # def setUpgradableUI(self):
-    #     renderer_toggle = Gtk.CellRendererToggle()
-    #     renderer_toggle.connect("toggled", self.on_cell_toggled)
-    #     column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=0)
-    #     column_toggle.set_resizable(True)
-    #     column_toggle.set_sort_column_id(0)
-    #     self.upgradables_treeview.append_column(column_toggle)
-    #
-    #     renderer = Gtk.CellRendererText()
-    #     column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=1)
-    #     column_name.set_resizable(True)
-    #     column_name.set_sort_column_id(1)
-    #     self.upgradables_treeview.append_column(column_name)
-    #
-    #     renderer = Gtk.CellRendererText()
-    #     column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=2)
-    #     column_cat.set_resizable(True)
-    #     column_cat.set_sort_column_id(2)
-    #     self.upgradables_treeview.append_column(column_cat)
-    #
-    #     self.upgradables_treeview.set_search_column(1)
-    #     self.upgradables_liststore = Gtk.ListStore(bool, str, str)
-    #     self.upgradables_treeview.set_model(self.upgradables_liststore)
-    #
-    #     self.upgradables_treeview.show_all()
-
-
     def server(self):
-        # self.splashbar.pulse()
         print("Getting applications from server")
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting applications from server")))
-        # self.splashlabel.set_markup()
         self.Server = Server()
 
         conffile = "/etc/pardus/pardus-software.conf"
@@ -1315,13 +1190,6 @@ class MainWindow(object):
         self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
         self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
 
-        # self.applist = sorted(self.Server.applist, key=lambda x: x["prettyname"][self.locale])
-        # self.fullapplist = self.applist
-        # self.catlist = self.Server.catlist
-        # self.Server.applist.clear()
-
-        # self.serverappicons = self.Server.getAppIcons()
-        # self.servercaticons = self.Server.getCategoryIcons()
         print("server func done")
 
     def afterServers(self):
@@ -1334,7 +1202,6 @@ class MainWindow(object):
         GLib.idle_add(self.setEditorApps)
         GLib.idle_add(self.setMostApps)
         GLib.idle_add(self.setRepoApps)
-        # GLib.idle_add(self.setUpgradableUI)
         GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlArgs)
         GLib.idle_add(self.controlPSUpdate)
@@ -1386,7 +1253,6 @@ class MainWindow(object):
                 self.Server.connection = False
                 self.afterServers()
                 self.connection_error_after = True
-
 
     def ServerIconsCB(self, status, type, fromsettings=False):
 
@@ -1457,13 +1323,6 @@ class MainWindow(object):
 
     def gnomeRatings(self):
         print("Getting ratings from gnome odrs")
-        # self.splashlabel.set_markup("<b>{}</b>".format(_("Getting ratings from gnome odrs")))
-        # self.GnomeServer = GnomeServer()
-        # self.gnomeratings = self.GnomeServer.getGnomeRatings()
-        # if self.gnomeratings is not False:
-        #     print("gnomeratings successful")
-        # else:
-        #     print("gnomeratings none")
 
         self.GnomeRatingServer = GnomeRatingServer()
         self.GnomeRatingServer.gRatingServer = self.gRatingServer
@@ -1499,7 +1358,8 @@ class MainWindow(object):
                     for i in app["subcategory"]:
                         subcategory += i[self.locale].lower() + ","
                     subcategory = subcategory.rstrip(",")
-                GLib.idle_add(self.addToPardusApps, [appicon, appname, categorynumber, prettyname, category, subcategory])
+                GLib.idle_add(self.addToPardusApps,
+                              [appicon, appname, categorynumber, prettyname, category, subcategory])
 
     def addToPardusApps(self, list):
         self.PardusAppListStore.append(list)
@@ -1566,11 +1426,13 @@ class MainWindow(object):
         self.isPardusSearching = False
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = -2
-        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
-        self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name_from_button(button.name)
+        self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, \
+            self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal, \
+            self.PardusCurrentCategorySubCategories = self.get_category_name_from_button(button.name)
 
         print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal,
+                                                    self.PardusCurrentCategorySubCats,
+                                                    self.PardusCurrentCategoryExternal,
                                                     self.PardusCurrentCategorySubCategories))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
@@ -1698,7 +1560,6 @@ class MainWindow(object):
                 box.set_margin_start(8)
                 box.set_margin_end(8)
                 box.set_spacing(8)
-
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
@@ -1869,7 +1730,8 @@ class MainWindow(object):
                         caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
                                                                         Gtk.IconLookupFlags(16))
                     except:
-                        caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
+                        caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
+                                                                        Gtk.IconLookupFlags(16))
             except:
                 try:
                     caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
@@ -1890,7 +1752,6 @@ class MainWindow(object):
             caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
                 self.Server.cachedir + icons + "/" + cat + ".svg", size, size)
         except:
-            # print("{} {}".format(cat, "icon not found in server cat icons"))
             try:
                 caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
                     self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size)
@@ -1944,7 +1805,6 @@ class MainWindow(object):
             appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
                                                              size)
         except:
-            # print("{} {}".format(app, "icon not found in server app icons"))
             try:
                 appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg",
                                                                  size, size)
@@ -2012,13 +1872,6 @@ class MainWindow(object):
 
         return appicon
 
-    # def on_timeout(self, user_data):
-    #     if self.splashbarstatus:
-    #         self.splashbar.pulse()
-    #     else:
-    #         self.splashbar.set_fraction(0)
-    #     return True
-
     def get_category_number(self, thatcategory):
         listcat = list(thatcategory.split(","))
         lenlistcat = len(listcat)
@@ -2033,14 +1886,14 @@ class MainWindow(object):
         for i in range(0, lencat):
             if thatnumber == i:
                 return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                       self.categories[i]["external"], self.categories[i]["subcategories"]
+                    self.categories[i]["external"], self.categories[i]["subcategories"]
 
     def get_category_name_from_button(self, name):
         lencat = len(self.categories)
         for i in range(0, lencat):
             if name == self.categories[i]["name"]:
                 return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                       self.categories[i]["external"], self.categories[i]["subcategories"]
+                    self.categories[i]["external"], self.categories[i]["subcategories"]
 
     def get_repo_category_number(self, thatcategory):
         repocatnumber = 404
@@ -2343,10 +2196,9 @@ class MainWindow(object):
                 self.queue_button.get_style_context().remove_class("suggested-action")
 
     def set_button_class(self, button, state):
-        # state 0 = app is not installed
-        # state 1 = app is installed
-        # state 2 = app is not found
-
+        '''
+        state 0 = app is not installed, state 1 = app is installed, state 2 = app is not found
+        '''
         if state == 1:
             if button.get_style_context().has_class("suggested-action"):
                 button.get_style_context().remove_class("suggested-action")
@@ -2430,8 +2282,6 @@ class MainWindow(object):
         self.gcStack.set_visible_child_name("gcTurkish")
 
         # clear size and requiered changes info
-        # self.dActionButton.set_tooltip_text(None)
-        # self.RequiredChangesLabel.set_text("")
         self.clear_drequired_popup()
         self.dSize.set_markup("...")
         self.dSizeTitle.set_text(_("Size"))
@@ -2579,14 +2429,10 @@ class MainWindow(object):
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
-                # ret = self.Package.required_changes(self.command)
                 sizethread = threading.Thread(target=self.size_worker_thread, daemon=True)
                 sizethread.start()
 
-                # self.dActionButton.set_sensitive(True)
-
                 version = self.Package.candidate_version(self.appname)
-                # size = self.Package.size(self.appname)
                 origins = self.Package.origins(self.appname)
 
                 component = ""
@@ -2603,7 +2449,6 @@ class MainWindow(object):
                     type = _("Open Source")
 
                 self.dVersion.set_markup(version)
-                # self.dSize.set_markup(size)
                 self.dComponent.set_markup("{} {}".format(origin, component))
                 self.dType.set_markup(type)
 
@@ -2648,8 +2493,6 @@ class MainWindow(object):
                             self.dActionInfoButton.set_sensitive(False)
 
             else:
-                # self.dActionButton.set_sensitive(False)
-
                 self.set_button_class(self.dActionButton, 2)
                 self.set_button_class(self.dActionInfoButton, 2)
 
@@ -2657,8 +2500,6 @@ class MainWindow(object):
                 self.dActionButton.set_image(
                     Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
 
-                # self.dActionButton.set_tooltip_text(None)
-                # self.RequiredChangesLabel.set_text("")
                 self.clear_drequired_popup()
 
                 self.dVersion.set_markup(_("None"))
@@ -2870,47 +2711,6 @@ class MainWindow(object):
             self.dSizeTitle.set_text(_("Download Size"))
             self.dSizeGrid.set_tooltip_text(None)
 
-        # isinstalled = self.Package.isinstalled(self.appname)
-        # if isinstalled:
-        #     if self.ret["to_install"] and self.ret["to_install"] is not None:
-        #         self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
-        #             self.appname,
-        #             _("Packages to remove"), ", ".join(self.ret["to_delete"]),
-        #             _("Packages to install"), ", ".join(self.ret["to_install"]),
-        #             self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed"),
-        #             self.Package.beauty_size(self.ret["download_size"]), _("to download"),
-        #             self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
-        #     else:
-        #         if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-        #             self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}".format(self.appname,
-        #             _("Packages to remove"), ", ".join(self.ret["to_delete"]), self.Package.beauty_size(self.ret["freed_size"]),
-        #             _("of disk space freed")))
-        #
-        #     self.dSizeTitle.set_text(_("Installed Size"))
-        #     self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
-        #     self.dSizeGrid.set_tooltip_text(None)
-        # else:
-        #     if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-        #         self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}\n<b>{}</b> {}".format(
-        #             self.appname,
-        #             _("Packages to install"), ", ".join(self.ret["to_install"]),
-        #             _("Packages to remove"), ", ".join(self.ret["to_delete"]),
-        #             self.Package.beauty_size(self.ret["download_size"]), _("to download"),
-        #             self.Package.beauty_size(self.ret["install_size"]), _("of disk space required"),
-        #             self.Package.beauty_size(self.ret["freed_size"]), _("of disk space freed")))
-        #     else:
-        #         if self.ret["to_install"] and self.ret["to_install"] is not None:
-        #             self.RequiredChangesLabel.set_markup("<b>{}</b>\n\n<b>{} :</b>\n<small>{}</small>\n\n<b>{}</b> {}\n<b>{}</b> {}".format(
-        #                 self.appname,
-        #                 _("Packages to install"), ", ".join(self.ret["to_install"]),
-        #                 self.Package.beauty_size(self.ret["download_size"]), _("to download"),
-        #                 self.Package.beauty_size(self.ret["install_size"]), _("of disk space required")))
-        #
-        #     self.dSizeTitle.set_text(_("Download Size"))
-        #     self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
-        #     self.dSizeGrid.set_tooltip_text("{}: {}".format(_("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
-
-
     def myapps_worker_thread(self):
         for row in self.MyAppsListBox:
             self.MyAppsListBox.remove(row)
@@ -2923,7 +2723,6 @@ class MainWindow(object):
     def on_myapps_worker_done(self, myapps):
         for pkg in myapps:
             self.addtoMyApps(pkg)
-            # GLib.idle_add(self.addtoMyApps, pkg)
         GLib.idle_add(self.MyAppsListBox.show_all)
         print("on_myapps_worker_done")
 
@@ -3248,7 +3047,6 @@ class MainWindow(object):
                         self.wpcCommentBox.set_visible(True)
                         self.addCommentButton.set_label(_("Edit Comment"))
 
-
                     if response["rating"]["justrate"]:
 
                         if response["rating"]["rate"]["recommentable"]:
@@ -3257,11 +3055,6 @@ class MainWindow(object):
                             bot = vadj.get_upper()
                             vadj.set_value(bot)
                             self.PardusAppDetailScroll.set_vadjustment(vadj)
-
-                            # if self.rate_comment == "" or self.rate_comment is None:
-                            #     self.commentstack.set_visible_child_name("sendcomment")
-                            # else:
-                            #     self.commentstack.set_visible_child_name("alreadysent")
 
                             self.setWpcStar(response["rating"]["rate"]["individual"])
                             self.wpcAuthor.set_text(str(response["rating"]["rate"]["author"]))
@@ -3360,8 +3153,6 @@ class MainWindow(object):
                                   response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
                                   response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
                                   response["details"]["rate"]["rates"]["5"])
-
-            # self.setPardusComments(response["details"]["comment"])
 
         else:
             self.rate_average = 0
@@ -3727,27 +3518,10 @@ class MainWindow(object):
 
             self.pop2Image.set_from_pixbuf(self.pixbuf2.scale_simple(basewidth, hsize, GdkPixbuf.InterpType.BILINEAR))
 
-    # def on_wpcStarE1_button_press_event(self, widget, event):
-    #     self.setWpcStar(1)
-    #
-    # def on_wpcStarE2_button_press_event(self, widget, event):
-    #     self.setWpcStar(2)
-    #
-    # def on_wpcStarE3_button_press_event(self, widget, event):
-    #     self.setWpcStar(3)
-    #
-    # def on_wpcStarE4_button_press_event(self, widget, event):
-    #     self.setWpcStar(4)
-    #
-    # def on_wpcStarE5_button_press_event(self, widget, event):
-    #     self.setWpcStar(5)
-
     def on_wpcStar_button_press_event(self, widget, event):
         self.setWpcStar(int(widget.get_name()[-1]))
-        # self.eventStarSet(widget.get_name())
 
     def on_addCommentButton_clicked(self, button):
-
         self.setWpcStar(self.rate_individual)
         self.wpcAuthor.set_text(self.rate_author)
         start, end = self.wpcComment.get_buffer().get_bounds()
@@ -3924,87 +3698,6 @@ class MainWindow(object):
                             else:
                                 return True
 
-    # def isAppAvailable(self, package):
-    #     inrepo = False
-    #     incodename = False
-    #     if self.Package.isinstalled(package) is not None:
-    #         inrepo = True
-    #     for app in self.applist:
-    #         if package == app["name"]:
-    #             for code in app["codename"]:
-    #                 if code["name"] == self.UserSettings.usercodename:
-    #                     incodename = True
-    #     if inrepo or incodename:
-    #         return True
-    #     return False
-
-    # def PardusCategoryFilterFunctionWithShowAvailable(self, model, iteration, data):
-    #     search_entry_text = self.pardussearchbar.get_text()
-    #     categorynumber = int(model[iteration][2])
-    #     category = model[iteration][4]
-    #     appname = model[iteration][1]
-    #     showinstalled = self.pardusicb.get_active()
-    #     showavailable = self.UserSettings.config_saa
-    #     pn_en = ""
-    #     pn_tr = ""
-    #     desc_en = ""
-    #     desc_tr = ""
-    #
-    #     if self.isPardusSearching:
-    #         for i in self.applist:
-    #             if i["name"] == appname:
-    #                 pn_en = i["prettyname"]["en"]
-    #                 pn_tr = i["prettyname"]["tr"]
-    #                 desc_en = i["description"]["en"]
-    #                 desc_tr = i["description"]["tr"]
-    #         self.HomeCategoryFlowBox.unselect_all()
-    #         if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
-    #                 or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en \
-    #                 or search_entry_text.lower() in desc_tr:
-    #             if showinstalled:
-    #                 if self.Package.isinstalled(appname):
-    #                     if showavailable:
-    #                         if self.isAppAvailable(appname):
-    #                             return True
-    #                     else:
-    #                         return True
-    #             else:
-    #                 if showavailable:
-    #                     if self.isAppAvailable(appname):
-    #                         return True
-    #                 else:
-    #                     return True
-    #     else:
-    #         if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
-    #             if showinstalled:
-    #                 if self.Package.isinstalled(appname):
-    #                     if showavailable:
-    #                         if self.isAppAvailable(appname):
-    #                             return True
-    #                     else:
-    #                         return True
-    #             else:
-    #                 if showavailable:
-    #                     if self.isAppAvailable(appname):
-    #                         return True
-    #                 else:
-    #                     return True
-    #         else:
-    #             if self.PardusCurrentCategoryString in category:
-    #                 if showinstalled:
-    #                     if self.Package.isinstalled(appname):
-    #                         if showavailable:
-    #                             if self.isAppAvailable(appname):
-    #                                 return True
-    #                         else:
-    #                             return True
-    #                 else:
-    #                     if showavailable:
-    #                         if self.isAppAvailable(appname):
-    #                             return True
-    #                     else:
-    #                         return True
-
     def on_pardusicb_toggled(self, button):
         self.PardusCategoryFilter.refilter()
 
@@ -4033,24 +3726,6 @@ class MainWindow(object):
                                   reverse=True)
             GLib.idle_add(self.PardusAppListStore.clear)
             self.setPardusApps()
-
-    # def RepoCategoryFilterFunction(self, model, iteration, data):
-    #     search_entry_text = self.repo_searchentry.get_text()
-    #     appname = model[iteration][0]
-    #     categorynumber = int(model[iteration][2])
-    #     category = model[iteration][1]
-    #
-    #     if self.isRepoSearching:
-    #         self.RepoCategoryListBox.unselect_all()
-    #         if search_entry_text in appname:
-    #             return True
-    #     else:
-    #         if self.RepoCurrentCategory == "all":
-    #             return True
-    #         elif self.RepoCurrentCategory == "empty":
-    #             return True
-    #         else:
-    #             return category == self.RepoCurrentCategory
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
@@ -4082,10 +3757,12 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.PardusCurrentCategory = child.get_index()
         self.PardusCurrentCategoryString, self.PardusCurrentCategoryIcon, self.PardusCurrentCategorySubCats, \
-        self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name(self.PardusCurrentCategory)
+            self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name(
+            self.PardusCurrentCategory)
 
         print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                 self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal,
+                                                    self.PardusCurrentCategorySubCats,
+                                                    self.PardusCurrentCategoryExternal,
                                                     self.PardusCurrentCategorySubCategories))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
@@ -4149,69 +3826,6 @@ class MainWindow(object):
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
         print("on_HomeCategoryFlowBox_selected_children_changed")
         self.isPardusSearching = False
-
-    def on_RepoCategoryListBox_row_selected(self, listbox, row):
-        # self.CurrentCategory = row.get_index()
-        # self.CategoryFilter.refilter()
-        # self.stack.set_visible_child_name("page0")
-        self.isRepoSearching = False
-
-    def on_RepoCategoryListBox_row_activated(self, listbox, row):
-        self.isRepoSearching = False
-        # self.RepoCurrentCategory = row.get_index()
-        self.RepoCurrentCategory = row.get_child().get_text().lower().strip()
-        # print(row.get_child().get_text().lower().strip())
-
-        if self.useDynamicListStore:
-
-            if self.RepoCurrentCategory != "all" or self.RepoCurrentCategory != "tümü":
-
-                self.RepoAppsTreeView.set_model(self.storedict[self.RepoCurrentCategory])
-                self.RepoAppsTreeView.show_all()
-
-            else:
-                self.RepoAppsTreeView.set_model(self.RepoAppListStore)
-                self.RepoAppsTreeView.show_all()
-
-        else:
-
-            if self.RepoCurrentCategory != "all" or self.RepoCurrentCategory != "tümü":
-
-                self.store = Gtk.ListStore(bool, str, str, str)
-
-                for i in self.repoapps[self.RepoCurrentCategory]:
-                    installstatus = self.Package.isinstalled(i["name"])
-                    self.store.append(
-                        [installstatus, i["name"], i["category"], self.Package.summary(i["name"])])
-
-                # print(self.repoapps[self.RepoCurrentCategory])
-
-                self.RepoAppsTreeView.set_model(self.store)
-
-                self.RepoAppsTreeView.show_all()
-
-            else:
-                self.RepoAppsTreeView.set_model(self.RepoAppListStore)
-                self.RepoAppsTreeView.show_all()
-
-        # self.RepoCategoryFilter.refilter()
-        # print("category selected")
-
-    # def on_QueueListBox_row_activated(self, list_box, row):
-    #
-    #     i = row.get_index()
-    #     if i == 0:
-    #         print("you can not remove because in progress")
-    #     if i == 1:
-    #         print("deleting 1")
-    #         print("row is " + str(i))
-    #         self.queue.pop(1)
-    #         self.QueueListBox.remove(row)
-
-    # def on_clearqueuebutton_clicked(self, button):
-    #     if len(self.queue) > 1:
-    #         self.queue.pop(1)
-    #         self.QueueListBox.remove(self.QueueListBox.get_row_at_index(1))
 
     def on_QueueListBox_row_activated(self, list_box, row):
         self.queueappname = row.get_children()[0].name
@@ -4367,7 +3981,6 @@ class MainWindow(object):
             self.pardus_searchentry.set_text("")
         self.topsearchbutton.set_active(False)
         if self.Server.connection:
-            # self.searchstack.set_visible_child_name("pardus")
             self.homestack.set_visible_child_name("pardushome")
             self.EditorAppsIconView.unselect_all()
             self.PardusAppsIconView.unselect_all()
@@ -4377,7 +3990,6 @@ class MainWindow(object):
             self.homestack.set_visible_child_name("noserver")
             self.topsearchbutton.set_sensitive(False)
         self.menubackbutton.set_sensitive(False)
-
 
     def on_repo_button_clicked(self, button):
         if self.repo_perm == 1:
@@ -4473,32 +4085,35 @@ class MainWindow(object):
 
         def add_to_listbox(package, state):
 
-            image = Gtk.Image.new_from_icon_name("go-up-symbolic" if state == 1 else "list-add-symbolic", Gtk.IconSize.BUTTON)
+            image = Gtk.Image.new_from_icon_name("go-up-symbolic" if state == 1 else "list-add-symbolic",
+                                                 Gtk.IconSize.BUTTON)
             name = Gtk.Label.new()
             name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(package, -1)))
             name.props.halign = Gtk.Align.START
 
             summarylabel = Gtk.Label.new()
-            summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(self.Package.summary(package), -1)))
+            summarylabel.set_markup(
+                "<small>{}</small>".format(GLib.markup_escape_text(self.Package.summary(package), -1)))
             summarylabel.set_ellipsize(Pango.EllipsizeMode.END)
             summarylabel.props.halign = Gtk.Align.START
 
             old_version = Gtk.Label.new()
-            old_version.set_markup("<span size='x-small'>{}</span>".format(GLib.markup_escape_text(self.Package.installed_version(package), -1)))
+            old_version.set_markup("<span size='x-small'>{}</span>".format(
+                GLib.markup_escape_text(self.Package.installed_version(package), -1)))
             old_version.set_ellipsize(Pango.EllipsizeMode.END)
 
             sep_label = Gtk.Label.new()
             sep_label.set_markup("<span size='x-small'>>></span>")
 
             new_version = Gtk.Label.new()
-            new_version.set_markup("<span size='x-small'>{}</span>".format(GLib.markup_escape_text(self.Package.candidate_version(package), -1)))
+            new_version.set_markup("<span size='x-small'>{}</span>".format(
+                GLib.markup_escape_text(self.Package.candidate_version(package), -1)))
             new_version.set_ellipsize(Pango.EllipsizeMode.END)
 
             box_version = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 5)
             box_version.pack_start(old_version, False, True, 0)
             box_version.pack_start(sep_label, False, True, 0)
             box_version.pack_start(new_version, False, True, 0)
-
 
             box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
             box1.pack_start(name, False, True, 0)
@@ -4529,7 +4144,7 @@ class MainWindow(object):
         if not requireds["changes_available"]:
             GLib.idle_add(self.upgrade_stack.set_visible_child_name, "upgrade")
             if requireds["to_keep"]:
-                GLib.idle_add(self.upgrade_info_label.set_markup,"<b>{}</b>\n\n{}:\n\n{}".format(
+                GLib.idle_add(self.upgrade_info_label.set_markup, "<b>{}</b>\n\n{}:\n\n{}".format(
                     _("Updates are complete. Your system is up to date."),
                     _("List of packages on hold"),
                     " ".join(self.Package.upgradable())))
@@ -4611,7 +4226,7 @@ class MainWindow(object):
 
         yq_conf = ""
         if self.upgrade_withyq_radiobutton.get_active():
-            yq_conf =  "-y -q"
+            yq_conf = "-y -q"
         elif self.upgrade_withoutyq_radiobutton.get_active():
             yq_conf = ""
 
@@ -4734,7 +4349,8 @@ class MainWindow(object):
 
         uninstallbutton = Gtk.Button.new()
         uninstallbutton.name = {"name": app["name"], "filename": app["filename"], "icon": app["icon"],
-                                "description": app["description"], "keywords": app["keywords"], "executable": app["executable"]}
+                                "description": app["description"], "keywords": app["keywords"],
+                                "executable": app["executable"]}
         uninstallbutton.props.valign = Gtk.Align.CENTER
         uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
@@ -4789,7 +4405,8 @@ class MainWindow(object):
         self.MyAppsDetailsPopover.set_relative_to(button)
         self.MyAppsDetailsPopover.popup()
 
-        myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread, args=(button.name,True,), daemon=True)
+        myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread,
+                                               args=(button.name, True,), daemon=True)
         myappsdetailsthread.start()
 
     def open_from_myapps(self, button):
@@ -4807,13 +4424,13 @@ class MainWindow(object):
         self.myappsdetailsstack.set_visible_child_name("details")
 
     def on_ui_myapps_uninstall_button_clicked(self, button):
-        importants =  [i for i in self.important_packages if i in self.myapp_toremove_list]
+        importants = [i for i in self.important_packages if i in self.myapp_toremove_list]
         if importants:
             self.myappsdetailsstack.set_visible_child_name("disclaimer")
             self.ui_myapps_disclaimer_label.set_markup("<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
                 _("The following important packages will also be removed."),
                 ", ".join(importants),
-            _("Are you sure you accept this?")))
+                _("Are you sure you accept this?")))
         else:
             print("not important package")
             self.ui_myapps_uninstall()
@@ -4823,13 +4440,13 @@ class MainWindow(object):
         self.ui_myapps_uninstall()
 
     def on_ui_myapp_pop_uninstall_button_clicked(self, button):
-        importants =  [i for i in self.important_packages if i in self.myapp_toremove_list]
+        importants = [i for i in self.important_packages if i in self.myapp_toremove_list]
         if importants:
             self.ui_myapp_pop_stack.set_visible_child_name("disclaimer")
             self.ui_myapp_pop_disclaimer_label.set_markup("<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
                 _("The following important packages will also be removed."),
                 ", ".join(importants),
-            _("Are you sure you accept this?")))
+                _("Are you sure you accept this?")))
         else:
             print("not important package")
             self.ui_myapps_uninstall()
@@ -4862,18 +4479,19 @@ class MainWindow(object):
     def myapps_filter_func(self, row):
         # app info defined in uninstall button so getting this widget
         myapp_name = row.get_children()[0].get_children()[3].name
-        # print(myapp_name)
         search = self.myapps_searchentry.get_text().lower()
         if search in myapp_name["name"].lower() or search in myapp_name["description"].lower() or \
                 search in myapp_name["keywords"].lower() or search in myapp_name["executable"].lower():
             return True
 
     def myapps_sort_func(self, row1, row2):
-        return locale.strxfrm(row1.get_children()[0].get_children()[3].name["name"]) > locale.strxfrm(row2.get_children()[0].get_children()[3].name["name"])
+        return locale.strxfrm(row1.get_children()[0].get_children()[3].name["name"]) > locale.strxfrm(
+            row2.get_children()[0].get_children()[3].name["name"])
 
     def on_MyAppsListBox_row_activated(self, list_box, row):
         desktopfilename = row.get_children()[0].name
-        myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread, args=(desktopfilename,), daemon=True)
+        myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread,
+                                               args=(desktopfilename,), daemon=True)
         myappspackagethread.start()
 
     def myappspackage_worker_thread(self, desktopfilename):
@@ -4916,7 +4534,8 @@ class MainWindow(object):
                     else:
                         self.open_myapps_detailspage_from_desktopfile(desktopfilename)
                 else:
-                    print("{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(desktopfilename, package))
+                    print("{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(desktopfilename,
+                                                                                                    package))
                     self.open_myapps_detailspage_from_desktopfile(desktopfilename)
 
         else:
@@ -4999,10 +4618,8 @@ class MainWindow(object):
         self.PardusCategoryFilter.refilter()
 
     def on_repo_searchbutton_clicked(self, button):
-        # self.RepoCategoryListBox.unselect_all()
-        self.isRepoSearching = True
         # print("on_repo_searchbutton_clicked")
-
+        self.isRepoSearching = True
         reposearch_list_tmp = []
         self.reposearch_list = []
         text = self.repo_searchentry.get_text()
@@ -5098,17 +4715,17 @@ class MainWindow(object):
 
         if maintainer_mail != "":
             self.r_maintainermail.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
-                    GLib.markup_escape_text(maintainer_mail, -1),
-                    GLib.markup_escape_text(maintainer_mail, -1),
-                    GLib.markup_escape_text(maintainer_mail, -1)))
+                GLib.markup_escape_text(maintainer_mail, -1),
+                GLib.markup_escape_text(maintainer_mail, -1),
+                GLib.markup_escape_text(maintainer_mail, -1)))
         else:
             self.r_maintainermail.set_text("-")
 
         if homepage != "":
             self.r_homepage.set_markup("<a title='{}' href='{}'>{}</a>".format(
-                    GLib.markup_escape_text(homepage, -1),
-                    GLib.markup_escape_text(homepage, -1),
-                    GLib.markup_escape_text(homepage, -1)))
+                GLib.markup_escape_text(homepage, -1),
+                GLib.markup_escape_text(homepage, -1),
+                GLib.markup_escape_text(homepage, -1)))
         else:
             self.r_homepage.set_text("-")
 
@@ -5138,28 +4755,6 @@ class MainWindow(object):
         # else:
         #     self.r_origin.set_text("-")
 
-    def on_RepoAppsTreeView_row_activated(self, tree_view, path, column):
-        # print("on_RepoAppsTreeView_row_activated")
-        # if not self.isRepoSearching:
-        #     if self.useDynamicListStore:
-        #         if self.RepoCurrentCategory != "all":
-        #             iter = self.storedict[self.RepoCurrentCategory].get_iter(path)
-        #             value = self.storedict[self.RepoCurrentCategory].get_value(iter, 0)
-        #         else:
-        #             iter = self.RepoAppListStore.get_iter(path)
-        #             value = self.RepoAppListStore.get_value(iter, 0)
-        #     else:
-        #         if self.RepoCurrentCategory != "all":
-        #             iter = self.store.get_iter(path)
-        #             value = self.store.get_value(iter, 0)
-        #         else:
-        #             iter = self.RepoAppListStore.get_iter(path)
-        #             value = self.RepoAppListStore.get_value(iter, 0)
-        # else:
-
-        # self.repoapps_selection_changed(path)
-        pass
-
     def on_RepoAppsTreeView_cursor_changed(self, tree_view):
         path = tree_view.get_cursor().path
         if path is not None:
@@ -5180,9 +4775,6 @@ class MainWindow(object):
                     self.on_myapps_button_clicked(None)
         else:
             self.toprevealer.set_reveal_child(False)
-
-    # def on_HeaderBarMenuButton_toggled(self, button):
-    #     self.HeaderBarMenuButton.grab_focus()
 
     def on_main_key_press_event(self, widget, event):
         if self.mainstack.get_visible_child_name() == "home":
@@ -6218,7 +5810,8 @@ class MainWindow(object):
 
             cachestatus = self.Package.updatecache()
 
-            # print("Cache Status: {}, Package Cache Status: {}".format(cachestatus, self.Package.controlPackageCache(self.actionedappname)))
+            # print("Cache Status: {}, Package Cache Status: {}".format(
+            #     cachestatus, self.Package.controlPackageCache(self.actionedappname)))
 
             if status == 0 and not self.error and cachestatus:
                 if self.Package.controlPackageCache(self.actionedappname):
@@ -6366,7 +5959,6 @@ class MainWindow(object):
         if repo == 1:  # pardus apps
             self.fromexternal = False
             if self.Package.isinstalled(actionedappname) is True:
-                # self.dActionButton.set_sensitive(True)
 
                 self.set_button_class(self.dActionButton, 1)
                 self.set_button_class(self.dActionInfoButton, 1)
@@ -6384,11 +5976,9 @@ class MainWindow(object):
                 sizethread1.start()
 
             elif self.Package.isinstalled(actionedappname) is False:
-                # self.dActionButton.set_sensitive(True)
 
                 self.set_button_class(self.dActionButton, 0)
                 self.set_button_class(self.dActionInfoButton, 0)
-
 
                 self.dActionButton.set_label(_(" Install"))
                 self.dActionButton.set_image(
@@ -6400,7 +5990,7 @@ class MainWindow(object):
                 self.wpcformcontrolLabel.set_markup(
                     "<span color='red'>{}</span>".format(_("You need to install the application")))
 
-                sizethread2 = threading.Thread(target=self.size_worker_thread, daemon=True, args=(actionedappcommand, ))
+                sizethread2 = threading.Thread(target=self.size_worker_thread, daemon=True, args=(actionedappcommand,))
                 sizethread2.start()
 
             else:
@@ -6422,13 +6012,9 @@ class MainWindow(object):
                         Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
                     self.dOpenButton.set_visible(False)
 
-                    # self.dActionButton.set_sensitive(False)
-
                     self.set_button_class(self.dActionButton, 2)
                     self.set_button_class(self.dActionInfoButton, 2)
 
-                # self.dActionButton.set_tooltip_text(None)
-                # self.RequiredChangesLabel.set_text("")
                 self.clear_drequired_popup()
 
                 self.dSize.set_markup(_("None"))
@@ -6583,7 +6169,8 @@ class MainWindow(object):
             if status == 0 and not self.error:
                 self.notify(message_summary=_("Pardus Software Center"), message_body=_("Repo Activation Completed"))
 
-            self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop, self.actionedenablingappcommand)
+            self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop,
+                             self.actionedenablingappcommand)
 
         if self.correctsourcesclicked and status == 0:
             self.preflabel_settext("<span weight='bold'>{}\n{}</span>".format(
@@ -6682,7 +6269,6 @@ class MainWindow(object):
             return False
         line = source.readline()
         print("onGroupProcessStdout - line: {}".format(line))
-        # self.preflabel_settext("<small><span weight='light'>{}</span></small>".format(line))
         return True
 
     def onGroupProcessStderr(self, source, condition):
@@ -6696,10 +6282,11 @@ class MainWindow(object):
     def onGroupProcessExit(self, pid, status):
         print("onGroupProcessExit - status: {}".format(status))
         self.control_groups()
-        if status == 32256: # operation cancelled | Request dismissed
+        if status == 32256:  # operation cancelled | Request dismissed
             self.preflabel_settext("")
         else:
-            self.preflabel_settext("<small><span color='red' weight='light'>{}</span></small>".format(self.grouperrormessage))
+            self.preflabel_settext(
+                "<small><span color='red' weight='light'>{}</span></small>".format(self.grouperrormessage))
 
     def on_tryfixButton_clicked(self, button):
         self.tryfixstack.set_visible_child_name("info")
@@ -6741,7 +6328,7 @@ class MainWindow(object):
             GLib.SpawnFlags.DO_NOT_REAP_CHILD,
             None,
             None,
-            )
+        )
 
     def onVteDone(self, obj, status):
         self.tryfixSpinner.stop()
@@ -6796,7 +6383,7 @@ class MainWindow(object):
                 None,
                 self.upgrade_vte_create_spawn_callback,
                 None
-                )
+            )
         except Exception as e:
             # old version VTE doesn't have spawn_async so use spawn_sync
             print("{}".format(e))
@@ -6817,7 +6404,7 @@ class MainWindow(object):
     def upgrade_vte_on_done(self, terminal, status):
         print("upgrade_vte_on_done status: {}".format(status))
         self.upgrade_inprogress = False
-        if status == 32256: # operation cancelled | Request dismissed
+        if status == 32256:  # operation cancelled | Request dismissed
             self.upgrade_stack.set_visible_child_name("main")
         else:
             self.Package.updatecache()
