@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pardus-software\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-07 16:02+0300\n"
-"PO-Revision-Date: 2023-05-05 12:30+0100\n"
+"PO-Revision-Date: 2023-05-05 12:33+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
 "Language: pt\n"
@@ -42,7 +42,7 @@ msgstr "Pacotes a instalar"
 
 #: ui/MainWindow.glade:329 ui/MainWindow.glade:11720 ui/MainWindow.glade:12318
 msgid "Broken packages"
-msgstr "Pacotes quebrados"
+msgstr "Pacotes corrompidos"
 
 #: ui/MainWindow.glade:394 ui/MainWindow.glade:11405 ui/MainWindow.glade:12003
 msgid "Disk space to be freed"
@@ -683,7 +683,7 @@ msgstr "Pacotes a instalar:"
 
 #: ui/MainWindow.glade:9749
 msgid "Broken packages:"
-msgstr "Pacotes quebrados:"
+msgstr "Pacotes corrompidos:"
 
 #: ui/MainWindow.glade:9813
 msgid "Disk space to be freed:"
@@ -1366,7 +1366,7 @@ msgstr "Ocorreu um erro ao atualizar a cache dos pacotes. Resultado: "
 
 #: src/MainWindow.py:6826
 msgid "Process completed."
-msgstr "Processo concluído"
+msgstr "Processo concluído."
 
 #~ msgid "No package is selected."
 #~ msgstr "Nenhum pacote está selecionado."
