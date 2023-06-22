@@ -4935,7 +4935,7 @@ class MainWindow(object):
     def on_stats_worker_done(self, libfound):
         if libfound:
             import matplotlib.pyplot as plt
-            from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
+            from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
             dates = []
             downs = []
@@ -4946,7 +4946,8 @@ class MainWindow(object):
             p1 = ax1.bar(dates, downs, width=0.9, edgecolor="white", linewidth=1)
             plt.title(_("Daily App Download Counts (Last 30 Days)"))
             plt.tight_layout()
-            # ax.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
+            if hasattr(ax1, "bar_label"):
+                ax1.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
             fig1.autofmt_xdate(rotation=60)
             canvas1 = FigureCanvas(fig1)
             GLib.idle_add(self.stats1ViewPort.add, canvas1)
@@ -4985,7 +4986,8 @@ class MainWindow(object):
             plt.title(_("Top 30 App Downloads"))
             plt.xticks(size="small")
             plt.tight_layout()
-            # ax.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
+            if hasattr(ax3, "bar_label"):
+                ax3.bar_label(p3, label_type='edge', fontsize="small") # requires version 3.4-2+
             fig3.autofmt_xdate(rotation=45)
             canvas3 = FigureCanvas(fig3)
             GLib.idle_add(self.stats3ViewPort.add, canvas3)
@@ -4994,6 +4996,8 @@ class MainWindow(object):
             GLib.idle_add(self.stats2ViewPort.show_all)
             GLib.idle_add(self.stats3ViewPort.show_all)
             GLib.idle_add(self.statmainstack.set_visible_child_name, "stats")
+
+            plt.close('all')
 
             self.statisticsSetted = True
 
