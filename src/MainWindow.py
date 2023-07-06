@@ -659,13 +659,17 @@ class MainWindow(object):
         self.imgfullscreen_count = 0
         self.down_image = 0
 
+        settings = Gtk.Settings.get_default()
+        theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
+
         cssProvider = Gtk.CssProvider()
-        cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/style.css")
+        if theme_name.startswith("pardus") or theme_name.startswith("adwaita"):
+            cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/all.css")
+        else:
+            cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/base.css")
         screen = Gdk.Screen.get_default()
         styleContext = Gtk.StyleContext()
-        styleContext.add_provider_for_screen(screen, cssProvider,
-                                             Gtk.STYLE_PROVIDER_PRIORITY_USER)
-        # With the others GTK_STYLE_PROVIDER_PRIORITY values get the same result.
+        styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         # fix apt vte box
         self.vteterm = Vte.Terminal()
