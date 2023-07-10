@@ -58,6 +58,8 @@ class Server(object):
         self.totalstatistics = []
         self.servermd5 = []
         self.appversion = ""
+        self.appversion_pardus21 = ""
+        self.appversion_pardus23 = ""
         self.iconnames = ""
         self.badwords = []
         self.dailydowns = []

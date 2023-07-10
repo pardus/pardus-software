@@ -502,6 +502,9 @@ class Package(object):
         return upgradable
 
     def versionCompare(self, version1, version2):
+        if version2 == "None" or version2 == "" or version2 is None:
+            print("user version: {} , server version: {}".format(version1, version2))
+            return False
         vc = apt_pkg.version_compare(version1, version2)
         if vc > 0:
             print("user version: {} > server version: {}".format(version1, version2))

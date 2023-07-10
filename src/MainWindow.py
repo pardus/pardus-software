@@ -829,14 +829,18 @@ class MainWindow(object):
             self.auto_apt_update_finished = True
 
     def controlPSUpdate(self):
-        if self.Server.connection and self.UserSettings.usercodename == "yirmibir" and not self.isbroken:
-            user_version = self.Package.installed_version("pardus-software")
-            server_version = self.Server.appversion
-            if user_version is not None and server_version != "":
-                version = self.Package.versionCompare(user_version, server_version)
-                if version < 0:
-                    self.notify(message_summary=_("Pardus Software Center | New version available"),
-                                message_body=_("Please upgrade application using Menu/Updates"))
+        if self.UserSettings.usercodename == "yirmibir" or self.UserSettings.usercodename == "yirmiuc":
+            if self.Server.connection and not self.isbroken:
+                user_version = self.Package.installed_version("pardus-software")
+                if self.UserSettings.usercodename == "yirmibir":
+                    server_version = self.Server.appversion_pardus21
+                else:
+                    server_version = self.Server.appversion_pardus23
+                if user_version is not None:
+                    version = self.Package.versionCompare(user_version, server_version)
+                    if version and version < 0:
+                        self.notify(message_summary=_("Pardus Software Center | New version available"),
+                                    message_body=_("Please upgrade application using Menu/Updates"))
 
     def controlAvailableApps(self):
         if self.Server.connection:
@@ -1234,6 +1238,10 @@ class MainWindow(object):
                 self.Server.totalstatistics = response["total"]
                 self.Server.servermd5 = response["md5"]
                 self.Server.appversion = response["version"]
+                self.Server.appversion_pardus21 = response["version_pardus21"] if hasattr(response,
+                                                                                          "version_pardus21") else self.Server.appversion
+                self.Server.appversion_pardus23 = response["version_pardus23"] if hasattr(response,
+                                                                                          "version_pardus23") else self.Server.appversion
                 self.Server.iconnames = response["iconnames"]
                 self.Server.badwords = response["badwords"]
                 if "important-packages" in response and response["important-packages"]:
@@ -4944,7 +4952,7 @@ class MainWindow(object):
             plt.title(_("Daily App Download Counts (Last 30 Days)"))
             plt.tight_layout()
             if hasattr(ax1, "bar_label"):
-                ax1.bar_label(p1, label_type='edge', fontsize="small") # requires version 3.4-2+
+                ax1.bar_label(p1, label_type='edge', fontsize="small")  # requires version 3.4-2+
             fig1.autofmt_xdate(rotation=60)
             canvas1 = FigureCanvas(fig1)
             GLib.idle_add(self.stats1ViewPort.add, canvas1)
@@ -4984,7 +4992,7 @@ class MainWindow(object):
             plt.xticks(size="small")
             plt.tight_layout()
             if hasattr(ax3, "bar_label"):
-                ax3.bar_label(p3, label_type='edge', fontsize="small") # requires version 3.4-2+
+                ax3.bar_label(p3, label_type='edge', fontsize="small")  # requires version 3.4-2+
             fig3.autofmt_xdate(rotation=45)
             canvas3 = FigureCanvas(fig3)
             GLib.idle_add(self.stats3ViewPort.add, canvas3)
