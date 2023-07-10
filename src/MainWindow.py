@@ -598,7 +598,6 @@ class MainWindow(object):
         self.fromdetails = False
         self.fromqueue = False
         self.frommyapps = False
-        self.myapps_clicked = False
         self.mda_clicked = False
         self.mra_clicked = False
         self.la_clicked = False
@@ -1411,9 +1410,6 @@ class MainWindow(object):
     def on_catbutton_clicked(self, button):
 
         print("on_catbutton_clicked")
-        if self.pardusicb.get_active() and self.myapps_clicked:
-            self.pardusicb.set_active(False)
-            self.myapps_clicked = False
 
         if self.mda_clicked and self.sortPardusAppsCombo.get_active() == 1:
             self.sortPardusAppsCombo.set_active(0)
@@ -3741,9 +3737,6 @@ class MainWindow(object):
         self.on_PardusAppsIconView_selection_changed(self.mostappname)
 
     def on_HomeCategoryFlowBox_child_activated(self, flow_box, child):
-        if self.pardusicb.get_active() and self.myapps_clicked:
-            self.pardusicb.set_active(False)
-            self.myapps_clicked = False
 
         if self.mda_clicked and self.sortPardusAppsCombo.get_active() == 1:
             self.sortPardusAppsCombo.set_active(0)
