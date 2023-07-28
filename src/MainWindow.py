@@ -190,7 +190,7 @@ class MainWindow(object):
         self.dapp_isize_label = self.GtkBuilder.get_object("dapp_isize_label")
 
         self.dDescriptionLabel = self.GtkBuilder.get_object("dDescriptionLabel")
-        self.dSection = self.GtkBuilder.get_object("dSection")
+        self.dPackage = self.GtkBuilder.get_object("dPackage")
         self.dMaintainer = self.GtkBuilder.get_object("dMaintainer")
         self.dVersion = self.GtkBuilder.get_object("dVersion")
         self.dSize = self.GtkBuilder.get_object("dSize")
@@ -2432,8 +2432,8 @@ class MainWindow(object):
                 prettyname = " ".join(prettyname.split(" ")[:3]) + "\n" + " ".join(prettyname.split(" ")[3:6]) + \
                              "\n" + " ".join(prettyname.split(" ")[6:])
             self.dName.set_markup("<span size='x-large'><b>" + prettyname + "</b></span>")
-            self.dName.set_tooltip_markup("<b>{}</b>".format(self.appname))
-            self.dSection.set_markup("<i>" + self.section + "</i>")
+            # self.dName.set_tooltip_markup("<b>{}</b>".format(self.appname))
+            self.dPackage.set_markup("<i>" + self.appname + "</i>")
             self.dMaintainer.set_markup("<i>" + self.maintainer_name + "</i>")
             self.dCategory.set_markup(self.category)
             if self.copyright != "" and self.copyright is not None:

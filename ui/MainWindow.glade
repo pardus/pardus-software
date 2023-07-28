@@ -2947,6 +2947,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                       <object class="GtkImage" id="dIcon">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
+                                        <property name="pixel-size">128</property>
                                         <property name="icon-name">image-missing</property>
                                       </object>
                                       <packing>
@@ -2959,13 +2960,15 @@ so that the OS has nothing to do with the health of the application.</property>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
                                         <property name="orientation">vertical</property>
-                                        <property name="spacing">21</property>
+                                        <property name="spacing">13</property>
                                         <child>
                                           <object class="GtkLabel" id="dName">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
                                             <property name="halign">start</property>
+                                            <property name="valign">start</property>
                                             <property name="label">appname</property>
                                           </object>
                                           <packing>
@@ -2975,14 +2978,15 @@ so that the OS has nothing to do with the health of the application.</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="dSection">
+                                          <object class="GtkLabel" id="dPackage">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
                                             <property name="halign">start</property>
-                                            <property name="label">section</property>
+                                            <property name="valign">center</property>
+                                            <property name="label">package</property>
                                           </object>
                                           <packing>
-                                            <property name="expand">False</property>
+                                            <property name="expand">True</property>
                                             <property name="fill">True</property>
                                             <property name="position">1</property>
                                           </packing>
@@ -2993,12 +2997,12 @@ so that the OS has nothing to do with the health of the application.</property>
                                             <property name="can-focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="valign">end</property>
-                                            <property name="vexpand">True</property>
                                             <property name="label">maintainer</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">True</property>
+                                            <property name="pack-type">end</property>
                                             <property name="position">2</property>
                                           </packing>
                                         </child>
@@ -9544,7 +9548,6 @@ Use with caution. Are you sure you want to continue?</property>
                                                         <property name="halign">start</property>
                                                         <property name="orientation">vertical</property>
                                                         <property name="spacing">13</property>
-                                                        <property name="homogeneous">True</property>
                                                         <child>
                                                           <object class="GtkLabel" id="ui_myapps_app">
                                                             <property name="visible">True</property>
@@ -9566,11 +9569,12 @@ Use with caution. Are you sure you want to continue?</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="tooltip-text" translatable="yes">Package Name</property>
                                                             <property name="halign">start</property>
+                                                            <property name="valign">center</property>
                                                             <property name="label" translatable="yes">Package Name</property>
                                                             <property name="selectable">True</property>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">False</property>
+                                                            <property name="expand">True</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
                                                           </packing>
@@ -9580,6 +9584,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
+                                                            <property name="valign">end</property>
                                                             <property name="label" translatable="yes">Maintainer</property>
                                                             <property name="justify">center</property>
                                                             <property name="wrap">True</property>
