@@ -208,6 +208,18 @@ class Package(object):
                 package_downloadable = False
         return package_downloadable, package_uri
 
+    def get_section(self, packagename):
+        section = ""
+        try:
+            package = self.cache[packagename]
+        except:
+            return section
+        try:
+            section = package.candidate.section.lower()
+        except:
+            section = package.versions[0].section.lower()
+        return section
+
     def required_changes_upgrade(self, sleep=True):
         if sleep:
             time.sleep(0.25)
