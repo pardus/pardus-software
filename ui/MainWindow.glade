@@ -10504,6 +10504,24 @@ Use with caution. Are you sure you want to continue?</property>
                                                 <property name="position">4</property>
                                               </packing>
                                             </child>
+                                            <child>
+                                              <object class="GtkButton" id="ui_myapp_to_store_button">
+                                                <property name="label" translatable="yes">View more information on the store page</property>
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">True</property>
+                                                <property name="receives-default">True</property>
+                                                <property name="halign">center</property>
+                                                <property name="valign">center</property>
+                                                <property name="relief">none</property>
+                                                <signal name="clicked" handler="on_ui_myapp_to_store_button_clicked" swapped="no"/>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="pack-type">end</property>
+                                                <property name="position">5</property>
+                                              </packing>
+                                            </child>
                                           </object>
                                           <packing>
                                             <property name="name">details</property>

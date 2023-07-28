@@ -423,6 +423,8 @@ class MainWindow(object):
         self.ui_myapp_pop_dsize_box = self.GtkBuilder.get_object("ui_myapp_pop_dsize_box")
         self.ui_myapp_pop_isize_box = self.GtkBuilder.get_object("ui_myapp_pop_isize_box")
 
+        self.ui_myapp_to_store_button = self.GtkBuilder.get_object("ui_myapp_to_store_button")
+
         self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
         self.PardusAppsIconView.set_pixbuf_column(0)
         self.PardusAppsIconView.set_text_column(3)
@@ -900,9 +902,7 @@ class MainWindow(object):
                         id = "{}".format(row.get_children()[0].name.rsplit('/', 1)[-1])
                         if id == app:
                             myapps_found = True
-                            myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread,
-                                                                   args=(row.get_children()[0].name,), daemon=True)
-                            myappspackagethread.start()
+                            self.open_myapps_detailspage_from_desktopfile(row.get_children()[0].name)
                     if not myapps_found:
                         process = subprocess.run(["dpkg", "-S", app], stdout=subprocess.PIPE)
                         output = process.stdout.decode("utf-8")
@@ -2099,7 +2099,7 @@ class MainWindow(object):
             elif self.frommyapps:
                 self.homestack.set_visible_child_name("myapps")
                 self.set_stack_n_search(3)
-                self.menubackbutton.set_sensitive(False)
+                self.menubackbutton.set_sensitive(True)
             else:
                 if self.fromqueue:
                     self.homestack.set_visible_child_name("queue")
@@ -2825,6 +2825,8 @@ class MainWindow(object):
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
+        self.ui_myapp_to_store_button.set_visible(False)
+        self.ui_myapp_to_store_button.name = ""
         self.ui_myapps_spinner.stop()
         self.ui_myapp_toremove_box.set_visible(False)
         self.ui_myapp_toinstall_box.set_visible(False)
@@ -2844,6 +2846,23 @@ class MainWindow(object):
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=128))
             self.ui_myapps_description.set_markup("{}".format(description))
+
+            name = any(package == e["name"] for e in self.fullapplist)
+            if name:
+                self.ui_myapp_to_store_button.set_visible(True)
+                self.ui_myapp_to_store_button.name = package
+            else:
+                command = any(package in e["command"][self.locale] for e in self.fullapplist if e["command"])
+                if command:
+                    appname = None
+                    for app in self.fullapplist:
+                        if app["command"]:
+                            if package in app["command"][self.locale]:
+                                appname = app["name"]
+                                break
+                    if appname:
+                        self.ui_myapp_to_store_button.set_visible(True)
+                        self.ui_myapp_to_store_button.name = appname
 
             if details["to_delete"] and details["to_delete"] is not None:
                 self.ui_myapp_pop_toremove_label.set_markup(
@@ -2969,6 +2988,17 @@ class MainWindow(object):
             self.ui_myapps_notfoundname_box.set_visible(True)
             self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
             self.ui_myapps_notfoundname_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
+
+    def open_store_page_from_myapps(self, packagename):
+        self.frommyapps = True
+        self.frommostapps = False
+        self.fromqueue = False
+        self.fromeditorapps = False
+        self.myappname = packagename
+        self.on_PardusAppsIconView_selection_changed(packagename)
+
+    def on_ui_myapp_to_store_button_clicked(self, button):
+        self.open_store_page_from_myapps(button.name)
 
     def on_MyAppsDetailsPopover_closed(self, popover):
         self.ui_myapp_pop_spinner.stop()
@@ -4629,61 +4659,30 @@ class MainWindow(object):
         self.ui_myapp_pop_stack.set_visible_child_name("spinner")
 
         desktopfilename = row.get_children()[0].name
-        myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread,
-                                               args=(desktopfilename,), daemon=True)
-        myappspackagethread.start()
 
-    def myappspackage_worker_thread(self, desktopfilename):
-        status, package = self.myappspackage_worker(desktopfilename)
-        GLib.idle_add(self.myappspackage_worker_done, status, package, desktopfilename)
+        self.open_myapps_detailspage_from_desktopfile(desktopfilename)
 
-    def myappspackage_worker(self, desktopfilename):
+        # myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread,
+        #                                        args=(desktopfilename,), daemon=True)
+        # myappspackagethread.start()
 
-        status, package = self.Package.get_appname_from_desktopfile(desktopfilename)
 
-        return status, package
+    # def myappspackage_worker_thread(self, desktopfilename):
+    #     status, package = self.myappspackage_worker(desktopfilename)
+    #     GLib.idle_add(self.myappspackage_worker_done, status, package, desktopfilename)
 
-    def myappspackage_worker_done(self, status, package, desktopfilename):
-        # if status:
-        #     print(package)
-        #     name = any(package == e["name"] for e in self.fullapplist)
-        #     if name:
-        #         self.frommyapps = True
-        #         self.frommostapps = False
-        #         self.fromqueue = False
-        #         self.fromeditorapps = False
-        #         self.myappname = package
-        #         self.on_PardusAppsIconView_selection_changed(package)
-        #     else:
-        #         command = any(package in e["command"][self.locale] for e in self.fullapplist if e["command"])
-        #         if command:
-        #             appname = None
-        #             for app in self.fullapplist:
-        #                 if app["command"]:
-        #                     if package in app["command"][self.locale]:
-        #                         appname = app["name"]
-        #                         break
-        #             if appname:
-        #                 self.frommyapps = True
-        #                 self.frommostapps = False
-        #                 self.fromqueue = False
-        #                 self.fromeditorapps = False
-        #                 self.myappname = appname
-        #                 self.on_PardusAppsIconView_selection_changed(appname)
-        #             else:
-        #                 self.open_myapps_detailspage_from_desktopfile(desktopfilename)
-        #         else:
-        #             print("{} : {} not found in fullapplist, on_MyAppsListBox_row_activated".format(desktopfilename,
-        #                                                                                             package))
-        #             self.open_myapps_detailspage_from_desktopfile(desktopfilename)
-        #
-        # else:
-        #     print("{} not found on_MyAppsListBox_row_activated".format(desktopfilename))
+    # def myappspackage_worker(self, desktopfilename):
+    #
+    #     status, package = self.Package.get_appname_from_desktopfile(desktopfilename)
+    #
+    #     return status, package
 
-        if status:
-            self.open_myapps_detailspage_from_desktopfile(desktopfilename)
-        else:
-            print("{} not found on_MyAppsListBox_row_activated".format(desktopfilename))
+    # def myappspackage_worker_done(self, status, package, desktopfilename):
+    #     if status:
+    #         self.open_myapps_detailspage_from_desktopfile(desktopfilename)
+    #     else:
+    #         print("{} not found on_MyAppsListBox_row_activated".format(desktopfilename))
+
 
     def open_myapps_detailspage_from_desktopfile(self, desktopfilename):
         valid, dic = self.Package.parse_desktopfile(os.path.basename(desktopfilename))
