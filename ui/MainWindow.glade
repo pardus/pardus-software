@@ -949,6 +949,74 @@
     <property name="can-focus">False</property>
     <property name="icon-name">web-browser-symbolic</property>
   </object>
+  <object class="GtkPopover" id="licensePopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">dLicense</property>
+    <property name="position">right</property>
+    <child>
+      <object class="GtkScrolledWindow" id="license_scrolledWin">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="min-content-width">500</property>
+        <property name="min-content-height">300</property>
+        <child>
+          <object class="GtkViewport">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">13</property>
+            <property name="margin-end">13</property>
+            <property name="margin-bottom">13</property>
+            <property name="shadow-type">none</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">13</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="licenseHeader">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="licenseBody">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkImage" id="nextimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -2929,8 +2997,8 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="valign">center</property>
-                                <property name="margin-start">40</property>
-                                <property name="margin-end">40</property>
+                                <property name="margin-start">34</property>
+                                <property name="margin-end">34</property>
                                 <property name="margin-top">13</property>
                                 <property name="margin-bottom">13</property>
                                 <property name="vexpand">False</property>
@@ -3652,9 +3720,9 @@ This application served from Pardus non-free package repositories, so that the O
                                       <object class="GtkGrid">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="margin-start">40</property>
-                                        <property name="margin-end">40</property>
-                                        <property name="margin-bottom">10</property>
+                                        <property name="margin-start">34</property>
+                                        <property name="margin-end">34</property>
+                                        <property name="margin-bottom">13</property>
                                         <property name="hexpand">True</property>
                                         <property name="row-spacing">13</property>
                                         <child>
@@ -3669,24 +3737,23 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="label-xalign">0</property>
                                                 <property name="shadow-type">out</property>
                                                 <child>
-                                                  <object class="GtkAlignment">
+                                                  <object class="GtkBox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="left-padding">12</property>
+                                                    <property name="margin-top">5</property>
+                                                    <property name="margin-bottom">13</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <property name="spacing">13</property>
                                                     <child>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="orientation">vertical</property>
-                                                        <property name="spacing">13</property>
+                                                        <property name="margin-start">5</property>
+                                                        <property name="margin-end">5</property>
+                                                        <property name="homogeneous">True</property>
                                                         <child>
-                                                          <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="homogeneous">True</property>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid">
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="row-spacing">8</property>
@@ -3720,16 +3787,16 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid" id="dSizeGrid">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid" id="dSizeGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="row-spacing">8</property>
@@ -3753,22 +3820,24 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="ellipsize">end</property>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="row-spacing">8</property>
@@ -3792,22 +3861,24 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="ellipsize">end</property>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="row-spacing">8</property>
@@ -3831,45 +3902,49 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="ellipsize">end</property>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
                                                           </packing>
                                                         </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkSeparator">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="margin-start">5</property>
+                                                        <property name="margin-end">5</property>
+                                                        <property name="homogeneous">True</property>
                                                         <child>
-                                                          <object class="GtkSeparator">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="homogeneous">True</property>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid">
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="row-spacing">8</property>
@@ -3904,16 +3979,16 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="row-spacing">8</property>
@@ -3937,22 +4012,24 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">None</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="ellipsize">end</property>
                                                             </object>
                                                             <packing>
                                                             <property name="left-attach">0</property>
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="row-spacing">8</property>
@@ -3986,16 +4063,16 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
+                                                          </object>
+                                                          <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <!-- n-columns=1 n-rows=2 -->
-                                                            <object class="GtkGrid">
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <!-- n-columns=1 n-rows=2 -->
+                                                          <object class="GtkGrid">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
@@ -4073,67 +4150,56 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="top-attach">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkSeparator">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">3</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="homogeneous">True</property>
-                                                            <child>
-                                                            <object class="GtkLabel" id="dViewonweb">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <property name="use-markup">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">4</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkSeparator">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">5</property>
                                                           </packing>
                                                         </child>
                                                       </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkSeparator">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">3</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="margin-start">5</property>
+                                                        <property name="margin-end">5</property>
+                                                        <property name="homogeneous">True</property>
+                                                        <child>
+                                                          <object class="GtkLabel" id="dViewonweb">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="use-markup">True</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">4</property>
+                                                      </packing>
                                                     </child>
                                                   </object>
                                                 </child>
@@ -4179,26 +4245,21 @@ This application served from Pardus non-free package repositories, so that the O
                                                 <property name="label-xalign">0</property>
                                                 <property name="shadow-type">out</property>
                                                 <child>
-                                                  <object class="GtkAlignment">
+                                                  <object class="GtkBox" id="PardusAppImageBox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="left-padding">12</property>
+                                                    <property name="spacing">5</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <signal name="size-allocate" handler="on_PardusAppImageBox_size_allocate" swapped="no"/>
                                                     <child>
-                                                      <object class="GtkBox" id="PardusAppImageBox">
+                                                      <object class="GtkPaned">
                                                         <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="spacing">5</property>
-                                                        <property name="homogeneous">True</property>
-                                                        <signal name="size-allocate" handler="on_PardusAppImageBox_size_allocate" swapped="no"/>
+                                                        <property name="can-focus">True</property>
                                                         <child>
-                                                          <object class="GtkPaned">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkStack" id="appimage1stack">
+                                                          <placeholder/>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkStack" id="appimage1stack">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="transition-type">crossfade</property>
@@ -4208,8 +4269,8 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
                                                             <property name="valign">center</property>
-                                                            <property name="margin-top">23</property>
-                                                            <property name="margin-bottom">23</property>
+                                                            <property name="margin-top">13</property>
+                                                            <property name="margin-bottom">21</property>
                                                             <signal name="button-press-event" handler="on_dEventBox1_button_press_event" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage" id="dImage1">
@@ -4238,28 +4299,28 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="position">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="resize">True</property>
-                                                            <property name="shrink">True</property>
-                                                            </packing>
-                                                            </child>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
+                                                            <property name="resize">True</property>
+                                                            <property name="shrink">True</property>
                                                           </packing>
                                                         </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkPaned">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">True</property>
                                                         <child>
-                                                          <object class="GtkPaned">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">True</property>
-                                                            <child>
-                                                            <placeholder/>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkStack" id="appimage2stack">
+                                                          <placeholder/>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkStack" id="appimage2stack">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="transition-type">crossfade</property>
@@ -4269,8 +4330,8 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
                                                             <property name="valign">center</property>
-                                                            <property name="margin-top">23</property>
-                                                            <property name="margin-bottom">23</property>
+                                                            <property name="margin-top">13</property>
+                                                            <property name="margin-bottom">21</property>
                                                             <signal name="button-press-event" handler="on_dEventBox2_button_press_event" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage" id="dImage2">
@@ -4299,20 +4360,18 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="position">1</property>
                                                             </packing>
                                                             </child>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="resize">True</property>
-                                                            <property name="shrink">True</property>
-                                                            </packing>
-                                                            </child>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
+                                                            <property name="resize">True</property>
+                                                            <property name="shrink">True</property>
                                                           </packing>
                                                         </child>
                                                       </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
                                                     </child>
                                                   </object>
                                                 </child>
@@ -4364,7 +4423,7 @@ This application served from Pardus non-free package repositories, so that the O
                                                     <property name="can-focus">False</property>
                                                     <property name="margin-start">13</property>
                                                     <property name="margin-end">13</property>
-                                                    <property name="margin-top">13</property>
+                                                    <property name="margin-top">5</property>
                                                     <property name="margin-bottom">13</property>
                                                     <property name="orientation">vertical</property>
                                                     <child>
@@ -4459,19 +4518,15 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="label-xalign">0.5</property>
                                                             <property name="shadow-type">out</property>
                                                             <child>
-                                                            <object class="GtkAlignment">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="top-padding">3</property>
-                                                            <property name="bottom-padding">13</property>
-                                                            <property name="left-padding">23</property>
-                                                            <property name="right-padding">23</property>
-                                                            <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
                                                             <property name="valign">center</property>
+                                                            <property name="margin-start">21</property>
+                                                            <property name="margin-end">21</property>
+                                                            <property name="margin-top">5</property>
+                                                            <property name="margin-bottom">13</property>
                                                             <property name="spacing">13</property>
                                                             <child>
                                                             <object class="GtkBox">
@@ -5053,8 +5108,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            </child>
                                                             <child type="label">
                                                             <object class="GtkLabel">
                                                             <property name="visible">True</property>
@@ -5079,19 +5132,15 @@ This application served from Pardus non-free package repositories, so that the O
                                                             <property name="label-xalign">0.5</property>
                                                             <property name="shadow-type">out</property>
                                                             <child>
-                                                            <object class="GtkAlignment">
-                                                            <property name="visible">True</property>
-                                                            <property name="can-focus">False</property>
-                                                            <property name="top-padding">3</property>
-                                                            <property name="bottom-padding">13</property>
-                                                            <property name="left-padding">23</property>
-                                                            <property name="right-padding">23</property>
-                                                            <child>
                                                             <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
                                                             <property name="valign">center</property>
+                                                            <property name="margin-start">21</property>
+                                                            <property name="margin-end">21</property>
+                                                            <property name="margin-top">5</property>
+                                                            <property name="margin-bottom">13</property>
                                                             <property name="spacing">13</property>
                                                             <child>
                                                             <object class="GtkBox">
@@ -5673,8 +5722,6 @@ This application served from Pardus non-free package repositories, so that the O
                                                             </child>
                                                             </object>
                                                             </child>
-                                                            </object>
-                                                            </child>
                                                             <child type="label">
                                                             <object class="GtkLabel">
                                                             <property name="visible">True</property>
@@ -5718,7 +5765,7 @@ This application served from Pardus non-free package repositories, so that the O
                                           <object class="GtkExpander">
                                             <property name="visible">True</property>
                                             <property name="can-focus">True</property>
-                                            <property name="margin-bottom">40</property>
+                                            <property name="margin-bottom">34</property>
                                             <property name="expanded">True</property>
                                             <child>
                                               <object class="GtkNotebook" id="CommentsNotebook">
@@ -9795,6 +9842,8 @@ Use with caution. Are you sure you want to continue?</property>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
+                                                        <property name="margin-start">5</property>
+                                                        <property name="margin-end">5</property>
                                                         <property name="margin-top">5</property>
                                                         <property name="margin-bottom">13</property>
                                                         <property name="orientation">vertical</property>
@@ -10069,6 +10118,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                 <property name="can-focus">True</property>
                                                 <property name="margin-start">34</property>
                                                 <property name="margin-end">34</property>
+                                                <property name="margin-bottom">8</property>
                                                 <property name="expanded">True</property>
                                                 <child>
                                                   <object class="GtkFrame">
@@ -12252,74 +12302,6 @@ Use with caution. Are you sure you want to continue?</property>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">7</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkPopover" id="licensePopover">
-    <property name="can-focus">False</property>
-    <property name="relative-to">dLicense</property>
-    <property name="position">right</property>
-    <child>
-      <object class="GtkScrolledWindow" id="license_scrolledWin">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="min-content-width">500</property>
-        <property name="min-content-height">300</property>
-        <child>
-          <object class="GtkViewport">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-start">13</property>
-            <property name="margin-end">13</property>
-            <property name="margin-bottom">13</property>
-            <property name="shadow-type">none</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">13</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="licenseHeader">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="selectable">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="licenseBody">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="wrap">True</property>
-                    <property name="selectable">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
