@@ -1228,7 +1228,6 @@ class MainWindow(object):
         GLib.idle_add(self.setMostApps)
         GLib.idle_add(self.setRepoApps)
         GLib.idle_add(self.gnomeRatings)
-        GLib.idle_add(self.controlArgs)
         GLib.idle_add(self.controlPSUpdate)
         GLib.idle_add(self.aptUpdate)
         GLib.idle_add(self.myapps_worker_thread)
@@ -2750,6 +2749,7 @@ class MainWindow(object):
         for pkg in myapps:
             self.addtoMyApps(pkg)
         GLib.idle_add(self.MyAppsListBox.show_all)
+        GLib.idle_add(self.controlArgs)
         print("on_myapps_worker_done")
 
     def myappsdetail_worker_thread(self, app, popup=False):
