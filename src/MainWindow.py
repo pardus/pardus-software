@@ -2984,10 +2984,11 @@ class MainWindow(object):
             self.ui_myapp_pop_stack.set_visible_child_name("notfound")
             self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
-            self.myappsstack.set_visible_child_name("notfound")
             self.ui_myapps_notfoundname_box.set_visible(True)
             self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
             self.ui_myapps_notfoundname_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
+            if not popup:
+                self.myappsstack.set_visible_child_name("notfound")
 
     def open_store_page_from_myapps(self, packagename):
         self.frommyapps = True
