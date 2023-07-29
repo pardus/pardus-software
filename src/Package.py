@@ -425,7 +425,7 @@ class Package(object):
             filename = app.get_filename()
             keywords = " ".join(app.get_keywords())
 
-            if os.path.dirname(filename) == "/usr/share/applications" and executable and not nodisplay:
+            if executable and not nodisplay:
                 apps.append({"id": id, "name": name, "icon": icon, "description": description, "filename": filename,
                              "keywords": keywords, "executable": executable})
 
@@ -445,12 +445,8 @@ class Package(object):
                 description = app.get_description() or app.get_generic_name() or app.get_name()
                 filename = app.get_filename()
                 keywords = " ".join(app.get_keywords())
-                if os.path.dirname(filename) == "/usr/share/applications":
-                    return True, {"id": id, "name": name, "icon": icon, "description": description,
-                                  "filename": filename, "keywords": keywords, "executable": executable}
-                else:
-                    return False, {"id": id, "name": name, "icon": icon, "description": description,
-                                   "filename": filename, "keywords": "", "executable": ""}
+                return True, {"id": id, "name": name, "icon": icon, "description": description,
+                              "filename": filename, "keywords": keywords, "executable": executable}
             else:
                 print("parse_desktopfile: {} app not exists".format(desktopfilename))
                 return False, None
