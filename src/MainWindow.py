@@ -2774,7 +2774,7 @@ class MainWindow(object):
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
-            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(name))
+            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
@@ -2837,12 +2837,12 @@ class MainWindow(object):
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
-            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(name))
+            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
             self.ma_action_buttonbox.set_sensitive(True)
-            self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(name))
+            self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=128))
             self.ui_myapps_description.set_markup("{}".format(description))
