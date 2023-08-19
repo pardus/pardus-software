@@ -2449,8 +2449,10 @@ class MainWindow(object):
                 "<a title='{}' href='mailto:{}'>{}</a>".format(self.maintainer_mail, self.maintainer_mail, "E-Mail"))
             self.dWeb.set_markup(
                 "<a title='{}' href='{}'>{}</a>".format(self.maintainer_web, self.maintainer_web, "Website"))
-            self.dViewonweb.set_markup("{}<a href='https://apps.pardus.org.tr/app/{}'>apps.pardus.org.tr</a>{}".format(
-                _("View on "), self.appname, _(".")))
+
+            self.dViewonweb.set_markup(_("View on {}.").format(
+                "<a href='https://apps.pardus.org.tr/app/{}'>apps.pardus.org.tr</a>".format(self.appname)))
+
             isinstalled = self.Package.isinstalled(self.appname)
 
             if isinstalled is not None:
@@ -5038,9 +5040,9 @@ class MainWindow(object):
                 "<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["downcount"]))
             self.statstotalrc.set_markup(
                 "<small><b>{}</b></small>".format(self.Server.totalstatistics[0]["ratecount"]))
-            self.statsweblabel.set_markup(
-                "<small>{}<a href='https://apps.pardus.org.tr/statistics' title='https://apps.pardus.org.tr/statistics'>apps.pardus.org.tr</a>{}</small>".format(
-                    _("View on "), _(".")))
+
+            self.statsweblabel.set_markup("<small>" + _("View on {}.").format(
+                "<a href='https://apps.pardus.org.tr/statistics' title='https://apps.pardus.org.tr/statistics'>apps.pardus.org.tr</a>") + "</small>")
 
             self.statmainstack.set_visible_child_name("splash")
             self.stat_spinner.start()
