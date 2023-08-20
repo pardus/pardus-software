@@ -949,74 +949,6 @@
     <property name="can-focus">False</property>
     <property name="icon-name">web-browser-symbolic</property>
   </object>
-  <object class="GtkPopover" id="licensePopover">
-    <property name="can-focus">False</property>
-    <property name="relative-to">dLicense</property>
-    <property name="position">right</property>
-    <child>
-      <object class="GtkScrolledWindow" id="license_scrolledWin">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="min-content-width">500</property>
-        <property name="min-content-height">300</property>
-        <child>
-          <object class="GtkViewport">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-start">13</property>
-            <property name="margin-end">13</property>
-            <property name="margin-bottom">13</property>
-            <property name="shadow-type">none</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">13</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="licenseHeader">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="selectable">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="licenseBody">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="wrap">True</property>
-                    <property name="selectable">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="nextimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -9601,7 +9533,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="tooltip-text" translatable="yes">Application Name</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">Application Name</property>
+                                                            <property name="label" translatable="yes">Application Name</property>
                                                             <property name="selectable">True</property>
                                                           </object>
                                                           <packing>
@@ -9693,7 +9625,7 @@ Use with caution. Are you sure you want to continue?</property>
                                                         <property name="layout-style">expand</property>
                                                         <child>
                                                           <object class="GtkButton" id="ui_myapps_uninstall_button">
-                                                            <property name="label">Uninstall</property>
+                                                            <property name="label" translatable="yes">Uninstall</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="receives-default">True</property>
@@ -12302,6 +12234,74 @@ Use with caution. Are you sure you want to continue?</property>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">7</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="licensePopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">dLicense</property>
+    <property name="position">right</property>
+    <child>
+      <object class="GtkScrolledWindow" id="license_scrolledWin">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="min-content-width">500</property>
+        <property name="min-content-height">300</property>
+        <child>
+          <object class="GtkViewport">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">13</property>
+            <property name="margin-end">13</property>
+            <property name="margin-bottom">13</property>
+            <property name="shadow-type">none</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">13</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="licenseHeader">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="licenseBody">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
