@@ -1,3 +1,48 @@
+pardus-software (0.7.0) unstable; urgency=medium
+
+  [ Fatih Altun ]
+  * Update repo page screenshot
+
+  [ Aliberk Sandıkçı ]
+  * Check if default gateway has a proper MAC address
+
+  [ Fatih Altun ]
+  * Fix typo
+  * Reformat Package.py
+  * Reformat Actions
+  * Reformat Main Server py files
+  * Reformat setup.py
+  * Reformat MainWindow
+  * Add scrolled window to repo app description
+
+  [ Hugo Carvalho ]
+  * Update portuguese translation
+  * Update portuguese translation
+
+  [ Fatih Altun ]
+  * Update matplotlib backend
+  * Add theme control to css
+  * Rm unnecessary control
+  * Add app version control for pardus23 too
+  * Fix css files on setup.py
+  * Add control myapps in details arg before repo apps
+  * Fix controlargs func run order
+  * Add button control for open store page from myapps
+  * Add package name to app details instead of section
+  * Update some spacing and margin values on app details page
+  * Disable myapps system path control
+  * Fix myapps popup control on not found
+  * Add markup escape text to myapp name label
+  * Add X-Pardus-Apps to desktop file categories
+  * Disable exact value of statistics
+  * Update translatable string
+  * Update pot file
+  * Update Turkish translations
+  * Fix translatable keys
+  * Update app icon
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 21 Aug 2023 12:34:02 +0300
+
 pardus-software (0.6.0) unstable; urgency=medium
 
   [ Sabri Ünal ]
