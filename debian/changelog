@@ -1,3 +1,9 @@
+pardus-software (0.7.1) unstable; urgency=medium
+
+  * Add adw theme control and Update menu spacings
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 28 Aug 2023 19:35:44 +0300
+
 pardus-software (0.7.0) unstable; urgency=medium
 
   [ Fatih Altun ]
