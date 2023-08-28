@@ -1,26 +1,26 @@
 @import url("base.css");
 
 .pardus-software-frame > border{
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .pardus-software-notebook.view,
 .pardus-software-notebook.frame,
 .pardus-software-notebook > *,
 .pardus-software-notebook > header *{
-    border-radius: 5px 5px 0 0;
+    border-radius: 8px 8px 0 0;
 }
 
 .pardus-software-listbox{
-    border-radius:5px;
+    border-radius:8px;
 }
 
 .pardus-software-listbox row:hover, row:selected{
-    border-radius:5px;
+    border-radius:8px;
 }
 
 .pardus-software-flowbox flowboxchild{
-    border-radius:5px;
+    border-radius:8px;
 }
 
 .pardus-software-listbox{
@@ -35,37 +35,37 @@
 /* iconview */
 
 iconview.view {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: transparent;
 }
 
 iconview.view:selected {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: @theme_selected_bg_color;
 }
 
 iconview.view:selected:focus {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: @theme_selected_bg_color;
 }
 
 iconview.view:backdrop {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: transparent;
 }
 
 iconview.view:selected:backdrop {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: @theme_unfocused_selected_bg_color;
 }
 
 iconview.view:selected:backdrop:hover {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: @theme_unfocused_selected_bg_color;
 }
 
 .view > iconview {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: transparent;
 }
 
@@ -74,12 +74,12 @@ iconview.view:selected:backdrop:hover {
 }
 
 .view > iconview:hover:selected {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: @theme_selected_bg_color;
 }
 
 .view > iconview:backdrop {
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: transparent;
     color: @theme_unfocused_fg_color;
 }

@@ -680,6 +680,8 @@ class MainWindow(object):
         cssProvider = Gtk.CssProvider()
         if theme_name.startswith("pardus") or theme_name.startswith("adwaita"):
             cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/all.css")
+        elif theme_name.startswith("adw-gtk3"):
+            cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/adw.css")
         else:
             cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/base.css")
         screen = Gdk.Screen.get_default()
@@ -1584,6 +1586,8 @@ class MainWindow(object):
                 box.pack_end(box1, False, True, 0)
                 box.set_margin_start(8)
                 box.set_margin_end(8)
+                box.set_margin_top(3)
+                box.set_margin_bottom(3)
                 box.set_spacing(8)
 
                 listbox = Gtk.ListBox.new()
@@ -1644,6 +1648,8 @@ class MainWindow(object):
                 box.pack_end(box1, False, True, 0)
                 box.set_margin_start(8)
                 box.set_margin_end(8)
+                box.set_margin_top(3)
+                box.set_margin_bottom(3)
                 box.set_spacing(8)
 
                 listbox = Gtk.ListBox.new()
@@ -1703,6 +1709,8 @@ class MainWindow(object):
                 box.pack_end(box1, False, True, 0)
                 box.set_margin_start(8)
                 box.set_margin_end(8)
+                box.set_margin_top(3)
+                box.set_margin_bottom(3)
                 box.set_spacing(8)
 
                 listbox = Gtk.ListBox.new()
