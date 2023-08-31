@@ -1257,10 +1257,14 @@ class MainWindow(object):
                 self.Server.totalstatistics = response["total"]
                 self.Server.servermd5 = response["md5"]
                 self.Server.appversion = response["version"]
-                self.Server.appversion_pardus21 = response["version_pardus21"] if hasattr(response,
-                                                                                          "version_pardus21") else self.Server.appversion
-                self.Server.appversion_pardus23 = response["version_pardus23"] if hasattr(response,
-                                                                                          "version_pardus23") else self.Server.appversion
+                if "version_pardus21" in response.keys():
+                    self.Server.appversion_pardus21 = response["version_pardus21"]
+                else:
+                    self.Server.appversion_pardus21 = self.Server.appversion
+                if "version_pardus23" in response.keys():
+                    self.Server.appversion_pardus23 = response["version_pardus23"]
+                else:
+                    self.Server.appversion_pardus23 = self.Server.appversion
                 self.Server.iconnames = response["iconnames"]
                 self.Server.badwords = response["badwords"]
                 if "important-packages" in response and response["important-packages"]:
@@ -1270,10 +1274,21 @@ class MainWindow(object):
                 print("server statistics successful")
                 self.status_serverstatistics = True
                 self.Server.dailydowns = response["dailydowns"]
-                self.Server.osdowns = response["osdowns"]
+                if "osdownsv23" in response.keys():
+                    self.Server.osdowns = response["osdownsv23"]
+                else:
+                    self.Server.osdowns = response["osdowns"]
+                if "oscolorsv23" in response.keys():
+                    self.Server.oscolors = response["oscolorsv23"]
+                else:
+                    self.Server.oscolors = response["oscolors"]
                 self.Server.appdowns = response["appdowns"]
-                self.Server.oscolors = response["oscolors"]
                 self.Server.appcolors = response["appcolors"]
+                if "osexplode" in response.keys():
+                    self.Server.osexplode = response["osexplode"]
+                else:
+                    for os in self.Server.osdowns:
+                        self.Server.osexplode.append(0.2)
 
             if self.status_serverapps and self.status_servercats and self.status_serverhome and self.status_serverstatistics:
                 self.Server.connection = True
@@ -5114,10 +5129,9 @@ class MainWindow(object):
                         key = "Diğerleri"
                     osnames.append(key)
                     osdowns.append(value)
-
-            explode = (0.1, 0.3, 0.4, 0.5)
+            # explode = (0.2, 0.3, 0.2, 0.2, 0.7)
             fig2, ax2 = plt.subplots()
-            p2 = ax2.pie(osdowns, labels=osnames, colors=self.Server.oscolors, explode=explode,
+            p2 = ax2.pie(osdowns, labels=osnames, colors=self.Server.oscolors, explode=self.Server.osexplode,
                          autopct=lambda p: f'{p * sum(osdowns) / 100 :.0f} (%{p:.2f})')
             # plt.setp(p2[1], size="small", weight="bold")
             # plt.setp(p2[2], size="small", weight="bold")
