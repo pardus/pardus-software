@@ -145,22 +145,22 @@ def main():
             found = False
 
         if found:
-            # rmtree("/etc/apt/sources.list.d", ignore_errors=True)
-            # Path("/etc/apt/sources.list.d").mkdir(parents=True, exist_ok=True)
-
             sdir = "/etc/apt/sources.list.d"
-            sdir_lists = os.listdir(sdir)
-            for slist in sdir_lists:
-                commented = ""
-                if slist.endswith(".list"):
-                    try:
-                        with open(os.path.join(sdir, slist), "r") as sread:
-                            for line in sread.readlines():
-                                commented += "#{}".format(line)
-                        with open(os.path.join(sdir, slist), "w") as swrite:
-                            swrite.writelines(commented)
-                    except Exception as e:
-                        print("{}".format(e))
+            if os.path.isdir(sdir):
+                slistd = os.listdir(sdir)
+                for slist in slistd:
+                    commented = ""
+                    if slist.endswith(".list"):
+                        try:
+                            with open(os.path.join(sdir, slist), "r") as sread:
+                                for line in sread.readlines():
+                                    commented += "#{}".format(line)
+                            with open(os.path.join(sdir, slist), "w") as swrite:
+                                swrite.writelines(commented)
+                                swrite.flush()
+                                swrite.close()
+                        except Exception as e:
+                            print("{}".format(e))
 
             sfile = open("/etc/apt/sources.list", "w")
             sfile.write(source)
@@ -168,7 +168,6 @@ def main():
             sfile.close()
 
             rmtree("/var/lib/apt/lists/", ignore_errors=True)
-
             aptclean()
 
     if len(sys.argv) > 1:
