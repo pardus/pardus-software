@@ -161,7 +161,7 @@ class Package(object):
         try:
             package = self.cache[packagename]
         except:
-            return "", "", ""
+            return "", "", "", ""
         try:
             maintainer = package.candidate.record["Maintainer"]
         except:
