@@ -1,3 +1,20 @@
+pardus-software (0.7.3) unstable; urgency=medium
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translation
+
+  [ Fatih Altun ]
+  * Add pardus23 statistics as dynamically
+  * Add yirmiuc to sysactions and Fix sources.list.d
+  * Remove menu updates
+  * Update pot file
+  * Update Turkish translations
+  * Add some space to expander labels
+  * Fix typo
+  * Fix sources.list.d correction
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 22 Sep 2023 17:32:57 +0300
+
 pardus-software (0.7.2) unstable; urgency=medium
 
   * Fix missing file
