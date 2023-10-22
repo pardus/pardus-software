@@ -144,12 +144,12 @@ class MainWindow(object):
         self.bottomerrorbutton = self.GtkBuilder.get_object("bottomerrorbutton")
 
         self.bottominterruptlabel = self.GtkBuilder.get_object("bottominterruptlabel")
-        self.bottominterruptbutton = self.GtkBuilder.get_object("bottominterruptbutton")
+        self.bottominterrupt_fix_button = self.GtkBuilder.get_object("bottominterrupt_fix_button")
         self.bottominterrupthide_button = self.GtkBuilder.get_object("bottominterrupthide_button")
 
-        self.interruptinfo_label = self.GtkBuilder.get_object("interruptinfo_label")
-        self.interruptinfo_spinner = self.GtkBuilder.get_object("interruptinfo_spinner")
-        self.interruptinfo_button = self.GtkBuilder.get_object("interruptinfo_button")
+        self.pop_interruptinfo_label = self.GtkBuilder.get_object("pop_interruptinfo_label")
+        self.pop_interruptinfo_spinner = self.GtkBuilder.get_object("pop_interruptinfo_spinner")
+        self.pop_interruptinfo_ok_button = self.GtkBuilder.get_object("pop_interruptinfo_ok_button")
         self.interruptpopover = self.GtkBuilder.get_object("interruptpopover")
 
         self.bottomerrordetails_popover = self.GtkBuilder.get_object("bottomerrordetails_popover")
@@ -5846,16 +5846,16 @@ class MainWindow(object):
                    self.external["repokey"], self.external["reposlist"], self.external["reponame"]]
         self.expid = self.startSysProcess(command)
 
-    def on_bottominterruptbutton_clicked(self, button):
-        self.bottominterruptbutton.set_sensitive(False)
+    def on_bottominterrupt_fix_button_clicked(self, button):
+        self.bottominterrupt_fix_button.set_sensitive(False)
         self.bottominterrupthide_button.set_sensitive(False)
 
-        self.interruptinfo_spinner.set_visible(True)
-        self.interruptinfo_spinner.start()
+        self.pop_interruptinfo_spinner.set_visible(True)
+        self.pop_interruptinfo_spinner.start()
 
-        self.interruptinfo_label.set_markup("<b>{}</b>".format(_("The process is in progress. Please wait...")))
+        self.pop_interruptinfo_label.set_markup("<b>{}</b>".format(_("The process is in progress. Please wait...")))
 
-        self.interruptinfo_button.set_visible(False)
+        self.pop_interruptinfo_ok_button.set_visible(False)
 
         self.interruptpopover.popup()
 
@@ -5867,7 +5867,7 @@ class MainWindow(object):
         else:
             print("dpkgconfiguring in progress")
 
-    def on_interruptinfo_button_clicked(self, button):
+    def on_pop_interruptinfo_ok_button_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
         self.interruptpopover.popdown()
 
@@ -6606,15 +6606,15 @@ class MainWindow(object):
         print("dpkgconfigure_vte_on_done status: {}".format(status))
 
         self.dpkgconfiguring = False
-        self.bottominterruptbutton.set_sensitive(True)
+        self.bottominterrupt_fix_button.set_sensitive(True)
         self.bottominterrupthide_button.set_sensitive(True)
 
-        self.interruptinfo_spinner.set_visible(False)
-        self.interruptinfo_spinner.stop()
+        self.pop_interruptinfo_spinner.set_visible(False)
+        self.pop_interruptinfo_spinner.stop()
 
         if status == 32256:  # operation cancelled | Request dismissed
             self.bottomrevealer.set_reveal_child(True)
-            self.interruptinfo_label.set_markup("<b>{}</b>".format(_("Error.")))
+            self.pop_interruptinfo_label.set_markup("<b>{}</b>".format(_("Error.")))
         else:
-            self.interruptinfo_label.set_markup("<b>{}</b>".format(_("Process completed.")))
-            self.interruptinfo_button.set_visible(True)
+            self.pop_interruptinfo_label.set_markup("<b>{}</b>".format(_("Process completed.")))
+            self.pop_interruptinfo_ok_button.set_visible(True)

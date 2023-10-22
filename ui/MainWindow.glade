@@ -1551,14 +1551,14 @@ so that the OS has nothing to do with the health of the application.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="bottominterruptbutton">
+                              <object class="GtkButton" id="bottominterrupt_fix_button">
                                 <property name="label" translatable="yes">Fix</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
                                 <property name="halign">center</property>
                                 <property name="valign">center</property>
-                                <signal name="clicked" handler="on_bottominterruptbutton_clicked" swapped="no"/>
+                                <signal name="clicked" handler="on_bottominterrupt_fix_button_clicked" swapped="no"/>
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
@@ -11942,7 +11942,7 @@ Use with caution. Are you sure you want to continue?</property>
   </object>
   <object class="GtkPopover" id="interruptpopover">
     <property name="can-focus">False</property>
-    <property name="relative-to">bottominterruptbutton</property>
+    <property name="relative-to">bottominterrupt_fix_button</property>
     <property name="position">left</property>
     <child>
       <object class="GtkScrolledWindow">
@@ -11988,7 +11988,7 @@ Use with caution. Are you sure you want to continue?</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">8</property>
                     <child>
-                      <object class="GtkLabel" id="interruptinfo_label">
+                      <object class="GtkLabel" id="pop_interruptinfo_label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label">The process is in progress. Please wait...</property>
@@ -12000,7 +12000,7 @@ Use with caution. Are you sure you want to continue?</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkSpinner" id="interruptinfo_spinner">
+                      <object class="GtkSpinner" id="pop_interruptinfo_spinner">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="active">True</property>
@@ -12012,13 +12012,13 @@ Use with caution. Are you sure you want to continue?</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="interruptinfo_button">
+                      <object class="GtkButton" id="pop_interruptinfo_ok_button">
                         <property name="label" translatable="yes">OK</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="halign">center</property>
-                        <signal name="clicked" handler="on_interruptinfo_button_clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_pop_interruptinfo_ok_button_clicked" swapped="no"/>
                         <style>
                           <class name="suggested-action"/>
                         </style>
