@@ -6020,8 +6020,8 @@ class MainWindow(object):
             if self.Package.control_dpkg_interrupt():
                 self.bottomstack.set_visible_child_name("interrupt")
                 self.bottominterruptlabel.set_markup("<span color='red'><b>{}</b></span>".format(
-                    "dpkg interrupt detected. Click the 'Fix' button or\n"
-                    "manually run 'sudo dpkg --configure -a' to fix the problem."
+                    _("dpkg interrupt detected. Click the 'Fix' button or\n"
+                    "manually run 'sudo dpkg --configure -a' to fix the problem.")
                 ))
 
         self.error = False
