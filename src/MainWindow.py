@@ -145,6 +145,7 @@ class MainWindow(object):
 
         self.bottominterruptlabel = self.GtkBuilder.get_object("bottominterruptlabel")
         self.bottominterruptbutton = self.GtkBuilder.get_object("bottominterruptbutton")
+        self.bottominterrupthide_button = self.GtkBuilder.get_object("bottominterrupthide_button")
 
         self.interruptinfo_label = self.GtkBuilder.get_object("interruptinfo_label")
         self.interruptinfo_spinner = self.GtkBuilder.get_object("interruptinfo_spinner")
@@ -605,7 +606,7 @@ class MainWindow(object):
         self.isinstalled = None
         self.correctsourcesclicked = False
 
-        self.dpkgconfigureclicked = False
+        self.dpkgconfiguring = False
 
         self.actionedappname = ""
         self.actionedenablingappname = ""
@@ -5847,6 +5848,7 @@ class MainWindow(object):
 
     def on_bottominterruptbutton_clicked(self, button):
         self.bottominterruptbutton.set_sensitive(False)
+        self.bottominterrupthide_button.set_sensitive(False)
 
         self.interruptinfo_spinner.set_visible(True)
         self.interruptinfo_spinner.start()
@@ -5858,11 +5860,19 @@ class MainWindow(object):
         self.interruptpopover.popup()
 
         command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "dpkgconfigure"]
-        self.dpkgconfigure_vte_start_process(command)
+
+        if not self.dpkgconfiguring:
+            self.dpkgconfigure_vte_start_process(command)
+            self.dpkgconfiguring = True
+        else:
+            print("dpkgconfiguring in progress")
 
     def on_interruptinfo_button_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
         self.interruptpopover.popdown()
+
+    def on_bottominterrupthide_button_clicked(self, button):
+        self.bottomrevealer.set_reveal_child(False)
 
     def on_bottomerrordetails_button_clicked(self, button):
         self.bottomerrordetails_popover.popup()
@@ -6594,7 +6604,10 @@ class MainWindow(object):
 
     def dpkgconfigure_vte_on_done(self, terminal, status):
         print("dpkgconfigure_vte_on_done status: {}".format(status))
+
+        self.dpkgconfiguring = False
         self.bottominterruptbutton.set_sensitive(True)
+        self.bottominterrupthide_button.set_sensitive(True)
 
         self.interruptinfo_spinner.set_visible(False)
         self.interruptinfo_spinner.stop()
