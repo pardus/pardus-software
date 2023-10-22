@@ -18,7 +18,8 @@ def main():
         apt_pkg.init_system()
         try:
             apt_pkg.pkgsystem_lock()
-        except SystemError:
+        except SystemError as e:
+            print(e, file=sys.stderr)
             return False
         apt_pkg.pkgsystem_unlock()
         return True

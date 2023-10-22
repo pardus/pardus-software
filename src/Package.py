@@ -43,6 +43,9 @@ class Package(object):
                 section = mypkg.versions[0].section.lower()
             self.apps.append({"name": name, "category": section})
 
+    def control_dpkg_interrupt(self):
+        return self.cache.dpkg_journal_dirty
+
     def controlPackageCache(self, packagename):
         try:
             self.cache[packagename]

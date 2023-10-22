@@ -68,6 +68,8 @@ class MainWindow(object):
         self.error = False
         self.dpkglockerror = False
         self.dpkgconferror = False
+        self.dpkglockerror_message = ""
+        self.error_message = ""
 
         try:
             self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
@@ -140,6 +142,18 @@ class MainWindow(object):
 
         self.bottomerrorlabel = self.GtkBuilder.get_object("bottomerrorlabel")
         self.bottomerrorbutton = self.GtkBuilder.get_object("bottomerrorbutton")
+
+        self.bottominterruptlabel = self.GtkBuilder.get_object("bottominterruptlabel")
+        self.bottominterruptbutton = self.GtkBuilder.get_object("bottominterruptbutton")
+
+        self.interruptinfo_label = self.GtkBuilder.get_object("interruptinfo_label")
+        self.interruptinfo_spinner = self.GtkBuilder.get_object("interruptinfo_spinner")
+        self.interruptinfo_button = self.GtkBuilder.get_object("interruptinfo_button")
+        self.interruptpopover = self.GtkBuilder.get_object("interruptpopover")
+
+        self.bottomerrordetails_popover = self.GtkBuilder.get_object("bottomerrordetails_popover")
+        self.bottomerrordetails_label = self.GtkBuilder.get_object("bottomerrordetails_label")
+        self.bottomerrordetails_button = self.GtkBuilder.get_object("bottomerrordetails_button")
 
         self.pardusicb = self.GtkBuilder.get_object("pardusicb")
         self.sortPardusAppsCombo = self.GtkBuilder.get_object("sortPardusAppsCombo")
@@ -591,6 +605,8 @@ class MainWindow(object):
         self.isinstalled = None
         self.correctsourcesclicked = False
 
+        self.dpkgconfigureclicked = False
+
         self.actionedappname = ""
         self.actionedenablingappname = ""
         self.actionedappdesktop = ""
@@ -706,6 +722,9 @@ class MainWindow(object):
         upgrade_vte_menu_items.show()
         self.upgrade_vteterm.connect_object("event", self.upgrade_vte_event, upgrade_vte_menu)
         self.upgrade_vte_sw.add(self.upgrade_vteterm)
+
+        self.dpkgconfigure_vteterm = None
+        self.interrupt_vte_box = self.GtkBuilder.get_object("interrupt_vte_box")
 
         self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
         self.GnomeCommentListBoxEN = self.GtkBuilder.get_object("GnomeCommentListBoxEN")
@@ -5826,6 +5845,28 @@ class MainWindow(object):
                    self.external["repokey"], self.external["reposlist"], self.external["reponame"]]
         self.expid = self.startSysProcess(command)
 
+    def on_bottominterruptbutton_clicked(self, button):
+        self.bottominterruptbutton.set_sensitive(False)
+
+        self.interruptinfo_spinner.set_visible(True)
+        self.interruptinfo_spinner.start()
+
+        self.interruptinfo_label.set_markup("<b>{}</b>".format(_("The process is in progress. Please wait...")))
+
+        self.interruptinfo_button.set_visible(False)
+
+        self.interruptpopover.popup()
+
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "dpkgconfigure"]
+        self.dpkgconfigure_vte_start_process(command)
+
+    def on_interruptinfo_button_clicked(self, button):
+        self.bottomrevealer.set_reveal_child(False)
+        self.interruptpopover.popdown()
+
+    def on_bottomerrordetails_button_clicked(self, button):
+        self.bottomerrordetails_popover.popup()
+
     def startProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
@@ -5840,7 +5881,7 @@ class MainWindow(object):
             return False
 
         line = source.readline()
-        print(line)
+        print("{}".format(line))
 
         return True
 
@@ -5850,7 +5891,7 @@ class MainWindow(object):
 
         line = source.readline()
 
-        print(line)
+        print("{}".format(line))
 
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
@@ -5867,6 +5908,7 @@ class MainWindow(object):
         elif "E:" in line and ".deb" in line:
             print("connection error")
             self.error = True
+            self.error_message += line
         elif "E:" in line and "dpkg --configure -a" in line:
             print("dpkg --configure -a error")
             self.error = True
@@ -5875,10 +5917,12 @@ class MainWindow(object):
             print("/var/lib/dpkg/lock-frontend error")
             self.error = True
             self.dpkglockerror = True
-
+            self.dpkglockerror_message += line
         return True
 
     def onProcessExit(self, pid, status):
+
+        self.bottomerrordetails_button.set_visible(False)
 
         if not self.error:
             if status == 0:
@@ -5948,16 +5992,33 @@ class MainWindow(object):
             self.bottomstack.set_visible_child_name("error")
             self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
 
-        self.error = False
-        self.dpkglockerror = False
-        self.dpkgconferror = False
-
         if status == 256:
             self.errormessage = _("Only one software management tool is allowed to run at the same time.\n"
                                   "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first.")
             self.bottomrevealer.set_reveal_child(True)
             self.bottomstack.set_visible_child_name("error")
             self.bottomerrorlabel.set_markup("<span color='red'>{}</span>".format(self.errormessage))
+            if self.dpkglockerror:
+                self.bottomerrordetails_button.set_visible(True)
+                self.bottomerrordetails_label.set_markup(
+                    "<b>{}</b>".format(GLib.markup_escape_text(self.dpkglockerror_message, -1)))
+            elif self.error:
+                self.bottomerrordetails_button.set_visible(True)
+                self.bottomerrordetails_label.set_markup(
+                    "<b>{}</b>".format(GLib.markup_escape_text(self.errormessage, -1)))
+
+            if self.Package.control_dpkg_interrupt():
+                self.bottomstack.set_visible_child_name("interrupt")
+                self.bottominterruptlabel.set_markup("<span color='red'><b>{}</b></span>".format(
+                    "dpkg interrupt detected. Click the 'Fix' button or\n"
+                    "manually run 'sudo dpkg --configure -a' to fix the problem."
+                ))
+
+        self.error = False
+        self.dpkglockerror = False
+        self.dpkgconferror = False
+        self.error_message = ""
+        self.dpkglockerror_message = ""
 
     def controlView(self, actionedappname, actionedappdesktop, actionedappcommand):
         selected_items = self.PardusAppsIconView.get_selected_items()
@@ -6470,3 +6531,77 @@ class MainWindow(object):
                 GLib.idle_add(self.upgrade_info_box.set_visible, True)
                 GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
                 GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
+
+
+    def dpkgconfigure_vte_event(self, widget, event):
+        if event.type == Gdk.EventType.BUTTON_PRESS:
+            if event.button.button == 3:
+                widget.popup_for_device(None, None, None, None, None,
+                                        event.button.button, event.time)
+                return True
+        return False
+
+    def dpkgconfigure_vte_menu_action(self, widget, terminal):
+        terminal.copy_clipboard()
+
+    def dpkgconfigure_vte_start_process(self, command):
+        if self.dpkgconfigure_vteterm:
+            self.dpkgconfigure_vteterm.get_parent().remove(self.dpkgconfigure_vteterm)
+
+        self.dpkgconfigure_vteterm = Vte.Terminal()
+        self.dpkgconfigure_vteterm.set_scrollback_lines(-1)
+        dpkgconfigure_vte_menu = Gtk.Menu()
+        dpkgconfigure_vte_menu_items = Gtk.MenuItem(label=_("Copy selected text"))
+        dpkgconfigure_vte_menu.append(dpkgconfigure_vte_menu_items)
+        dpkgconfigure_vte_menu_items.connect("activate", self.dpkgconfigure_vte_menu_action, self.dpkgconfigure_vteterm)
+        dpkgconfigure_vte_menu_items.show()
+        self.dpkgconfigure_vteterm.connect_object("event", self.dpkgconfigure_vte_event, dpkgconfigure_vte_menu)
+        self.interrupt_vte_box.add(self.dpkgconfigure_vteterm)
+        self.dpkgconfigure_vteterm.show_all()
+
+        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
+        self.dpkgconfigure_vteterm.set_pty(pty)
+        try:
+            self.dpkgconfigure_vteterm.spawn_async(
+                Vte.PtyFlags.DEFAULT,
+                os.environ['HOME'],
+                command,
+                None,
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
+                -1,
+                None,
+                self.dpkgconfigure_vte_create_spawn_callback,
+                None
+            )
+        except Exception as e:
+            # old version VTE doesn't have spawn_async so use spawn_sync
+            print("{}".format(e))
+            self.dpkgconfigure_vteterm.connect("child-exited", self.dpkgconfigure_vte_on_done)
+            self.dpkgconfigure_vteterm.spawn_sync(
+                Vte.PtyFlags.DEFAULT,
+                os.environ['HOME'],
+                command,
+                [],
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
+            )
+
+    def dpkgconfigure_vte_create_spawn_callback(self, terminal, pid, error, userdata):
+        self.dpkgconfigure_vteterm.connect("child-exited", self.dpkgconfigure_vte_on_done)
+
+    def dpkgconfigure_vte_on_done(self, terminal, status):
+        print("dpkgconfigure_vte_on_done status: {}".format(status))
+        self.bottominterruptbutton.set_sensitive(True)
+
+        self.interruptinfo_spinner.set_visible(False)
+        self.interruptinfo_spinner.stop()
+
+        if status == 32256:  # operation cancelled | Request dismissed
+            self.bottomrevealer.set_reveal_child(True)
+            self.interruptinfo_label.set_markup("<b>{}</b>".format(_("Error.")))
+        else:
+            self.interruptinfo_label.set_markup("<b>{}</b>".format(_("Process completed.")))
+            self.interruptinfo_button.set_visible(True)

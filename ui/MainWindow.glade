@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkListStore" id="EditorListStore">
@@ -1447,11 +1447,13 @@ so that the OS has nothing to do with the health of the application.</property>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="spacing">8</property>
                             <child>
                               <object class="GtkLabel" id="bottomerrorlabel">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label">label</property>
+                                <property name="wrap">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1465,7 +1467,78 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
                                 <signal name="clicked" handler="on_bottomerrorbutton_clicked" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="pack-type">end</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="bottomerrordetails_button">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <signal name="clicked" handler="on_bottomerrordetails_button_clicked" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="icon-name">dialog-information-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="pack-type">end</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">error</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkLabel" id="bottominterruptlabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label">label</property>
+                                <property name="justify">center</property>
+                                <property name="wrap">True</property>
+                                <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="bottominterruptbutton">
+                                <property name="label" translatable="yes">Fix</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <signal name="clicked" handler="on_bottominterruptbutton_clicked" swapped="no"/>
+                                <style>
+                                  <class name="suggested-action"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1476,8 +1549,8 @@ so that the OS has nothing to do with the health of the application.</property>
                             </child>
                           </object>
                           <packing>
-                            <property name="name">error</property>
-                            <property name="position">1</property>
+                            <property name="name">interrupt</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>
@@ -11801,6 +11874,143 @@ Use with caution. Are you sure you want to continue?</property>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">7</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="bottomerrordetails_popover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">bottomerrordetails_button</property>
+    <property name="position">left</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="min-content-width">400</property>
+        <property name="min-content-height">175</property>
+        <child>
+          <object class="GtkViewport">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">13</property>
+            <property name="margin-end">13</property>
+            <property name="margin-top">13</property>
+            <property name="margin-bottom">13</property>
+            <property name="shadow-type">none</property>
+            <child>
+              <object class="GtkLabel" id="bottomerrordetails_label">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="wrap">True</property>
+                <property name="selectable">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="interruptpopover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">bottominterruptbutton</property>
+    <property name="position">left</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="min-content-width">575</property>
+        <property name="min-content-height">450</property>
+        <child>
+          <object class="GtkViewport">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">13</property>
+            <property name="margin-end">13</property>
+            <property name="margin-top">13</property>
+            <property name="margin-bottom">13</property>
+            <property name="shadow-type">none</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">13</property>
+                <child>
+                  <object class="GtkBox" id="interrupt_vte_box">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">8</property>
+                    <child>
+                      <object class="GtkLabel" id="interruptinfo_label">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label">The process is in progress. Please wait...</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinner" id="interruptinfo_spinner">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="active">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="interruptinfo_button">
+                        <property name="label" translatable="yes">OK</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <property name="halign">center</property>
+                        <signal name="clicked" handler="on_interruptinfo_button_clicked" swapped="no"/>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
