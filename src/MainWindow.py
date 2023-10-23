@@ -6012,12 +6012,8 @@ class MainWindow(object):
                 self.bottomerrordetails_button.set_visible(True)
                 self.bottomerrordetails_label.set_markup(
                     "<b>{}</b>".format(GLib.markup_escape_text(self.dpkglockerror_message, -1)))
-            elif self.error:
-                self.bottomerrordetails_button.set_visible(True)
-                self.bottomerrordetails_label.set_markup(
-                    "<b>{}</b>".format(GLib.markup_escape_text(self.errormessage, -1)))
 
-            if self.Package.control_dpkg_interrupt():
+            elif self.Package.control_dpkg_interrupt():
                 self.bottomstack.set_visible_child_name("interrupt")
                 self.bottominterruptlabel.set_markup("<span color='red'><b>{}</b></span>".format(
                     _("dpkg interrupt detected. Click the 'Fix' button or\n"
