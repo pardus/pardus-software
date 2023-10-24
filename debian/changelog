@@ -1,3 +1,21 @@
+pardus-software (0.7.4) unstable; urgency=medium
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+
+  [ Fatih Altun ]
+  * Add dpkg interrupt control, fix and Update dpkg status controls
+  * Add hide button to dpkg configure revealer
+  * Fix some widget names
+  * Fix typo
+  * Update pot file
+  * Update Turkish translations
+  * Update dpkg interrupt control
+  * Add dpkg interrupt, lock control to upgrade
+  * Fix fixapt func order
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 24 Oct 2023 16:50:36 +0300
+
 pardus-software (0.7.3) unstable; urgency=medium
 
   [ Hugo Carvalho ]
