@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkListStore" id="EditorListStore">
@@ -10978,21 +10978,6 @@ Use with caution. Are you sure you want to continue?</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkButton" id="upgrade_info_back_button">
-                                            <property name="label" translatable="yes">Back</property>
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
-                                            <property name="receives-default">True</property>
-                                            <property name="halign">center</property>
-                                            <signal name="clicked" handler="on_upgrade_info_back_button_clicked" swapped="no"/>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                        <child>
                                           <object class="GtkButton" id="upgrade_info_ok_button">
                                             <property name="label" translatable="yes">Ok</property>
                                             <property name="visible">True</property>
@@ -11007,7 +10992,40 @@ Use with caution. Are you sure you want to continue?</property>
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton" id="upgrade_info_dpkgfix_button">
+                                            <property name="label" translatable="yes">Fix</property>
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">True</property>
+                                            <property name="receives-default">True</property>
+                                            <property name="halign">center</property>
+                                            <signal name="clicked" handler="on_upgrade_info_dpkgfix_button_clicked" swapped="no"/>
+                                            <style>
+                                              <class name="suggested-action"/>
+                                            </style>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
                                             <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton" id="upgrade_info_back_button">
+                                            <property name="label" translatable="yes">Back</property>
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">True</property>
+                                            <property name="receives-default">True</property>
+                                            <property name="halign">center</property>
+                                            <signal name="clicked" handler="on_upgrade_info_back_button_clicked" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">3</property>
                                           </packing>
                                         </child>
                                       </object>
@@ -11943,7 +11961,6 @@ Use with caution. Are you sure you want to continue?</property>
   <object class="GtkPopover" id="interruptpopover">
     <property name="can-focus">False</property>
     <property name="relative-to">bottominterrupt_fix_button</property>
-    <property name="position">left</property>
     <child>
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>

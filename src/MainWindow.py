@@ -351,6 +351,7 @@ class MainWindow(object):
         self.upgrade_withoutyq_radiobutton = self.GtkBuilder.get_object("upgrade_withoutyq_radiobutton")
         self.upgrade_info_back_button = self.GtkBuilder.get_object("upgrade_info_back_button")
         self.upgrade_info_ok_button = self.GtkBuilder.get_object("upgrade_info_ok_button")
+        self.upgrade_info_dpkgfix_button = self.GtkBuilder.get_object("upgrade_info_dpkgfix_button")
         self.upgrade_info_box = self.GtkBuilder.get_object("upgrade_info_box")
         self.upgrade_info_label = self.GtkBuilder.get_object("upgrade_info_label")
         self.upgrade_dsize_label = self.GtkBuilder.get_object("upgrade_dsize_label")
@@ -4334,6 +4335,7 @@ class MainWindow(object):
             GLib.idle_add(self.updates_button.set_sensitive, True)
             GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
             GLib.idle_add(self.upgrade_info_ok_button.set_visible, False)
+            GLib.idle_add(self.upgrade_info_dpkgfix_button.set_visible, False)
             return
 
         if not requireds["changes_available"]:
@@ -4352,6 +4354,7 @@ class MainWindow(object):
             GLib.idle_add(self.upgrade_stack_spinnner.stop)
             GLib.idle_add(self.updates_button.set_sensitive, True)
             GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
+            GLib.idle_add(self.upgrade_info_dpkgfix_button.set_visible, False)
             GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
             return
 
@@ -4417,6 +4420,7 @@ class MainWindow(object):
         self.upgrade_vte_sw.set_visible(True)
         self.upgrade_info_back_button.set_visible(True)
         self.upgrade_info_ok_button.set_visible(False)
+        self.upgrade_info_dpkgfix_button.set_visible(False)
         self.upgrade_stack.set_visible_child_name("upgrade")
 
         yq_conf = ""
@@ -4444,6 +4448,29 @@ class MainWindow(object):
                 "<span color='red'>{}</span>".format(_("Package manager is busy, try again later.")))
             self.upgrade_info_box.set_visible(True)
             self.upgrade_vte_sw.set_visible(False)
+
+    def on_upgrade_info_dpkgfix_button_clicked(self, button):
+
+        self.upgrade_info_dpkgfix_button.set_sensitive(False)
+
+        self.pop_interruptinfo_spinner.set_visible(True)
+        self.pop_interruptinfo_spinner.start()
+
+        self.pop_interruptinfo_label.set_markup("<b>{}</b>".format(_("The process is in progress. Please wait...")))
+
+        self.pop_interruptinfo_ok_button.set_visible(False)
+
+        self.interruptpopover.set_relative_to(button)
+        self.interruptpopover.popup()
+
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "dpkgconfigure"]
+
+        if not self.dpkgconfiguring:
+            self.dpkgconfigure_vte_start_process(command)
+            self.dpkgconfiguring = True
+        else:
+            print("dpkgconfiguring in progress")
+
 
     def on_upgrade_info_back_button_clicked(self, button):
         self.upgrade_stack.set_visible_child_name("main")
@@ -5857,6 +5884,7 @@ class MainWindow(object):
 
         self.pop_interruptinfo_ok_button.set_visible(False)
 
+        self.interruptpopover.set_relative_to(button)
         self.interruptpopover.popup()
 
         command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "dpkgconfigure"]
@@ -5870,6 +5898,7 @@ class MainWindow(object):
     def on_pop_interruptinfo_ok_button_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
         self.interruptpopover.popdown()
+        self.upgrade_stack.set_visible_child_name("main")
 
     def on_bottominterrupthide_button_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
@@ -6528,6 +6557,20 @@ class MainWindow(object):
         self.upgrade_inprogress = False
         if status == 32256:  # operation cancelled | Request dismissed
             self.upgrade_stack.set_visible_child_name("main")
+        elif status == 2816:  # dpkg lock error
+            GLib.idle_add(self.upgrade_info_box.set_visible, True)
+            GLib.idle_add(self.upgrade_info_dpkgfix_button.set_visible, True)
+            GLib.idle_add(self.upgrade_info_back_button.set_visible, True)
+            self.upgrade_info_label.set_markup("<span color='red'><b>{}</b></span>".format(
+                _("Only one software management tool is allowed to run at the same time.\n"
+                  "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first.")))
+        elif status == 3072:  # dpkg interrupt error
+            GLib.idle_add(self.upgrade_info_box.set_visible, True)
+            GLib.idle_add(self.upgrade_info_dpkgfix_button.set_visible, True)
+            GLib.idle_add(self.upgrade_info_back_button.set_visible, True)
+            self.upgrade_info_label.set_markup("<span color='red'><b>{}</b></span>".format(
+                _("dpkg interrupt detected. Click the 'Fix' button or\n"
+                  "manually run 'sudo dpkg --configure -a' to fix the problem.")))
         else:
             self.Package.updatecache()
             self.upgradables_page_setted = False
@@ -6605,11 +6648,12 @@ class MainWindow(object):
         self.bottominterrupt_fix_button.set_sensitive(True)
         self.bottominterrupthide_button.set_sensitive(True)
 
+        self.upgrade_info_dpkgfix_button.set_sensitive(True)
+
         self.pop_interruptinfo_spinner.set_visible(False)
         self.pop_interruptinfo_spinner.stop()
 
         if status == 32256:  # operation cancelled | Request dismissed
-            self.bottomrevealer.set_reveal_child(True)
             self.pop_interruptinfo_label.set_markup("<b>{}</b>".format(_("Error.")))
         else:
             self.pop_interruptinfo_label.set_markup("<b>{}</b>".format(_("Process completed.")))
