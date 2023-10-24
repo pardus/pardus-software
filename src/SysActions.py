@@ -206,8 +206,8 @@ def main():
         elif sys.argv[1] == "fixapt":
             correctsourceslist()
             subupdate()
-            fixbroken()
             dpkgconfigure()
+            fixbroken()
         elif sys.argv[1] == "upgrade":
             subupdate()
             subupgrade(sys.argv[2], sys.argv[3])
