@@ -11,6 +11,7 @@ import locale
 import os
 import re
 import subprocess
+import sys
 import threading
 import time
 from datetime import datetime
@@ -938,7 +939,7 @@ class MainWindow(object):
             except Exception as e:
                 print(str(e))
 
-        if "remove" in self.Application.args.keys():
+        elif "remove" in self.Application.args.keys():
             if self.myapps_perm == 1:
                 app = self.Application.args["remove"]
                 if not app.endswith(".desktop"):
@@ -948,6 +949,26 @@ class MainWindow(object):
 
             else:
                 print("myapps permission is 0 so you can not use remove arg")
+        else:
+            if len(sys.argv) > 1:
+                try:
+                    app = sys.argv[1].replace("pardus-software-app://", "")
+                    if ".desktop" in app:
+                        app = "{}".format(app.split(".desktop")[0])
+                    for apps in self.fullapplist:
+                        if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or \
+                                app == apps["gnomename"].split(".desktop")[0] or \
+                                any(app == e for e in
+                                    apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
+                            self.topsearchbutton.set_active(False)
+                            app = apps["name"]  # if the name is coming from desktop then set it to app name
+                            self.fromdetails = True
+                            self.detailsappname = app
+                            self.mostappname = None
+                            self.fromqueue = False
+                            GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
+                except Exception as e:
+                    print("{}".format(e))
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
