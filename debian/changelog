@@ -1,3 +1,18 @@
+pardus-software (0.7.5) unstable; urgency=medium
+
+  [ Fatih Altun ]
+  * Add sys argv handler
+  * Add x-scheme-handler
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+
+  [ Fatih Altun ]
+  * Add handle for Gio.tls_error_quark
+  * Update copyright to 2024
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 16 Jan 2024 11:19:56 +0300
+
 pardus-software (0.7.4) unstable; urgency=medium
 
   [ Hugo Carvalho ]
