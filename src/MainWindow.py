@@ -4212,7 +4212,8 @@ class MainWindow(object):
         if self.repo_perm == 1:
 
             self.menubackbutton.set_sensitive(False)
-            self.prefback = self.homestack.get_visible_child_name()
+            if self.homestack.get_visible_child_name() == self.prefback:
+                self.prefback = self.homestack.get_visible_child_name()
 
             self.homestack.set_visible_child_name("repohome")
             self.set_stack_n_search(2)
@@ -4237,7 +4238,8 @@ class MainWindow(object):
     def on_myapps_button_clicked(self, button):
         if self.myapps_perm == 1:
             if button is not None:
-                self.prefback = self.homestack.get_visible_child_name()
+                if self.homestack.get_visible_child_name() == self.prefback:
+                    self.prefback = self.homestack.get_visible_child_name()
             else:
                 self.prefback = "pardushome"
             self.menubackbutton.set_sensitive(False)
@@ -4514,7 +4516,8 @@ class MainWindow(object):
 
     def on_queue_button_clicked(self, button):
         self.menubackbutton.set_sensitive(True)
-        self.prefback = self.homestack.get_visible_child_name()
+        if self.homestack.get_visible_child_name() == self.prefback:
+            self.prefback = self.homestack.get_visible_child_name()
         self.homestack.set_visible_child_name("queue")
         self.set_stack_n_search(4)
 
@@ -5039,7 +5042,8 @@ class MainWindow(object):
                         return True
 
     def on_menu_settings_clicked(self, button):
-        self.prefback = self.homestack.get_visible_child_name()
+        if self.homestack.get_visible_child_name() == self.prefback:
+            self.prefback = self.homestack.get_visible_child_name()
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
@@ -5099,7 +5103,8 @@ class MainWindow(object):
             self.selecticonsBox.set_visible(False)
 
     def on_menu_statistics_clicked(self, button):
-        self.prefback = self.homestack.get_visible_child_name()
+        if self.homestack.get_visible_child_name() == self.prefback:
+            self.prefback = self.homestack.get_visible_child_name()
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
@@ -5251,7 +5256,8 @@ class MainWindow(object):
         self.aboutdialog.hide()
 
     def on_menu_suggestapp_clicked(self, button):
-        self.prefback = self.homestack.get_visible_child_name()
+        if self.homestack.get_visible_child_name() == self.prefback:
+            self.prefback = self.homestack.get_visible_child_name()
         self.menubackbutton.set_sensitive(True)
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
