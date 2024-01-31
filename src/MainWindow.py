@@ -4222,9 +4222,11 @@ class MainWindow(object):
     def on_repo_button_clicked(self, button):
         if self.repo_perm == 1:
 
+            if self.homestack.get_visible_child_name() == "repohome":
+                print("already repohome page")
+                return
             self.menubackbutton.set_sensitive(False)
-            if self.homestack.get_visible_child_name() == self.prefback:
-                self.prefback = self.homestack.get_visible_child_name()
+            self.prefback = self.homestack.get_visible_child_name()
 
             self.homestack.set_visible_child_name("repohome")
             self.set_stack_n_search(2)
@@ -4249,8 +4251,10 @@ class MainWindow(object):
     def on_myapps_button_clicked(self, button):
         if self.myapps_perm == 1:
             if button is not None:
-                if self.homestack.get_visible_child_name() == self.prefback:
-                    self.prefback = self.homestack.get_visible_child_name()
+                if self.homestack.get_visible_child_name() == "myapps":
+                    print("already myapps page")
+                    return
+                self.prefback = self.homestack.get_visible_child_name()
             else:
                 self.prefback = "pardushome"
             self.menubackbutton.set_sensitive(False)
@@ -4526,9 +4530,11 @@ class MainWindow(object):
                 self.topsearchbutton.set_sensitive(False)
 
     def on_queue_button_clicked(self, button):
+        if self.homestack.get_visible_child_name() == "queue":
+            print("already queue page")
+            return
         self.menubackbutton.set_sensitive(True)
-        if self.homestack.get_visible_child_name() == self.prefback:
-            self.prefback = self.homestack.get_visible_child_name()
+        self.prefback = self.homestack.get_visible_child_name()
         self.homestack.set_visible_child_name("queue")
         self.set_stack_n_search(4)
 
@@ -5053,8 +5059,11 @@ class MainWindow(object):
                         return True
 
     def on_menu_settings_clicked(self, button):
-        if self.homestack.get_visible_child_name() == self.prefback:
-            self.prefback = self.homestack.get_visible_child_name()
+        if self.homestack.get_visible_child_name() == "preferences":
+            print("already preferences page")
+            self.PopoverMenu.popdown()
+            return
+        self.prefback = self.homestack.get_visible_child_name()
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
@@ -5114,8 +5123,11 @@ class MainWindow(object):
             self.selecticonsBox.set_visible(False)
 
     def on_menu_statistics_clicked(self, button):
-        if self.homestack.get_visible_child_name() == self.prefback:
-            self.prefback = self.homestack.get_visible_child_name()
+        if self.homestack.get_visible_child_name() == "statistics":
+            print("already statistics page")
+            self.PopoverMenu.popdown()
+            return
+        self.prefback = self.homestack.get_visible_child_name()
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
@@ -5267,8 +5279,11 @@ class MainWindow(object):
         self.aboutdialog.hide()
 
     def on_menu_suggestapp_clicked(self, button):
-        if self.homestack.get_visible_child_name() == self.prefback:
-            self.prefback = self.homestack.get_visible_child_name()
+        if self.homestack.get_visible_child_name() == "suggestapp":
+            print("already suggestapp page")
+            self.PopoverMenu.popdown()
+            return
+        self.prefback = self.homestack.get_visible_child_name()
         self.menubackbutton.set_sensitive(True)
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
