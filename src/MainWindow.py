@@ -666,6 +666,10 @@ class MainWindow(object):
                                    "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
 
         self.prefback = "pardushome"
+        self.prefback_preferences = None
+        self.prefback_statistics = None
+        self.prefback_suggestapp = None
+        self.prefback_queue = None
 
         self.clicked_myapp = ""
 
@@ -2193,7 +2197,16 @@ class MainWindow(object):
 
         elif hsname == "preferences" or hsname == "repohome" or hsname == "suggestapp" or hsname == "queue" or hsname == "statistics":
 
-            self.homestack.set_visible_child_name(self.prefback)
+            if hsname == "preferences":
+                self.homestack.set_visible_child_name(self.prefback_preferences)
+            elif hsname == "statistics":
+                self.homestack.set_visible_child_name(self.prefback_statistics)
+            elif hsname == "suggestapp":
+                self.homestack.set_visible_child_name(self.prefback_suggestapp)
+            elif hsname == "queue":
+                self.homestack.set_visible_child_name(self.prefback_queue)
+            else:
+                self.homestack.set_visible_child_name(self.prefback)
 
             if not self.isbroken:
                 self.topsearchbutton.set_sensitive(True)
@@ -2220,7 +2233,7 @@ class MainWindow(object):
                     self.menubackbutton.set_sensitive(False)
                 elif hsname1 == "queue":
                     self.set_stack_n_search(4)
-                elif hsname1 == "preferences" or hsname1 == "fixapt":
+                elif hsname1 == "fixapt":
                     self.menubackbutton.set_sensitive(False)
 
     def set_stack_n_search(self, id):
@@ -4535,6 +4548,7 @@ class MainWindow(object):
             return
         self.menubackbutton.set_sensitive(True)
         self.prefback = self.homestack.get_visible_child_name()
+        self.prefback_queue = self.prefback
         self.homestack.set_visible_child_name("queue")
         self.set_stack_n_search(4)
 
@@ -5064,6 +5078,7 @@ class MainWindow(object):
             self.PopoverMenu.popdown()
             return
         self.prefback = self.homestack.get_visible_child_name()
+        self.prefback_preferences = self.prefback
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
@@ -5128,6 +5143,7 @@ class MainWindow(object):
             self.PopoverMenu.popdown()
             return
         self.prefback = self.homestack.get_visible_child_name()
+        self.prefback_statistics = self.prefback
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
@@ -5284,6 +5300,7 @@ class MainWindow(object):
             self.PopoverMenu.popdown()
             return
         self.prefback = self.homestack.get_visible_child_name()
+        self.prefback_suggestapp = self.prefback
         self.menubackbutton.set_sensitive(True)
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
