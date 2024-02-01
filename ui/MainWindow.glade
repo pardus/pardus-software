@@ -2796,7 +2796,7 @@ so that the OS has nothing to do with the health of the application.</property>
                             <property name="margin-end">13</property>
                             <property name="margin-top">5</property>
                             <property name="margin-bottom">5</property>
-                            <property name="spacing">23</property>
+                            <property name="spacing">21</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -2806,8 +2806,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                   <object class="GtkImage" id="NavCategoryImage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="icon-name">applications-other</property>
-                                    <property name="icon_size">5</property>
+                                    <property name="icon-name">view-app-grid-symbolic</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -2846,26 +2845,96 @@ so that the OS has nothing to do with the health of the application.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkCheckButton" id="pardusicb">
+                              <object class="GtkButtonBox" id="ui_showapps_buttonbox">
                                 <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="receives-default">False</property>
-                                <property name="tooltip-text" translatable="yes">Show only installed apps</property>
-                                <property name="draw-indicator">True</property>
-                                <signal name="toggled" handler="on_pardusicb_toggled" swapped="no"/>
+                                <property name="can-focus">False</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="homogeneous">True</property>
+                                <property name="layout-style">expand</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkToggleButton" id="ui_showall_button">
+                                    <property name="name">-1</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Show installed apps</property>
-                                    <property name="ellipsize">end</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Show All Applications</property>
+                                    <property name="active">True</property>
+                                    <signal name="clicked" handler="on_ui_showall_button_clicked" swapped="no"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="icon-name">view-app-grid-symbolic</property>
+                                      </object>
+                                    </child>
                                   </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkToggleButton" id="ui_showinstalled_button">
+                                    <property name="name">1</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Show Installed Applications</property>
+                                    <signal name="clicked" handler="on_ui_showinstalled_button_clicked" swapped="no"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="icon-name">emblem-ok-symbolic</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkToggleButton" id="ui_shownotinstalled_button">
+                                    <property name="name">0</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Show Not Installed Applications</property>
+                                    <signal name="clicked" handler="on_ui_shownotinstalled_button_clicked" swapped="no"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="icon-name">list-remove-symbolic</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="ui_showappcount_label">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                             <child>
@@ -2886,7 +2955,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="pack-type">end</property>
-                                <property name="position">3</property>
+                                <property name="position">4</property>
                               </packing>
                             </child>
                             <child>
@@ -2900,7 +2969,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="pack-type">end</property>
-                                <property name="position">4</property>
+                                <property name="position">5</property>
                               </packing>
                             </child>
                           </object>
