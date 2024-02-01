@@ -4237,10 +4237,10 @@ class MainWindow(object):
 
             if self.homestack.get_visible_child_name() == "repohome":
                 print("already repohome page")
-                return
-            self.menubackbutton.set_sensitive(False)
-            self.prefback = self.homestack.get_visible_child_name()
+            else:
+                self.prefback = self.homestack.get_visible_child_name()
 
+            self.menubackbutton.set_sensitive(False)
             self.homestack.set_visible_child_name("repohome")
             self.set_stack_n_search(2)
 
@@ -4264,9 +4264,6 @@ class MainWindow(object):
     def on_myapps_button_clicked(self, button):
         if self.myapps_perm == 1:
             if button is not None:
-                if self.homestack.get_visible_child_name() == "myapps":
-                    print("already myapps page")
-                    return
                 self.prefback = self.homestack.get_visible_child_name()
             else:
                 self.prefback = "pardushome"
@@ -5075,10 +5072,9 @@ class MainWindow(object):
     def on_menu_settings_clicked(self, button):
         if self.homestack.get_visible_child_name() == "preferences":
             print("already preferences page")
-            self.PopoverMenu.popdown()
-            return
-        self.prefback = self.homestack.get_visible_child_name()
-        self.prefback_preferences = self.prefback
+        else:
+            self.prefback = self.homestack.get_visible_child_name()
+            self.prefback_preferences = self.prefback
         self.PopoverMenu.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
