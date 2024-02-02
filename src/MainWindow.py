@@ -43,7 +43,7 @@ from AppRequest import AppRequest
 from GnomeComment import GnomeComment
 from PardusComment import PardusComment
 from UserSettings import UserSettings
-
+from QueueManager import QueueManager
 
 class MainWindow(object):
     def __init__(self, application):
@@ -697,6 +697,9 @@ class MainWindow(object):
         self.imgfullscreen_count = 0
         self.down_image = 0
 
+        self.queuetmpfile = "/tmp/pardus-software-queue.tmp"
+        self.queuemanager = QueueManager(self.queuetmpfile)
+
         settings = Gtk.Settings.get_default()
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
 
@@ -1030,6 +1033,7 @@ class MainWindow(object):
             GLib.idle_add(self.updates_button.set_sensitive, False)
 
         print("page setted to normal")
+        self.get_queue()
 
     def package(self):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
@@ -4607,7 +4611,6 @@ class MainWindow(object):
         self.set_stack_n_search(4)
 
     def addtoQueue(self, appname, myappicon=False):
-
         appicon = Gtk.Image.new()
         if self.UserSettings.config_usi:
             appicon.set_from_pixbuf(self.getServerAppIcon(self.appname, myappicon=myappicon))
@@ -4649,6 +4652,7 @@ class MainWindow(object):
         box.name = self.appname
         self.QueueListBox.add(box)
         self.QueueListBox.show_all()
+        self.queuemanager.save(self.queue)
 
     def remove_from_queue_clicked(self, button):
         for row in self.QueueListBox:
@@ -4658,6 +4662,7 @@ class MainWindow(object):
                     # removing from queue list too
                     index = next((index for (index, app) in enumerate(self.queue) if app["name"] == button.name), None)
                     self.queue.pop(index)
+        self.queuemanager.save(self.queue)
 
     def addtoMyApps(self, app):
 
@@ -4802,6 +4807,7 @@ class MainWindow(object):
 
         self.queue.append({"name": self.appname, "command": self.command})
         self.addtoQueue(self.appname, myappicon=True)
+        self.queuemanager.save(self.queue)
         if not self.inprogress:
             self.actionPackage(self.appname, self.command)
             self.inprogress = True
@@ -6154,6 +6160,7 @@ class MainWindow(object):
             if not self.error:
                 self.progresstextlabel.set_text("")
                 self.queuestack.set_visible_child_name("completed")
+        self.queuemanager.save(self.queue)
 
         if self.error:
             self.bottomrevealer.set_reveal_child(True)
@@ -6787,3 +6794,28 @@ class MainWindow(object):
         else:
             self.pop_interruptinfo_label.set_markup("<b>{}</b>".format(_("Process completed.")))
             self.pop_interruptinfo_ok_button.set_visible(True)
+
+    def get_queue(self):
+        queue = self.queuemanager.load()
+        isFirst = True
+        for proc in queue:
+            if isFirst:
+                self.appname, self.command = (proc['name'], proc['command'])
+                self.bottomstack.set_visible_child_name("queue")
+                self.bottomrevealer.set_reveal_child(True)
+                self.queuestack.set_visible_child_name("inprogress")
+                self.dActionButton.set_sensitive(False)
+                self.dActionInfoButton.set_sensitive(False)
+                self.queue.append({"name": self.appname, "command": self.command})
+                self.addtoQueue(self.appname)
+                if not self.inprogress:
+                    self.actionPackage(self.appname, self.command)
+                    self.inprogress = True
+                    print("action " + self.appname)
+                isFirst = False
+                print(f"{self.appname} added to queue from tmp file")
+            else:
+                name, command = (proc['name'], proc['command'])
+                self.queue.append({"name": name, "command": command})
+                self.addtoQueue(self.appname)
+                print(f"{name} added to queue from tmp file")
