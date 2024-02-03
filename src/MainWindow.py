@@ -474,6 +474,7 @@ class MainWindow(object):
         self.switchSGC = self.GtkBuilder.get_object("switchSGC")
         self.switchUDT = self.GtkBuilder.get_object("switchUDT")
         self.switchAPTU = self.GtkBuilder.get_object("switchAPTU")
+        self.switchSQUE = self.GtkBuilder.get_object("switchSQUE")
         self.preflabel = self.GtkBuilder.get_object("preflabel")
         self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
@@ -488,6 +489,7 @@ class MainWindow(object):
         self.tip_sgc = self.GtkBuilder.get_object("tip_sgc")
         self.tip_udt = self.GtkBuilder.get_object("tip_udt")
         self.tip_aptu = self.GtkBuilder.get_object("tip_aptu")
+        self.tip_sque = self.GtkBuilder.get_object("tip_sque")
         self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
         self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
         self.passwordlessbutton = self.GtkBuilder.get_object("passwordlessbutton")
@@ -698,8 +700,7 @@ class MainWindow(object):
         self.imgfullscreen_count = 0
         self.down_image = 0
 
-        self.queuetmpfile = "/tmp/pardus-software-queue.tmp"
-        self.queuemanager = QueueManager(self.queuetmpfile)
+        self.queuemanager = QueueManager()
 
         self.pm = ProcessManager()
 
@@ -1037,13 +1038,13 @@ class MainWindow(object):
 
         print("page setted to normal")
 
-        active_process = self.pm.get_running_process()
-        if active_process:
+        last_pid = self.pm.get_last_pid()
+        print(last_pid)
+        if last_pid:
             # kill active apt process (that should be opened by pardus-software)
             # we'll reopen it
             # apt saves downloaded data
-            subprocess.call(['sudo', 'kill', str(active_process.pid)],
-                env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+            subprocess.call(['/usr/bin/pkexec', '/usr/bin/kill', str(last_pid)])
 
         self.get_queue()
 
@@ -1074,6 +1075,7 @@ class MainWindow(object):
         print("{} {}".format("config_aptup", self.UserSettings.config_aptup))
         print("{} {}".format("config_lastaptup", self.UserSettings.config_lastaptup))
         print("{} {}".format("config_forceaptuptime", self.UserSettings.config_forceaptuptime))
+        print("{} {}".format("config_savequeue", self.UserSettings.config_savequeue))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -5167,6 +5169,7 @@ class MainWindow(object):
         self.switchSGC.set_state(self.UserSettings.config_sgc)
         self.switchUDT.set_state(self.UserSettings.config_udt)
         self.switchAPTU.set_state(self.UserSettings.config_aptup)
+        self.switchSQUE.set_state(self.UserSettings.config_savequeue)
         self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
             _("Server Address"), self.Server.serverurl))
         self.store_button.get_style_context().remove_class("suggested-action")
@@ -5617,6 +5620,12 @@ class MainWindow(object):
                     force
                 ))
             self.PopoverPrefTip.popup()
+        elif button.get_name() == "tip_sque":
+            self.PopoverPrefTip.set_relative_to(self.tip_sque)
+            self.prefTipLabel.set_markup("{}".format(
+                _("Remember processes on queue after reopen app.")
+            ))
+            self.PopoverPrefTip.popup()
 
     def displayTime(self, seconds, granularity=5):
         result = []
@@ -5641,11 +5650,8 @@ class MainWindow(object):
         if state != user_config_usi:
             print("Updating user icon state")
             try:
-                self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.config_usi = state
+                self.save_config()
                 self.usersettings()
                 GLib.idle_add(self.clearBoxes)
                 if state:
@@ -5671,11 +5677,8 @@ class MainWindow(object):
         if state != user_config_ea:
             print("Updating user animation state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.config_ea = state
+                self.save_config()
                 self.usersettings()
                 self.setAnimations()
             except Exception as e:
@@ -5686,11 +5689,8 @@ class MainWindow(object):
         if state != user_config_saa:
             print("Updating show available apps state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.config_saa = state
+                self.save_config()
                 self.usersettings()
                 self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
             except Exception as e:
@@ -5707,11 +5707,8 @@ class MainWindow(object):
         if state != user_config_hera:
             print("Updating hide external apps state")
             try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                              self.UserSettings.config_saa, state, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
+                self.UserSettings.config_hera = state
+                self.save_config()
                 self.usersettings()
                 self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=state)
             except Exception as e:
@@ -5728,11 +5725,8 @@ class MainWindow(object):
         active = combo_box.get_active_id()
         if active != user_config_icon and active is not None:
             print("changing icons to " + str(combo_box.get_active_id()))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera, active,
-                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.config_icon = active
+            self.save_config()
             self.usersettings()
             GLib.idle_add(self.clearBoxes)
             self.setPardusApps()
@@ -5744,23 +5738,16 @@ class MainWindow(object):
         user_config_sgc = self.UserSettings.config_sgc
         if state != user_config_sgc:
             print("Updating show gnome apps state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.config_sgc = state
+            self.save_config(state)
             self.usersettings()
 
     def on_switchUDT_state_set(self, switch, state):
         user_config_udt = self.UserSettings.config_udt
         if state != user_config_udt:
             print("Updating use dark theme state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
-
+            self.UserSettings.config_udt = state
+            self.save_config(state)
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = state
 
             self.usersettings()
@@ -5769,12 +5756,32 @@ class MainWindow(object):
         user_config_aptup = self.UserSettings.config_aptup
         if state != user_config_aptup:
             print("Updating auto apt update state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
-                                          self.UserSettings.config_udt, state,
-                                          self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
+            self.UserSettings.config_forceaptuptime = state
+            self.save_config()
             self.usersettings()
+
+    def on_switchSQUE_state_set(self, switch, state):
+        user_config_sque = self.UserSettings.config_savequeue
+        if state != user_config_sque:
+            print("Updating auto apt update state as {}".format(state))
+            self.UserSettings.config_savequeue = state
+            self.save_config()
+            self.usersettings()
+
+    def save_config(self):
+        self.UserSettings.writeConfig(
+            self.UserSettings.config_usi,
+            self.UserSettings.config_ea,
+            self.UserSettings.config_saa,
+            self.UserSettings.config_hera,
+            self.UserSettings.config_icon,
+            self.UserSettings.config_sgc,
+            self.UserSettings.config_udt,
+            self.UserSettings.config_aptup,
+            self.UserSettings.config_lastaptup,
+            self.UserSettings.config_forceaptuptime,
+            self.UserSettings.config_savequeue
+        )
 
     def clearBoxes(self):
         self.EditorListStore.clear()
@@ -6104,6 +6111,11 @@ class MainWindow(object):
             self.error = True
             self.dpkglockerror = True
             self.dpkglockerror_message += line
+
+        proc = self.pm.get_running_process()
+        if proc:
+            self.pm.write_last_pid(proc.pid)
+
         return True
 
     def onProcessExit(self, pid, status):

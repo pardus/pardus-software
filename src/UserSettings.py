@@ -36,6 +36,7 @@ class UserSettings(object):
         self.config_aptup = None
         self.config_lastaptup = None
         self.config_forceaptuptime = None
+        self.config_savequeue = None
 
     def createDefaultConfig(self, force=False):
         self.config['DEFAULT'] = {'UseServerIcons': 'yes',
@@ -47,7 +48,8 @@ class UserSettings(object):
                                   'UseDarkTheme': 'no',
                                   'AutoAptUpdate': 'yes',
                                   'LastAutoAptUpdate': '0',
-                                  'ForceAutoAptUpdateTime': '0'}
+                                  'ForceAutoAptUpdateTime': '0',
+                                  'SaveQueue': 'no'}
 
         if not Path.is_file(Path(self.configdir + self.configfile)) or force:
             if self.createDir(self.configdir):
@@ -68,6 +70,7 @@ class UserSettings(object):
             self.config_aptup = self.config.getboolean('DEFAULT', 'AutoAptUpdate')
             self.config_lastaptup = self.config.getint('DEFAULT', 'LastAutoAptUpdate')
             self.config_forceaptuptime = self.config.getint('DEFAULT', 'ForceAutoAptUpdateTime')
+            self.config_savequeue = self.config.getboolean('DEFAULT', 'SaveQueue')
         except Exception as e:
             print("{}".format(e))
             print("user config read error ! Trying create defaults")
@@ -82,12 +85,13 @@ class UserSettings(object):
             self.config_aptup = True
             self.config_lastaptup = 0
             self.config_forceaptuptime = 0
+            self.config_savequeue = False
             try:
                 self.createDefaultConfig(force=True)
             except Exception as e:
                 print("self.createDefaultConfig(force=True) : {}".format(e))
 
-    def writeConfig(self, srvicons, anims, avaiapps, extapps, iconname, gnomecom, darktheme, aptup, lastaptup, faptupt):
+    def writeConfig(self, srvicons, anims, avaiapps, extapps, iconname, gnomecom, darktheme, aptup, lastaptup, faptupt, savequeue):
         self.config['DEFAULT'] = {'UseServerIcons': srvicons,
                                   'Animations': anims,
                                   'ShowAvailableApps': avaiapps,
@@ -97,7 +101,8 @@ class UserSettings(object):
                                   'UseDarkTheme': darktheme,
                                   'AutoAptUpdate': aptup,
                                   'LastAutoAptUpdate': lastaptup,
-                                  'ForceAutoAptUpdateTime': faptupt}
+                                  'ForceAutoAptUpdateTime': faptupt,
+                                  'SaveQueue': savequeue}
         if self.createDir(self.configdir):
             with open(self.configdir + self.configfile, "w") as cf:
                 self.config.write(cf)

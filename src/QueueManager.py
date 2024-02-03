@@ -2,8 +2,8 @@ import os
 
 class QueueManager:
 
-	def __init__(self, tmpfile):
-		self.tmpfile = tmpfile
+	def __init__(self):
+		self.tmpfile = "/tmp/pardus-software-queue.tmp"
 
 	def save(self, queue):
 		with open(self.tmpfile, "w") as file:
