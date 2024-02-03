@@ -44,6 +44,7 @@ from GnomeComment import GnomeComment
 from PardusComment import PardusComment
 from UserSettings import UserSettings
 from QueueManager import QueueManager
+from ProcessManager import ProcessManager
 
 class MainWindow(object):
     def __init__(self, application):
@@ -700,6 +701,8 @@ class MainWindow(object):
         self.queuetmpfile = "/tmp/pardus-software-queue.tmp"
         self.queuemanager = QueueManager(self.queuetmpfile)
 
+        self.pm = ProcessManager()
+
         settings = Gtk.Settings.get_default()
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
 
@@ -1033,6 +1036,15 @@ class MainWindow(object):
             GLib.idle_add(self.updates_button.set_sensitive, False)
 
         print("page setted to normal")
+
+        active_process = self.pm.get_running_process()
+        if active_process:
+            # kill active apt process (that should be opened by pardus-software)
+            # we'll reopen it
+            # apt saves downloaded data
+            subprocess.call(['sudo', 'kill', str(active_process.pid)],
+                env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
         self.get_queue()
 
     def package(self):
