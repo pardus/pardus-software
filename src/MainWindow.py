@@ -465,6 +465,13 @@ class MainWindow(object):
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
         self.aboutdialog.set_program_name(_("Pardus Software Center"))
+        if self.aboutdialog.get_titlebar() is None:
+            about_headerbar = Gtk.HeaderBar.new()
+            about_headerbar.set_show_close_button(True)
+            about_headerbar.set_title(_("About Pardus Software Center"))
+            about_headerbar.pack_start(Gtk.Image.new_from_icon_name("pardus-software", Gtk.IconSize.LARGE_TOOLBAR))
+            about_headerbar.show_all()
+            self.aboutdialog.set_titlebar(about_headerbar)
 
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
