@@ -676,6 +676,8 @@ class MainWindow(object):
                                    "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
                                    "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
 
+        self.i386_packages = ["wine", "winehq-stable"]
+
         self.prefback = "pardushome"
         self.prefback_preferences = None
         self.prefback_statistics = None
@@ -1333,6 +1335,8 @@ class MainWindow(object):
                 self.Server.badwords = response["badwords"]
                 if "important-packages" in response and response["important-packages"]:
                     self.important_packages = response["important-packages"]
+                if "i386-packages" in response and response["i386-packages"]:
+                    self.i386_packages = response["i386-packages"]
                 self.Server.aptuptime = response["aptuptime"]
             elif type == "statistics":
                 print("server statistics successful")
@@ -5995,6 +5999,10 @@ class MainWindow(object):
                 self.raction.set_label(_(" Installing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedcommand]
+            packagelist = self.actionedcommand.split(" ")
+            if [i for i in self.i386_packages if i in packagelist]:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                               "enablei386andinstall", self.actionedcommand]
         else:
             print("actionPackage func error")
 
@@ -6093,6 +6101,9 @@ class MainWindow(object):
             self.error = True
             self.dpkglockerror = True
             self.dpkglockerror_message += line
+        elif "pardus-software-i386-start" in line:
+            self.progresstextlabel.set_text(
+                "{} | {}".format(self.actionedappname, _("Activating i386")))
         return True
 
     def onProcessExit(self, pid, status):
