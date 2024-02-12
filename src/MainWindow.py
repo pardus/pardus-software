@@ -6103,7 +6103,7 @@ class MainWindow(object):
             self.dpkglockerror_message += line
         elif "pardus-software-i386-start" in line:
             self.progresstextlabel.set_text(
-                "{} | {}".format(self.actionedappname, _("Activating i386")))
+                "{} | {}".format(self.actionedappname, _("i386 activating")))
         return True
 
     def onProcessExit(self, pid, status):
