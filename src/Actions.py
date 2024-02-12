@@ -9,6 +9,7 @@ Created on Fri Sep 18 14:53:00 2020
 import os
 import subprocess
 import sys
+import time
 
 import apt_pkg
 
@@ -59,7 +60,14 @@ def main():
         subprocess.call(["apt-key", "add", keyfile])
         subprocess.call(["mv", slistfile, "/etc/apt/sources.list.d/"])
 
+    def killPid(pid):
+        subprocess.call(["kill", pid])
+
     if len(sys.argv) > 1:
+        if sys.argv[1] == "kill":
+            killPid(sys.argv[2])
+            time.sleep(1)
+            return
         if control_lock():
             if sys.argv[1] == "install":
                 install(sys.argv[2])

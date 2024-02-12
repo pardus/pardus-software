@@ -704,6 +704,8 @@ class MainWindow(object):
 
         self.pm = ProcessManager()
 
+        self.last_pid = None
+
         settings = Gtk.Settings.get_default()
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
 
@@ -1037,14 +1039,6 @@ class MainWindow(object):
             GLib.idle_add(self.updates_button.set_sensitive, False)
 
         print("page setted to normal")
-
-        last_pid = self.pm.get_last_pid()
-        print(last_pid)
-        if last_pid:
-            # kill active apt process (that should be opened by pardus-software)
-            # we'll reopen it
-            # apt saves downloaded data
-            subprocess.call(['/usr/bin/pkexec', '/usr/bin/kill', str(last_pid)])
 
         self.get_queue()
 
@@ -5756,7 +5750,7 @@ class MainWindow(object):
         user_config_aptup = self.UserSettings.config_aptup
         if state != user_config_aptup:
             print("Updating auto apt update state as {}".format(state))
-            self.UserSettings.config_forceaptuptime = state
+            self.UserSettings.config_aptup = state
             self.save_config()
             self.usersettings()
 
@@ -6000,21 +5994,32 @@ class MainWindow(object):
         self.actionedcommand = command
         self.actionedappdesktop = self.desktop_file
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
+        #self.last_pid = self.pm.get_last_pid()
 
         if self.isinstalled is True:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Removing"))
                 self.raction.set_label(_(" Removing"))
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
-                       self.actionedcommand]
+            if not self.last_pid:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
+                           self.actionedcommand]
+            else:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "kill", self.last_pid, ";", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
+                           self.actionedcommand]
         elif self.isinstalled is False:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Installing"))
                 self.raction.set_label(_(" Installing"))
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
-                       self.actionedcommand]
+            if not self.last_pid:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
+                           self.actionedcommand]
+            else:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "kill", self.last_pid, ";", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
+                           self.actionedcommand]
         else:
             print("actionPackage func error")
+
+        print(command)
 
         self.pid = self.startProcess(command)
 
@@ -6549,12 +6554,7 @@ class MainWindow(object):
             except Exception as e:
                 print("timestamp Error: {}".format(e))
                 timestamp = 0
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
-                                          self.UserSettings.config_udt, self.UserSettings.config_aptup,
-                                          timestamp, self.UserSettings.config_forceaptuptime)
-
+            self.save_config()
             if self.Package.upgradable():
                 if not self.updates_button.get_visible():
                     GLib.idle_add(self.header_buttonbox.pack_start, self.updates_button, False, True, 0)
