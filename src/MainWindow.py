@@ -676,7 +676,7 @@ class MainWindow(object):
                                    "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
                                    "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
 
-        self.i386_packages = ["wine", "winehq-stable"]
+        self.i386_packages = ["wine"]
 
         self.prefback = "pardushome"
         self.prefback_preferences = None
