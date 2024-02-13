@@ -873,42 +873,6 @@
       <mime-type>image/svg+xml</mime-type>
     </mime-types>
   </object>
-  <object class="GtkAboutDialog" id="aboutdialog">
-    <property name="can-focus">False</property>
-    <property name="icon-name">pardus-software</property>
-    <property name="type-hint">dialog</property>
-    <property name="program-name">Pardus Software Center</property>
-    <property name="version">0.1.0~alpha1</property>
-    <property name="copyright">© 2024 Pardus</property>
-    <property name="comments" translatable="yes">Install, remove, update applications</property>
-    <property name="website">https://github.com/pardus/pardus-software</property>
-    <property name="website-label" translatable="yes">Website</property>
-    <property name="authors">Fatih Altun</property>
-    <property name="translator-credits">Fatih Altun</property>
-    <property name="logo-icon-name">pardus-software</property>
-    <property name="license-type">gpl-3-0</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="backimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -11989,6 +11953,45 @@ Use with caution. Are you sure you want to continue?</property>
               </object>
             </child>
           </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAboutDialog" id="aboutdialog">
+    <property name="can-focus">False</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="icon-name">pardus-software</property>
+    <property name="type-hint">dialog</property>
+    <property name="gravity">center</property>
+    <property name="transient-for">MainWindow</property>
+    <property name="program-name">Pardus Software Center</property>
+    <property name="version">0.1.0~alpha1</property>
+    <property name="copyright">© 2024 Pardus</property>
+    <property name="comments" translatable="yes">Install, remove, update applications</property>
+    <property name="website">https://github.com/pardus/pardus-software</property>
+    <property name="website-label" translatable="yes">Website</property>
+    <property name="authors">Fatih Altun</property>
+    <property name="translator-credits">Fatih Altun</property>
+    <property name="logo-icon-name">pardus-software</property>
+    <property name="license-type">gpl-3-0</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>
