@@ -184,6 +184,7 @@ class MainWindow(object):
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
         self.dActionInfoButton = self.GtkBuilder.get_object("dActionInfoButton")
+        self.dActionCancelButton = self.GtkBuilder.get_object("dActionCancelButton")
         self.dActionButtonBox = self.GtkBuilder.get_object("dActionButtonBox")
         self.dActionButtonBox.set_homogeneous(False)
         self.dOpenButton = self.GtkBuilder.get_object("dOpenButton")
@@ -788,6 +789,8 @@ class MainWindow(object):
 
         self.MainWindow.show_all()
 
+        self.hide_some_widgets()
+
         p1 = threading.Thread(target=self.worker)
         p1.daemon = True
         p1.start()
@@ -858,6 +861,9 @@ class MainWindow(object):
             print("Error in controlDisplay: {}".format(e))
 
         print("window w:{} h:{} | monitor w:{} h:{} s:{}".format(width, height, w, h, s))
+
+    def hide_some_widgets(self):
+        self.dActionCancelButton.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -2605,17 +2611,20 @@ class MainWindow(object):
                     self.wpcformcontrolLabel.set_markup(
                         "<span color='red'>{}</span>".format(_("You need to install the application")))
 
+                app_in_queue = False
                 if len(self.queue) > 0:
                     for qa in self.queue:
                         if self.appname == qa["name"]:
-                            if isinstalled:
-                                self.dActionButton.set_label(_(" Removing"))
-                            else:
-                                self.dActionButton.set_label(_(" Installing"))
-                            self.dActionButton.set_image(
-                                Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
-                            self.dActionButton.set_sensitive(False)
-                            self.dActionInfoButton.set_sensitive(False)
+                            app_in_queue = True
+                if app_in_queue:
+                    if isinstalled:
+                        self.dActionButton.set_label(_(" Removing"))
+                    else:
+                        self.dActionButton.set_label(_(" Installing"))
+                    self.dActionButton.set_image(
+                        Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
+                    self.dActionButton.set_sensitive(False)
+                    self.dActionInfoButton.set_sensitive(False)
 
             else:
                 self.set_button_class(self.dActionButton, 2)
@@ -4171,6 +4180,12 @@ class MainWindow(object):
 
     def on_dActionInfoButton_clicked(self, button):
         self.RequiredChangesPopover.popup()
+
+    def on_dActionCancelButton_clicked(self, button):
+        print("Cancelling {} {}".format(self.actionedappname, self.pid))
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                   "kill", "{}".format(self.pid)]
+        self.start_kill_process(command)
 
     def on_dOpenButton_clicked(self, button):
         if not self.openDesktop(self.desktop_file):
@@ -6007,6 +6022,7 @@ class MainWindow(object):
             print("actionPackage func error")
 
         self.pid = self.startProcess(command)
+        print("started pid :" + str(self.pid))
 
     def actionEnablePackage(self, appname):
         self.actionedenablingappname = appname
@@ -6050,6 +6066,28 @@ class MainWindow(object):
     def on_bottomerrordetails_button_clicked(self, button):
         self.bottomerrordetails_popover.popup()
 
+    def start_kill_process(self, params):
+        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                                                      standard_output=True, standard_error=True)
+        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.on_start_kill_process_stdout)
+        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.on_start_kill_process_stderr)
+        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.on_start_kill_process_exit)
+        return pid
+
+    def on_start_kill_process_stdout(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+        line = source.readline()
+        print("{}".format(line))
+        return True
+
+    def on_start_kill_process_stderr(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+
+    def on_start_kill_process_exit(self, pid, status):
+        print("on_start_kill_process_exit: {}".format(pid))
+
     def startProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
@@ -6080,6 +6118,7 @@ class MainWindow(object):
             percent = line.split(":")[2].split(".")[0]
             self.progresstextlabel.set_text(
                 "{} | {} : {} %".format(self.actionedappname, _("Downloading"), percent))
+            self.dActionCancelButton.set_visible(True)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             if self.isinstalled:
@@ -6088,6 +6127,7 @@ class MainWindow(object):
             else:
                 self.progresstextlabel.set_text(
                     "{} | {} : {} %".format(self.actionedappname, _("Installing"), percent))
+            self.dActionCancelButton.set_visible(False)
         elif "E:" in line and ".deb" in line:
             print("connection error")
             self.error = True
@@ -6107,7 +6147,7 @@ class MainWindow(object):
         return True
 
     def onProcessExit(self, pid, status):
-
+        self.dActionCancelButton.set_visible(False)
         self.bottomerrordetails_button.set_visible(False)
 
         if not self.error:
@@ -6154,8 +6194,9 @@ class MainWindow(object):
 
         self.inprogress = False
 
-        self.queue.pop(0)
-        self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
+        if len(self.queue) > 0:
+            self.queue.pop(0)
+            self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
         if len(self.queue) > 0:
             self.actionPackage(self.queue[0]["name"], self.queue[0]["command"])
             # Update QueueListBox's first element too

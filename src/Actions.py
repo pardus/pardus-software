@@ -11,6 +11,7 @@ import subprocess
 import sys
 import apt
 import apt_pkg
+import psutil
 
 
 def main():
@@ -72,7 +73,33 @@ def main():
             update()
         install(packages)
 
+    def kill(pid):
+        print("kill function working for: {} pid".format(pid))
+        kill_dic = {}
+        parent = psutil.Process(int(pid))
+        for child in parent.children(recursive=True):
+            kill_dic[child.name()] = child.pid
+
+        keys = kill_dic.keys()
+        if "dpkg" in keys or "dpkg-deb" in keys:
+            print("You can't cancel the operation because download completed and install in progress.")
+        elif "http" in keys or "https" in keys:
+            print("download operation is cancelling")
+            for child_name, child_pid in kill_dic.items():
+                print("child killing!!! name: {} - pid: {}".format(child_name, child_pid))
+                psutil.Process(child_pid).kill()
+            print("parent killing!!! name: {} - pid: {}".format(parent.name(), parent.pid))
+            parent.kill()
+        else:
+            print("There is something wrong.")
+            for child_name, child_pid in kill_dic.items():
+                print("child, name: {} - pid: {}".format(child_name, child_pid))
+
+
     if len(sys.argv) > 1:
+        if sys.argv[1] == "kill":
+            kill(sys.argv[2])
+            return
         if control_lock():
             if sys.argv[1] == "install":
                 install(sys.argv[2])
