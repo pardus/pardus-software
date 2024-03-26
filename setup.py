@@ -74,6 +74,7 @@ data_files = [
                    "src/Server.py",
                    "src/SysActions.py",
                    "src/UserSettings.py",
+                   "src/Utils.py",
                    "src/__version__"]),
                  ("/usr/share/icons/hicolor/scalable/apps/",
                   ["images/pardus-software.svg"]),
