@@ -67,6 +67,7 @@ data_files = [
                    "src/GnomeComment.py",
                    "src/GnomeRatingServer.py",
                    "src/Group.py",
+                   "src/Logger.py",
                    "src/Main.py",
                    "src/MainWindow.py",
                    "src/Package.py",
