@@ -43,7 +43,7 @@ from AppRequest import AppRequest
 from GnomeComment import GnomeComment
 from PardusComment import PardusComment
 from UserSettings import UserSettings
-
+from Utils import Utils
 
 class MainWindow(object):
     def __init__(self, application):
@@ -782,7 +782,11 @@ class MainWindow(object):
         self.PardusComment = PardusComment()
         self.PardusComment.pComment = self.pComment
 
+        self.utils()
         self.usersettings()
+
+        self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
+        print(self.user_distro_full)
 
         if self.UserSettings.config_udt:
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
@@ -1057,6 +1061,13 @@ class MainWindow(object):
             print("Error while updating Cache")
 
         print("package completed")
+
+    def utils(self):
+        self.Utils = Utils()
+        desktop_env = self.Utils.get_desktop_env()
+        desktop_env_vers = self.Utils.get_desktop_env_version(desktop_env)
+        session = self.Utils.get_session_type()
+        self.user_desktop_env = "{} {}, {}".format(desktop_env, desktop_env_vers, session)
 
     def usersettings(self):
         self.UserSettings = UserSettings()
@@ -3696,7 +3707,7 @@ class MainWindow(object):
             if version is None:
                 version = ""
             dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
-                   "installed": installed, "comment": "", "appversion": version, "distro": self.UserSettings.userdistro,
+                   "installed": installed, "comment": "", "appversion": version, "distro": self.user_distro_full,
                    "justrate": True}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
         else:
@@ -3822,7 +3833,7 @@ class MainWindow(object):
                 if version is None:
                     version = ""
                 dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
-                       "installed": installed, "appversion": version, "distro": self.UserSettings.userdistro,
+                       "installed": installed, "appversion": version, "distro": self.user_distro_full,
                        "justrate": False}
                 try:
                     self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
@@ -6457,7 +6468,7 @@ class MainWindow(object):
             if version is None:
                 version = ""
             dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
-                   "distro": self.UserSettings.userdistro}
+                   "distro": self.user_distro_full}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
         except Exception as e:
             print("sendDownloaded Error: {}".format(e))
