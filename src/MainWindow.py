@@ -489,6 +489,7 @@ class MainWindow(object):
         self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
         self.prefcorrectbutton = self.GtkBuilder.get_object("prefcorrectbutton")
+        self.ui_cache_size = self.GtkBuilder.get_object("ui_cache_size")
         self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
         self.prefTipLabel = self.GtkBuilder.get_object("prefTipLabel")
         self.tip_usi = self.GtkBuilder.get_object("tip_usi")
@@ -5175,6 +5176,13 @@ class MainWindow(object):
 
         self.setSelectIcons()
 
+        self.set_cache_size()
+
+    def set_cache_size(self):
+        cache_size = self.Utils.get_path_size(self.UserSettings.cachedir)
+        self.Logger.info("{} : {} bytes".format(self.UserSettings.cachedir, cache_size))
+        self.ui_cache_size.set_text("({})".format(self.Package.beauty_size(cache_size)))
+
     def control_groups(self):
         try:
             self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.username in g.gr_mem]
@@ -5831,6 +5839,7 @@ class MainWindow(object):
             self.prefcachebutton.set_sensitive(True)
             self.prefcachebutton.set_label(_("Error"))
             self.preflabel_settext("{}".format(message))
+        self.set_cache_size()
 
     def on_prefcorrectbutton_clicked(self, button):
         self.prefstack.set_visible_child_name("confirm")

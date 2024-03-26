@@ -80,3 +80,13 @@ class Utils(object):
     def get_session_type(self):
         session = "{}".format(os.environ.get('XDG_SESSION_TYPE')).capitalize()
         return session
+
+    def get_path_size(self, path):
+        total = 0
+        with os.scandir(path) as it:
+            for entry in it:
+                if entry.is_file():
+                    total += entry.stat().st_size
+                elif entry.is_dir():
+                    total += self.get_path_size(entry.path)
+        return total

@@ -223,6 +223,8 @@ class Server(object):
     def deleteCache(self):
         try:
             rmtree(self.cachedir)
+            self.createDir(self.cachedir)
+            self.Logger.info("{} removed".format(self.cachedir))
             return True, ""
         except Exception as e:
             self.Logger.exception("{}".format(e))

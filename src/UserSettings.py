@@ -37,6 +37,8 @@ class UserSettings(object):
         self.config_lastaptup = None
         self.config_forceaptuptime = None
 
+        self.cachedir = userhome + "/.cache/pardus-software/"
+
         self.Logger = Logger(__name__)
 
     def createDefaultConfig(self, force=False):
