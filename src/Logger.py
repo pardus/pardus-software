@@ -22,11 +22,19 @@ class Logger(object):
         if not Path.is_dir(Path(logdir)):
             Path(logdir).mkdir(parents=True, exist_ok=True)
 
-        logging.basicConfig(level=loglevel,
-                            format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s",
-                            datefmt="%Y-%m-%d %H:%M:%S", encoding="utf-8",
-                            handlers=[logging.FileHandler(logfile), logging.StreamHandler()]
-                            )
+        try:
+            logging.basicConfig(level=loglevel,
+                                format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s",
+                                datefmt="%Y-%m-%d %H:%M:%S", encoding="utf-8",
+                                handlers=[logging.FileHandler(logfile), logging.StreamHandler()]
+                                )
+        except Exception as e:
+            print("{} - Logger will be use without utf-8 encoding".format(e))
+            logging.basicConfig(level=loglevel,
+                                format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s",
+                                datefmt="%Y-%m-%d %H:%M:%S",
+                                handlers=[logging.FileHandler(logfile), logging.StreamHandler()]
+                                )
 
         self.logger = logging.getLogger(name)
         self.logger.info("Logger setup completed.")
