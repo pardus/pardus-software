@@ -1263,7 +1263,7 @@ class MainWindow(object):
 
         if not self.Server.serverurl:
             try:
-                self.Server.serverurl = int(open(conffile, "r").read().strip())
+                self.Server.serverurl = open(conffile, "r").read().strip()
                 self.Logger.info("server url getted from old type one line config")
             except Exception as e:
                 self.Logger.warning("Error getting server url from conf so setting to https://apps.pardus.org.tr")
