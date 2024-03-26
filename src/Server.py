@@ -17,10 +17,11 @@ import gi
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio
-
+from Logger import Logger
 
 class Server(object):
     def __init__(self):
+        self.Logger = Logger(__name__)
         self.serverurl = ""  # This is setting from MainWindow server func
         self.serverapps = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
@@ -83,7 +84,8 @@ class Server(object):
         except GLib.Error as error:
             # if error.matches(Gio.tls_error_quark(),  Gio.TlsError.BAD_CERTIFICATE):
             if error.domain == GLib.quark_to_string(Gio.tls_error_quark()):
-                print("_open_control_stream Error: {}, {}".format(error.domain, error.message))
+                self.Logger.warning("_open_control_stream Error: {}, {}".format(error.domain, error.message))
+                self.Logger.exception("{}".format(error))
                 self.ServerAppsControlCB(False)  # Send to MainWindow
                 return False
         self.ServerAppsControlCB(True)  # Send to MainWindow
@@ -97,14 +99,15 @@ class Server(object):
             success, data, etag = file.load_contents_finish(result)
         except GLib.Error as error:
             self.error_message = error.message
-            print("{} _open_stream Error: {}, {}".format(type, error.domain, error.message))
+            self.Logger.warning("{} _open_stream Error: {}, {}".format(type, error.domain, error.message))
+            self.Logger.exception("{}".format(error))
             self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
             return False
 
         if success:
             self.ServerAppsCB(True, json.loads(data), type)
         else:
-            print("{} is not success".format(type))
+            self.Logger.warning("{} is not success".format(type))
             self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
 
     def getIcons(self, url, type, force_download=False, fromsettings=False):
@@ -112,14 +115,15 @@ class Server(object):
             file = Gio.File.new_for_uri(url)
             file.load_contents_async(None, self._open_icon_stream, type, fromsettings)
         else:
-            print("{} already available".format(type))
+            self.Logger.info("{} already available".format(type))
             self.ServerIconsCB(True, type, fromsettings)
 
     def _open_icon_stream(self, file, result, type, fromsettings):
         try:
             success, data, etag = file.load_contents_finish(result)
         except GLib.Error as error:
-            print("{} _open_icon_stream Error: {}, {}".format(type, error.domain, error.message))
+            self.Logger.warning("{} _open_icon_stream Error: {}, {}".format(type, error.domain, error.message))
+            self.Logger.exception("{}".format(error))
             self.ServerIconsCB(False, type, fromsettings)
             return False
 
@@ -132,11 +136,11 @@ class Server(object):
                         self.ServerIconsCB(True, type, fromsettings)
                         return True
                     else:
-                        print("{} extract error".format(type))
+                        self.Logger.warning("{} extract error".format(type))
                 else:
-                    print("md5 value is different (controlMD5) {} ".format(type))
+                    self.Logger.warning("md5 value is different (controlMD5) {} ".format(type))
         else:
-            print("{} is not success".format(type))
+            self.Logger.warning("{} is not success".format(type))
 
         self.ServerIconsCB(False, type, fromsettings)
 
@@ -147,14 +151,14 @@ class Server(object):
             localiconmd5 = md5(open(self.cachedir + self.serverappicons + self.serverarchive, "rb").read()).hexdigest()
             if self.servermd5["appicon"]:
                 if localiconmd5 != self.servermd5["appicon"]:
-                    print("md5 value of app icon is different so trying download new app icons from server")
+                    self.Logger.info("md5 value of app icon is different so trying download new app icons from server")
                     redown_app_icons = True
 
         if self.isExists(self.cachedir + self.servercaticons + self.serverarchive):
             localiconmd5 = md5(open(self.cachedir + self.servercaticons + self.serverarchive, "rb").read()).hexdigest()
             if self.servermd5["caticon"]:
                 if localiconmd5 != self.servermd5["caticon"]:
-                    print("md5 value of cat icon is different so trying download new cat icons from server")
+                    self.Logger.info("md5 value of cat icon is different so trying download new cat icons from server")
                     redown_cat_icons = True
 
         return redown_app_icons, redown_cat_icons
@@ -178,8 +182,9 @@ class Server(object):
         try:
             Path(dir).mkdir(parents=True, exist_ok=True)
             return True
-        except:
-            print("{} : {}".format("mkdir error", self.cachedir))
+        except Exception as error:
+            self.Logger.warning("{} : {}".format("mkdir error", self.cachedir))
+            self.Logger.exception("{}".format(error))
             return False
 
     def extractArchive(self, archive, type):
@@ -199,20 +204,20 @@ class Server(object):
                 for icon in icons:
                     rmtree(self.cachedir + type + "-" + icon, ignore_errors=True)
             except Exception as e:
-                print("{}".format(e))
+                self.Logger.exception("{}".format(e))
             tar.extractall(members=extractables, path=self.cachedir)
             tar.close()
             return True
         except:
-            print("tarfile error")
+            self.Logger.warning("tarfile error")
             return False
 
     def isExists(self, dir):
         if Path(dir).exists():
-            print(dir + " exists")
+            self.Logger.warning(dir + " exists")
             return True
         else:
-            print(dir + " not exists")
+            self.Logger.warning(dir + " not exists")
             return False
 
     def deleteCache(self):
@@ -220,5 +225,5 @@ class Server(object):
             rmtree(self.cachedir)
             return True, ""
         except Exception as e:
-            print(str(e))
+            self.Logger.exception("{}".format(e))
             return False, str(e)

@@ -10,15 +10,16 @@ import json
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio, Soup
-
+from Logger import Logger
 
 class PardusComment(object):
     def __init__(self):
 
         self.session = Soup.Session(user_agent="application/json")
+        self.Logger = Logger(__name__)
 
     def get(self, method, uri, dic, appname):
-        # print("{} : {} {}".format(method, uri, dic))
+        # self.Logger.info("{} : {} {}".format(method, uri, dic))
         message = Soup.Message.new(method, uri)
 
         if method == "POST":
@@ -31,12 +32,12 @@ class PardusComment(object):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
-            print("PardusComment stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("PardusComment stream Error: {}, {}".format(error.domain, error.message))
             self.pComment(False, None)  # Send to MainWindow
             return False
 
         status_code = message.status_code
-        print("pardus comments server status code : {}".format(status_code))
+        self.Logger.info("pardus comments server status code : {}".format(status_code))
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)
@@ -44,7 +45,7 @@ class PardusComment(object):
             while True:
                 line, length = data_input_stream.read_line_utf8()
                 if line is None:
-                    print("Finished")
+                    self.Logger.info("Finished")
                     break
                 else:
                     lines.append(line)
@@ -59,7 +60,8 @@ class PardusComment(object):
         try:
             session.close_finish(result)
         except GLib.Error as error:
-            print("PardusComments Close Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("PardusComments Close Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
 
     def control(self, uri):
         message = Soup.Message.new("POST", uri)

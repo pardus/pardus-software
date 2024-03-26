@@ -7,7 +7,7 @@ Created on Wed Mar 20 23:59:23 2024
 """
 import os
 import subprocess
-
+from Logger import Logger
 
 class Utils(object):
     def __init__(self):
@@ -19,6 +19,8 @@ class Utils(object):
                                 "kde": ["plasmashell", "--version"],
                                 "lxqt": ["lxqt-about", "--version"],
                                 "budgie": ["budgie-desktop", "--version"]}
+
+        self.Logger = Logger(__name__)
 
     def get_desktop_env(self):
         current_desktop = "{}".format(os.environ.get('XDG_CURRENT_DESKTOP'))
@@ -70,7 +72,8 @@ class Utils(object):
                                                                      stderr=subprocess.PIPE)).stdout.decode().strip()
                 version = version_output.split("\n")[0].strip().split(" ")[-1]
         except Exception as e:
-            print("Error on get_desktop_env_version: {}".format(e))
+            self.Logger.warning("Error on get_desktop_env_version")
+            self.Logger.exception("{}".format(e))
 
         return version
 

@@ -12,15 +12,16 @@ import json
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio, Soup
-
+from Logger import Logger
 
 class AppDetail(object):
     def __init__(self):
 
         self.session = Soup.Session(user_agent="application/json")
+        self.Logger = Logger(__name__)
 
     def get(self, method, uri, dic, appname=""):
-        # print("{} : {} {}".format(method, uri, dic))
+        # self.Logger.info("{} : {} {}".format(method, uri, dic))
         message = Soup.Message.new(method, uri)
 
         if method == "POST":
@@ -35,12 +36,12 @@ class AppDetail(object):
         except GLib.Error as error:
             if message.status_code == Soup.Status.SSL_FAILED:
                 self.session.props.ssl_strict = False
-            print("AppDetail stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("AppDetail stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
             self.Detail(False, None)  # Send to MainWindow
             return False
 
         status_code = message.status_code
-        # print(status_code)
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)
@@ -54,7 +55,8 @@ class AppDetail(object):
         try:
             session.close_finish(result)
         except GLib.Error as error:
-            print("AppDetail Close Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("AppDetail Close Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
 
     def control(self, uri):
         message = Soup.Message.new("POST", uri)

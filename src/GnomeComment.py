@@ -10,15 +10,16 @@ import json
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio, Soup
-
+from Logger import Logger
 
 class GnomeComment(object):
     def __init__(self):
 
         self.session = Soup.Session(user_agent="application/json")
+        self.Logger = Logger(__name__)
 
     def get(self, method, uri, dic, appname, lang):
-        # print("{} : {} {}".format(method, uri, dic))
+        # self.Logger.info("{} : {} {}".format(method, uri, dic))
         message = Soup.Message.new(method, uri)
 
         if method == "POST":
@@ -31,12 +32,13 @@ class GnomeComment(object):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
-            print("GnomeComment stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("GnomeComment stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
             self.gComment(False, None)  # Send to MainWindow
             return False
 
         status_code = message.status_code
-        print("gnome comments server status code : {}, lang : {}".format(status_code, lang))
+        self.Logger.info("gnome comments server status code : {}, lang : {}".format(status_code, lang))
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)
@@ -44,7 +46,7 @@ class GnomeComment(object):
             while True:
                 line, length = data_input_stream.read_line_utf8()
                 if line is None:
-                    print("Finished")
+                    self.Logger.info("Finished")
                     break
                 else:
                     lines.append(line)
@@ -59,4 +61,6 @@ class GnomeComment(object):
         try:
             session.close_finish(result)
         except GLib.Error as error:
-            print("GnomeComments Close Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("GnomeComments Close Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
+
