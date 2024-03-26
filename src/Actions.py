@@ -9,6 +9,7 @@ Created on Fri Sep 18 14:53:00 2020
 import os
 import subprocess
 import sys
+
 import apt
 import apt_pkg
 import psutil
@@ -94,7 +95,6 @@ def main():
             print("There is something wrong.")
             for child_name, child_pid in kill_dic.items():
                 print("child, name: {} - pid: {}".format(child_name, child_pid))
-
 
     if len(sys.argv) > 1:
         if sys.argv[1] == "kill":

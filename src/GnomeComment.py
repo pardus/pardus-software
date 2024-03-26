@@ -4,13 +4,15 @@
 @author: fatih
 """
 
-import gi
 import json
+
+import gi
 
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio, Soup
 from Logger import Logger
+
 
 class GnomeComment(object):
     def __init__(self):
@@ -63,4 +65,3 @@ class GnomeComment(object):
         except GLib.Error as error:
             self.Logger.warning("GnomeComments Close Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
-

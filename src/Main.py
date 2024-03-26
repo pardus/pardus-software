@@ -18,8 +18,9 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import gi
 import sys
+
+import gi
 
 from MainWindow import MainWindow
 

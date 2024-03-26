@@ -15,7 +15,9 @@ import time
 import apt
 import apt_pkg
 from gi.repository import Gio, GLib
+
 from Logger import Logger
+
 
 class Package(object):
     def __init__(self):

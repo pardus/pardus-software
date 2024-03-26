@@ -7,18 +7,20 @@ Created on Wed Mar 20 23:59:23 2024
 """
 import os
 import subprocess
+
 from Logger import Logger
+
 
 class Utils(object):
     def __init__(self):
 
         self.de_version_command = {"xfce": ["xfce4-session", "--version"],
-                                "gnome": ["gnome-shell", "--version"],
-                                "cinnamon": ["cinnamon", "--version"],
-                                "mate": ["mate-about", "--version"],
-                                "kde": ["plasmashell", "--version"],
-                                "lxqt": ["lxqt-about", "--version"],
-                                "budgie": ["budgie-desktop", "--version"]}
+                                   "gnome": ["gnome-shell", "--version"],
+                                   "cinnamon": ["cinnamon", "--version"],
+                                   "mate": ["mate-about", "--version"],
+                                   "kde": ["plasmashell", "--version"],
+                                   "lxqt": ["lxqt-about", "--version"],
+                                   "budgie": ["budgie-desktop", "--version"]}
 
         self.Logger = Logger(__name__)
 
@@ -31,46 +33,46 @@ class Utils(object):
         desktop = "{}".format(desktop.lower())
         try:
             if "xfce" in desktop:
-                version_output = (subprocess.run(self.de_version_command["xfce"], shell=False, stdout=subprocess.PIPE,
-                                                                     stderr=subprocess.PIPE)).stdout.decode().strip()
-                for line in version_output.split("\n"):
+                output = (subprocess.run(self.de_version_command["xfce"], shell=False, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)).stdout.decode().strip()
+                for line in output.split("\n"):
                     if line.startswith("xfce4-session "):
                         version = line.split(" ")[-1].strip("()")
                         break
 
             elif "gnome" in desktop:
-                version_output = (subprocess.run(self.de_version_command["gnome"], shell=False, stdout=subprocess.PIPE,
-                                                                     stderr=subprocess.PIPE)).stdout.decode().strip()
-                for line in version_output.split("\n"):
+                output = (subprocess.run(self.de_version_command["gnome"], shell=False, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)).stdout.decode().strip()
+                for line in output.split("\n"):
                     if "GNOME Shell" in line:
                         version = line.split(" ")[-1]
 
             elif "cinnamon" in desktop:
-                version_output = (subprocess.run(self.de_version_command["cinnamon"], shell=False, stdout=subprocess.PIPE,
-                                                                     stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = version_output.split(" ")[-1]
+                output = (subprocess.run(self.de_version_command["cinnamon"], shell=False, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)).stdout.decode().strip()
+                version = output.split(" ")[-1]
 
             elif "mate" in desktop:
-                version_output = (subprocess.run(self.de_version_command["mate"], shell=False, stdout=subprocess.PIPE,
-                                                                     stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = version_output.split(" ")[-1]
+                output = (subprocess.run(self.de_version_command["mate"], shell=False, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)).stdout.decode().strip()
+                version = output.split(" ")[-1]
 
             elif "kde" in desktop:
-                version_output = (subprocess.run(self.de_version_command["kde"], shell=False, stdout=subprocess.PIPE,
-                                                                     stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = version_output.split(" ")[-1]
+                output = (subprocess.run(self.de_version_command["kde"], shell=False, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)).stdout.decode().strip()
+                version = output.split(" ")[-1]
 
             elif "lxqt" in desktop:
-                version_output = (subprocess.run(self.de_version_command["lxqt"], shell=False, stdout=subprocess.PIPE,
-                                                                     stderr=subprocess.PIPE)).stdout.decode().strip()
-                for line in version_output:
+                output = (subprocess.run(self.de_version_command["lxqt"], shell=False, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)).stdout.decode().strip()
+                for line in output:
                     if "liblxqt" in line:
                         version = line.split()[1].strip()
 
             elif "budgie" in desktop:
-                version_output = (subprocess.run(self.de_version_command["budgie"], shell=False, stdout=subprocess.PIPE,
-                                                                     stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = version_output.split("\n")[0].strip().split(" ")[-1]
+                output = (subprocess.run(self.de_version_command["budgie"], shell=False, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)).stdout.decode().strip()
+                version = output.split("\n")[0].strip().split(" ")[-1]
         except Exception as e:
             self.Logger.warning("Error on get_desktop_env_version")
             self.Logger.exception("{}".format(e))

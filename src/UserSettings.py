@@ -7,9 +7,12 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import configparser
-import distro
 from pathlib import Path
+
+import distro
+
 from Logger import Logger
+
 
 class UserSettings(object):
     def __init__(self):

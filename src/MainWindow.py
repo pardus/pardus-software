@@ -46,6 +46,7 @@ from UserSettings import UserSettings
 from Utils import Utils
 from Logger import Logger
 
+
 class MainWindow(object):
     def __init__(self, application):
         self.Application = application
@@ -870,7 +871,6 @@ class MainWindow(object):
             self.Logger.warning("Error in controlDisplay: {}")
             self.Logger.exception("{}".format(e))
 
-
         self.Logger.info("window w:{} h:{} | monitor w:{} h:{} s:{}".format(width, height, w, h, s))
 
     def hide_some_widgets(self):
@@ -1322,7 +1322,6 @@ class MainWindow(object):
         self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
         self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
         self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
-
 
     def ServerAppsCB(self, success, response=None, type=None):
         if success:
@@ -2884,7 +2883,6 @@ class MainWindow(object):
         self.Logger.info(myapp_details)
         return valid, myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
 
-
     def set_myapp_popup_details(self, myapp):
 
         self.ui_myapp_pop_toremove_box.set_visible(False)
@@ -2896,7 +2894,8 @@ class MainWindow(object):
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
-            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
+            self.ui_myapp_pop_app.set_markup(
+                "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
@@ -2931,7 +2930,6 @@ class MainWindow(object):
                     "{}".format(self.Package.beauty_size(details["install_size"])))
                 self.ui_myapp_pop_isize_box.set_visible(True)
 
-
             self.ui_myapp_pop_stack.set_visible_child_name("details")
             self.ui_myapp_pop_uninstall_button.grab_focus()
 
@@ -2959,12 +2957,14 @@ class MainWindow(object):
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
-            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
+            self.ui_myapp_pop_app.set_markup(
+                "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
             self.ma_action_buttonbox.set_sensitive(True)
-            self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
+            self.ui_myapps_app.set_markup(
+                "<span size='x-large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=128))
             self.ui_myapps_description.set_markup("{}".format(description))
@@ -3943,7 +3943,6 @@ class MainWindow(object):
             showall = False
             showinstalled = False
 
-
         if self.isPardusSearching:
             for i in self.applist:
                 if i["name"] == appname:
@@ -4611,7 +4610,6 @@ class MainWindow(object):
             self.dpkgconfiguring = True
         else:
             self.Logger.info("dpkgconfiguring in progress")
-
 
     def on_upgrade_info_back_button_clicked(self, button):
         self.upgrade_stack.set_visible_child_name("main")
@@ -6012,7 +6010,7 @@ class MainWindow(object):
             packagelist = self.actionedcommand.split(" ")
             if [i for i in self.i386_packages if i in packagelist]:
                 command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
-                               "enablei386andinstall", self.actionedcommand]
+                           "enablei386andinstall", self.actionedcommand]
         else:
             self.Logger.info("actionPackage func error")
 
@@ -6229,7 +6227,7 @@ class MainWindow(object):
                 self.bottomstack.set_visible_child_name("interrupt")
                 self.bottominterruptlabel.set_markup("<span color='red'><b>{}</b></span>".format(
                     _("dpkg interrupt detected. Click the 'Fix' button or\n"
-                    "manually run 'sudo dpkg --configure -a' to fix the problem.")
+                      "manually run 'sudo dpkg --configure -a' to fix the problem.")
                 ))
 
         self.error = False
@@ -6458,7 +6456,6 @@ class MainWindow(object):
         except Exception as e:
             self.Logger.warning("sendDownloaded Error")
             self.Logger.exception("{}".format(e))
-
 
     def startSysProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
@@ -6768,7 +6765,6 @@ class MainWindow(object):
                 GLib.idle_add(self.upgrade_info_box.set_visible, True)
                 GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
                 GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
-
 
     def dpkgconfigure_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:

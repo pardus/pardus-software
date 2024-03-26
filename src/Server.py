@@ -19,6 +19,7 @@ gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio
 from Logger import Logger
 
+
 class Server(object):
     def __init__(self):
         self.Logger = Logger(__name__)

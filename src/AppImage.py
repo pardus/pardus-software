@@ -13,6 +13,7 @@ gi.require_version("GdkPixbuf", "2.0")
 from gi.repository import GLib, GdkPixbuf, Gio
 from Logger import Logger
 
+
 class AppImage(object):
     def __init__(self):
 
