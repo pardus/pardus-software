@@ -35,7 +35,7 @@ class AppRequest(object):
             input_stream = session.send_finish(result)
         except GLib.Error as error:
             self.Logger.warning("AppRequest stream Error: {}, {}".format(error.domain, error.message))
-            self.Logger.exception("{}".format(e))
+            self.Logger.exception("{}".format(error))
             self.Request(False, None)  # Send to MainWindow
             return False
 
@@ -54,7 +54,7 @@ class AppRequest(object):
             session.close_finish(result)
         except GLib.Error as error:
             self.Logger.warning("AppRequest Close Error: {}, {}".format(error.domain, error.message))
-            self.Logger.exception("{}".format(e))
+            self.Logger.exception("{}".format(error))
 
     def control(self, uri):
         message = Soup.Message.new("POST", uri)
