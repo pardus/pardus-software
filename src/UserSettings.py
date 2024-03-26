@@ -18,7 +18,7 @@ class UserSettings(object):
         self.usercodename = distro.codename().lower()
         if self.usercodename == "etap":
             self.usercodename = self.usercodename + self.userdistroversion
-        self.userdistro = ", ".join(filter(bool, distro.linux_distribution()))
+        self.userdistro = ", ".join(filter(bool, (distro.name(), distro.version(), distro.codename())))
 
         userhome = str(Path.home())
         self.username = userhome.rsplit("/", maxsplit=1)[-1]
