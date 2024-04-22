@@ -66,7 +66,7 @@ class MainWindow(object):
         self.catlist = []
 
         self.locale = self.getLocale()
-        self.Logger.info(self.locale)
+        self.Logger.info("{}".format(self.locale))
 
         self.parduspixbuf = Gtk.IconTheme.new()
         self.parduspixbuf.set_custom_theme("pardus")
@@ -792,7 +792,7 @@ class MainWindow(object):
         self.usersettings()
 
         self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
-        self.Logger.info(self.user_distro_full)
+        self.Logger.info("{}".format(self.user_distro_full))
 
         if self.UserSettings.config_udt:
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
@@ -1316,7 +1316,7 @@ class MainWindow(object):
 
         if not status:
             self.Server.serverurl = self.Server.serverurl.replace("https://", "http://")
-            self.Logger.info(self.Server.serverurl)
+            self.Logger.info("{}".format(self.Server.serverurl))
 
         self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
         self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
@@ -2798,7 +2798,7 @@ class MainWindow(object):
             self.ret = self.Package.required_changes(self.command)
         else:
             self.ret = self.Package.required_changes(app)
-        self.Logger.info(self.ret)
+        self.Logger.info("{}".format(self.ret))
 
     def on_size_worker_done(self):
 
@@ -2880,7 +2880,7 @@ class MainWindow(object):
     def myappsdetail_worker(self, app):
 
         valid, myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
-        self.Logger.info(myapp_details)
+        self.Logger.info("{}".format(myapp_details))
         return valid, myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
 
     def set_myapp_popup_details(self, myapp):
@@ -4208,7 +4208,7 @@ class MainWindow(object):
             subprocess.check_call(["gtk-launch", desktop])
             return True
         except subprocess.CalledProcessError as e:
-            self.Logger.warning("error opening " + desktop)
+            self.Logger.warning("error opening {}".format(desktop))
             self.Logger.exception("{}".format(e))
             return False
 
@@ -4225,7 +4225,7 @@ class MainWindow(object):
             if not self.inprogress:
                 self.actionPackage(self.appname, self.command)
                 self.inprogress = True
-                self.Logger.info("action " + self.appname)
+                self.Logger.info("action {}".format(self.appname))
         else:
             self.activatestack.set_visible_child_name("activate")
             self.activate_repo_label.set_text(self.external["reposlist"])
@@ -4305,7 +4305,7 @@ class MainWindow(object):
         if not self.inprogress:
             self.actionPackage(self.appname, self.appname)
             self.inprogress = True
-            self.Logger.info("action " + self.appname)
+            self.Logger.info("action {}".format(self.appname))
 
     def on_store_button_clicked(self, button):
         self.set_stack_n_search(1)
@@ -4755,7 +4755,7 @@ class MainWindow(object):
         GLib.idle_add(self.MyAppsListBox.add, box)
 
     def remove_from_myapps(self, button):
-        self.Logger.info("remove_from_myapps", button.name)
+        self.Logger.info("remove_from_myapps {}".format(button.name))
 
         self.ui_myapp_pop_toremove_box.set_visible(False)
         self.ui_myapp_pop_toinstall_box.set_visible(False)
@@ -4775,7 +4775,7 @@ class MainWindow(object):
         myappsdetailsthread.start()
 
     def open_from_myapps(self, button):
-        self.Logger.info(button.name)
+        self.Logger.info("{}".format(button.name))
         self.openDesktop(os.path.basename(button.name))
 
     def on_ui_myapps_cancel_clicked(self, button):
@@ -4839,7 +4839,7 @@ class MainWindow(object):
         if not self.inprogress:
             self.actionPackage(self.appname, self.command)
             self.inprogress = True
-            self.Logger.info("action " + self.appname)
+            self.Logger.info("action {}".format(self.appname))
 
     def myapps_filter_func(self, row):
         # app info defined in uninstall button so getting this widget
@@ -5727,7 +5727,7 @@ class MainWindow(object):
         user_config_icon = self.UserSettings.config_icon
         active = combo_box.get_active_id()
         if active != user_config_icon and active is not None:
-            self.Logger.info("changing icons to " + str(combo_box.get_active_id()))
+            self.Logger.info("changing icons to {}".format(combo_box.get_active_id()))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera, active,
                                           self.UserSettings.config_sgc, self.UserSettings.config_udt,
@@ -6015,7 +6015,7 @@ class MainWindow(object):
             self.Logger.info("actionPackage func error")
 
         self.pid = self.startProcess(command)
-        self.Logger.info("started pid :" + str(self.pid))
+        self.Logger.info("started pid : {}".format(self.pid))
 
     def actionEnablePackage(self, appname):
         self.actionedenablingappname = appname
@@ -6243,14 +6243,14 @@ class MainWindow(object):
         if len(selected_items) == 1:
             treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
             appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
-            self.Logger.info("in controlView " + appname)
+            self.Logger.info("in controlView {}".format(appname))
             if appname == actionedappname:
                 self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
         if len(editor_selected_items) == 1:
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             appname = self.EditorListStore.get(treeiter, 1)[0]
-            self.Logger.info("in controlView " + appname)
+            self.Logger.info("in controlView {}".format(appname))
             if appname == actionedappname:
                 self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
@@ -6470,14 +6470,14 @@ class MainWindow(object):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        self.Logger.info(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onSysProcessStderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        self.Logger.info(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onSysProcessExit(self, pid, status):
@@ -6552,14 +6552,14 @@ class MainWindow(object):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        self.Logger.info(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onAptUpdateProcessStderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        self.Logger.info(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onAptUpdateProcessExit(self, pid, status):

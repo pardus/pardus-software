@@ -215,10 +215,10 @@ class Server(object):
 
     def isExists(self, dir):
         if Path(dir).exists():
-            self.Logger.info(dir + " exists")
+            self.Logger.info("{} exists".format(dir))
             return True
         else:
-            self.Logger.info(dir + " not exists")
+            self.Logger.info("{} not exists".format(dir))
             return False
 
     def deleteCache(self):
