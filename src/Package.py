@@ -15,7 +15,7 @@ import time
 import apt
 import apt_pkg
 from gi.repository import Gio, GLib
-
+from pathlib import Path
 from Logger import Logger
 
 
@@ -419,10 +419,24 @@ class Package(object):
             return "size not found"
         return GLib.format_size(size)
 
+    def list_desktop_files(self):
+        xdg_data_dirs = os.getenv('XDG_DATA_DIRS', '/usr/share:/usr/local/share').split(':')
+        desktop_files = []
+
+        for directory in xdg_data_dirs:
+            applications_path = Path(directory.strip()) / 'applications'
+            desktop_files.extend(applications_path.rglob('*.desktop'))
+
+        return [str(file) for file in desktop_files]
+
     def get_installed_apps(self):
         apps = []
-        for app in Gio.DesktopAppInfo.get_all():
-
+        desktopfiles = self.list_desktop_files()
+        for file in desktopfiles:
+            try:
+                app = Gio.DesktopAppInfo.new_from_filename(file)
+            except:
+                continue
             id = app.get_id()
             name = app.get_name()
             executable = app.get_executable()
@@ -441,8 +455,17 @@ class Package(object):
         return apps
 
     def parse_desktopfile(self, desktopfilename):
+        desktopfilepath = ''
+        for data_dir in os.environ["XDG_DATA_DIRS"].split(":"):
+            data_dir = data_dir.rstrip("/")
+            path = data_dir + '/applications/' + desktopfilename
+            if os.path.exists(path):
+                desktopfilepath = path
+                break
+        if not desktopfilepath:
+            return False, None
         try:
-            app = Gio.DesktopAppInfo.new(desktopfilename)
+            app = Gio.DesktopAppInfo.new_from_filename(desktopfilepath)
             if app:
                 id = app.get_id()
                 name = app.get_name()
