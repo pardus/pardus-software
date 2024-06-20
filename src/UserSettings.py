@@ -23,7 +23,7 @@ class UserSettings(object):
         userhome = str(Path.home())
         self.username = userhome.rsplit("/", maxsplit=1)[-1]
 
-        self.configdir = userhome + "/.config/pardus-software/"
+        self.configdir = os.getenv("XDG_CONFIG_HOME", userhome + "/.config") +  "/pardus-software/"
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser(strict=False)
         self.config_usi = None
