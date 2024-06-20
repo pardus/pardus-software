@@ -7,8 +7,11 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import configparser
-import distro
 from pathlib import Path
+
+import distro
+
+from Logger import Logger
 
 
 class UserSettings(object):
@@ -18,7 +21,7 @@ class UserSettings(object):
         self.usercodename = distro.codename().lower()
         if self.usercodename == "etap":
             self.usercodename = self.usercodename + self.userdistroversion
-        self.userdistro = ", ".join(filter(bool, distro.linux_distribution()))
+        self.userdistro = ", ".join(filter(bool, (distro.name(), distro.version(), distro.codename())))
 
         userhome = str(Path.home())
         self.username = userhome.rsplit("/", maxsplit=1)[-1]
@@ -36,6 +39,10 @@ class UserSettings(object):
         self.config_aptup = None
         self.config_lastaptup = None
         self.config_forceaptuptime = None
+
+        self.cachedir = userhome + "/.cache/pardus-software/"
+
+        self.Logger = Logger(__name__)
 
     def createDefaultConfig(self, force=False):
         self.config['DEFAULT'] = {'UseServerIcons': 'yes',
@@ -56,7 +63,7 @@ class UserSettings(object):
 
     def readConfig(self):
         try:
-            print("in readconfig")
+            self.Logger.info("in readconfig")
             self.config.read(self.configdir + self.configfile)
             self.config_usi = self.config.getboolean('DEFAULT', 'UseServerIcons')
             self.config_ea = self.config.getboolean('DEFAULT', 'Animations')
@@ -69,8 +76,8 @@ class UserSettings(object):
             self.config_lastaptup = self.config.getint('DEFAULT', 'LastAutoAptUpdate')
             self.config_forceaptuptime = self.config.getint('DEFAULT', 'ForceAutoAptUpdateTime')
         except Exception as e:
-            print("{}".format(e))
-            print("user config read error ! Trying create defaults")
+            self.Logger.warning("user config read error ! Trying create defaults")
+            self.Logger.exception("{}".format(e))
             # if not read; try to create defaults
             self.config_usi = True
             self.config_ea = True
@@ -85,7 +92,8 @@ class UserSettings(object):
             try:
                 self.createDefaultConfig(force=True)
             except Exception as e:
-                print("self.createDefaultConfig(force=True) : {}".format(e))
+                self.Logger.warning("self.createDefaultConfig(force=True)")
+                self.Logger.exception("{}".format(e))
 
     def writeConfig(self, srvicons, anims, avaiapps, extapps, iconname, gnomecom, darktheme, aptup, lastaptup, faptupt):
         self.config['DEFAULT'] = {'UseServerIcons': srvicons,
@@ -108,6 +116,7 @@ class UserSettings(object):
         try:
             Path(dir).mkdir(parents=True, exist_ok=True)
             return True
-        except:
-            print("{} : {}".format("mkdir error", dir))
+        except Exception as e:
+            self.Logger.warning("{} : {}".format("mkdir error", dir))
+            self.Logger.exception("{}".format(e))
             return False

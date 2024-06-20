@@ -43,25 +43,30 @@ from AppRequest import AppRequest
 from GnomeComment import GnomeComment
 from PardusComment import PardusComment
 from UserSettings import UserSettings
+from Utils import Utils
+from Logger import Logger
 
 
 class MainWindow(object):
     def __init__(self, application):
         self.Application = application
 
+        self.Logger = Logger(__name__)
+
         self.MainWindowUIFileName = os.path.dirname(os.path.abspath(__file__)) + "/../ui/MainWindow.glade"
         try:
             self.GtkBuilder = Gtk.Builder.new_from_file(self.MainWindowUIFileName)
             self.GtkBuilder.connect_signals(self)
-        except GObject.GError:
-            print("Error reading GUI file: " + self.MainWindowUIFileName)
+        except GObject.GError as e:
+            self.Logger.warning("Error reading GUI file")
+            self.Logger.exception("{}".format(e))
             raise
 
         self.applist = []
         self.catlist = []
 
         self.locale = self.getLocale()
-        print(self.locale)
+        self.Logger.info("{}".format(self.locale))
 
         self.parduspixbuf = Gtk.IconTheme.new()
         self.parduspixbuf.set_custom_theme("pardus")
@@ -184,6 +189,7 @@ class MainWindow(object):
         self.dName = self.GtkBuilder.get_object("dName")
         self.dActionButton = self.GtkBuilder.get_object("dActionButton")
         self.dActionInfoButton = self.GtkBuilder.get_object("dActionInfoButton")
+        self.dActionCancelButton = self.GtkBuilder.get_object("dActionCancelButton")
         self.dActionButtonBox = self.GtkBuilder.get_object("dActionButtonBox")
         self.dActionButtonBox.set_homogeneous(False)
         self.dOpenButton = self.GtkBuilder.get_object("dOpenButton")
@@ -465,6 +471,13 @@ class MainWindow(object):
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
         self.aboutdialog.set_program_name(_("Pardus Software Center"))
+        if self.aboutdialog.get_titlebar() is None:
+            about_headerbar = Gtk.HeaderBar.new()
+            about_headerbar.set_show_close_button(True)
+            about_headerbar.set_title(_("About Pardus Software Center"))
+            about_headerbar.pack_start(Gtk.Image.new_from_icon_name("pardus-software", Gtk.IconSize.LARGE_TOOLBAR))
+            about_headerbar.show_all()
+            self.aboutdialog.set_titlebar(about_headerbar)
 
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
@@ -477,6 +490,7 @@ class MainWindow(object):
         self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
         self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
         self.prefcorrectbutton = self.GtkBuilder.get_object("prefcorrectbutton")
+        self.ui_cache_size = self.GtkBuilder.get_object("ui_cache_size")
         self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
         self.prefTipLabel = self.GtkBuilder.get_object("prefTipLabel")
         self.tip_usi = self.GtkBuilder.get_object("tip_usi")
@@ -669,6 +683,8 @@ class MainWindow(object):
                                    "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
                                    "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
 
+        self.i386_packages = ["wine"]
+
         self.prefback = "pardushome"
         self.prefback_preferences = None
         self.prefback_statistics = None
@@ -772,17 +788,23 @@ class MainWindow(object):
         self.PardusComment = PardusComment()
         self.PardusComment.pComment = self.pComment
 
+        self.utils()
         self.usersettings()
+
+        self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
+        self.Logger.info("{}".format(self.user_distro_full))
 
         if self.UserSettings.config_udt:
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
 
         self.MainWindow.show_all()
 
+        self.hide_some_widgets()
+
         p1 = threading.Thread(target=self.worker)
         p1.daemon = True
         p1.start()
-        print("start done")
+        self.Logger.info("start done")
 
     def getMac(self):
         mac = ""
@@ -798,7 +820,7 @@ class MainWindow(object):
                 mac = netifaces.ifaddresses(interface)[AF_LINK][0]["addr"].upper()
             break
         if mac is None or mac == "":
-            print("mac address can not get from netifaces, trying psutil")
+            self.Logger.info("mac address can not get from netifaces, trying psutil")
             nics = psutil.net_if_addrs()
             nics.pop('lo')  # remove loopback
             for i in nics:
@@ -815,11 +837,11 @@ class MainWindow(object):
         try:
             user_locale = os.getenv("LANG").split(".")[0].split("_")[0]
         except Exception as e:
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
             try:
                 user_locale = getlocale()[0].split("_")[0]
             except Exception as e:
-                print("{}".format(e))
+                self.Logger.exception("{}".format(e))
                 user_locale = "en"
         if user_locale != "tr" and user_locale != "en":
             user_locale = "en"
@@ -846,9 +868,13 @@ class MainWindow(object):
             self.MainWindow.resize(width, height)
 
         except Exception as e:
-            print("Error in controlDisplay: {}".format(e))
+            self.Logger.warning("Error in controlDisplay: {}")
+            self.Logger.exception("{}".format(e))
 
-        print("window w:{} h:{} | monitor w:{} h:{} s:{}".format(width, height, w, h, s))
+        self.Logger.info("window w:{} h:{} | monitor w:{} h:{} s:{}".format(width, height, w, h, s))
+
+    def hide_some_widgets(self):
+        self.dActionCancelButton.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -901,7 +927,7 @@ class MainWindow(object):
                         appfile = open(app, "r")
                         app = appfile.read().strip()
             except Exception as e:
-                print(str(e))
+                self.Logger.exception("{}".format(e))
             try:
                 if ".desktop" in app:
                     app = "{}".format(app.split(".desktop")[0])
@@ -920,7 +946,7 @@ class MainWindow(object):
                         self.fromqueue = False
                         GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
             except Exception as e:
-                print(str(e))
+                self.Logger.exception("{}".format(e))
             try:
                 if not found:
                     app = self.Application.args["details"]
@@ -945,7 +971,7 @@ class MainWindow(object):
                                 self.RepoAppsTreeView.set_cursor(row.path)
                                 # self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
             except Exception as e:
-                print(str(e))
+                self.Logger.exception("{}".format(e))
 
         elif "remove" in self.Application.args.keys():
             if self.myapps_perm == 1:
@@ -956,7 +982,7 @@ class MainWindow(object):
                 self.open_myapps_detailspage_from_desktopfile(app)
 
             else:
-                print("myapps permission is 0 so you can not use remove arg")
+                self.Logger.info("myapps permission is 0 so you can not use remove arg")
         else:
             if len(sys.argv) > 1:
                 try:
@@ -976,7 +1002,7 @@ class MainWindow(object):
                             self.fromqueue = False
                             GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
                 except Exception as e:
-                    print("{}".format(e))
+                    self.Logger.exception("{}".format(e))
 
     def normalpage(self):
         self.mainstack.set_visible_child_name("home")
@@ -1029,7 +1055,7 @@ class MainWindow(object):
             GLib.idle_add(self.updates_button.set_visible, False)
             GLib.idle_add(self.updates_button.set_sensitive, False)
 
-        print("page setted to normal")
+        self.Logger.info("page setted to normal")
 
     def package(self):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
@@ -1039,25 +1065,32 @@ class MainWindow(object):
             self.Package.getApps()
         else:
             self.isbroken = True
-            print("Error while updating Cache")
+            self.Logger.warning("Error while updating Cache")
 
-        print("package completed")
+        self.Logger.info("package completed")
+
+    def utils(self):
+        self.Utils = Utils()
+        desktop_env = self.Utils.get_desktop_env()
+        desktop_env_vers = self.Utils.get_desktop_env_version(desktop_env)
+        session = self.Utils.get_session_type()
+        self.user_desktop_env = "{} {}, {}".format(desktop_env, desktop_env_vers, session)
 
     def usersettings(self):
         self.UserSettings = UserSettings()
         self.UserSettings.createDefaultConfig()
         self.UserSettings.readConfig()
 
-        print("{} {}".format("config_usi", self.UserSettings.config_usi))
-        print("{} {}".format("config_anim", self.UserSettings.config_ea))
-        print("{} {}".format("config_availableapps", self.UserSettings.config_saa))
-        print("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
-        print("{} {}".format("config_icon", self.UserSettings.config_icon))
-        print("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
-        print("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
-        print("{} {}".format("config_aptup", self.UserSettings.config_aptup))
-        print("{} {}".format("config_lastaptup", self.UserSettings.config_lastaptup))
-        print("{} {}".format("config_forceaptuptime", self.UserSettings.config_forceaptuptime))
+        self.Logger.info("{} {}".format("config_usi", self.UserSettings.config_usi))
+        self.Logger.info("{} {}".format("config_anim", self.UserSettings.config_ea))
+        self.Logger.info("{} {}".format("config_availableapps", self.UserSettings.config_saa))
+        self.Logger.info("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
+        self.Logger.info("{} {}".format("config_icon", self.UserSettings.config_icon))
+        self.Logger.info("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
+        self.Logger.info("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
+        self.Logger.info("{} {}".format("config_aptup", self.UserSettings.config_aptup))
+        self.Logger.info("{} {}".format("config_lastaptup", self.UserSettings.config_lastaptup))
+        self.Logger.info("{} {}".format("config_forceaptuptime", self.UserSettings.config_forceaptuptime))
 
     def on_dEventBox1_button_press_event(self, widget, event):
         self.imgfullscreen_count = 0
@@ -1199,14 +1232,14 @@ class MainWindow(object):
                 self.repoappsinit = True
 
         elif self.repo_perm == 0:
-            print("repo_perm is 0 so repo apps not setting")
+            self.Logger.info("repo_perm is 0 so repo apps not setting")
             self.repo_button.set_sensitive(False)
 
     def on_cell_toggled(self, widget, path):
-        print("cell toggled")
+        self.Logger.info("cell toggled")
 
     def server(self):
-        print("Getting applications from server")
+        self.Logger.info("Getting applications from server")
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
 
@@ -1227,41 +1260,41 @@ class MainWindow(object):
                     if line.startswith("myapps="):
                         self.myapps_perm = line.split("myapps=")[1]
         except Exception as e:
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
 
         if not self.Server.serverurl:
             try:
                 self.Server.serverurl = open(conffile, "r").read().strip()
-                print("{}".format("server url getted from old type one line config"))
+                self.Logger.info("server url getted from old type one line config")
             except Exception as e:
-                print("Error getting server url from conf so setting to https://apps.pardus.org.tr")
-                print("{}".format(e))
+                self.Logger.warning("Error getting server url from conf so setting to https://apps.pardus.org.tr")
+                self.Logger.exception("{}".format(e))
                 self.Server.serverurl = "https://apps.pardus.org.tr"
         else:
-            print("{}".format("server url getted from new type config"))
+            self.Logger.info("{}".format("server url getted from new type config"))
 
         try:
             self.repo_perm = int(self.repo_perm)
         except:
-            print("repo key's value must be int. 1 or 0. So setting to default value 1")
+            self.Logger.warning("repo key's value must be int. 1 or 0. So setting to default value 1")
             self.repo_perm = 1
 
         try:
             self.myapps_perm = int(self.myapps_perm)
         except:
-            print("myapps_perm key's value must be int. 1 or 0. So setting to default value 1")
+            self.Logger.warning("myapps_perm key's value must be int. 1 or 0. So setting to default value 1")
             self.myapps_perm = 1
 
-        print("server url: {}".format(self.Server.serverurl))
-        print("repo permission: {}".format(self.repo_perm))
-        print("myapps permission: {}".format(self.myapps_perm))
+        self.Logger.info("server url: {}".format(self.Server.serverurl))
+        self.Logger.info("repo permission: {}".format(self.repo_perm))
+        self.Logger.info("myapps permission: {}".format(self.myapps_perm))
 
         self.Server.ServerAppsControlCB = self.ServerAppsControlCB
         self.Server.ServerAppsCB = self.ServerAppsCB
         self.Server.ServerIconsCB = self.ServerIconsCB
         self.Server.control_server(self.Server.serverurl + "/api/v2/test")
 
-        print("server func done")
+        self.Logger.info("server func done")
 
     def afterServers(self):
         self.normalpage()
@@ -1279,32 +1312,31 @@ class MainWindow(object):
         GLib.idle_add(self.myapps_worker_thread)
 
     def ServerAppsControlCB(self, status):
-        print("ServerAppsControlCB : {}".format(status))
+        self.Logger.info("ServerAppsControlCB : {}".format(status))
 
         if not status:
             self.Server.serverurl = self.Server.serverurl.replace("https://", "http://")
-            print(self.Server.serverurl)
+            self.Logger.info("{}".format(self.Server.serverurl))
 
         self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
         self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
         self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
         self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
 
-
     def ServerAppsCB(self, success, response=None, type=None):
         if success:
             if type == "apps":
-                print("server apps successful")
+                self.Logger.info("server apps successful")
                 self.status_serverapps = True
                 self.applist = sorted(response["app-list"], key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
                 self.fullapplist = self.applist
             elif type == "cats":
-                print("server cats successful")
+                self.Logger.info("server cats successful")
                 self.status_servercats = True
                 self.catlist = response["cat-list"]
                 self.fullcatlist = self.catlist
             elif type == "home":
-                print("server home successful")
+                self.Logger.info("server home successful")
                 self.status_serverhome = True
                 self.Server.ediapplist = response["editor-apps"]
                 self.Server.mostdownapplist = response["mostdown-apps"]
@@ -1326,9 +1358,11 @@ class MainWindow(object):
                 self.Server.badwords = response["badwords"]
                 if "important-packages" in response and response["important-packages"]:
                     self.important_packages = response["important-packages"]
+                if "i386-packages" in response and response["i386-packages"]:
+                    self.i386_packages = response["i386-packages"]
                 self.Server.aptuptime = response["aptuptime"]
             elif type == "statistics":
-                print("server statistics successful")
+                self.Logger.info("server statistics successful")
                 self.status_serverstatistics = True
                 self.Server.dailydowns = response["dailydowns"]
                 if "osdownsv23" in response.keys():
@@ -1372,7 +1406,7 @@ class MainWindow(object):
             if self.serverappicons_done and self.servercaticons_done:
                 self.afterServers()
         else:
-            print("fromsettings, {} re-setting".format(type))
+            self.Logger.info("fromsettings, {} re-setting".format(type))
             self.usersettings()
             if type == self.Server.serverappicons:
                 GLib.idle_add(self.PardusAppListStore.clear)
@@ -1394,7 +1428,7 @@ class MainWindow(object):
 
     def getIcons(self):
         if self.Server.connection:
-            print("Getting icons from server")
+            self.Logger.info("Getting icons from server")
             GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting icons from server")))
             redown_app_icons, redown_cat_icons = self.Server.controlIcons()
             if redown_app_icons:
@@ -1414,17 +1448,17 @@ class MainWindow(object):
                     self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
                     self.Server.servercaticons)
         else:
-            print("icons cannot downloading because server connection is {}".format(self.Server.connection))
+            self.Logger.info("icons cannot downloading because server connection is {}".format(self.Server.connection))
 
     def controlServer(self):
         if self.Server.connection:
-            print("Controlling {}".format(self.Server.serverurl))
+            self.Logger.info("Controlling {}".format(self.Server.serverurl))
             self.AppDetail.control(self.Server.serverurl + "/api/v2/test")
             self.AppRequest.control(self.Server.serverurl + "/api/v2/test")
             self.PardusComment.control(self.Server.serverurl + "/api/v2/test")
 
     def gnomeRatings(self):
-        print("Getting ratings from gnome odrs")
+        self.Logger.info("Getting ratings from gnome odrs")
 
         self.GnomeRatingServer = GnomeRatingServer()
         self.GnomeRatingServer.gRatingServer = self.gRatingServer
@@ -1432,11 +1466,11 @@ class MainWindow(object):
 
     def gRatingServer(self, status, response):
         if status:
-            print("gnomeratings successful")
+            self.Logger.info("gnomeratings successful")
             self.gnomeratings = response
         else:
             self.gnomeratings = []
-            print("gnomeratings not successful")
+            self.Logger.info("gnomeratings not successful")
 
     def setPardusApps(self):
         GLib.idle_add(self.PardusAppListStore.clear)
@@ -1508,7 +1542,7 @@ class MainWindow(object):
 
     def on_catbutton_clicked(self, button):
 
-        print("on_catbutton_clicked")
+        self.Logger.info("on_catbutton_clicked")
 
         if self.mda_clicked and self.sortPardusAppsCombo.get_active() == 1:
             self.sortPardusAppsCombo.set_active(0)
@@ -1529,10 +1563,11 @@ class MainWindow(object):
             self.PardusCurrentCategorySubCats, self.PardusCurrentCategoryExternal, \
             self.PardusCurrentCategorySubCategories = self.get_category_name_from_button(button.name)
 
-        print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                    self.PardusCurrentCategorySubCats,
-                                                    self.PardusCurrentCategoryExternal,
-                                                    self.PardusCurrentCategorySubCategories))
+        self.Logger.info("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory,
+                                                               self.PardusCurrentCategoryString,
+                                                               self.PardusCurrentCategorySubCats,
+                                                               self.PardusCurrentCategoryExternal,
+                                                               self.PardusCurrentCategorySubCategories))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -1590,7 +1625,7 @@ class MainWindow(object):
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
         if self.Server.connection:
-            print("setting editor apps")
+            self.Logger.info("setting editor apps")
             for ediapp in self.Server.ediapplist:
                 if self.UserSettings.config_usi:
                     edipixbuf = self.getServerAppIcon(ediapp['name'])
@@ -1615,7 +1650,7 @@ class MainWindow(object):
         self.MostRateFlowBox.foreach(lambda child: self.MostRateFlowBox.remove(child))
         self.LastAddedFlowBox.foreach(lambda child: self.LastAddedFlowBox.remove(child))
         if self.Server.connection:
-            print("setting mostapps")
+            self.Logger.info("setting mostapps")
             for mda in self.Server.mostdownapplist:
                 icon = Gtk.Image.new()
                 if self.UserSettings.config_usi:
@@ -1824,7 +1859,7 @@ class MainWindow(object):
         try:
             caticon = Gtk.IconTheme.get_default().load_icon("applications-" + cat, size, Gtk.IconLookupFlags(16))
         except:
-            print("{} {}".format(cat, "category icon not found in system icons"))
+            self.Logger.info("{} {}".format(cat, "category icon not found in system icons"))
             try:
                 if cat == "education":
                     caticon = Gtk.IconTheme.get_default().load_icon("applications-science", size,
@@ -1855,7 +1890,7 @@ class MainWindow(object):
                 icons = "categoryicons-" + self.UserSettings.config_icon
         except Exception as e:
             icons = "categoryicons"
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
         try:
             caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
                 self.Server.cachedir + icons + "/" + cat + ".svg", size, size)
@@ -1908,7 +1943,7 @@ class MainWindow(object):
                 icons = "appicons-" + self.UserSettings.config_icon
         except Exception as e:
             icons = "appicons"
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
         try:
             appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
                                                              size)
@@ -1931,7 +1966,6 @@ class MainWindow(object):
                 else:
                     if myappicon:
                         appicon = self.getMyAppIcon(app, size)
-                        print(appicon)
                     else:
                         try:
                             appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
@@ -1949,7 +1983,7 @@ class MainWindow(object):
                 icons = "appicons-" + self.UserSettings.config_icon
         except Exception as e:
             icons = "appicons"
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
         try:
             appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
                                                              size)
@@ -2144,7 +2178,6 @@ class MainWindow(object):
         self.RequiredChangesPopover.set_transitions_enabled(self.UserSettings.config_ea)
 
     def on_menubackbutton_clicked(self, widget):
-        print("menuback")
         hsname = self.homestack.get_visible_child_name()
         if hsname == "pardusapps":
 
@@ -2430,7 +2463,7 @@ class MainWindow(object):
             else:
                 self.appname = iconview
 
-            print("APPNAME : {}".format(self.appname))
+            self.Logger.info("APPNAME : {}".format(self.appname))
 
             if self.UserSettings.config_usi:
                 pixbuf = self.getServerAppIcon(self.appname, 128)
@@ -2497,9 +2530,10 @@ class MainWindow(object):
             if self.gnomename != "" and self.gnomename is not None:
                 try:
                     self.setGnomeRatings(self.gnomeratings[self.gnomename])
-                except:
+                except Exception as e:
                     self.setGnomeRatings("")
-                    print("{} {}".format(self.gnomename, "not found in gnomeratings"))
+                    self.Logger.warning("{} {}".format(self.gnomename, "not found in gnomeratings"))
+                    self.Logger.exception("{}".format(e))
             else:
                 self.setGnomeRatings("")
 
@@ -2594,17 +2628,20 @@ class MainWindow(object):
                     self.wpcformcontrolLabel.set_markup(
                         "<span color='red'>{}</span>".format(_("You need to install the application")))
 
+                app_in_queue = False
                 if len(self.queue) > 0:
                     for qa in self.queue:
                         if self.appname == qa["name"]:
-                            if isinstalled:
-                                self.dActionButton.set_label(_(" Removing"))
-                            else:
-                                self.dActionButton.set_label(_(" Installing"))
-                            self.dActionButton.set_image(
-                                Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
-                            self.dActionButton.set_sensitive(False)
-                            self.dActionInfoButton.set_sensitive(False)
+                            app_in_queue = True
+                if app_in_queue:
+                    if isinstalled:
+                        self.dActionButton.set_label(_(" Removing"))
+                    else:
+                        self.dActionButton.set_label(_(" Installing"))
+                    self.dActionButton.set_image(
+                        Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
+                    self.dActionButton.set_sensitive(False)
+                    self.dActionInfoButton.set_sensitive(False)
 
             else:
                 self.set_button_class(self.dActionButton, 2)
@@ -2654,22 +2691,18 @@ class MainWindow(object):
             self.pixbuf2 = None
 
             if self.screenshots[0] + "#1" in self.AppImage.imgcache:
-                # print("image1 in cache")
                 self.pixbuf1 = self.AppImage.imgcache[self.screenshots[0] + "#1"]
                 self.resizeAppImage()
                 self.appimage1stack.set_visible_child_name("loaded")
             else:
                 self.pixbuf1 = None
-                # print("image1 not in cache")
                 self.AppImage.fetch(self.Server.serverurl, self.screenshots[0], "#1")
 
             if self.screenshots[1] + "#2" in self.AppImage.imgcache:
-                # print("image2 in cache")
                 self.pixbuf2 = self.AppImage.imgcache[self.screenshots[1] + "#2"]
                 self.resizeAppImage()
                 self.appimage2stack.set_visible_child_name("loaded")
             else:
-                # print("image2 not in cache")
                 self.pixbuf2 = None
                 self.AppImage.fetch(self.Server.serverurl, self.screenshots[1], "#2")
 
@@ -2696,7 +2729,7 @@ class MainWindow(object):
                 self.GnomeComment.get("POST", self.Server.gnomecommentserver, gdic_en, self.appname, "en")
             else:
                 self.CommentsNotebook.get_nth_page(1).hide()  # page_num 1 is Gnome Comments
-                print("gnome comments disabled")
+                self.Logger.info("gnome comments disabled")
 
     def clear_drequired_popup(self):
         self.dapp_packagename_label.set_text("{}".format(""))
@@ -2765,10 +2798,9 @@ class MainWindow(object):
             self.ret = self.Package.required_changes(self.command)
         else:
             self.ret = self.Package.required_changes(app)
-        print(self.ret)
+        self.Logger.info("{}".format(self.ret))
 
     def on_size_worker_done(self):
-        # print("on_size_worker_done")
 
         self.dapp_packagename_label.set_markup("<b>{}</b>".format(self.appname))
 
@@ -2839,7 +2871,7 @@ class MainWindow(object):
             self.addtoMyApps(pkg)
         GLib.idle_add(self.MyAppsListBox.show_all)
         GLib.idle_add(self.controlArgs)
-        print("on_myapps_worker_done")
+        self.Logger.info("on_myapps_worker_done")
 
     def myappsdetail_worker_thread(self, app, popup=False):
         myappdetails = self.myappsdetail_worker(app)
@@ -2848,9 +2880,8 @@ class MainWindow(object):
     def myappsdetail_worker(self, app):
 
         valid, myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
-        print(myapp_details)
+        self.Logger.info("{}".format(myapp_details))
         return valid, myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
-
 
     def set_myapp_popup_details(self, myapp):
 
@@ -2863,7 +2894,8 @@ class MainWindow(object):
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
-            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
+            self.ui_myapp_pop_app.set_markup(
+                "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
@@ -2898,13 +2930,12 @@ class MainWindow(object):
                     "{}".format(self.Package.beauty_size(details["install_size"])))
                 self.ui_myapp_pop_isize_box.set_visible(True)
 
-
             self.ui_myapp_pop_stack.set_visible_child_name("details")
             self.ui_myapp_pop_uninstall_button.grab_focus()
 
 
         else:
-            print("package not found")
+            self.Logger.info("package not found")
             self.ui_myapp_pop_stack.set_visible_child_name("notfound")
             self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
@@ -2926,12 +2957,14 @@ class MainWindow(object):
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
-            self.ui_myapp_pop_app.set_markup("<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
+            self.ui_myapp_pop_app.set_markup(
+                "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
             self.ma_action_buttonbox.set_sensitive(True)
-            self.ui_myapps_app.set_markup("<span size='x-large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
+            self.ui_myapps_app.set_markup(
+                "<span size='x-large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=128))
             self.ui_myapps_description.set_markup("{}".format(description))
@@ -3069,7 +3102,7 @@ class MainWindow(object):
                 self.menubackbutton.set_sensitive(True)
 
         else:
-            print("package not found")
+            self.Logger.info("package not found")
             self.ui_myapp_pop_stack.set_visible_child_name("notfound")
             self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
@@ -3157,7 +3190,7 @@ class MainWindow(object):
             self.cs4.set_from_pixbuf(self.cstaron)
             self.cs5.set_from_pixbuf(self.cstaron)
         else:
-            print("comment star error")
+            self.Logger.info("comment star error")
 
     def setGnomeCommentStar(self, rate):
         self.gcs1 = Gtk.Image.new()
@@ -3202,7 +3235,7 @@ class MainWindow(object):
             self.gcs4.set_from_pixbuf(self.gcstaron)
             self.gcs5.set_from_pixbuf(self.gcstaron)
         else:
-            print("comment star error")
+            self.Logger.info("comment star error")
 
     def setPardusComments(self, comments, appname=""):
 
@@ -3271,7 +3304,6 @@ class MainWindow(object):
 
     def Request(self, status, response, appname=""):
         if status:
-            # print(response)
             if response["response-type"] == 10 and appname == self.getActiveAppOnUI():
                 self.wpcSendButton.set_sensitive(True)
                 if response["rating"]["status"]:
@@ -3331,7 +3363,7 @@ class MainWindow(object):
                             _("Your comment has been sent successfully. It will be published after approval."))
                 else:
                     if response["rating"]["justrate"]:
-                        print("justrate error")
+                        self.Logger.info("justrate error")
                     else:
                         self.wpcformcontrolLabel.set_visible(True)
                         if response["rating"]["flood"]:
@@ -3358,7 +3390,6 @@ class MainWindow(object):
 
     def Detail(self, status, response, appname=""):
         if status and appname == self.getActiveAppOnUI():
-            # print(response)
             self.dtDownload.set_markup(
                 "{} {}".format(response["details"]["download"]["count"], _("Download")))
 
@@ -3480,7 +3511,7 @@ class MainWindow(object):
             self.dtStar4.set_from_pixbuf(self.staron)
             self.dtStar5.set_from_pixbuf(self.staron)
         else:
-            print("star error")
+            self.Logger.info("star error")
 
     def setPardusRatings(self, tr, r, r1, r2, r3, r4, r5):
         self.dPardusRating.set_markup("<span size='xx-large'><b>{:.1f}</b></span>".format(float(r)))
@@ -3505,7 +3536,6 @@ class MainWindow(object):
 
     def setGnomeRatings(self, gr):
         if gr != "":
-            # print(gr)
 
             average = (gr["star1"] * 1 + gr["star2"] * 2 + gr["star3"] * 3 + gr["star4"] * 4 + gr["star5"] * 5) / gr[
                 "total"]
@@ -3612,10 +3642,10 @@ class MainWindow(object):
                             self.GnomeCommentListBoxEN.add(box)
                     else:
                         try:
-                            print("Comment is not clean, app_id: {}, review_id : {}".format(
+                            self.Logger.info("Comment is not clean, app_id: {}, review_id : {}".format(
                                 comment["app_id"], comment["review_id"]))
                         except Exception as e:
-                            print("{}".format(e))
+                            self.Logger.exception("{}".format(e))
 
         if lang == "tr":
             self.GnomeCommentListBoxTR.show_all()
@@ -3676,7 +3706,7 @@ class MainWindow(object):
             if version is None:
                 version = ""
             dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
-                   "installed": installed, "comment": "", "appversion": version, "distro": self.UserSettings.userdistro,
+                   "installed": installed, "comment": "", "appversion": version, "distro": self.user_distro_full,
                    "justrate": True}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
         else:
@@ -3694,7 +3724,6 @@ class MainWindow(object):
                 self.pixbuf2 = pixbuf
                 self.resizeAppImage()
         else:
-            # print("image not in cache")
             self.dImage1.set_from_pixbuf(self.missing_pixbuf)
             self.dImage2.set_from_pixbuf(self.missing_pixbuf)
 
@@ -3783,7 +3812,7 @@ class MainWindow(object):
         self.commentstack.set_visible_child_name("sendcomment")
 
     def on_wpcSendButton_clicked(self, button):
-        print("on_wpcSendButton_clicked")
+        self.Logger.info("on_wpcSendButton_clicked")
 
         author = self.wpcAuthor.get_text().strip()
         start, end = self.wpcComment.get_buffer().get_bounds()
@@ -3802,7 +3831,7 @@ class MainWindow(object):
                 if version is None:
                     version = ""
                 dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
-                       "installed": installed, "appversion": version, "distro": self.UserSettings.userdistro,
+                       "installed": installed, "appversion": version, "distro": self.user_distro_full,
                        "justrate": False}
                 try:
                     self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
@@ -3877,7 +3906,7 @@ class MainWindow(object):
             # self.wpcStarLabel.set_markup("<b>{}</b>".format(_("Love it")))
             self.wpcstar = 5
         else:
-            print("wpc star error")
+            self.Logger.info("wpc star error")
 
     def PardusCategoryFilterFunction(self, model, iteration, data):
         def control_show_filter(show_all, show_installed, app_name=""):
@@ -3914,7 +3943,6 @@ class MainWindow(object):
             showall = False
             showinstalled = False
 
-
         if self.isPardusSearching:
             for i in self.applist:
                 if i["name"] == appname:
@@ -3950,7 +3978,7 @@ class MainWindow(object):
 
     def on_ui_showinstalled_button_clicked(self, button):
         if button.get_active():
-            print("active : installed")
+            self.Logger.info("active : installed")
             self.ui_showall_button.set_active(False)
             self.ui_shownotinstalled_button.set_active(False)
             self.PardusCategoryFilter.refilter()
@@ -3961,7 +3989,7 @@ class MainWindow(object):
 
     def on_ui_shownotinstalled_button_clicked(self, button):
         if button.get_active():
-            print("active : notinstalled")
+            self.Logger.info("active : notinstalled")
             self.ui_showall_button.set_active(False)
             self.ui_showinstalled_button.set_active(False)
             self.PardusCategoryFilter.refilter()
@@ -3971,7 +3999,7 @@ class MainWindow(object):
 
     def on_ui_showall_button_clicked(self, button):
         if button.get_active():
-            print("active : showall")
+            self.Logger.info("active : showall")
             self.ui_showinstalled_button.set_active(False)
             self.ui_shownotinstalled_button.set_active(False)
             self.PardusCategoryFilter.refilter()
@@ -3996,7 +4024,7 @@ class MainWindow(object):
 
     def on_SubCatCombo_changed(self, combo_box):
         if combo_box.get_active_text() is not None:
-            print("on_SubCatCombo_changed : {}".format(combo_box.get_active_text()))
+            self.Logger.info("on_SubCatCombo_changed : {}".format(combo_box.get_active_text()))
             self.PardusCategoryFilter.refilter()
             self.set_app_count_label()
 
@@ -4053,10 +4081,11 @@ class MainWindow(object):
             self.PardusCurrentCategoryExternal, self.PardusCurrentCategorySubCategories = self.get_category_name(
             self.PardusCurrentCategory)
 
-        print("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory, self.PardusCurrentCategoryString,
-                                                    self.PardusCurrentCategorySubCats,
-                                                    self.PardusCurrentCategoryExternal,
-                                                    self.PardusCurrentCategorySubCategories))
+        self.Logger.info("HomeCategory: {} {} {} {} {}".format(self.PardusCurrentCategory,
+                                                               self.PardusCurrentCategoryString,
+                                                               self.PardusCurrentCategorySubCats,
+                                                               self.PardusCurrentCategoryExternal,
+                                                               self.PardusCurrentCategorySubCategories))
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon(self.PardusCurrentCategoryIcon, 32)
         else:
@@ -4112,7 +4141,6 @@ class MainWindow(object):
             self.set_app_count_label()
 
     def on_SubCategoryFlowBox_child_activated(self, flow_box, child):
-        # print(child.get_children()[0].name)
         self.externalreponame = child.get_children()[0].name
         self.ui_showapps_buttonbox.set_visible(True)
         self.ui_showappcount_label.set_visible(True)
@@ -4122,12 +4150,12 @@ class MainWindow(object):
         self.pardusAppsStack.set_visible_child_name("normal")
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
-        print("on_HomeCategoryFlowBox_selected_children_changed")
+        self.Logger.info("on_HomeCategoryFlowBox_selected_children_changed")
         self.isPardusSearching = False
 
     def on_QueueListBox_row_activated(self, list_box, row):
         self.queueappname = row.get_children()[0].name
-        print("queueappname : {}".format(self.queueappname))
+        self.Logger.info("queueappname : {}".format(self.queueappname))
         self.fromqueue = True
         self.frommostapps = False
         self.fromdetails = False
@@ -4161,6 +4189,12 @@ class MainWindow(object):
     def on_dActionInfoButton_clicked(self, button):
         self.RequiredChangesPopover.popup()
 
+    def on_dActionCancelButton_clicked(self, button):
+        self.Logger.info("Cancelling {} {}".format(self.actionedappname, self.pid))
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                   "kill", "{}".format(self.pid)]
+        self.start_kill_process(command)
+
     def on_dOpenButton_clicked(self, button):
         if not self.openDesktop(self.desktop_file):
             if self.desktop_file_extras != "":
@@ -4173,8 +4207,9 @@ class MainWindow(object):
         try:
             subprocess.check_call(["gtk-launch", desktop])
             return True
-        except subprocess.CalledProcessError:
-            print("error opening " + desktop)
+        except subprocess.CalledProcessError as e:
+            self.Logger.warning("error opening {}".format(desktop))
+            self.Logger.exception("{}".format(e))
             return False
 
     def on_dActionButton_clicked(self, button):
@@ -4190,7 +4225,7 @@ class MainWindow(object):
             if not self.inprogress:
                 self.actionPackage(self.appname, self.command)
                 self.inprogress = True
-                print("action " + self.appname)
+                self.Logger.info("action {}".format(self.appname))
         else:
             self.activatestack.set_visible_child_name("activate")
             self.activate_repo_label.set_text(self.external["reposlist"])
@@ -4270,7 +4305,7 @@ class MainWindow(object):
         if not self.inprogress:
             self.actionPackage(self.appname, self.appname)
             self.inprogress = True
-            print("action " + self.appname)
+            self.Logger.info("action {}".format(self.appname))
 
     def on_store_button_clicked(self, button):
         self.set_stack_n_search(1)
@@ -4293,7 +4328,7 @@ class MainWindow(object):
         if self.repo_perm == 1:
 
             if self.homestack.get_visible_child_name() == "repohome":
-                print("already repohome page")
+                self.Logger.info("already repohome page")
             else:
                 self.prefback = self.homestack.get_visible_child_name()
 
@@ -4316,7 +4351,7 @@ class MainWindow(object):
             self.repo_searchentry.grab_focus()
             self.topsearchbutton.set_sensitive(True)
         else:
-            print("repo perm is 0 so you can not use repo button")
+            self.Logger.info("repo perm is 0 so you can not use repo button")
 
     def on_myapps_button_clicked(self, button):
         if self.myapps_perm == 1:
@@ -4335,7 +4370,7 @@ class MainWindow(object):
             # set scroll position to top (reset)
             self.myapps_apps_sw.set_vadjustment(Gtk.Adjustment())
         else:
-            print("myapps perm is 0 so you can not use myapps button")
+            self.Logger.info("myapps perm is 0 so you can not use myapps button")
 
     def on_updates_button_clicked(self, button):
 
@@ -4503,7 +4538,7 @@ class MainWindow(object):
             GLib.idle_add(self.upgrade_kcount_label.set_markup, "{}".format(requireds["to_keep"]))
             GLib.idle_add(self.upgrade_kcount_box.set_visible, True)
 
-        print("on_upgradables_worker_done")
+        self.Logger.info("on_upgradables_worker_done")
         self.upgradables_page_setted = True
 
     def on_upgrade_conf_radiobutton_toggled(self, button):
@@ -4542,7 +4577,7 @@ class MainWindow(object):
         elif self.upgrade_ask_conf_radiobutton.get_active():
             dpkg_conf = ""
 
-        print("yq_conf: {}\ndpkg_conf: {}".format(yq_conf, dpkg_conf))
+        self.Logger.info("yq_conf: {}\ndpkg_conf: {}".format(yq_conf, dpkg_conf))
         if len(self.queue) == 0:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
                        "upgrade", yq_conf, dpkg_conf]
@@ -4574,8 +4609,7 @@ class MainWindow(object):
             self.dpkgconfigure_vte_start_process(command)
             self.dpkgconfiguring = True
         else:
-            print("dpkgconfiguring in progress")
-
+            self.Logger.info("dpkgconfiguring in progress")
 
     def on_upgrade_info_back_button_clicked(self, button):
         self.upgrade_stack.set_visible_child_name("main")
@@ -4598,7 +4632,7 @@ class MainWindow(object):
 
     def on_queue_button_clicked(self, button):
         if self.homestack.get_visible_child_name() == "queue":
-            print("already queue page")
+            self.Logger.info("already queue page")
             return
         self.menubackbutton.set_sensitive(True)
         self.prefback = self.homestack.get_visible_child_name()
@@ -4721,7 +4755,7 @@ class MainWindow(object):
         GLib.idle_add(self.MyAppsListBox.add, box)
 
     def remove_from_myapps(self, button):
-        print("remove_from_myapps", button.name)
+        self.Logger.info("remove_from_myapps {}".format(button.name))
 
         self.ui_myapp_pop_toremove_box.set_visible(False)
         self.ui_myapp_pop_toinstall_box.set_visible(False)
@@ -4741,14 +4775,14 @@ class MainWindow(object):
         myappsdetailsthread.start()
 
     def open_from_myapps(self, button):
-        print(button.name)
+        self.Logger.info("{}".format(button.name))
         self.openDesktop(os.path.basename(button.name))
 
     def on_ui_myapps_cancel_clicked(self, button):
         self.menubackbutton.set_sensitive(False)
         self.myappsstack.set_visible_child_name("myapps")
         if not len(self.MyAppsListBox) > 0:
-            print("MyAppsListBox creating")
+            self.Logger.info("MyAppsListBox creating")
             GLib.idle_add(self.on_myapps_button_clicked, None)
 
     def on_ui_myapps_cancel_disclaimer_clicked(self, button):
@@ -4763,7 +4797,7 @@ class MainWindow(object):
                 ", ".join(importants),
                 _("Are you sure you accept this?")))
         else:
-            print("not important package")
+            self.Logger.info("not important package")
             self.ui_myapps_uninstall()
 
     def on_ui_myapps_accept_disclaimer_clicked(self, button):
@@ -4779,7 +4813,7 @@ class MainWindow(object):
                 ", ".join(importants),
                 _("Are you sure you accept this?")))
         else:
-            print("not important package")
+            self.Logger.info("not important package")
             self.ui_myapps_uninstall()
 
     def on_ui_myapp_pop_accept_disclaimer_clicked(self, button):
@@ -4805,7 +4839,7 @@ class MainWindow(object):
         if not self.inprogress:
             self.actionPackage(self.appname, self.command)
             self.inprogress = True
-            print("action " + self.appname)
+            self.Logger.info("action {}".format(self.appname))
 
     def myapps_filter_func(self, row):
         # app info defined in uninstall button so getting this widget
@@ -4833,28 +4867,6 @@ class MainWindow(object):
         desktopfilename = row.get_children()[0].name
 
         self.open_myapps_detailspage_from_desktopfile(desktopfilename)
-
-        # myappspackagethread = threading.Thread(target=self.myappspackage_worker_thread,
-        #                                        args=(desktopfilename,), daemon=True)
-        # myappspackagethread.start()
-
-
-    # def myappspackage_worker_thread(self, desktopfilename):
-    #     status, package = self.myappspackage_worker(desktopfilename)
-    #     GLib.idle_add(self.myappspackage_worker_done, status, package, desktopfilename)
-
-    # def myappspackage_worker(self, desktopfilename):
-    #
-    #     status, package = self.Package.get_appname_from_desktopfile(desktopfilename)
-    #
-    #     return status, package
-
-    # def myappspackage_worker_done(self, status, package, desktopfilename):
-    #     if status:
-    #         self.open_myapps_detailspage_from_desktopfile(desktopfilename)
-    #     else:
-    #         print("{} not found on_MyAppsListBox_row_activated".format(desktopfilename))
-
 
     def open_myapps_detailspage_from_desktopfile(self, desktopfilename):
         valid, dic = self.Package.parse_desktopfile(os.path.basename(desktopfilename))
@@ -4895,7 +4907,7 @@ class MainWindow(object):
         self.MyAppsListBox.invalidate_filter()
 
     def on_pardus_searchentry_search_changed(self, entry_search):
-        print("on_pardus_searchentry_search_changed")
+        self.Logger.info("on_pardus_searchentry_search_changed")
         self.isPardusSearching = True
         if not self.store_button_clicked:
             self.homestack.set_visible_child_name("pardusapps")
@@ -4905,7 +4917,7 @@ class MainWindow(object):
         self.store_button_clicked = False
 
     def on_pardus_searchentry_button_press_event(self, widget, click):
-        print("on_pardus_searchentry_button_press_event")
+        self.Logger.info("on_pardus_searchentry_button_press_event")
         self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
@@ -4913,7 +4925,7 @@ class MainWindow(object):
         self.set_app_count_label()
 
     def on_pardus_searchentry_focus_in_event(self, widget, click):
-        print("on_pardus_searchentry_focus_in_event")
+        self.Logger.info("on_pardus_searchentry_focus_in_event")
         self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
@@ -4936,7 +4948,6 @@ class MainWindow(object):
         self.set_app_count_label()
 
     def on_repo_searchbutton_clicked(self, button):
-        # print("on_repo_searchbutton_clicked")
         self.isRepoSearching = True
         reposearch_list_tmp = []
         self.reposearch_list = []
@@ -5083,13 +5094,13 @@ class MainWindow(object):
             self.toprevealer.set_reveal_child(True)
             if self.searchstack.get_visible_child_name() == "pardus":
                 self.pardus_searchentry.grab_focus()
-                print("in grab focus")
+                self.Logger.info("in grab focus")
             elif self.searchstack.get_visible_child_name() == "repo":
                 self.repo_searchentry.grab_focus()
             elif self.searchstack.get_visible_child_name() == "myapps":
                 self.myapps_searchentry.grab_focus()
                 if not len(self.MyAppsListBox) > 0:
-                    print("MyAppsListBox creating")
+                    self.Logger.info("MyAppsListBox creating")
                     self.on_myapps_button_clicked(None)
         else:
             self.toprevealer.set_reveal_child(False)
@@ -5131,7 +5142,7 @@ class MainWindow(object):
 
     def on_menu_settings_clicked(self, button):
         if self.homestack.get_visible_child_name() == "preferences":
-            print("already preferences page")
+            self.Logger.info("already preferences page")
         else:
             self.prefback = self.homestack.get_visible_child_name()
             self.prefback_preferences = self.prefback
@@ -5163,11 +5174,18 @@ class MainWindow(object):
 
         self.setSelectIcons()
 
+        self.set_cache_size()
+
+    def set_cache_size(self):
+        cache_size = self.Utils.get_path_size(self.UserSettings.cachedir)
+        self.Logger.info("{} : {} bytes".format(self.UserSettings.cachedir, cache_size))
+        self.ui_cache_size.set_text("({})".format(self.Package.beauty_size(cache_size)))
+
     def control_groups(self):
         try:
             self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.username in g.gr_mem]
         except Exception as e:
-            print("control_groups: {}".format(e))
+            self.Logger.exception("control_groups: {}".format(e))
             self.usergroups = []
 
         if self.usergroups:
@@ -5195,7 +5213,7 @@ class MainWindow(object):
 
     def on_menu_statistics_clicked(self, button):
         if self.homestack.get_visible_child_name() == "statistics":
-            print("already statistics page")
+            self.Logger.info("already statistics page")
             self.PopoverMenu.popdown()
             return
         self.prefback = self.homestack.get_visible_child_name()
@@ -5250,7 +5268,7 @@ class MainWindow(object):
             from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
             return True
         except ModuleNotFoundError as e:
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
             self.matplot_error = "{}\n\n{}".format(e,
                                                    _("The python3-matplotlib library is required to view statistics."))
             return False
@@ -5330,7 +5348,7 @@ class MainWindow(object):
         else:
             GLib.idle_add(self.statmainstack.set_visible_child_name, "info")
             GLib.idle_add(self.stat_ilabel.set_text, "{}".format(self.matplot_error))
-            print("matplotlib is not found")
+            self.Logger.info("matplotlib is not found")
 
         GLib.idle_add(self.stat_spinner.stop)
 
@@ -5352,7 +5370,7 @@ class MainWindow(object):
 
     def on_menu_suggestapp_clicked(self, button):
         if self.homestack.get_visible_child_name() == "suggestapp":
-            print("already suggestapp page")
+            self.Logger.info("already suggestapp page")
             self.PopoverMenu.popdown()
             return
         self.prefback = self.homestack.get_visible_child_name()
@@ -5621,7 +5639,7 @@ class MainWindow(object):
     def on_switchUSI_state_set(self, switch, state):
         user_config_usi = self.UserSettings.config_usi
         if state != user_config_usi:
-            print("Updating user icon state")
+            self.Logger.info("Updating user icon state")
             try:
                 self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
@@ -5646,12 +5664,12 @@ class MainWindow(object):
                     self.setSelectIcons()
             except Exception as e:
                 self.preflabel_settext("{}".format(e))
-                print(e)
+                self.Logger.exception("{}".format(e))
 
     def on_switchEA_state_set(self, switch, state):
         user_config_ea = self.UserSettings.config_ea
         if state != user_config_ea:
-            print("Updating user animation state")
+            self.Logger.info("Updating user animation state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
@@ -5666,7 +5684,7 @@ class MainWindow(object):
     def on_switchSAA_state_set(self, switch, state):
         user_config_saa = self.UserSettings.config_saa
         if state != user_config_saa:
-            print("Updating show available apps state")
+            self.Logger.info("Updating show available apps state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
                                               self.UserSettings.config_hera, self.UserSettings.config_icon,
@@ -5687,7 +5705,7 @@ class MainWindow(object):
     def on_switchHERA_state_set(self, switch, state):
         user_config_hera = self.UserSettings.config_hera
         if state != user_config_hera:
-            print("Updating hide external apps state")
+            self.Logger.info("Updating hide external apps state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                               self.UserSettings.config_saa, state, self.UserSettings.config_icon,
@@ -5709,7 +5727,7 @@ class MainWindow(object):
         user_config_icon = self.UserSettings.config_icon
         active = combo_box.get_active_id()
         if active != user_config_icon and active is not None:
-            print("changing icons to " + str(combo_box.get_active_id()))
+            self.Logger.info("changing icons to {}".format(combo_box.get_active_id()))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera, active,
                                           self.UserSettings.config_sgc, self.UserSettings.config_udt,
@@ -5725,7 +5743,7 @@ class MainWindow(object):
     def on_switchSGC_state_set(self, switch, state):
         user_config_sgc = self.UserSettings.config_sgc
         if state != user_config_sgc:
-            print("Updating show gnome apps state as {}".format(state))
+            self.Logger.info("Updating show gnome apps state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera,
                                           self.UserSettings.config_icon, state, self.UserSettings.config_udt,
@@ -5736,7 +5754,7 @@ class MainWindow(object):
     def on_switchUDT_state_set(self, switch, state):
         user_config_udt = self.UserSettings.config_udt
         if state != user_config_udt:
-            print("Updating use dark theme state as {}".format(state))
+            self.Logger.info("Updating use dark theme state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera,
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
@@ -5750,7 +5768,7 @@ class MainWindow(object):
     def on_switchAPTU_state_set(self, switch, state):
         user_config_aptup = self.UserSettings.config_aptup
         if state != user_config_aptup:
-            print("Updating auto apt update state as {}".format(state))
+            self.Logger.info("Updating auto apt update state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera,
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc,
@@ -5819,6 +5837,7 @@ class MainWindow(object):
             self.prefcachebutton.set_sensitive(True)
             self.prefcachebutton.set_label(_("Error"))
             self.preflabel_settext("{}".format(message))
+        self.set_cache_size()
 
     def on_prefcorrectbutton_clicked(self, button):
         self.prefstack.set_visible_child_name("confirm")
@@ -5881,7 +5900,7 @@ class MainWindow(object):
             ui_appname = self.myappname
         if self.fromrepoapps:
             ui_appname = self.repoappname
-        print("ui_app : {}".format(ui_appname))
+        self.Logger.info("ui_app : {}".format(ui_appname))
         return ui_appname
 
     def on_retrybutton_clicked(self, button):
@@ -5988,10 +6007,15 @@ class MainWindow(object):
                 self.raction.set_label(_(" Installing"))
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedcommand]
+            packagelist = self.actionedcommand.split(" ")
+            if [i for i in self.i386_packages if i in packagelist]:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                           "enablei386andinstall", self.actionedcommand]
         else:
-            print("actionPackage func error")
+            self.Logger.info("actionPackage func error")
 
         self.pid = self.startProcess(command)
+        self.Logger.info("started pid : {}".format(self.pid))
 
     def actionEnablePackage(self, appname):
         self.actionedenablingappname = appname
@@ -6022,7 +6046,7 @@ class MainWindow(object):
             self.dpkgconfigure_vte_start_process(command)
             self.dpkgconfiguring = True
         else:
-            print("dpkgconfiguring in progress")
+            self.Logger.info("dpkgconfiguring in progress")
 
     def on_pop_interruptinfo_ok_button_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
@@ -6034,6 +6058,28 @@ class MainWindow(object):
 
     def on_bottomerrordetails_button_clicked(self, button):
         self.bottomerrordetails_popover.popup()
+
+    def start_kill_process(self, params):
+        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                                                      standard_output=True, standard_error=True)
+        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.on_start_kill_process_stdout)
+        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.on_start_kill_process_stderr)
+        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.on_start_kill_process_exit)
+        return pid
+
+    def on_start_kill_process_stdout(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+        line = source.readline()
+        self.Logger.info("{}".format(line))
+        return True
+
+    def on_start_kill_process_stderr(self, source, condition):
+        if condition == GLib.IO_HUP:
+            return False
+
+    def on_start_kill_process_exit(self, pid, status):
+        self.Logger.info("on_start_kill_process_exit: {}".format(pid))
 
     def startProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
@@ -6049,7 +6095,7 @@ class MainWindow(object):
             return False
 
         line = source.readline()
-        print("{}".format(line))
+        self.Logger.info("{}".format(line))
 
         return True
 
@@ -6059,12 +6105,13 @@ class MainWindow(object):
 
         line = source.readline()
 
-        print("{}".format(line))
+        self.Logger.info("{}".format(line))
 
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             self.progresstextlabel.set_text(
                 "{} | {} : {} %".format(self.actionedappname, _("Downloading"), percent))
+            self.dActionCancelButton.set_visible(True)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             if self.isinstalled:
@@ -6073,23 +6120,27 @@ class MainWindow(object):
             else:
                 self.progresstextlabel.set_text(
                     "{} | {} : {} %".format(self.actionedappname, _("Installing"), percent))
+            self.dActionCancelButton.set_visible(False)
         elif "E:" in line and ".deb" in line:
-            print("connection error")
+            self.Logger.warning("connection error")
             self.error = True
             self.error_message += line
         elif "E:" in line and "dpkg --configure -a" in line:
-            print("dpkg --configure -a error")
+            self.Logger.warning("dpkg --configure -a error")
             self.error = True
             self.dpkgconferror = True
         elif "E:" in line and "/var/lib/dpkg/lock-frontend" in line:
-            print("/var/lib/dpkg/lock-frontend error")
+            self.Logger.warning("/var/lib/dpkg/lock-frontend error")
             self.error = True
             self.dpkglockerror = True
             self.dpkglockerror_message += line
+        elif "pardus-software-i386-start" in line:
+            self.progresstextlabel.set_text(
+                "{} | {}".format(self.actionedappname, _("i386 activating")))
         return True
 
     def onProcessExit(self, pid, status):
-
+        self.dActionCancelButton.set_visible(False)
         self.bottomerrordetails_button.set_visible(False)
 
         if not self.error:
@@ -6109,8 +6160,8 @@ class MainWindow(object):
 
         cachestatus = self.Package.updatecache()
 
-        # print("Cache Status: {}, Package Cache Status: {}".format(
-        #     cachestatus, self.Package.controlPackageCache(self.actionedappname)))
+        self.Logger.info("Cache Status: {}, Package Cache Status: {}".format(
+            cachestatus, self.Package.controlPackageCache(self.actionedappname)))
 
         if status == 0 and not self.error and cachestatus:
             if self.Package.controlPackageCache(self.actionedappname):
@@ -6132,12 +6183,13 @@ class MainWindow(object):
                 self.raction.set_sensitive(True)
 
         self.topspinner.stop()
-        print("Exit Code: {}".format(status))
+        self.Logger.info("Exit Code: {}".format(status))
 
         self.inprogress = False
 
-        self.queue.pop(0)
-        self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
+        if len(self.queue) > 0:
+            self.queue.pop(0)
+            self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
         if len(self.queue) > 0:
             self.actionPackage(self.queue[0]["name"], self.queue[0]["command"])
             # Update QueueListBox's first element too
@@ -6175,7 +6227,7 @@ class MainWindow(object):
                 self.bottomstack.set_visible_child_name("interrupt")
                 self.bottominterruptlabel.set_markup("<span color='red'><b>{}</b></span>".format(
                     _("dpkg interrupt detected. Click the 'Fix' button or\n"
-                    "manually run 'sudo dpkg --configure -a' to fix the problem.")
+                      "manually run 'sudo dpkg --configure -a' to fix the problem.")
                 ))
 
         self.error = False
@@ -6191,14 +6243,14 @@ class MainWindow(object):
         if len(selected_items) == 1:
             treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
             appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
-            print("in controlView " + appname)
+            self.Logger.info("in controlView {}".format(appname))
             if appname == actionedappname:
                 self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
         if len(editor_selected_items) == 1:
             treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
             appname = self.EditorListStore.get(treeiter, 1)[0]
-            print("in controlView " + appname)
+            self.Logger.info("in controlView {}".format(appname))
             if appname == actionedappname:
                 self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
 
@@ -6311,16 +6363,16 @@ class MainWindow(object):
                 self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
     def control_myapps(self, actionedappname, actionedappdesktop, status, error, cachestatus):
-        print("in control_myapps")
+        self.Logger.info("in control_myapps")
         # if self.homestack.get_visible_child_name() == "myapps":
         if status == 0 and not error and cachestatus:
             if self.isinstalled:
-                print("{} removing from myapps".format(actionedappdesktop))
+                self.Logger.info("{} removing from myapps".format(actionedappdesktop))
                 if "/" in actionedappdesktop:
                     for row in self.MyAppsListBox:
                         if row.get_children()[0].name == actionedappdesktop:
                             if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                                print("in pop_myapp popdown")
+                                self.Logger.info("in pop_myapp popdown")
                                 self.MyAppsDetailsPopover.set_relative_to(self.MyAppsListBox)
                                 self.MyAppsDetailsPopover.popdown()
                             self.MyAppsListBox.remove(row)
@@ -6330,16 +6382,17 @@ class MainWindow(object):
                             rowapp = os.path.basename(row.get_children()[0].name)
                             if rowapp == actionedappdesktop:
                                 if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                                    print("in pop_myapp popdown")
+                                    self.Logger.info("in pop_myapp popdown")
                                     self.MyAppsDetailsPopover.set_relative_to(self.MyAppsListBox)
                                     self.MyAppsDetailsPopover.popdown()
 
                                 self.MyAppsListBox.remove(row)
                         except Exception as e:
-                            print("Error in control_myapps: {}".format(e))
+                            self.Logger.warning("Error in control_myapps")
+                            self.Logger.exception("{}".format(e))
                             pass
             else:
-                print("{} adding to myapps".format(actionedappdesktop))
+                self.Logger.info("{} adding to myapps".format(actionedappdesktop))
                 valid, dic = self.Package.parse_desktopfile(os.path.basename(actionedappdesktop))
                 if valid:
                     self.addtoMyApps(dic)
@@ -6347,21 +6400,21 @@ class MainWindow(object):
                     self.MyAppsListBox.set_sort_func(self.myapps_sort_func)
 
             if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                print("in myappsstack details actionedappname status=0")
+                self.Logger.info("in myappsstack details actionedappname status=0")
                 self.ma_action_buttonbox.set_sensitive(False)
 
             if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                print("in pop_myapp details status=0")
+                self.Logger.info("in pop_myapp details status=0")
                 self.ui_myapp_pop_uninstall_button.set_sensitive(False)
                 self.MyAppsDetailsPopover.popdown()
 
         else:
             if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                print("in myappsstack details actionedappname status!=0")
+                self.Logger.info("in myappsstack details actionedappname status!=0")
                 self.ma_action_buttonbox.set_sensitive(True)
 
             if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                print("in pop_myapp details status!=0")
+                self.Logger.info("in pop_myapp details status!=0")
                 self.ui_myapp_pop_uninstall_button.set_sensitive(True)
 
     def notify(self, message_summary="", message_body=""):
@@ -6387,7 +6440,7 @@ class MainWindow(object):
                 notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
             notification.show()
         except Exception as e:
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
 
     def sendDownloaded(self, appname):
         try:
@@ -6398,10 +6451,11 @@ class MainWindow(object):
             if version is None:
                 version = ""
             dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
-                   "distro": self.UserSettings.userdistro}
+                   "distro": self.user_distro_full}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
         except Exception as e:
-            print("sendDownloaded Error: {}".format(e))
+            self.Logger.warning("sendDownloaded Error")
+            self.Logger.exception("{}".format(e))
 
     def startSysProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
@@ -6416,14 +6470,14 @@ class MainWindow(object):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        print(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onSysProcessStderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        print(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onSysProcessExit(self, pid, status):
@@ -6462,7 +6516,7 @@ class MainWindow(object):
             self.correctsourcesclicked = False
 
         if self.aptupdateclicked:
-            print("apt update done (detail page), status code : {}".format(status))
+            self.Logger.info("apt update done (detail page), status code : {}".format(status))
             self.dAptUpdateButton.set_sensitive(True)
             self.dAptUpdateSpinner.stop()
             self.Package.updatecache()
@@ -6475,7 +6529,7 @@ class MainWindow(object):
             elif status == 32256:
                 self.dAptUpdateInfoLabel.set_visible(True)
                 self.dAptUpdateInfoLabel.set_text("")
-                print("wrong password on apt update (detail page)")
+                self.Logger.info("wrong password on apt update (detail page)")
             else:
                 self.dAptUpdateBox.set_visible(True)
                 self.dAptUpdateInfoLabel.set_visible(True)
@@ -6483,7 +6537,7 @@ class MainWindow(object):
                     _("An error occurred while updating the package cache. Exit Code: "), status))
             self.aptupdateclicked = False
 
-        print("SysProcess Exit Code: {}".format(status))
+        self.Logger.info("SysProcess Exit Code: {}".format(status))
 
     def startAptUpdateProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
@@ -6498,14 +6552,14 @@ class MainWindow(object):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        print(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onAptUpdateProcessStderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        print(line)
+        self.Logger.info("{}".format(line))
         return True
 
     def onAptUpdateProcessExit(self, pid, status):
@@ -6516,7 +6570,9 @@ class MainWindow(object):
             try:
                 timestamp = int(datetime.now().timestamp())
             except Exception as e:
-                print("timestamp Error: {}".format(e))
+                self.Logger.warning("timestamp Error: {}")
+                self.Logger.exception("{}".format(e))
+
                 timestamp = 0
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_hera,
@@ -6548,19 +6604,19 @@ class MainWindow(object):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        print("onGroupProcessStdout - line: {}".format(line))
+        self.Logger.info("onGroupProcessStdout - line: {}".format(line))
         return True
 
     def onGroupProcessStderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        print("onGroupProcessStderr - line: {}".format(line))
+        self.Logger.info("onGroupProcessStderr - line: {}".format(line))
         self.grouperrormessage = line
         return True
 
     def onGroupProcessExit(self, pid, status):
-        print("onGroupProcessExit - status: {}".format(status))
+        self.Logger.info("onGroupProcessExit - status: {}".format(status))
         self.control_groups()
         if status == 32256:  # operation cancelled | Request dismissed
             self.preflabel_settext("")
@@ -6632,9 +6688,9 @@ class MainWindow(object):
             else:
                 self.tryfixstack.set_visible_child_name("error")
                 self.isbroken = True
-                print("Error while updating Cache")
+                self.Logger.warning("Error while updating Cache")
         else:
-            print("onVteDone status: {}".format(status))
+            self.Logger.info("onVteDone status: {}".format(status))
 
     def upgrade_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
@@ -6666,7 +6722,7 @@ class MainWindow(object):
             )
         except Exception as e:
             # old version VTE doesn't have spawn_async so use spawn_sync
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
             self.upgrade_vteterm.connect("child-exited", self.upgrade_vte_on_done)
             self.upgrade_vteterm.spawn_sync(
                 Vte.PtyFlags.DEFAULT,
@@ -6682,7 +6738,7 @@ class MainWindow(object):
         self.upgrade_vteterm.connect("child-exited", self.upgrade_vte_on_done)
 
     def upgrade_vte_on_done(self, terminal, status):
-        print("upgrade_vte_on_done status: {}".format(status))
+        self.Logger.info("upgrade_vte_on_done status: {}".format(status))
         self.upgrade_inprogress = False
         if status == 32256:  # operation cancelled | Request dismissed
             self.upgrade_stack.set_visible_child_name("main")
@@ -6709,7 +6765,6 @@ class MainWindow(object):
                 GLib.idle_add(self.upgrade_info_box.set_visible, True)
                 GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
                 GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
-
 
     def dpkgconfigure_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
@@ -6755,7 +6810,7 @@ class MainWindow(object):
             )
         except Exception as e:
             # old version VTE doesn't have spawn_async so use spawn_sync
-            print("{}".format(e))
+            self.Logger.exception("{}".format(e))
             self.dpkgconfigure_vteterm.connect("child-exited", self.dpkgconfigure_vte_on_done)
             self.dpkgconfigure_vteterm.spawn_sync(
                 Vte.PtyFlags.DEFAULT,
@@ -6771,7 +6826,7 @@ class MainWindow(object):
         self.dpkgconfigure_vteterm.connect("child-exited", self.dpkgconfigure_vte_on_done)
 
     def dpkgconfigure_vte_on_done(self, terminal, status):
-        print("dpkgconfigure_vte_on_done status: {}".format(status))
+        self.Logger.info("dpkgconfigure_vte_on_done status: {}".format(status))
 
         self.dpkgconfiguring = False
         self.bottominterrupt_fix_button.set_sensitive(True)

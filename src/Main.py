@@ -18,8 +18,9 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import gi
 import sys
+
+import gi
 
 from MainWindow import MainWindow
 
@@ -32,6 +33,7 @@ class Application(Gtk.Application):
         super().__init__(*args, application_id="tr.org.pardus.software",
                          flags=Gio.ApplicationFlags(8), **kwargs)
         self.window = None
+        GLib.set_prgname("tr.org.pardus.software")
 
         self.add_main_option(
             "details",
