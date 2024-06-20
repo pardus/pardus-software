@@ -26,7 +26,11 @@ class UserSettings(object):
         userhome = str(Path.home())
         self.username = userhome.rsplit("/", maxsplit=1)[-1]
 
+        # The following config assignment are for backward compatibility
         self.configdir = os.getenv("XDG_CONFIG_HOME", userhome + "/.config") +  "/pardus-software/"
+        # This is for the new versions
+        if not os.path.exists(self.configdir):
+            self.configdir = os.getenv("XDG_CONFIG_HOME", userhome + "/.config") +  "/pardus/pardus-software/"
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser(strict=False)
         self.config_usi = None
