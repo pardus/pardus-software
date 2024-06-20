@@ -8,6 +8,7 @@ Created on Fri Sep 18 14:53:00 2020
 
 import configparser
 from pathlib import Path
+import os
 
 import distro
 
