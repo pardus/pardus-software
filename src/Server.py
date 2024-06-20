@@ -11,6 +11,7 @@ import tarfile
 from hashlib import md5
 from pathlib import Path
 from shutil import rmtree
+import os
 
 import gi
 
@@ -43,8 +44,8 @@ class Server(object):
             self.username = userhome.split("/")[-1]
         except:
             self.username = ""
-        self.cachedir = userhome + "/.cache/pardus-software/"
-        self.configdir = userhome + "/.config/pardus-software/"
+        self.cachedir = os.getenv("XDG_CACHE_HOME", userhome + "/.cache") + "/pardus-software/"
+        self.configdir = os.getenv("XDG_CONFIG_HOME", userhome + "/.config") +  "/pardus-software/"
 
         self.error_message = ""
         self.connection = False
