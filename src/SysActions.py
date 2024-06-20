@@ -21,7 +21,6 @@ import distro
 
 
 def main():
-
     def control_lock():
         msg = ""
         apt_pkg.init_system()

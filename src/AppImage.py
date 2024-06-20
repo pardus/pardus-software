@@ -11,12 +11,14 @@ import gi
 gi.require_version("GLib", "2.0")
 gi.require_version("GdkPixbuf", "2.0")
 from gi.repository import GLib, GdkPixbuf, Gio
+from Logger import Logger
 
 
 class AppImage(object):
     def __init__(self):
 
         self.imgcache = {}
+        self.Logger = Logger(__name__)
 
     def fetch(self, uri, fileuri, i):
         url = uri + fileuri
@@ -27,7 +29,8 @@ class AppImage(object):
         try:
             stream = img_file.read_finish(result)
         except GLib.Error as error:
-            print("_open_stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("_open_stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
             self.Pixbuf(False, None, None)  # Send to MainWindow
             return False
 
@@ -37,7 +40,8 @@ class AppImage(object):
         try:
             pixbuf = GdkPixbuf.Pixbuf.new_from_stream_finish(result)
         except GLib.Error as error:
-            print("_pixbuf_loaded Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("_pixbuf_loaded Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
             self.Pixbuf(False, None, None)  # Send to MainWindow
             return False
 
@@ -51,4 +55,5 @@ class AppImage(object):
         try:
             stream.close_finish(result)
         except GLib.Error as error:
-            print("Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
