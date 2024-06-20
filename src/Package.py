@@ -16,6 +16,8 @@ import apt
 import apt_pkg
 from gi.repository import Gio, GLib
 
+from Logger import Logger
+
 
 class Package(object):
     def __init__(self):
@@ -23,6 +25,7 @@ class Package(object):
         self.secs = []
         self.sections = []
         self.update_cache_error_msg = ""
+        self.Logger = Logger(__name__)
 
     def updatecache(self):
         try:
@@ -240,13 +243,12 @@ class Package(object):
             cache_error = False
             self.update_cache_error_msg = ""
         except Exception as error:
-            print("cache.upgrade Error: {}".format(error))
+            self.Logger.info("cache.upgrade Error: {}".format(error))
             self.update_cache_error_msg = "{}".format(error)
             return rcu
 
         to_keep = self.cache.keep_count
         changes = self.cache.get_changes()
-        # print(changes)
         if changes:
             changes_available = True
             for package in changes:
@@ -283,14 +285,14 @@ class Package(object):
         rcu["changes_available"] = changes_available
         rcu["cache_error"] = cache_error
 
-        # print("freed_size {}".format(rcu["freed_size"]))
-        # print("download_size {}".format(rcu["download_size"]))
-        # print("install_size {}".format(rcu["install_size"]))
-        print("to_upgrade {}".format(rcu["to_upgrade"]))
-        print("to_install {}".format(rcu["to_install"]))
-        print("to_delete {}".format(rcu["to_delete"]))
-        print("changes_available {}".format(rcu["changes_available"]))
-        print("cache_error {}".format(rcu["cache_error"]))
+        self.Logger.info("freed_size {}".format(rcu["freed_size"]))
+        self.Logger.info("download_size {}".format(rcu["download_size"]))
+        self.Logger.info("install_size {}".format(rcu["install_size"]))
+        self.Logger.info("to_upgrade {}".format(rcu["to_upgrade"]))
+        self.Logger.info("to_install {}".format(rcu["to_install"]))
+        self.Logger.info("to_delete {}".format(rcu["to_delete"]))
+        self.Logger.info("changes_available {}".format(rcu["changes_available"]))
+        self.Logger.info("cache_error {}".format(rcu["cache_error"]))
         return rcu
 
     def required_changes(self, packagenames, sleep=True):
@@ -317,7 +319,7 @@ class Package(object):
             try:
                 package = self.cache[packagename]
             except Exception as e:
-                print("{}".format(e))
+                self.Logger.exception("{}".format(e))
                 return ret
             try:
                 if package.is_installed:
@@ -360,11 +362,11 @@ class Package(object):
         ret["broken"] = broken
         ret["package_broken"] = package_broken
 
-        # print("freed_size {}".format(ret["freed_size"]))
-        # print("download_size {}".format(ret["download_size"]))
-        # print("install_size {}".format(ret["install_size"]))
-        # print("to_install {}".format(ret["to_install"]))
-        # print("to_delete {}".format(ret["to_delete"]))
+        self.Logger.info("freed_size {}".format(ret["freed_size"]))
+        self.Logger.info("download_size {}".format(ret["download_size"]))
+        self.Logger.info("install_size {}".format(ret["install_size"]))
+        self.Logger.info("to_install {}".format(ret["to_install"]))
+        self.Logger.info("to_delete {}".format(ret["to_delete"]))
 
         return ret
 
@@ -386,7 +388,8 @@ class Package(object):
                 else:
                     return False, None, ""
         except Exception as e:
-            print("Error on myapps_remove_details: {}".format(e))
+            self.Logger.warning("Error on myapps_remove_details")
+            self.Logger.exception("{}".format(e))
             return False, None, ""
 
     def get_appname_from_desktopfile(self, desktopname):
@@ -406,7 +409,8 @@ class Package(object):
                 else:
                     return False, ""
         except Exception as e:
-            print("Error on get_appname_from_desktopfile: {}".format(e))
+            self.Logger.warning("Error on get_appname_from_desktopfile")
+            self.Logger.exception("{}".format(e))
             return False, ""
 
     def beauty_size(self, size):
@@ -451,11 +455,11 @@ class Package(object):
                 return True, {"id": id, "name": name, "icon": icon, "description": description,
                               "filename": filename, "keywords": keywords, "executable": executable}
             else:
-                print("parse_desktopfile: {} app not exists".format(desktopfilename))
+                self.Logger.warning("parse_desktopfile: {} app not exists".format(desktopfilename))
                 return False, None
         except Exception as e:
-            print("{}".format(e))
-            print("parse_desktopfile: {} app not exists".format(desktopfilename))
+            self.Logger.exception("{}".format(e))
+            self.Logger.warning("parse_desktopfile: {} app not exists".format(desktopfilename))
             return False, None
 
     def origins(self, packagename):
@@ -476,8 +480,8 @@ class Package(object):
                 if self.cache[pkg.name].has_config_files and not self.cache[pkg.name].is_installed:
                     residual.append(pkg.name)
         except Exception as e:
-            print("Package residual Error: {}".format(e))
-
+            self.Logger.warning("Package residual Error")
+            self.Logger.exception("{}".format(e))
         return residual
 
     def autoremovable(self):
@@ -487,7 +491,7 @@ class Package(object):
                 if self.cache[pkg.name].is_auto_removable:
                     autoremovable.append(pkg.name)
         except Exception as e:
-            print("Package autoremovable Error: {}".format(e))
+            self.Logger.warning("Package autoremovable Error")
         return autoremovable
 
     def upgradable(self):
@@ -498,7 +502,7 @@ class Package(object):
                     upgradable.append(pkg.name)
             upgradable = sorted(upgradable)
         except Exception as e:
-            print("Package upgradable Error: {}".format(e))
+            self.Logger.warning("Package upgradable Error")
         return upgradable
 
     def upgradable_full(self):
@@ -509,18 +513,18 @@ class Package(object):
                     upgradable.append({"name": pkg.name, "summary": self.summary(pkg.name)})
             upgradable = sorted(upgradable, key=lambda x: x["name"])
         except Exception as e:
-            print("Package upgradable Error: {}".format(e))
+            self.Logger.warning("Package upgradable Error")
         return upgradable
 
     def versionCompare(self, version1, version2):
         if version2 == "None" or version2 == "" or version2 is None:
-            print("user version: {} , server version: {}".format(version1, version2))
+            self.Logger.info("user version: {} , server version: {}".format(version1, version2))
             return False
         vc = apt_pkg.version_compare(version1, version2)
         if vc > 0:
-            print("user version: {} > server version: {}".format(version1, version2))
+            self.Logger.info("user version: {} > server version: {}".format(version1, version2))
         elif vc == 0:
-            print("user version: {} == server version: {}".format(version1, version2))
+            self.Logger.info("user version: {} == server version: {}".format(version1, version2))
         elif vc < 0:
-            print("user version: {} < server version: {}".format(version1, version2))
+            self.Logger.info("user version: {} < server version: {}".format(version1, version2))
         return vc

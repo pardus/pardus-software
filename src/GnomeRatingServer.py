@@ -6,19 +6,21 @@ Created on Fri Sep 18 14:53:00 2020
 @author: fatih
 """
 
-import gi
 import json
+
+import gi
 
 gi.require_version("GLib", "2.0")
 gi.require_version('Soup', '2.4')
 from gi.repository import GLib, Gio
+from Logger import Logger
 
 
 class GnomeRatingServer(object):
 
     def __init__(self):
 
-        pass
+        self.Logger = Logger(__name__)
 
     def get(self):
 
@@ -29,7 +31,8 @@ class GnomeRatingServer(object):
         try:
             success, data, etag = ratings_file.load_contents_finish(result)
         except GLib.Error as error:
-            print("GnomeRatingServer _open_stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.warning("GnomeRatingServer _open_stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
             self.gRatingServer(False, None)  # Send to MainWindow
             return False
 

@@ -873,42 +873,6 @@
       <mime-type>image/svg+xml</mime-type>
     </mime-types>
   </object>
-  <object class="GtkAboutDialog" id="aboutdialog">
-    <property name="can-focus">False</property>
-    <property name="icon-name">pardus-software</property>
-    <property name="type-hint">dialog</property>
-    <property name="program-name">Pardus Software Center</property>
-    <property name="version">0.1.0~alpha1</property>
-    <property name="copyright">© 2024 Pardus</property>
-    <property name="comments" translatable="yes">Install, remove, update applications</property>
-    <property name="website">https://github.com/pardus/pardus-software</property>
-    <property name="website-label" translatable="yes">Website</property>
-    <property name="authors">Fatih Altun</property>
-    <property name="translator-credits">Fatih Altun</property>
-    <property name="logo-icon-name">pardus-software</property>
-    <property name="license-type">gpl-3-0</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="backimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -1404,7 +1368,29 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="halign">end</property>
-                                <property name="spacing">7</property>
+                                <property name="spacing">8</property>
+                                <child>
+                                  <object class="GtkButton" id="dActionCancelButton">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="relief">none</property>
+                                    <signal name="clicked" handler="on_dActionCancelButton_clicked" swapped="no"/>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="icon-name">edit-delete-symbolic</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
                                 <child>
                                   <object class="GtkLabel" id="progresstextlabel">
                                     <property name="visible">True</property>
@@ -1414,7 +1400,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">0</property>
+                                    <property name="position">1</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1427,7 +1413,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">1</property>
+                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -3510,7 +3496,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                               <packing>
                                                 <property name="expand">True</property>
                                                 <property name="fill">True</property>
-                                                <property name="position">1</property>
+                                                <property name="position">2</property>
                                               </packing>
                                             </child>
                                           </object>
@@ -7323,12 +7309,35 @@ This application served from Pardus non-free package repositories, so that the O
                                     <property name="can-focus">False</property>
                                     <property name="spacing">13</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="halign">end</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">Clear Cache Files</property>
+                                        <property name="spacing">8</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="halign">end</property>
+                                            <property name="hexpand">True</property>
+                                            <property name="label" translatable="yes">Clear Cache Files</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="ui_cache_size">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -12052,6 +12061,46 @@ Use with caution. Are you sure you want to continue?</property>
               </object>
             </child>
           </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAboutDialog" id="aboutdialog">
+    <property name="can-focus">False</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="icon-name">pardus-software</property>
+    <property name="type-hint">dialog</property>
+    <property name="gravity">center</property>
+    <property name="transient-for">MainWindow</property>
+    <property name="program-name">Pardus Software Center</property>
+    <property name="version">0.1.0~alpha1</property>
+    <property name="copyright">© 2024 Pardus</property>
+    <property name="comments" translatable="yes">Install, remove, update applications</property>
+    <property name="website">https://github.com/pardus/pardus-software</property>
+    <property name="website-label" translatable="yes">Website</property>
+    <property name="authors">Fatih Altun &lt;fatih.altun@pardus.org.tr&gt;</property>
+    <property name="translator-credits" translatable="yes" comments="Name Surname &lt;example@examplemail.com&gt;">translator-credits</property>
+    <property name="artists">Yusuf Düzgün &lt;yusuf.duzgun@pardus.org.tr&gt;</property>
+    <property name="logo-icon-name">pardus-software</property>
+    <property name="license-type">gpl-3-0</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>
