@@ -716,11 +716,9 @@ class MainWindow(object):
         self.imgfullscreen_count = 0
         self.down_image = 0
 
-        self.queuemanager = QueueManager()
+        self.queuemanager = QueueManager(self.Logger)
 
         self.pm = ProcessManager()
-
-        self.last_pid = None
 
         settings = Gtk.Settings.get_default()
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
@@ -813,6 +811,7 @@ class MainWindow(object):
         p1 = threading.Thread(target=self.worker)
         p1.daemon = True
         p1.start()
+
         self.Logger.info("start done")
 
     def getMac(self):
@@ -890,6 +889,7 @@ class MainWindow(object):
         self.setAnimations()
         self.package()
         self.server()
+        self.get_queue()
 
     def aptUpdate(self):
         if self.Server.connection and self.UserSettings.config_aptup:
@@ -1065,8 +1065,6 @@ class MainWindow(object):
             GLib.idle_add(self.updates_button.set_sensitive, False)
 
         self.Logger.info("page setted to normal")
-
-        self.get_queue()
 
     def package(self):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
@@ -6012,22 +6010,21 @@ class MainWindow(object):
         self.actionedcommand = command
         self.actionedappdesktop = self.desktop_file
         self.isinstalled = self.Package.isinstalled(self.actionedappname)
-        #self.last_pid = self.pm.get_last_pid()
 
         if self.isinstalled is True:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Removing"))
                 self.raction.set_label(_(" Removing"))
-            if not self.last_pid:
-                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
-                           self.actionedcommand]
-            else:
-                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "kill", self.last_pid, ";", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
+            if self.pm.get_running_process():
+                self.start_kill_process(["/usr/bin/pkexec", "pkill", "apt"])
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
                            self.actionedcommand]
         elif self.isinstalled is False:
             if ui_appname == appname:
                 self.dActionButton.set_label(_(" Installing"))
                 self.raction.set_label(_(" Installing"))
+            if self.pm.get_running_process():
+                self.start_kill_process(["/usr/bin/pkexec", "pkill", "apt"])
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedcommand]
             packagelist = self.actionedcommand.split(" ")
@@ -6162,10 +6159,6 @@ class MainWindow(object):
         elif "pardus-software-i386-start" in line:
             self.progresstextlabel.set_text(
                 "{} | {}".format(self.actionedappname, _("i386 activating")))
-
-        proc = self.pm.get_running_process()
-        if proc:
-            self.pm.write_last_pid(proc.pid)
             
         return True
 
@@ -6872,9 +6865,11 @@ class MainWindow(object):
     def get_queue(self):
         queue = self.queuemanager.load()
         isFirst = True
+        firstappname = ""
         for proc in queue:
             if isFirst:
                 self.appname, self.command = (proc['name'], proc['command'])
+                firstappname = self.appname
                 self.bottomstack.set_visible_child_name("queue")
                 self.bottomrevealer.set_reveal_child(True)
                 self.queuestack.set_visible_child_name("inprogress")
@@ -6889,7 +6884,8 @@ class MainWindow(object):
                 isFirst = False
                 self.Logger.info(f"{self.appname} added to queue from tmp file")
             else:
-                name, command = (proc['name'], proc['command'])
-                self.queue.append({"name": name, "command": command})
+                self.appname, command = (proc['name'], proc['command'])
+                self.queue.append({"name": self.appname, "command": command})
                 self.addtoQueue(self.appname)
-                self.Logger.info(f"{name} added to queue from tmp file")
+                self.appname = firstappname
+                self.Logger.info(f"{self.appname} added to queue from tmp file")
