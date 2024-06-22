@@ -15,17 +15,24 @@ import apt
 import apt_pkg
 import psutil
 
-
 def main():
     def control_lock():
+        try_count = 0
+        success_locked = True
         apt_pkg.init_system()
-        try:
-            apt_pkg.pkgsystem_lock()
-        except SystemError as e:
-            print(e, file=sys.stderr)
-            return False
+        while try_count < 5:
+            try:
+                apt_pkg.pkgsystem_lock()
+                success_locked = True
+            except SystemError as e:
+                print(e, file=sys.stderr)
+                success_locked = False
+            if success_locked:
+                break
+            try_count += 1
+            time.sleep(0.2)
         apt_pkg.pkgsystem_unlock()
-        return True
+        return success_locked
 
     def install(packages):
         packagelist = packages.split(" ")
