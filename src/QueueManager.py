@@ -1,17 +1,25 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 2 12:55:00 2024
+
+@author: bariscodefxy
+"""
 import os
 
 class QueueManager:
 
-	def __init__(self):
+	def __init__(self, Logger):
+		self.Logger = Logger
 		self.tmpfile = "/tmp/pardus-software-queue.tmp"
+		self.separator = "|"
 
 	def save(self, queue):
 		with open(self.tmpfile, "w") as file:
 			data = ""
 			for proc in queue:
-				data += proc['name'] + "|" + proc['command'] + "\n"
+				data += proc['name'] + self.separator + proc['command'] + "\n"
 			file.write(data)
-			print(data)
+			self.Logger.info(data)
 
 	def load(self):
 		queue = []
@@ -21,6 +29,6 @@ class QueueManager:
 				for proc in data:
 					if not proc: # do not include empty strings
 						continue
-					name, command = proc.split('|')
+					name, command = proc.split(self.separator)
 					queue.append({"name": name, "command": command})
 		return queue
