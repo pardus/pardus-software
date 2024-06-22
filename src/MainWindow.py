@@ -6887,9 +6887,9 @@ class MainWindow(object):
                     self.inprogress = True
                     print("action " + self.appname)
                 isFirst = False
-                print(f"{self.appname} added to queue from tmp file")
+                self.Logger.info(f"{self.appname} added to queue from tmp file")
             else:
                 name, command = (proc['name'], proc['command'])
                 self.queue.append({"name": name, "command": command})
                 self.addtoQueue(self.appname)
-                print(f"{name} added to queue from tmp file")
+                self.Logger.info(f"{name} added to queue from tmp file")
