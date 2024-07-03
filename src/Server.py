@@ -11,7 +11,6 @@ import tarfile
 from hashlib import md5
 from pathlib import Path
 from shutil import rmtree
-import os
 
 import gi
 
@@ -46,9 +45,9 @@ class Server(object):
         self.configdir = "{}/pardus-software/".format(GLib.get_user_config_dir())
 
         # The following cache and config assignments are for the new version
-        if not os.path.exists(self.cachedir):
+        if not Path(self.cachedir).exists():
             self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
-        if not os.path.exists(self.configdir):
+        if not Path(self.configdir).exists():
             self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
         self.error_message = ""
