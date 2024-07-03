@@ -35,9 +35,9 @@ class UserSettings(object):
         self.cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
         self.configdir = "{}/pardus-software/".format(GLib.get_user_config_dir())
 
-        if not os.path.exists(self.cachedir):
+        if not Path(self.cachedir).exists():
             self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
-        if not os.path.exists(self.configdir):
+        if not Path(self.configdir).exists():
             self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
         self.configfile = "settings.ini"
