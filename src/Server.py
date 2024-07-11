@@ -226,6 +226,7 @@ class Server(object):
     def deleteCache(self):
         try:
             rmtree(self.cachedir)
+            self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
             self.createDir(self.cachedir)
             self.Logger.info("{} removed".format(self.cachedir))
             return True, ""

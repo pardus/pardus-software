@@ -5177,8 +5177,8 @@ class MainWindow(object):
         self.set_cache_size()
 
     def set_cache_size(self):
-        cache_size = self.Utils.get_path_size(self.UserSettings.cachedir)
-        self.Logger.info("{} : {} bytes".format(self.UserSettings.cachedir, cache_size))
+        cache_size = self.Utils.get_path_size(self.Server.cachedir)
+        self.Logger.info("{} : {} bytes".format(self.Server.cachedir, cache_size))
         self.ui_cache_size.set_text("({})".format(self.Package.beauty_size(cache_size)))
 
     def control_groups(self):
