@@ -1,3 +1,73 @@
+pardus-software (0.8.0) unstable; urgency=medium
+
+  [ bariscodefxy ]
+  * sometimes menu back button couldn't work is fixed
+  * back button: refix
+  * fixed all prefback issues
+
+  [ Fatih Altun ]
+  * Update some controls of back button
+  * Update apps filter ui, Add show not installed apps too
+
+  [ Othamae ]
+  * Added Spanish translation
+  * Updated comments
+  * Added "es" in langs variable.
+
+  [ Fatih Altun ]
+  * Add headerbar control for about dialog
+  * Add i386 activation for i386 dependent packages
+  * Fix typo
+  * Update pot file
+  * Update Turkish translations
+  * Update i386 control apps
+  * Update transient and some default values of about window
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+
+  [ Fatih Altun ]
+  * Add process cancel ability while package download
+  * Fix translators structure
+  * Update pot file
+  * Update Turkish translations
+  * Fix charset on es.po
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+
+  [ Fatih Altun ]
+  * Add desktop env and session type to distro info
+  * Add Utils.py to setup.py
+  * Add logger
+  * Add Logger.py to setup.py
+  * Fix typo
+  * Add logger encoding exeption for old versions
+  * Fix deprecated distro.linux_distribution
+  * Add cache size info
+  * Fix typo
+  * Reformat code
+
+  [ Hugo Carvalho ]
+  * Update tr.org.pardus.software.desktop
+
+  [ Fatih Altun ]
+  * Fix some typos
+
+  [ Ali Riza KESKIN ]
+  * fix kde wayland wrong icon issue
+
+  [ Fatih Altun ]
+  * Use GLib for get user cache config dirs, Closes #33
+
+  [ Edip ]
+  * Update config and cache directory path (#34)
+
+  [ Fatih Altun ]
+  * Use GLib user cache path on logger too
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 16 Jul 2024 12:38:35 +0300
+
 pardus-software (0.7.5) unstable; urgency=medium
 
   [ Fatih Altun ]
