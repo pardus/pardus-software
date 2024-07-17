@@ -6016,7 +6016,7 @@ class MainWindow(object):
                 self.dActionButton.set_label(_(" Removing"))
                 self.raction.set_label(_(" Removing"))
             if self.pm.get_running_process():
-                self.start_kill_process(["/usr/bin/pkexec", "pkill", "apt"])
+                self.start_kill_process(["/usr/bin/pkill", "apt"])
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
                            self.actionedcommand]
         elif self.isinstalled is False:
@@ -6024,7 +6024,7 @@ class MainWindow(object):
                 self.dActionButton.set_label(_(" Installing"))
                 self.raction.set_label(_(" Installing"))
             if self.pm.get_running_process():
-                self.start_kill_process(["/usr/bin/pkexec", "pkill", "apt"])
+                self.start_kill_process(["/usr/bin/pkill", "apt"])
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.actionedcommand]
             packagelist = self.actionedcommand.split(" ")
