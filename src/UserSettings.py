@@ -10,7 +10,10 @@ import configparser
 from pathlib import Path
 
 import distro
+import gi
 
+gi.require_version("GLib", "2.0")
+from gi.repository import GLib
 from Logger import Logger
 
 
@@ -23,10 +26,20 @@ class UserSettings(object):
             self.usercodename = self.usercodename + self.userdistroversion
         self.userdistro = ", ".join(filter(bool, (distro.name(), distro.version(), distro.codename())))
 
-        userhome = str(Path.home())
-        self.username = userhome.rsplit("/", maxsplit=1)[-1]
+        self.username = GLib.get_user_name()
+        self.user_real_name = GLib.get_real_name()
 
-        self.configdir = userhome + "/.config/pardus-software/"
+        if self.user_real_name == "" or self.user_real_name == "Unknown":
+            self.user_real_name = self.username
+
+        self.cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
+        self.configdir = "{}/pardus-software/".format(GLib.get_user_config_dir())
+
+        if not Path(self.cachedir).exists():
+            self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
+        if not Path(self.configdir).exists():
+            self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
+
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser(strict=False)
         self.config_usi = None
@@ -40,8 +53,6 @@ class UserSettings(object):
         self.config_lastaptup = None
         self.config_forceaptuptime = None
         self.config_savequeue = None
-
-        self.cachedir = userhome + "/.cache/pardus-software/"
 
         self.Logger = Logger(__name__)
 

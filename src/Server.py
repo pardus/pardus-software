@@ -40,13 +40,15 @@ class Server(object):
         self.serversettings = "/api/v2/settings"
         self.settingsfile = "serversettings.ini"
 
-        userhome = str(Path.home())
-        try:
-            self.username = userhome.split("/")[-1]
-        except:
-            self.username = ""
-        self.cachedir = userhome + "/.cache/pardus-software/"
-        self.configdir = userhome + "/.config/pardus-software/"
+        # The following cache and config assignments are for backward compatibility
+        self.cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
+        self.configdir = "{}/pardus-software/".format(GLib.get_user_config_dir())
+
+        # The following cache and config assignments are for the new version
+        if not Path(self.cachedir).exists():
+            self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
+        if not Path(self.configdir).exists():
+            self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
         self.error_message = ""
         self.connection = False
@@ -224,6 +226,7 @@ class Server(object):
     def deleteCache(self):
         try:
             rmtree(self.cachedir)
+            self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
             self.createDir(self.cachedir)
             self.Logger.info("{} removed".format(self.cachedir))
             return True, ""

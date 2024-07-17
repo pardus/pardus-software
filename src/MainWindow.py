@@ -2394,7 +2394,7 @@ class MainWindow(object):
         self.wpcformcontrolLabel.set_visible(False)
         self.wpcformcontrolLabel.set_text("")
         self.wpcresultLabel.set_text("")
-        self.wpcAuthor.set_text(self.Server.username)
+        self.wpcAuthor.set_text(self.UserSettings.user_real_name)
         start, end = self.wpcComment.get_buffer().get_bounds()
         self.wpcComment.get_buffer().delete(start, end)
         self.wpcSendButton.set_sensitive(True)
@@ -3714,9 +3714,9 @@ class MainWindow(object):
             version = self.Package.installed_version(self.appname)
             if version is None:
                 version = ""
-            dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1], "author": self.Server.username,
-                   "installed": installed, "comment": "", "appversion": version, "distro": self.user_distro_full,
-                   "justrate": True}
+            dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1],
+                   "author": self.UserSettings.user_real_name, "installed": installed, "comment": "",
+                   "appversion": version, "distro": self.user_distro_full, "justrate": True}
             self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
         else:
             self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
@@ -5189,8 +5189,8 @@ class MainWindow(object):
         self.set_cache_size()
 
     def set_cache_size(self):
-        cache_size = self.Utils.get_path_size(self.UserSettings.cachedir)
-        self.Logger.info("{} : {} bytes".format(self.UserSettings.cachedir, cache_size))
+        cache_size = self.Utils.get_path_size(self.Server.cachedir)
+        self.Logger.info("{} : {} bytes".format(self.Server.cachedir, cache_size))
         self.ui_cache_size.set_text("({})".format(self.Package.beauty_size(cache_size)))
 
     def control_groups(self):
