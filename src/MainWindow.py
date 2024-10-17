@@ -720,7 +720,7 @@ class MainWindow(object):
         cssProvider = Gtk.CssProvider()
         if theme_name.startswith("pardus") or theme_name.startswith("adwaita"):
             cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/all.css")
-        elif theme_name.startswith("adw-gtk3"):
+        elif theme_name.startswith("adw-gtk3") or theme_name.startswith("eta"):
             cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/adw.css")
         else:
             cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/base.css")
