@@ -681,7 +681,8 @@ class MainWindow(object):
         self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
                                    "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop",
                                    "eta-gnome-desktop", "eta-nonhid-gnome-desktop", "eta-gnome-desktop-other",
-                                   "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session"]
+                                   "eta-nonhid-gnome-desktop-other", "xfce4-session", "gnome-session",
+                                   "cinnamon", "cinnamon-session", "cinnamon-desktop-data", "eta-desktop"]
 
         self.i386_packages = ["wine"]
 
