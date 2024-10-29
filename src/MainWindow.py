@@ -3255,46 +3255,61 @@ class MainWindow(object):
                 for comment in comments:
                     self.setPardusCommentStar(comment["value"])
 
-                    label_author = Gtk.Label.new()
-                    label_author.set_markup("<b>{}</b>".format(comment["author"]))
-                    label_date = Gtk.Label.new()
-                    label_date.set_markup("{}".format(comment["date"]))
-
-                    box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                    box1.pack_start(self.cs1, False, True, 0)
-                    box1.pack_start(self.cs2, False, True, 0)
-                    box1.pack_start(self.cs3, False, True, 0)
-                    box1.pack_start(self.cs4, False, True, 0)
-                    box1.pack_start(self.cs5, False, True, 0)
-                    box1.pack_start(label_author, False, True, 10)
-                    box1.pack_end(label_date, False, True, 3)
-
-                    label_comment = Gtk.Label.new()
-                    label_comment.set_text("{}".format(comment["comment"]))
-                    label_comment.set_selectable(True)
-                    label_comment.set_line_wrap(True)
-                    label_comment.set_line_wrap_mode(2)  # WORD_CHAR
-
-                    box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                    box2.pack_start(label_comment, False, True, 0)
-
-                    hsep = Gtk.HSeparator.new()
-
-                    self.box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
-                    self.box.pack_start(box1, False, True, 5)
-                    self.box.pack_start(box2, False, True, 5)
-                    self.box.pack_start(hsep, False, True, 0)
-
                     if comment["distro"] is None or comment["distro"] == "":
                         comment["distro"] = _("unknown")
 
                     if comment["appversion"] is None or comment["appversion"] == "":
                         comment["appversion"] = _("unknown")
 
-                    self.box.set_tooltip_markup("<b>{}</b> : {}\n<b>{}</b> : {}".format(
-                        _("Distro"), comment["distro"], _("App Version"), comment["appversion"]))
+                    label_author = Gtk.Label.new()
+                    label_author.set_markup("<b>{}</b>".format(comment["author"]))
+                    label_author.set_selectable(True)
 
-                    self.PardusCommentListBox.add(self.box)
+                    label_date = Gtk.Label.new()
+                    label_date.set_markup("{}".format(comment["date"]))
+                    label_date.set_selectable(True)
+
+                    label_distro = Gtk.Label.new()
+                    label_distro.set_markup("<small>{}: {}</small>".format(_("Distro"), comment["distro"]))
+                    label_distro.set_selectable(True)
+                    label_distro.props.halign = Gtk.Align.START
+
+                    label_appversion = Gtk.Label.new()
+                    label_appversion.set_markup("<small>{}: {}</small>".format(_("App Version"), comment["appversion"]))
+                    label_appversion.set_selectable(True)
+                    label_appversion.props.halign = Gtk.Align.START
+
+                    hbox_top = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                    hbox_top.set_margin_top(8)
+                    hbox_top.pack_start(self.cs1, False, False, 0)
+                    hbox_top.pack_start(self.cs2, False, False, 0)
+                    hbox_top.pack_start(self.cs3, False, False, 0)
+                    hbox_top.pack_start(self.cs4, False, False, 0)
+                    hbox_top.pack_start(self.cs5, False, False, 0)
+                    hbox_top.pack_start(label_author, False, False, 8)
+                    hbox_top.pack_end(label_date, False, False, 0)
+
+                    label_comment = Gtk.Label.new()
+                    label_comment.set_text("{}".format(comment["comment"]))
+                    label_comment.set_selectable(True)
+                    label_comment.set_line_wrap(True)
+                    label_comment.set_line_wrap_mode(2)  # WORD_CHAR
+                    label_comment.props.halign = Gtk.Align.START
+
+                    sep = Gtk.VSeparator.new()
+                    sep.set_margin_top(8)
+
+                    main_vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 8)
+                    main_vbox.pack_start(hbox_top, False, False, 0)
+                    main_vbox.pack_start(label_distro, False, False, 0)
+                    main_vbox.pack_start(label_appversion, False, False, 0)
+                    main_vbox.pack_start(label_comment, False, False, 0)
+                    main_vbox.pack_start(sep, False, False, 0)
+
+                    row = Gtk.ListBoxRow()
+                    row.add(main_vbox)
+
+                    self.PardusCommentListBox.add(row)
 
                 self.PardusCommentListBox.show_all()
 
