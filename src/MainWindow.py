@@ -3623,39 +3623,64 @@ class MainWindow(object):
                 else:
                     self.gcMoreButtonEN.set_visible(False)
             for comment in comments:
-                if "rating" and "user_display" and "date_created" and "summary" and "description" in comment:
+                if "rating" and "user_display" and "date_created" and "summary" and "description" and "distro" and "version" in comment:
                     if self.isCommentClean(comment["summary"]) and self.isCommentClean(
                             comment["description"]) and self.isCommentClean(comment["user_display"]):
                         self.setGnomeCommentStar(comment["rating"] / 20)
-                        label1 = Gtk.Label.new()
-                        label1.set_markup("<b>" + str(comment["user_display"]) + "</b>")
-                        labeldate = Gtk.Label.new()
-                        labeldate.set_text(str(datetime.fromtimestamp(comment["date_created"])))
-                        box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                        box1.pack_start(self.gcs1, False, True, 0)
-                        box1.pack_start(self.gcs2, False, True, 0)
-                        box1.pack_start(self.gcs3, False, True, 0)
-                        box1.pack_start(self.gcs4, False, True, 0)
-                        box1.pack_start(self.gcs5, False, True, 0)
-                        box1.pack_start(label1, False, True, 10)
-                        box1.pack_end(labeldate, False, True, 0)
-                        label2 = Gtk.Label.new()
-                        label2.set_text(str(comment["summary"]) + "\n" + str(comment["description"]))
-                        label2.set_selectable(True)
-                        label2.set_line_wrap(True)
-                        label2.set_line_wrap_mode(2)  # WORD_CHAR
-                        box2 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                        box2.pack_start(label2, False, True, 0)
-                        hsep = Gtk.HSeparator.new()
-                        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
-                        box.pack_start(box1, False, True, 5)
-                        box.pack_start(box2, False, True, 5)
-                        box.pack_start(hsep, False, True, 0)
+
+                        label_author = Gtk.Label.new()
+                        label_author.set_markup("<b>{}</b>".format(comment["user_display"]))
+                        label_author.set_selectable(True)
+
+                        label_date = Gtk.Label.new()
+                        label_date.set_markup("{}".format(datetime.fromtimestamp(comment["date_created"])))
+                        label_date.set_selectable(True)
+
+                        label_distro = Gtk.Label.new()
+                        label_distro.set_markup("<small>{}: {}</small>".format(_("Distro"), comment["distro"]))
+                        label_distro.set_selectable(True)
+                        label_distro.props.halign = Gtk.Align.START
+
+                        label_appversion = Gtk.Label.new()
+                        label_appversion.set_markup(
+                            "<small>{}: {}</small>".format(_("App Version"), comment["version"]))
+                        label_appversion.set_selectable(True)
+                        label_appversion.props.halign = Gtk.Align.START
+
+                        hbox_top = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                        hbox_top.set_margin_top(8)
+                        hbox_top.pack_start(self.gcs1, False, False, 0)
+                        hbox_top.pack_start(self.gcs2, False, False, 0)
+                        hbox_top.pack_start(self.gcs3, False, False, 0)
+                        hbox_top.pack_start(self.gcs4, False, False, 0)
+                        hbox_top.pack_start(self.gcs5, False, False, 0)
+                        hbox_top.pack_start(label_author, False, False, 8)
+                        hbox_top.pack_end(label_date, False, False, 0)
+
+                        label_comment = Gtk.Label.new()
+                        label_comment.set_text("{}\n{}".format(comment["summary"], comment["description"]))
+                        label_comment.set_selectable(True)
+                        label_comment.set_line_wrap(True)
+                        label_comment.set_line_wrap_mode(2)  # WORD_CHAR
+                        label_comment.props.halign = Gtk.Align.START
+
+                        sep = Gtk.VSeparator.new()
+                        sep.set_margin_top(8)
+
+                        main_vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 8)
+                        main_vbox.pack_start(hbox_top, False, False, 0)
+                        main_vbox.pack_start(label_distro, False, False, 0)
+                        main_vbox.pack_start(label_appversion, False, False, 0)
+                        main_vbox.pack_start(label_comment, False, False, 0)
+                        main_vbox.pack_start(sep, False, False, 0)
+
+                        row = Gtk.ListBoxRow()
+                        row.add(main_vbox)
 
                         if lang == "tr":
-                            self.GnomeCommentListBoxTR.add(box)
+                            self.GnomeCommentListBoxTR.add(row)
                         elif lang == "en":
-                            self.GnomeCommentListBoxEN.add(box)
+                            self.GnomeCommentListBoxEN.add(row)
                     else:
                         try:
                             self.Logger.info("Comment is not clean, app_id: {}, review_id : {}".format(
