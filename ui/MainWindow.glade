@@ -1297,7 +1297,7 @@ so that the OS has nothing to do with the health of the application.</property>
                     <property name="can-focus">False</property>
                     <property name="margin-top">8</property>
                     <property name="margin-bottom">8</property>
-                    <property name="label">TÜBİTAK ULAKBİM | 2024</property>
+                    <property name="label">© TÜBİTAK BİLGEM</property>
                     <attributes>
                       <attribute name="weight" value="thin"/>
                     </attributes>
@@ -8755,7 +8755,7 @@ Use with caution. Are you sure you want to continue?</property>
                                         <property name="can-focus">False</property>
                                         <property name="margin-top">8</property>
                                         <property name="margin-bottom">8</property>
-                                        <property name="label">TÜBİTAK ULAKBİM | 2023</property>
+                                        <property name="label">© TÜBİTAK BİLGEM</property>
                                         <attributes>
                                           <attribute name="weight" value="thin"/>
                                         </attributes>
@@ -12011,7 +12011,7 @@ Use with caution. Are you sure you want to continue?</property>
     <property name="transient-for">MainWindow</property>
     <property name="program-name">Pardus Software Center</property>
     <property name="version">0.1.0~alpha1</property>
-    <property name="copyright">© 2024 Pardus</property>
+    <property name="copyright">© Pardus</property>
     <property name="comments" translatable="yes">Install, remove, update applications</property>
     <property name="website">https://github.com/pardus/pardus-software</property>
     <property name="website-label" translatable="yes">Website</property>
