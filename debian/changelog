@@ -1,3 +1,18 @@
+pardus-software (0.8.2) unstable; urgency=medium
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+
+  [ Fatih Altun ]
+  * Update important_packages list
+  * Add eta to css theme control
+  * Update pardus comments ui
+  * Update gnome comments ui
+  * Update copyright
+  * Update copyright
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 28 Nov 2024 17:35:47 +0300
+
 pardus-software (0.8.1) unstable; urgency=medium
 
   * Add new static sources for new etap and pardus codenames
