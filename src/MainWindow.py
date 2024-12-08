@@ -47,6 +47,11 @@ from Utils import Utils
 from Logger import Logger
 
 class MainWindow(object):
+    def __getattr__(self, name):
+        # return object if exists
+        if self.GtkBuilder.get_object(name):
+            return self.GtkBuilder.get_object(name)
+
     def __init__(self, application):
         self.Application = application
 
