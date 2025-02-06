@@ -1935,8 +1935,8 @@ class MainWindow(object):
                 self.LastAddedFlowBox.get_style_context().add_class("pardus-software-flowbox")
                 GLib.idle_add(self.LastAddedFlowBox.insert, listbox, GLib.PRIORITY_DEFAULT_IDLE)
 
-            self.hometotaldc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["downcount"]))
-            self.hometotalrc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["ratecount"]))
+            # self.hometotaldc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["downcount"]))
+            # self.hometotalrc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["ratecount"]))
 
         GLib.idle_add(self.MostDownFlowBox.show_all)
         GLib.idle_add(self.MostRateFlowBox.show_all)
