@@ -427,7 +427,7 @@ class Package(object):
             name = app.get_name()
             executable = app.get_executable()
             nodisplay = app.get_nodisplay()
-            icon = app.get_string('Icon')
+            icon = "{}".format(app.get_string('Icon'))
             description = app.get_description() or app.get_generic_name() or app.get_name()
             filename = app.get_filename()
             keywords = " ".join(app.get_keywords())

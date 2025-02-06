@@ -7,3 +7,32 @@
     background-color:transparent;
 }
 */
+
+
+/*
+.pardus-software-listbox{
+    background-color:alpha(@unfocused_borders, 0.3);
+}
+
+list row:hover{
+    background-color:alpha(@unfocused_borders, 0.5);;
+
+}
+
+list row {
+    margin: 0px;
+}*/
+
+
+.pardus-software-listbox{
+    background-color:alpha(@unfocused_borders, 0.3);
+}
+
+.pardus-software-listbox row:hover{
+    background-color:alpha(@unfocused_borders, 0.5);;
+
+}
+
+.pardus-software-listbox row {
+    margin: 0px;
+}

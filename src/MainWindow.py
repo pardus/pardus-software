@@ -452,9 +452,13 @@ class MainWindow(object):
 
         self.ui_myapp_to_store_button = self.GtkBuilder.get_object("ui_myapp_to_store_button")
 
-        self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
-        self.PardusAppsIconView.set_pixbuf_column(0)
-        self.PardusAppsIconView.set_text_column(3)
+        # self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
+        # self.PardusAppsIconView.set_pixbuf_column(0)
+        # self.PardusAppsIconView.set_text_column(3)
+
+        self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
+
+        self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
 
         self.EditorAppsIconView = self.GtkBuilder.get_object("EditorAppsIconView")
         self.EditorAppsIconView.set_pixbuf_column(0)
@@ -588,8 +592,8 @@ class MainWindow(object):
 
         self.store_button_clicked = False
 
-        self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
-        self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
+        # self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
+        # self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
 
         self.dImage1 = self.GtkBuilder.get_object("dImage1")
         self.dImage2 = self.GtkBuilder.get_object("dImage2")
@@ -1474,32 +1478,126 @@ class MainWindow(object):
             self.Logger.info("gnomeratings not successful")
 
     def setPardusApps(self):
-        GLib.idle_add(self.PardusAppListStore.clear)
+        for row in self.ui_pardusapps_flowbox:
+            self.ui_pardusapps_flowbox.remove(row)
         if self.Server.connection:
             for app in self.applist:
-                if self.UserSettings.config_usi:
-                    appicon = self.getServerAppIcon(app["name"])
+
+                if os.path.isfile("{}appicons/{}.svg".format(self.Server.cachedir, app["name"])):
+
+                    info = GdkPixbuf.Pixbuf.get_file_info("{}appicons/{}.svg".format(self.Server.cachedir, app["name"]))
+
+                    if info.width == 64 and info.height == 64:
+                        app_icon = Gtk.Image.new_from_file("{}appicons/{}.svg".format(self.Server.cachedir, app["name"]))
+                    else:
+                        print("{} icon size: {}x{}".format(app["name"], info.width, info.height))
+                        px = GdkPixbuf.Pixbuf.new_from_file_at_scale("{}appicons/{}.svg".format(self.Server.cachedir, app["name"]), 64, 64, True)
+                        app_icon = Gtk.Image.new_from_pixbuf(px)
+
                 else:
-                    appicon = self.getSystemAppIcon(app["name"])
-                appname = app['name']
+                    app_icon = Gtk.Image.new_from_icon_name(app["name"], 64)
+                app_icon.set_pixel_size(64)
+
                 prettyname = app["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
                     prettyname = app["prettyname"]["en"]
-                category = ""
-                for i in app["category"]:
-                    category += i[self.locale] + ","
-                category = category.rstrip(",")
-                categorynumber = self.get_category_number(category)
-                subcategory = ""
-                if "subcategory" in app.keys():
-                    for i in app["subcategory"]:
-                        subcategory += i[self.locale].lower() + ","
-                    subcategory = subcategory.rstrip(",")
-                GLib.idle_add(self.addToPardusApps,
-                              [appicon, appname, categorynumber, prettyname, category, subcategory])
 
-    def addToPardusApps(self, list):
-        self.PardusAppListStore.append(list)
+                app_name = Gtk.Label.new()
+                app_name.set_markup("<b>{}</b>".format(prettyname))
+                app_name.set_line_wrap(False)
+                app_name.set_justify(Gtk.Justification.LEFT)
+                app_name.set_max_width_chars(21)
+                app_name.set_ellipsize(Pango.EllipsizeMode.END)
+                app_name.props.valign = Gtk.Align.START
+                app_name.props.halign = Gtk.Align.START
+
+
+                down_icon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
+                down_icon.set_pixel_size(12)
+
+                down_label = Gtk.Label.new()
+                down_label.set_markup("<small>{}</small>".format(app["download"]))
+
+
+                rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
+                rate_icon.set_pixel_size(12)
+
+                rate_label = Gtk.Label.new()
+                rate_label.set_markup("<small>{:.1f}</small>".format(float(app["rate_average"])))
+
+
+                box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+                box_stats.pack_start(down_icon, False, True, 0)
+                box_stats.pack_start(down_label, False, True, 0)
+                box_stats.pack_start(rate_icon, False, True, 5)
+                box_stats.pack_start(rate_label, False, True, 0)
+                box_stats.props.valign = Gtk.Align.END
+
+
+
+                box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+                box_right.pack_start(app_name, False, True, 0)
+                box_right.pack_end(box_stats, False, True, 0)
+                box_right.set_margin_top(3)
+                box_right.set_margin_bottom(3)
+                box_right.set_spacing(5)
+
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                box.pack_start(app_icon, False, True, 0)
+                box.pack_start(box_right, False, True, 0)
+                box.set_margin_start(8)
+                box.set_margin_end(8)
+                box.set_margin_top(8)
+                box.set_margin_bottom(8)
+                box.set_spacing(8)
+
+
+                listbox = Gtk.ListBox.new()
+                listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+                listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
+                listbox.name = app
+                listbox.get_style_context().add_class("pardus-software-listbox")
+                GLib.idle_add(listbox.add, box)
+
+                GLib.idle_add(self.ui_pardusapps_flowbox.insert, listbox, -1)
+
+            GLib.idle_add(self.ui_pardusapps_flowbox.show_all)
+
+    #             if self.UserSettings.config_usi:
+    #                 appicon = self.getServerAppIcon(app["name"])
+    #             else:
+    #                 appicon = self.getSystemAppIcon(app["name"])
+    #             appname = app['name']
+    #             prettyname = app["prettyname"][self.locale]
+    #             if prettyname == "" or prettyname is None:
+    #                 prettyname = app["prettyname"]["en"]
+    #             category = ""
+    #             for i in app["category"]:
+    #                 category += i[self.locale] + ","
+    #             category = category.rstrip(",")
+    #             categorynumber = self.get_category_number(category)
+    #             subcategory = ""
+    #             if "subcategory" in app.keys():
+    #                 for i in app["subcategory"]:
+    #                     subcategory += i[self.locale].lower() + ","
+    #                 subcategory = subcategory.rstrip(",")
+    #             GLib.idle_add(self.addToPardusApps,
+    #                           [appicon, appname, categorynumber, prettyname, category, subcategory])
+
+
+    # def addToPardusApps(self, list):
+    #     self.PardusAppListStore.append(list)
+
+
+    def on_pardus_apps_listbox_released(self, widget, event, listbox):
+        # print(listbox.name)
+        if event.button == 3:
+            print(f"Right clicked: {listbox.name}")
+
+    def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
+        print(f"Left clicked: {child.get_children()[0].name}")
+        GLib.idle_add(flowbox.unselect_all)
+
 
     def setPardusCategories(self):
         self.HomeCategoryFlowBox.foreach(lambda child: self.HomeCategoryFlowBox.remove(child))
@@ -1620,7 +1718,8 @@ class MainWindow(object):
             self.ui_showappcount_label.set_visible(True)
             self.sortPardusAppsCombo.set_visible(True)
             self.pardusAppsStack.set_visible_child_name("normal")
-            self.PardusCategoryFilter.refilter()
+            # self.PardusCategoryFilter.refilter()
+            self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
 
     def setEditorApps(self):
@@ -1706,13 +1805,13 @@ class MainWindow(object):
                 listbox.get_style_context().add_class("pardus-software-listbox")
                 listbox.add(box)
 
-                frame = Gtk.Frame.new()
-                frame.get_style_context().add_class("pardus-software-frame")
-                frame.add(listbox)
+                # frame = Gtk.Frame.new()
+                # frame.get_style_context().add_class("pardus-software-frame")
+                # frame.add(listbox)
 
                 self.MostDownFlowBox.get_style_context().add_class("pardus-software-flowbox")
 
-                GLib.idle_add(self.MostDownFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+                GLib.idle_add(self.MostDownFlowBox.insert, listbox, GLib.PRIORITY_DEFAULT_IDLE)
 
             for mra in self.Server.mostrateapplist:
                 icon = Gtk.Image.new()
@@ -1768,12 +1867,12 @@ class MainWindow(object):
                 listbox.get_style_context().add_class("pardus-software-listbox")
                 listbox.add(box)
 
-                frame = Gtk.Frame.new()
-                frame.get_style_context().add_class("pardus-software-frame")
-                frame.add(listbox)
+                # frame = Gtk.Frame.new()
+                # frame.get_style_context().add_class("pardus-software-frame")
+                # frame.add(listbox)
 
                 self.MostRateFlowBox.get_style_context().add_class("pardus-software-flowbox")
-                GLib.idle_add(self.MostRateFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+                GLib.idle_add(self.MostRateFlowBox.insert, listbox, GLib.PRIORITY_DEFAULT_IDLE)
 
             for la in self.Server.lastaddedapplist:
                 icon = Gtk.Image.new()
@@ -1829,12 +1928,12 @@ class MainWindow(object):
                 listbox.get_style_context().add_class("pardus-software-listbox")
                 listbox.add(box)
 
-                frame = Gtk.Frame.new()
-                frame.get_style_context().add_class("pardus-software-frame")
-                frame.add(listbox)
+                # frame = Gtk.Frame.new()
+                # frame.get_style_context().add_class("pardus-software-frame")
+                # frame.add(listbox)
 
                 self.LastAddedFlowBox.get_style_context().add_class("pardus-software-flowbox")
-                GLib.idle_add(self.LastAddedFlowBox.insert, frame, GLib.PRIORITY_DEFAULT_IDLE)
+                GLib.idle_add(self.LastAddedFlowBox.insert, listbox, GLib.PRIORITY_DEFAULT_IDLE)
 
             self.hometotaldc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["downcount"]))
             self.hometotalrc.set_markup("<small>{}</small>".format(self.Server.totalstatistics[0]["ratecount"]))
@@ -3949,7 +4048,78 @@ class MainWindow(object):
         else:
             self.Logger.info("wpc star error")
 
-    def PardusCategoryFilterFunction(self, model, iteration, data):
+    # def PardusCategoryFilterFunction(self, model, iteration, data):
+    #     def control_show_filter(show_all, show_installed, app_name=""):
+    #         if show_all:
+    #             return True
+    #         else:
+    #             if show_installed:
+    #                 return self.Package.isinstalled(app_name)
+    #             else:
+    #                 return not self.Package.isinstalled(app_name)
+    #
+    #     search_entry_text = self.pardus_searchentry.get_text()
+    #     categorynumber = int(model[iteration][2])
+    #     category = list(model[iteration][4].split(","))
+    #     subcategory = list(model[iteration][5].split(","))
+    #     # category = model[iteration][4]
+    #     appname = model[iteration][1]
+    #     # showinstalled = self.pardusicb.get_active()
+    #     pn_en = ""
+    #     pn_tr = ""
+    #     desc_en = ""
+    #     desc_tr = ""
+    #
+    #     showall = True
+    #     showinstalled = None
+    #
+    #     if self.ui_showall_button.get_active():
+    #         showall = True
+    #         showinstalled = None
+    #     elif self.ui_showinstalled_button.get_active():
+    #         showall = False
+    #         showinstalled = True
+    #     elif self.ui_shownotinstalled_button.get_active():
+    #         showall = False
+    #         showinstalled = False
+    #
+    #     if self.isPardusSearching:
+    #         for i in self.applist:
+    #             if i["name"] == appname:
+    #                 pn_en = i["prettyname"]["en"]
+    #                 pn_tr = i["prettyname"]["tr"]
+    #                 desc_en = i["description"]["en"]
+    #                 desc_tr = i["description"]["tr"]
+    #         if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
+    #                 or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en.lower() \
+    #                 or search_entry_text.lower() in desc_tr.lower():
+    #             return control_show_filter(showall, showinstalled, appname)
+    #     else:
+    #         if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
+    #             for i in self.applist:
+    #                 if i["name"] == appname:
+    #                     if i["external"]:
+    #                         if i["external"]["reponame"] == self.externalreponame:
+    #                             return control_show_filter(showall, showinstalled, appname)
+    #         else:
+    #             if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
+    #                 return control_show_filter(showall, showinstalled, appname)
+    #             else:
+    #                 if self.PardusCurrentCategoryString in category:
+    #                     if self.SubCatCombo.get_active_text() is not None:
+    #                         if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
+    #                             return control_show_filter(showall, showinstalled, appname)
+    #                         else:
+    #                             if self.PardusCurrentCategorySubCategories:
+    #                                 if self.SubCatCombo.get_active_text().lower() in subcategory:
+    #                                     return control_show_filter(showall, showinstalled, appname)
+    #                     else:
+    #                         return control_show_filter(showall, showinstalled, appname)
+
+
+    def pardusapps_filter_function(self, row):
+        app = row.get_children()[0].name
+
         def control_show_filter(show_all, show_installed, app_name=""):
             if show_all:
                 return True
@@ -3959,13 +4129,15 @@ class MainWindow(object):
                 else:
                     return not self.Package.isinstalled(app_name)
 
+        category = []
+        for i in app["category"]:
+            category.append(i[self.locale])
+        subcategory = []
+        for i in app["subcategory"]:
+            subcategory.append(i[self.locale])
         search_entry_text = self.pardus_searchentry.get_text()
-        categorynumber = int(model[iteration][2])
-        category = list(model[iteration][4].split(","))
-        subcategory = list(model[iteration][5].split(","))
-        # category = model[iteration][4]
-        appname = model[iteration][1]
-        # showinstalled = self.pardusicb.get_active()
+        appname = app["name"]
+
         pn_en = ""
         pn_tr = ""
         desc_en = ""
@@ -4022,7 +4194,8 @@ class MainWindow(object):
             self.Logger.info("active : installed")
             self.ui_showall_button.set_active(False)
             self.ui_shownotinstalled_button.set_active(False)
-            self.PardusCategoryFilter.refilter()
+            # self.PardusCategoryFilter.refilter()
+            self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
         else:
             if not self.ui_showall_button.get_active() and not self.ui_shownotinstalled_button.get_active():
@@ -4033,7 +4206,8 @@ class MainWindow(object):
             self.Logger.info("active : notinstalled")
             self.ui_showall_button.set_active(False)
             self.ui_showinstalled_button.set_active(False)
-            self.PardusCategoryFilter.refilter()
+            # self.PardusCategoryFilter.refilter()
+            self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
         if not self.ui_showall_button.get_active() and not self.ui_showinstalled_button.get_active():
             button.set_active(True)
@@ -4043,13 +4217,25 @@ class MainWindow(object):
             self.Logger.info("active : showall")
             self.ui_showinstalled_button.set_active(False)
             self.ui_shownotinstalled_button.set_active(False)
-            self.PardusCategoryFilter.refilter()
+            # self.PardusCategoryFilter.refilter()
+            self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
         if not self.ui_showinstalled_button.get_active() and not self.ui_shownotinstalled_button.get_active():
             button.set_active(True)
 
     def set_app_count_label(self):
-        count = len(self.PardusCategoryFilter)
+        def get_visible_count(flowbox):
+            # count = 0
+            # for child in flowbox.get_children():
+            #     if child.get_mapped():
+            #         count += 1
+            # return count
+            return sum(1 for child in flowbox.get_children() if child.get_mapped())
+
+        # Örnek kullanım:
+        count = get_visible_count(self.ui_pardusapps_flowbox)
+        print(f"Görünür öğe sayısı: {count}")
+
         if self.ui_showall_button.get_active():
             status_text = _("available")
         elif self.ui_showinstalled_button.get_active():
@@ -4072,23 +4258,23 @@ class MainWindow(object):
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
             self.applist = sorted(self.applist, key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
-            GLib.idle_add(self.PardusAppListStore.clear)
-            self.setPardusApps()
+            # GLib.idle_add(self.PardusAppListStore.clear)
+            GLib.idle_add(self.setPardusApps)
         elif combo_box.get_active() == 1:  # sort by download
             self.applist = sorted(self.applist, key=lambda x: (x["download"], x["rate_average"]), reverse=True)
-            GLib.idle_add(self.PardusAppListStore.clear)
-            self.setPardusApps()
+            # GLib.idle_add(self.PardusAppListStore.clear)
+            GLib.idle_add(self.setPardusApps)
         elif combo_box.get_active() == 2:  # sort by popularity
             self.applist = sorted(self.applist,
                                   key=lambda x: (x["popularity"] if "popularity" in x.keys() else x["rate_average"],
                                                  x["download"]), reverse=True)
-            GLib.idle_add(self.PardusAppListStore.clear)
-            self.setPardusApps()
+            # GLib.idle_add(self.PardusAppListStore.clear)
+            GLib.idle_add(self.setPardusApps)
         elif combo_box.get_active() == 3:  # sort by last added
             self.applist = sorted(self.applist, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"),
                                   reverse=True)
-            GLib.idle_add(self.PardusAppListStore.clear)
-            self.setPardusApps()
+            # GLib.idle_add(self.PardusAppListStore.clear)
+            GLib.idle_add(self.setPardusApps)
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
@@ -4357,7 +4543,8 @@ class MainWindow(object):
         if self.Server.connection:
             self.homestack.set_visible_child_name("pardushome")
             self.EditorAppsIconView.unselect_all()
-            self.PardusAppsIconView.unselect_all()
+            # self.PardusAppsIconView.unselect_all()
+            self.ui_pardusapps_flowbox.unselect_all()
             self.topsearchbutton.set_sensitive(True)
         else:
             self.searchstack.set_visible_child_name("noserver")
@@ -4953,7 +5140,8 @@ class MainWindow(object):
         if not self.store_button_clicked:
             self.homestack.set_visible_child_name("pardusapps")
             self.menubackbutton.set_sensitive(True)
-            self.PardusCategoryFilter.refilter()
+            # self.PardusCategoryFilter.refilter()
+            self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
         self.store_button_clicked = False
 
@@ -4962,7 +5150,8 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("pardusapps")
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
-        self.PardusCategoryFilter.refilter()
+        # self.PardusCategoryFilter.refilter()
+        self.ui_pardusapps_flowbox.invalidate_filter()
         self.set_app_count_label()
 
     def on_pardus_searchentry_focus_in_event(self, widget, click):
@@ -4971,7 +5160,7 @@ class MainWindow(object):
         self.menubackbutton.set_sensitive(True)
         self.isPardusSearching = True
 
-        self.PardusAppsIconView.unselect_all()
+        # self.PardusAppsIconView.unselect_all()
         if self.UserSettings.config_usi:
             pixbuf = self.getServerCatIcon("all", 32)
         else:
@@ -4985,7 +5174,8 @@ class MainWindow(object):
         self.SubCatCombo.remove_all()
         self.SubCatCombo.set_visible(False)
 
-        self.PardusCategoryFilter.refilter()
+        # self.PardusCategoryFilter.refilter()
+        self.ui_pardusapps_flowbox.invalidate_filter()
         self.set_app_count_label()
 
     def on_repo_searchbutton_clicked(self, button):
@@ -5969,7 +6159,8 @@ class MainWindow(object):
             self.sortPardusAppsCombo.set_active(1)
         if not self.ui_showall_button.get_active():
             self.ui_showall_button.set_active(True)
-        self.PardusCategoryFilter.refilter()
+        # self.PardusCategoryFilter.refilter()
+        self.ui_pardusapps_flowbox.invalidate_filter()
         self.set_app_count_label()
         self.homestack.set_visible_child_name("pardusapps")
 
@@ -5991,7 +6182,8 @@ class MainWindow(object):
             self.sortPardusAppsCombo.set_active(2)
         if not self.ui_showall_button.get_active():
             self.ui_showall_button.set_active(True)
-        self.PardusCategoryFilter.refilter()
+        # self.PardusCategoryFilter.refilter()
+        self.ui_pardusapps_flowbox.invalidate_filter()
         self.set_app_count_label()
         self.homestack.set_visible_child_name("pardusapps")
 
@@ -6013,7 +6205,8 @@ class MainWindow(object):
             self.sortPardusAppsCombo.set_active(3)
         if not self.ui_showall_button.get_active():
             self.ui_showall_button.set_active(True)
-        self.PardusCategoryFilter.refilter()
+        # self.PardusCategoryFilter.refilter()
+        self.ui_pardusapps_flowbox.invalidate_filter()
         self.set_app_count_label()
         self.homestack.set_visible_child_name("pardusapps")
 
