@@ -36,3 +36,24 @@ list row {
 .pardus-software-listbox row {
     margin: 0px;
 }
+
+/*
+.pardus-software-left-cats-flowbox{
+    background-color:alpha(@unfocused_borders, 0.3);
+    border-radius:8px;
+}
+*/
+
+.pardus-software-left-cats-box{
+    background-color:alpha(@unfocused_borders, 0.3);
+    border-radius:8px;
+}
+
+.pardus-software-left-cats-listbox{
+    background-color:transparent;
+    border-radius:8px;
+}
+
+.pardus-software-left-cats-listbox row:hover, row:selected{
+    border-radius:8px;
+}

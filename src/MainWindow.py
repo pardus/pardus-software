@@ -1619,23 +1619,33 @@ class MainWindow(object):
             for cat in self.categories:
                 caticon = Gtk.Image.new()
                 if self.UserSettings.config_usi:
-                    caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"]))
+                    caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"], size=16))
                 else:
-                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"]))
+                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"], size=16))
                 label = Gtk.Label.new()
                 label_text = str(cat["name"]).title()
                 label.set_text(" " + label_text)
-                box1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                box1.pack_start(caticon, False, True, 0)
-                box1.pack_start(label, False, True, 0)
-                box1.set_name("homecats")
-                button = Gtk.Button.new()
-                button.add(box1)
-                button.set_relief(Gtk.ReliefStyle.NONE)
-                button.connect('clicked', self.on_catbutton_clicked)
-                button.name = cat["name"]
-                self.catbuttons.append(button)
-                GLib.idle_add(self.HomeCategoryFlowBox.insert, button, GLib.PRIORITY_DEFAULT_IDLE)
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+                box.pack_start(caticon, False, True, 0)
+                box.pack_start(label, False, True, 0)
+                box.set_name("homecats")
+
+
+                listbox = Gtk.ListBox.new()
+                listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+                listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
+                listbox.name = cat["name"]
+                listbox.get_style_context().add_class("pardus-software-left-cats-listbox")
+
+                box.set_margin_start(8)
+                box.set_margin_end(50)
+                box.set_margin_top(8)
+                box.set_margin_bottom(8)
+
+                GLib.idle_add(listbox.add, box)
+
+
+                GLib.idle_add(self.HomeCategoryFlowBox.insert, listbox, -1)
 
             GLib.idle_add(self.HomeCategoryFlowBox.show_all)
 

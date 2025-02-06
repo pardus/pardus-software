@@ -1754,106 +1754,336 @@ so that the OS has nothing to do with the health of the application.</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">13</property>
                         <property name="margin-end">13</property>
-                        <property name="margin-top">8</property>
+                        <property name="margin-top">13</property>
+                        <property name="margin-bottom">13</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">8</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">5</property>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="halign">center</property>
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Editor's Picks</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
+                                <property name="vexpand">True</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="margin-start">13</property>
+                                    <property name="margin-top">13</property>
+                                    <property name="margin-bottom">13</property>
+                                    <property name="label" translatable="yes">Pardus Store</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkFlowBox" id="HomeCategoryFlowBox">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                    <property name="homogeneous">True</property>
+                                    <property name="min-children-per-line">1</property>
+                                    <property name="max-children-per-line">1</property>
+                                    <property name="selection-mode">none</property>
+                                    <signal name="child-activated" handler="on_HomeCategoryFlowBox_child_activated" swapped="no"/>
+                                    <signal name="selected-children-changed" handler="on_HomeCategoryFlowBox_selected_children_changed" swapped="no"/>
+                                    <style>
+                                      <class name="pardus-software-left-cats-flowbox"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <style>
+                                  <class name="pardus-software-left-cats-box"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkIconView" id="EditorAppsIconView">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="margin">6</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="item-orientation">horizontal</property>
+                                    <property name="model">EditorListStore</property>
+                                    <property name="item-width">150</property>
+                                    <signal name="selection-changed" handler="on_PardusAppsIconView_selection_changed" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkPaned">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <child>
+                                          <object class="GtkViewport">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <child>
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="orientation">vertical</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="orientation">vertical</property>
+                                                        <property name="spacing">5</property>
+                                                        <child>
+                                                          <object class="GtkButton" id="mdabutton">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="relief">none</property>
+                                                            <signal name="clicked" handler="on_mdabutton_clicked" swapped="no"/>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">Most Downloaded Apps</property>
+                                                            <attributes>
+                                                            <attribute name="weight" value="bold"/>
+                                                            </attributes>
+                                                            </object>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkFlowBox" id="MostDownFlowBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="hexpand">True</property>
+                                                            <property name="homogeneous">True</property>
+                                                            <property name="column-spacing">5</property>
+                                                            <property name="row-spacing">5</property>
+                                                            <property name="max-children-per-line">3</property>
+                                                            <property name="selection-mode">none</property>
+                                                            <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkSeparator">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">center</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="orientation">vertical</property>
+                                                        <property name="spacing">5</property>
+                                                        <child>
+                                                          <object class="GtkButton" id="mrabutton">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="relief">none</property>
+                                                            <signal name="clicked" handler="on_mrabutton_clicked" swapped="no"/>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">Popular Apps</property>
+                                                            <attributes>
+                                                            <attribute name="weight" value="bold"/>
+                                                            </attributes>
+                                                            </object>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkFlowBox" id="MostRateFlowBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="hexpand">True</property>
+                                                            <property name="homogeneous">True</property>
+                                                            <property name="column-spacing">5</property>
+                                                            <property name="row-spacing">5</property>
+                                                            <property name="max-children-per-line">3</property>
+                                                            <property name="selection-mode">none</property>
+                                                            <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkSeparator">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-top">5</property>
+                                                    <property name="margin-bottom">5</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkButton" id="labutton">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">True</property>
+                                                    <property name="receives-default">True</property>
+                                                    <property name="halign">center</property>
+                                                    <property name="valign">center</property>
+                                                    <property name="relief">none</property>
+                                                    <signal name="clicked" handler="on_labutton_clicked" swapped="no"/>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label" translatable="yes">Last Added Apps</property>
+                                                        <attributes>
+                                                          <attribute name="weight" value="bold"/>
+                                                        </attributes>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">2</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkFlowBox" id="LastAddedFlowBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">center</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <property name="column-spacing">5</property>
+                                                    <property name="row-spacing">5</property>
+                                                    <property name="max-children-per-line">6</property>
+                                                    <property name="selection-mode">none</property>
+                                                    <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">3</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="resize">True</property>
+                                        <property name="shrink">True</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
                                 <property name="fill">True</property>
                                 <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkIconView" id="EditorAppsIconView">
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="halign">center</property>
-                                <property name="margin">6</property>
-                                <property name="hexpand">True</property>
-                                <property name="item-orientation">horizontal</property>
-                                <property name="model">EditorListStore</property>
-                                <property name="item-width">150</property>
-                                <signal name="selection-changed" handler="on_PardusAppsIconView_selection_changed" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSeparator">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label" translatable="yes">Categories</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkFlowBox" id="HomeCategoryFlowBox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="halign">center</property>
-                                <property name="hexpand">True</property>
-                                <property name="homogeneous">True</property>
-                                <property name="column-spacing">5</property>
-                                <property name="row-spacing">5</property>
-                                <property name="min-children-per-line">3</property>
-                                <property name="max-children-per-line">50</property>
-                                <property name="selection-mode">none</property>
-                                <signal name="child-activated" handler="on_HomeCategoryFlowBox_child_activated" swapped="no"/>
-                                <signal name="selected-children-changed" handler="on_HomeCategoryFlowBox_selected_children_changed" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">5</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSeparator">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">6</property>
                               </packing>
                             </child>
                           </object>
@@ -1863,251 +2093,10 @@ so that the OS has nothing to do with the health of the application.</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
-                        <child>
-                          <object class="GtkPaned">
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <child>
-                                  <object class="GtkViewport">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <child>
-                                      <object class="GtkBox">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="orientation">vertical</property>
-                                        <child>
-                                          <object class="GtkBox">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <child>
-                                              <object class="GtkBox">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="orientation">vertical</property>
-                                                <property name="spacing">5</property>
-                                                <child>
-                                                  <object class="GtkButton" id="mdabutton">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_mdabutton_clicked" swapped="no"/>
-                                                    <child>
-                                                      <object class="GtkLabel">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">Most Downloaded Apps</property>
-                                                        <attributes>
-                                                          <attribute name="weight" value="bold"/>
-                                                        </attributes>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkFlowBox" id="MostDownFlowBox">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="hexpand">True</property>
-                                                    <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">5</property>
-                                                    <property name="row-spacing">5</property>
-                                                    <property name="max-children-per-line">3</property>
-                                                    <property name="selection-mode">none</property>
-                                                    <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkSeparator">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">center</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkBox">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="orientation">vertical</property>
-                                                <property name="spacing">5</property>
-                                                <child>
-                                                  <object class="GtkButton" id="mrabutton">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_mrabutton_clicked" swapped="no"/>
-                                                    <child>
-                                                      <object class="GtkLabel">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">Popular Apps</property>
-                                                        <attributes>
-                                                          <attribute name="weight" value="bold"/>
-                                                        </attributes>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkFlowBox" id="MostRateFlowBox">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="hexpand">True</property>
-                                                    <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">5</property>
-                                                    <property name="row-spacing">5</property>
-                                                    <property name="max-children-per-line">3</property>
-                                                    <property name="selection-mode">none</property>
-                                                    <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">2</property>
-                                              </packing>
-                                            </child>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkSeparator">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="margin-top">5</property>
-                                            <property name="margin-bottom">5</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkButton" id="labutton">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
-                                            <property name="receives-default">True</property>
-                                            <property name="halign">center</property>
-                                            <property name="valign">center</property>
-                                            <property name="relief">none</property>
-                                            <signal name="clicked" handler="on_labutton_clicked" swapped="no"/>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="label" translatable="yes">Last Added Apps</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
-                                              </object>
-                                            </child>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">2</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkFlowBox" id="LastAddedFlowBox">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="halign">center</property>
-                                            <property name="hexpand">True</property>
-                                            <property name="homogeneous">True</property>
-                                            <property name="column-spacing">5</property>
-                                            <property name="row-spacing">5</property>
-                                            <property name="max-children-per-line">6</property>
-                                            <property name="selection-mode">none</property>
-                                            <signal name="child-activated" handler="on_MostFlowBox_child_activated" swapped="no"/>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">3</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="resize">True</property>
-                                <property name="shrink">True</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
                       <packing>
                         <property name="name">pardushome</property>
-                        <property name="title">Pardus</property>
+                        <property name="title" translatable="yes">Pardus</property>
                       </packing>
                     </child>
                     <child>
