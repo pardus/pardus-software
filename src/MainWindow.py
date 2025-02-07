@@ -121,7 +121,7 @@ class MainWindow(object):
 
         self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
 
-        self.HomeCategoryFlowBox = self.GtkBuilder.get_object("HomeCategoryFlowBox")
+        self.ui_leftcats_flowbox = self.GtkBuilder.get_object("ui_leftcats_flowbox")
         self.SubCategoryFlowBox = self.GtkBuilder.get_object("SubCategoryFlowBox")
         self.MostDownFlowBox = self.GtkBuilder.get_object("MostDownFlowBox")
         self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
@@ -763,6 +763,8 @@ class MainWindow(object):
         self.GnomeCommentListBoxTR = self.GtkBuilder.get_object("GnomeCommentListBoxTR")
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
+        self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
+
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
         try:
@@ -1311,7 +1313,7 @@ class MainWindow(object):
         GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.setPardusCategories)
         GLib.idle_add(self.setPardusApps)
-        GLib.idle_add(self.setEditorApps)
+        # GLib.idle_add(self.setEditorApps)
         GLib.idle_add(self.setMostApps)
         GLib.idle_add(self.setRepoApps)
         GLib.idle_add(self.gnomeRatings)
@@ -1429,8 +1431,8 @@ class MainWindow(object):
                 self.setEditorApps()
                 self.setMostApps()
             elif type == self.Server.servercaticons:
-                for row in self.HomeCategoryFlowBox:
-                    self.HomeCategoryFlowBox.remove(row)
+                for row in self.ui_leftcats_flowbox:
+                    self.ui_leftcats_flowbox.remove(row)
                 self.setPardusCategories()
             self.setSelectIcons()
 
@@ -1593,9 +1595,7 @@ class MainWindow(object):
 
 
     def on_pardus_apps_listbox_released(self, widget, event, listbox):
-        # print(listbox.name)
-        if event.button == 3:
-            print(f"Right clicked: {listbox.name}")
+        print(listbox.name)
 
     def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
         print(f"Left clicked: {child.get_children()[0].name}")
@@ -1603,9 +1603,8 @@ class MainWindow(object):
 
 
     def setPardusCategories(self):
-        self.HomeCategoryFlowBox.foreach(lambda child: self.HomeCategoryFlowBox.remove(child))
+        # self.ui_leftcats_flowbox.foreach(lambda child: self.ui_leftcats_flowbox.remove(child))
         if self.Server.connection:
-            self.catbuttons = []
             self.categories = []
             for cat in self.catlist:
                 self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"],
@@ -1613,48 +1612,45 @@ class MainWindow(object):
                                         "subcategories": cat["subcategories"] if "subcategories" in cat.keys() else []})
             self.categories = sorted(self.categories, key=lambda x: x["name"])
             if self.locale == "tr":
-                self.categories.insert(0, {"name": "tümü", "icon": "all", "external": False, "subcats": False,
+                self.categories.insert(0, {"name": "keşfet", "icon": "discover", "external": False, "subcats": False,
+                                           "subcategories": []})
+                self.categories.insert(1, {"name": "tümü", "icon": "all", "external": False, "subcats": False,
                                            "subcategories": []})
             else:
-                self.categories.insert(0, {"name": "all", "icon": "all", "external": False, "subcats": False,
+                self.categories.insert(0, {"name": "discover", "icon": "discover", "external": False, "subcats": False,
                                            "subcategories": []})
-
-
-
+                self.categories.insert(1, {"name": "all", "icon": "all", "external": False, "subcats": False,
+                                           "subcategories": []})
 
             for cat in self.categories:
 
                 cat["icon"] = "ps-{}-symbolic".format(cat["icon"])
-
                 cat_icon = Gtk.Image.new_from_icon_name(cat["icon"],  Gtk.IconSize.BUTTON)
 
-
                 label = Gtk.Label.new()
-                label_text = str(cat["name"]).title()
-                label.set_text(" " + label_text)
+                label.set_text(cat["name"].title())
+
                 box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
                 box.pack_start(cat_icon, False, True, 0)
                 box.pack_start(label, False, True, 0)
-                box.set_name("homecats")
-
-
-                listbox = Gtk.ListBox.new()
-                listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-                listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
-                listbox.name = cat["name"]
-                listbox.get_style_context().add_class("pardus-software-left-cats-listbox")
-
                 box.set_margin_start(8)
                 box.set_margin_end(50)
                 box.set_margin_top(8)
                 box.set_margin_bottom(8)
 
-                GLib.idle_add(listbox.add, box)
+                row = Gtk.ListBoxRow()
+                row.add(box)
+                row.name = cat["name"]
 
+                GLib.idle_add(self.ui_leftcats_listbox.add, row)
 
-                GLib.idle_add(self.HomeCategoryFlowBox.insert, listbox, -1)
+            GLib.idle_add(self.ui_leftcats_listbox.show_all)
 
-            GLib.idle_add(self.HomeCategoryFlowBox.show_all)
+            # GLib.idle_add(self.ui_leftcats_listbox.select_row, self.ui_leftcats_listbox.get_row_at_index(0))
+            GLib.idle_add(lambda: self.ui_leftcats_listbox.select_row(self.ui_leftcats_listbox.get_row_at_index(0)))
+
+    def on_ui_leftcats_listbox_row_activated(self, listbox, row):
+        print(row.name)
 
     def on_catbutton_clicked(self, button):
 
@@ -6027,8 +6023,8 @@ class MainWindow(object):
     def clearBoxes(self):
         self.EditorListStore.clear()
         self.PardusAppListStore.clear()
-        for row in self.HomeCategoryFlowBox:
-            self.HomeCategoryFlowBox.remove(row)
+        # for row in self.ui_leftcats_flowbox:
+        #     self.ui_leftcats_flowbox.remove(row)
         for row in self.MostDownFlowBox:
             self.MostDownFlowBox.remove(row)
         for row in self.MostRateFlowBox:

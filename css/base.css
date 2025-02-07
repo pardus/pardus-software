@@ -54,6 +54,10 @@ list row {
     border-radius:8px;
 }
 
+.pardus-software-left-cats-listbox row{
+    margin-bottom: 8px;
+}
+
 .pardus-software-left-cats-listbox row:hover, row:selected{
     border-radius:8px;
 }

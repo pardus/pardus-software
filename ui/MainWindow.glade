@@ -1774,8 +1774,8 @@ so that the OS has nothing to do with the health of the application.</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="margin-start">13</property>
-                                    <property name="margin-top">13</property>
-                                    <property name="margin-bottom">13</property>
+                                    <property name="margin-top">20</property>
+                                    <property name="margin-bottom">24</property>
                                     <property name="label" translatable="yes">Pardus Store</property>
                                   </object>
                                   <packing>
@@ -1785,21 +1785,14 @@ so that the OS has nothing to do with the health of the application.</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkFlowBox" id="HomeCategoryFlowBox">
+                                  <object class="GtkListBox" id="ui_leftcats_listbox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="valign">start</property>
                                     <property name="margin-start">12</property>
                                     <property name="margin-end">12</property>
-                                    <property name="homogeneous">True</property>
-                                    <property name="min-children-per-line">1</property>
-                                    <property name="max-children-per-line">1</property>
-                                    <property name="selection-mode">none</property>
-                                    <signal name="child-activated" handler="on_HomeCategoryFlowBox_child_activated" swapped="no"/>
-                                    <signal name="selected-children-changed" handler="on_HomeCategoryFlowBox_selected_children_changed" swapped="no"/>
+                                    <signal name="row-activated" handler="on_ui_leftcats_listbox_row_activated" swapped="no"/>
                                     <style>
-                                      <class name="pardus-software-left-cats-flowbox"/>
+                                      <class name="pardus-software-left-cats-listbox"/>
                                     </style>
                                   </object>
                                   <packing>
