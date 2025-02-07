@@ -796,6 +796,9 @@ class MainWindow(object):
         self.utils()
         self.usersettings()
 
+        icon_theme = Gtk.IconTheme.get_default()
+        icon_theme.append_search_path(self.UserSettings.cat_icons_dir)
+
         self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
         self.Logger.info("{}".format(self.user_distro_full))
 
@@ -1616,17 +1619,21 @@ class MainWindow(object):
                 self.categories.insert(0, {"name": "all", "icon": "all", "external": False, "subcats": False,
                                            "subcategories": []})
 
+
+
+
             for cat in self.categories:
-                caticon = Gtk.Image.new()
-                if self.UserSettings.config_usi:
-                    caticon.set_from_pixbuf(self.getServerCatIcon(cat["icon"], size=16))
-                else:
-                    caticon.set_from_pixbuf(self.getSystemCatIcon(cat["icon"], size=16))
+
+                cat["icon"] = "ps-{}-symbolic".format(cat["icon"])
+
+                cat_icon = Gtk.Image.new_from_icon_name(cat["icon"],  Gtk.IconSize.BUTTON)
+
+
                 label = Gtk.Label.new()
                 label_text = str(cat["name"]).title()
                 label.set_text(" " + label_text)
                 box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
-                box.pack_start(caticon, False, True, 0)
+                box.pack_start(cat_icon, False, True, 0)
                 box.pack_start(label, False, True, 0)
                 box.set_name("homecats")
 
