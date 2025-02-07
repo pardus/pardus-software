@@ -460,9 +460,6 @@ class MainWindow(object):
 
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
 
-        self.EditorAppsIconView = self.GtkBuilder.get_object("EditorAppsIconView")
-        self.EditorAppsIconView.set_pixbuf_column(0)
-        self.EditorAppsIconView.set_text_column(3)
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
 
@@ -764,6 +761,7 @@ class MainWindow(object):
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
+        self.ui_banner_overlay = self.GtkBuilder.get_object("ui_banner_overlay")
 
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
@@ -1310,12 +1308,13 @@ class MainWindow(object):
         self.normalpage()
         GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
-        GLib.idle_add(self.clearBoxes)
+        # GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.setPardusCategories)
         GLib.idle_add(self.setPardusApps)
+        GLib.idle_add(self.set_banner)
         # GLib.idle_add(self.setEditorApps)
-        GLib.idle_add(self.setMostApps)
-        GLib.idle_add(self.setRepoApps)
+        # GLib.idle_add(self.setMostApps)
+        # GLib.idle_add(self.setRepoApps)
         GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlPSUpdate)
         GLib.idle_add(self.aptUpdate)
@@ -1481,6 +1480,19 @@ class MainWindow(object):
         else:
             self.gnomeratings = []
             self.Logger.info("gnomeratings not successful")
+
+    def set_banner(self):
+        background_label = Gtk.Label.new()
+        background_label.set_markup(
+            "<span weight='light' size='50000'>{}</span>\n<span weight='light' size='xx-large'>{}</span>".format(
+                "Google Chrome", "Google Chrome"))
+        background_label.set_opacity(0.1)
+        background_label.set_valign(Gtk.Align.CENTER)
+        background_label.set_halign(Gtk.Align.END)
+        background_label.set_justify(Gtk.Justification.CENTER)
+        background_label.set_angle(35.0)
+        self.ui_banner_overlay.add_overlay(background_label)
+        self.ui_banner_overlay.show_all()
 
     def setPardusApps(self):
         for row in self.ui_pardusapps_flowbox:
