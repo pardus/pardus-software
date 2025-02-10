@@ -1177,6 +1177,7 @@ so that the OS has nothing to do with the health of the application.</property>
     <property name="default-width">857</property>
     <property name="default-height">657</property>
     <property name="icon-name">pardus-software</property>
+    <signal name="configure-event" handler="on_MainWindow_configure_event" swapped="no"/>
     <signal name="key-press-event" handler="on_main_key_press_event" swapped="no"/>
     <child>
       <object class="GtkStack" id="mainstack">
@@ -1817,10 +1818,11 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <child>
-                                  <object class="GtkBox">
+                                  <object class="GtkBox" id="ui_discover_box">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="spacing">13</property>
                                     <child>
                                       <object class="GtkBox" id="ui_banner_box">
                                         <property name="visible">True</property>
@@ -1850,103 +1852,11 @@ so that the OS has nothing to do with the health of the application.</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkOverlay" id="ui_banner_overlay">
+                                          <object class="GtkStack" id="ui_banner_stack">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="hexpand">True</property>
                                             <child>
-                                              <object class="GtkBox">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="margin-start">12</property>
-                                                <property name="margin-end">12</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="spacing">55</property>
-                                                <child>
-                                                  <object class="GtkBox">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="halign">start</property>
-                                                    <property name="margin-top">48</property>
-                                                    <property name="margin-bottom">48</property>
-                                                    <property name="hexpand">True</property>
-                                                    <property name="orientation">vertical</property>
-                                                    <child>
-                                                      <object class="GtkLabel">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="halign">start</property>
-                                                        <property name="margin-bottom">6</property>
-                                                        <property name="label" translatable="yes">PARDUS STORE</property>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">0</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkLabel">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="halign">start</property>
-                                                        <property name="margin-bottom">16</property>
-                                                        <property name="label" translatable="yes">Google Chrome</property>
-                                                        <attributes>
-                                                          <attribute name="weight" value="bold"/>
-                                                        </attributes>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">1</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkLabel">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="halign">start</property>
-                                                        <property name="label" translatable="yes">Google Chrome is a cross-platform web browser developed by google.</property>
-                                                        <property name="wrap">True</property>
-                                                        <attributes>
-                                                          <attribute name="weight" value="light"/>
-                                                        </attributes>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">2</property>
-                                                      </packing>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkImage">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="halign">end</property>
-                                                    <property name="margin-top">34</property>
-                                                    <property name="margin-bottom">34</property>
-                                                    <property name="hexpand">True</property>
-                                                    <property name="pixel-size">96</property>
-                                                    <property name="icon-name">google-chrome</property>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">2</property>
-                                                  </packing>
-                                                </child>
-                                              </object>
-                                              <packing>
-                                                <property name="index">-1</property>
-                                              </packing>
+                                              <placeholder/>
                                             </child>
                                           </object>
                                           <packing>

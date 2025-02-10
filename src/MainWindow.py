@@ -761,7 +761,7 @@ class MainWindow(object):
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
-        self.ui_banner_overlay = self.GtkBuilder.get_object("ui_banner_overlay")
+        self.ui_banner_stack = self.GtkBuilder.get_object("ui_banner_stack")
 
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
@@ -797,7 +797,8 @@ class MainWindow(object):
         self.usersettings()
 
         icon_theme = Gtk.IconTheme.get_default()
-        icon_theme.append_search_path(self.UserSettings.cat_icons_dir)
+        icon_theme.prepend_search_path(self.UserSettings.cat_icons_dir)
+        icon_theme.prepend_search_path(self.UserSettings.app_icons_dir)
 
         self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
         self.Logger.info("{}".format(self.user_distro_full))
@@ -1482,17 +1483,69 @@ class MainWindow(object):
             self.Logger.info("gnomeratings not successful")
 
     def set_banner(self):
-        background_label = Gtk.Label.new()
-        background_label.set_markup(
+
+        overlay = Gtk.Overlay()
+
+        box_1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 55)
+        box_1.set_margin_start(12)
+        box_1.set_margin_end(12)
+
+        box_2 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+        box_2.props.halign = Gtk.Align.START
+        box_2.set_hexpand(True)
+        box_2.set_margin_top(48)
+        box_2.set_margin_bottom(48)
+
+        label_ps = Gtk.Label.new()
+        label_ps.props.halign = Gtk.Align.START
+        label_ps.set_margin_bottom(6)
+        label_ps.set_markup("PARDUS STORE")
+
+        label_appname = Gtk.Label.new()
+        label_appname.props.halign = Gtk.Align.START
+        label_appname.set_margin_bottom(16)
+        label_appname.set_markup("<b>Google Chrome</b>")
+
+        label_appdesc = Gtk.Label.new()
+        label_appdesc.props.halign = Gtk.Align.START
+        label_appdesc.set_line_wrap(True)
+        label_appdesc.set_line_wrap_mode(0)  # WORD
+        label_appdesc.set_markup(
+            "<span weight='light'>Google Chrome is a cross-platform web browser developed by google.</span>")
+
+        app_icon = Gtk.Image.new_from_icon_name("teamviewer", Gtk.IconSize.BUTTON)
+        app_icon.set_pixel_size(96)
+        app_icon.props.halign = Gtk.Align.END
+        app_icon.set_hexpand(True)
+        app_icon.set_margin_top(34)
+        app_icon.set_margin_bottom(34)
+
+        label_background = Gtk.Label.new()
+        label_background.set_markup(
             "<span weight='light' size='50000'>{}</span>\n<span weight='light' size='xx-large'>{}</span>".format(
                 "Google Chrome", "Google Chrome"))
-        background_label.set_opacity(0.1)
-        background_label.set_valign(Gtk.Align.CENTER)
-        background_label.set_halign(Gtk.Align.END)
-        background_label.set_justify(Gtk.Justification.CENTER)
-        background_label.set_angle(35.0)
-        self.ui_banner_overlay.add_overlay(background_label)
-        self.ui_banner_overlay.show_all()
+        label_background.set_opacity(0.1)
+        label_background.set_valign(Gtk.Align.CENTER)
+        label_background.set_halign(Gtk.Align.END)
+        label_background.set_justify(Gtk.Justification.CENTER)
+        label_background.set_angle(35.0)
+
+        box_2.pack_start(label_ps, False, True, 0)
+        box_2.pack_start(label_appname, False, True, 0)
+        box_2.pack_start(label_appdesc, False, True, 0)
+
+        box_1.pack_start(box_2, True, True, 0)
+        box_1.pack_start(app_icon, True, True, 0)
+
+        overlay.add(box_1)
+
+        overlay.add_overlay(label_background)
+        overlay.show_all()
+
+        self.ui_banner_stack.add_named(overlay, "0")
+
+        self.ui_banner_stack.show_all()
+
 
     def setPardusApps(self):
         for row in self.ui_pardusapps_flowbox:

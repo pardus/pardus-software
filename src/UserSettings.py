@@ -41,6 +41,7 @@ class UserSettings(object):
             self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
         self.cat_icons_dir = self.cachedir + "caticons"
+        self.app_icons_dir = self.cachedir + "appicons"
 
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser(strict=False)
