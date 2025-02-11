@@ -1771,22 +1771,6 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="margin-start">13</property>
-                                    <property name="margin-top">20</property>
-                                    <property name="margin-bottom">24</property>
-                                    <property name="label" translatable="yes">Pardus Store</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
                                   <object class="GtkListBox" id="ui_leftcats_listbox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
