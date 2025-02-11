@@ -1776,6 +1776,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                     <property name="can-focus">False</property>
                                     <property name="margin-start">12</property>
                                     <property name="margin-end">12</property>
+                                    <property name="margin-top">12</property>
                                     <signal name="row-activated" handler="on_ui_leftcats_listbox_row_activated" swapped="no"/>
                                     <style>
                                       <class name="pardus-software-left-cats-listbox"/>
