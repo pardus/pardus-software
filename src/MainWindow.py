@@ -1786,7 +1786,6 @@ class MainWindow(object):
             box_updates.pack_start(icon_updates, False, True, 0)
             box_updates.pack_start(label_updates, False, True, 0)
             box_updates.props.halign = Gtk.Align.END
-            box_updates.set_hexpand(True)
             box_updates.get_style_context().add_class("pardus-software-left-updates-box")
             box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
             box.pack_start(installed_icon, False, True, 0)
