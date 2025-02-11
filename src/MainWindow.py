@@ -457,9 +457,9 @@ class MainWindow(object):
         # self.PardusAppsIconView.set_text_column(3)
 
         self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
-
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
 
+        self.ui_mostdown_flowbox = self.GtkBuilder.get_object("ui_mostdown_flowbox")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
 
@@ -1315,6 +1315,7 @@ class MainWindow(object):
         GLib.idle_add(self.setPardusCategories)
         GLib.idle_add(self.setPardusApps)
         GLib.idle_add(self.set_banner)
+        GLib.idle_add(self.set_most_apps)
         # GLib.idle_add(self.setEditorApps)
         # GLib.idle_add(self.setMostApps)
         # GLib.idle_add(self.setRepoApps)
@@ -1891,6 +1892,101 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
 
+    def set_most_apps(self):
+        GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
+
+        if self.Server.connection:
+            self.Logger.info("setting mostapps")
+            mda_counter = 1
+            for mda in self.Server.mostdownapplist:
+
+                number_label = Gtk.Label.new()
+                number_label.set_markup("<small>{}</small>".format(mda_counter))
+                number_label.get_style_context().add_class("pardus-software-mostapp-number-label")
+
+                number_label1 = Gtk.Label.new()
+                number_label1.set_markup("{}".format(mda_counter))
+                number_label1.get_style_context().add_class("pardus-software-mostapp-empty-label")
+
+                app_icon = Gtk.Image.new_from_icon_name(mda["name"], 64)
+                app_icon.set_pixel_size(64)
+                app_icon.set_margin_end(12)
+
+                prettyname = "{}".format(self.getPrettyName(mda["name"]))
+
+                app_name = Gtk.Label.new()
+                app_name.set_markup("{}".format(prettyname))
+                app_name.set_line_wrap(False)
+                app_name.set_justify(Gtk.Justification.LEFT)
+                app_name.set_max_width_chars(21)
+                app_name.set_ellipsize(Pango.EllipsizeMode.END)
+                app_name.props.halign = Gtk.Align.START
+
+                button_action = Gtk.Button.new()
+                button_action.set_label(_("Get"))
+                button_action.props.halign = Gtk.Align.END
+                button_action.set_hexpand(True)
+                button_action.get_style_context().add_class("suggested-action")
+                button_action.get_style_context().add_class("pardus-software-mostapp-action-button")
+
+                box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
+                box_app.pack_start(app_name, False, True, 0)
+                box_app.pack_start(button_action, True, True, 0)
+
+                rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
+                rate_icon.set_pixel_size(10)
+                rate_icon.set_opacity(0.7)
+                rate_icon.props.valign = Gtk.Align.CENTER
+
+                rate_label = Gtk.Label.new()
+                rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(mda["rate"])))
+
+                box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
+                box_stats.pack_start(rate_label, False, True, 0)
+                box_stats.pack_start(rate_icon, False, True, 0)
+                box_stats.props.valign = Gtk.Align.START
+                box_stats.props.halign = Gtk.Align.START
+
+                category_label = Gtk.Label.new()
+                category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
+                    self.get_category_name_from_app_name(mda["name"])))
+                category_label.props.valign = Gtk.Align.START
+                category_label.props.halign = Gtk.Align.START
+
+                box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+                box_right.props.valign = Gtk.Align.CENTER
+                # box_right.props.halign = Gtk.Align.START
+                box_right.pack_start(box_app, False, True, 0)
+                box_right.pack_start(category_label, False, True, 0)
+                box_right.pack_start(box_stats, False, True, 0)
+
+                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+                box.pack_start(app_icon, False, True, 0)
+                box.pack_start(box_right, False, True, 0)
+
+                grid = Gtk.Grid.new()
+                grid.attach(number_label, 0, 0, 1, 1)
+                grid.attach(box, 1, 1, 1, 1)
+                grid.attach(number_label1, 2, 2, 1, 1)
+
+                listbox = Gtk.ListBox.new()
+                listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+                listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
+                listbox_row = Gtk.ListBoxRow()
+                GLib.idle_add(listbox_row.add, grid)
+                listbox_row.name = mda["name"]
+                GLib.idle_add(listbox.add, listbox_row)
+
+                GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox")
+                GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
+
+                mda_counter += 1
+
+            GLib.idle_add(self.ui_mostdown_flowbox.show_all)
+
+    def on_mostdown_listbox_row_activated(self, listbox, row):
+        print(row.name)
+
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
         if self.Server.connection:
@@ -2123,6 +2219,14 @@ class MainWindow(object):
             if len(prettyname.split(" ")) > 3:
                 prettyname = " ".join(prettyname.split(" ")[:3]) + " ..."
         return prettyname
+
+    def get_category_name_from_app_name(self, name, split=True):
+        cat = _("Unknowm")
+        # look full list of apps
+        for i in self.fullapplist:
+            if i["name"] == name:
+                cat = i["category"][0][self.locale].title()
+        return cat
 
     def getSystemCatIcon(self, cat, size=48):
         try:
