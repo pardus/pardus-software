@@ -61,3 +61,8 @@ list row {
 .pardus-software-left-cats-listbox row:hover, row:selected{
     border-radius:8px;
 }
+
+.pardus-software-left-updates-box {
+    background-color:alpha(@unfocused_borders, 0.5);
+    border-radius: 8px;
+}

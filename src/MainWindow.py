@@ -1761,6 +1761,46 @@ class MainWindow(object):
 
                 GLib.idle_add(self.ui_leftcats_listbox.add, row)
 
+            # seperator
+            separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+            row = Gtk.ListBoxRow()
+            row.add(separator)
+            row.set_selectable(False)
+            row.set_activatable(False)
+            GLib.idle_add(self.ui_leftcats_listbox.add, row)
+
+            # installed
+            installed_icon = Gtk.Image.new_from_icon_name("ps-installed-symbolic", Gtk.IconSize.BUTTON)
+            label = Gtk.Label.new()
+            label.set_text(_("Installed"))
+            box_updates = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 2)
+            label_updates = Gtk.Label.new()
+            label_updates.set_text("13")
+            label_updates.set_margin_end(8)
+            label_updates.set_margin_top(3)
+            label_updates.set_margin_bottom(3)
+            icon_updates = Gtk.Image.new_from_icon_name("ps-updates-symbolic", Gtk.IconSize.BUTTON)
+            icon_updates.set_margin_start(3)
+            icon_updates.set_margin_top(3)
+            icon_updates.set_margin_bottom(3)
+            box_updates.pack_start(icon_updates, False, True, 0)
+            box_updates.pack_start(label_updates, False, True, 0)
+            box_updates.props.halign = Gtk.Align.END
+            box_updates.set_hexpand(True)
+            box_updates.get_style_context().add_class("pardus-software-left-updates-box")
+            box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+            box.pack_start(installed_icon, False, True, 0)
+            box.pack_start(label, False, True, 0)
+            box.pack_end(box_updates, True, True, 0)
+            box.set_margin_start(8)
+            box.set_margin_end(12)
+            box.set_margin_top(5)
+            box.set_margin_bottom(5)
+            row = Gtk.ListBoxRow()
+            row.add(box)
+            row.name = "installed"
+            GLib.idle_add(self.ui_leftcats_listbox.add, row)
+
             GLib.idle_add(self.ui_leftcats_listbox.show_all)
 
             # GLib.idle_add(self.ui_leftcats_listbox.select_row, self.ui_leftcats_listbox.get_row_at_index(0))
