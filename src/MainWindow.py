@@ -859,8 +859,8 @@ class MainWindow(object):
         return user_locale
 
     def controlDisplay(self):
-        width = 857
-        height = 657
+        width = 950
+        height = 730
         s = 1
         w = 1920
         h = 1080
@@ -873,8 +873,8 @@ class MainWindow(object):
             s = Gdk.Monitor.get_scale_factor(monitor)
 
             if w > 1920 or h > 1080:
-                width = int(w / 2.24)
-                height = int(h / 1.643)
+                width = int(w * 0.4948)
+                height = int(h * 0.6759)
 
             self.MainWindow.resize(width, height)
 

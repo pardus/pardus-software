@@ -1174,10 +1174,9 @@ so that the OS has nothing to do with the health of the application.</property>
   <object class="GtkWindow" id="MainWindow">
     <property name="can-focus">False</property>
     <property name="window-position">center</property>
-    <property name="default-width">857</property>
-    <property name="default-height">657</property>
+    <property name="default-width">950</property>
+    <property name="default-height">730</property>
     <property name="icon-name">pardus-software</property>
-    <signal name="configure-event" handler="on_MainWindow_configure_event" swapped="no"/>
     <signal name="key-press-event" handler="on_main_key_press_event" swapped="no"/>
     <child>
       <object class="GtkStack" id="mainstack">
