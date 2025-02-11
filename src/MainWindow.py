@@ -715,6 +715,8 @@ class MainWindow(object):
         self.imgfullscreen_count = 0
         self.down_image = 0
 
+        self.banner_current_page = 0
+
         settings = Gtk.Settings.get_default()
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
 
@@ -1484,67 +1486,117 @@ class MainWindow(object):
 
     def set_banner(self):
 
-        overlay = Gtk.Overlay()
+        stack_counter = 0
+        for editor_app in self.Server.ediapplist:
 
-        box_1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 55)
-        box_1.set_margin_start(12)
-        box_1.set_margin_end(12)
+            editor_app_name = editor_app["name"]
+            editor_app_pretty_name = editor_app["prettyname"][self.locale]
+            if editor_app_pretty_name == "" or editor_app_pretty_name is None:
+                editor_app_pretty_name = editor_app["prettyname"]["en"]
 
-        box_2 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-        box_2.props.halign = Gtk.Align.START
-        box_2.set_hexpand(True)
-        box_2.set_margin_top(48)
-        box_2.set_margin_bottom(48)
+            if "shortdesc" in editor_app.keys():
+                editor_app_short_desc = editor_app["shortdesc"][self.locale]
+                if editor_app_short_desc == "" or editor_app_short_desc is None:
+                    editor_app_short_desc = editor_app["shortdesc"]["en"]
+            else:
+                editor_app_short_desc = ""
 
-        label_ps = Gtk.Label.new()
-        label_ps.props.halign = Gtk.Align.START
-        label_ps.set_margin_bottom(6)
-        label_ps.set_markup("PARDUS STORE")
+            overlay = Gtk.Overlay()
 
-        label_appname = Gtk.Label.new()
-        label_appname.props.halign = Gtk.Align.START
-        label_appname.set_margin_bottom(16)
-        label_appname.set_markup("<b>Google Chrome</b>")
+            box_1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 55)
+            box_1.set_margin_start(12)
+            box_1.set_margin_end(12)
 
-        label_appdesc = Gtk.Label.new()
-        label_appdesc.props.halign = Gtk.Align.START
-        label_appdesc.set_line_wrap(True)
-        label_appdesc.set_line_wrap_mode(0)  # WORD
-        label_appdesc.set_markup(
-            "<span weight='light'>Google Chrome is a cross-platform web browser developed by google.</span>")
+            box_2 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+            box_2.props.halign = Gtk.Align.START
+            box_2.set_hexpand(True)
+            box_2.set_margin_top(48)
+            box_2.set_margin_bottom(48)
 
-        app_icon = Gtk.Image.new_from_icon_name("teamviewer", Gtk.IconSize.BUTTON)
-        app_icon.set_pixel_size(96)
-        app_icon.props.halign = Gtk.Align.END
-        app_icon.set_hexpand(True)
-        app_icon.set_margin_top(34)
-        app_icon.set_margin_bottom(34)
+            label_ps = Gtk.Label.new()
+            label_ps.props.halign = Gtk.Align.START
+            label_ps.set_margin_bottom(6)
+            label_ps.set_markup(_("PARDUS STORE"))
 
-        label_background = Gtk.Label.new()
-        label_background.set_markup(
-            "<span weight='light' size='50000'>{}</span>\n<span weight='light' size='xx-large'>{}</span>".format(
-                "Google Chrome", "Google Chrome"))
-        label_background.set_opacity(0.1)
-        label_background.set_valign(Gtk.Align.CENTER)
-        label_background.set_halign(Gtk.Align.END)
-        label_background.set_justify(Gtk.Justification.CENTER)
-        label_background.set_angle(35.0)
+            label_appname = Gtk.Label.new()
+            label_appname.props.halign = Gtk.Align.START
+            label_appname.set_margin_bottom(16)
+            label_appname.set_markup("<b>{}</b>".format(editor_app_pretty_name))
 
-        box_2.pack_start(label_ps, False, True, 0)
-        box_2.pack_start(label_appname, False, True, 0)
-        box_2.pack_start(label_appdesc, False, True, 0)
+            label_appdesc = Gtk.Label.new()
+            label_appdesc.props.halign = Gtk.Align.START
+            label_appdesc.set_line_wrap(True)
+            label_appdesc.set_line_wrap_mode(0)  # WORD
+            label_appdesc.set_markup("<span weight='light'>{}</span>".format(editor_app_short_desc))
 
-        box_1.pack_start(box_2, True, True, 0)
-        box_1.pack_start(app_icon, True, True, 0)
+            app_icon = Gtk.Image.new_from_icon_name(editor_app_name, Gtk.IconSize.BUTTON)
+            app_icon.set_pixel_size(96)
+            app_icon.props.halign = Gtk.Align.END
+            app_icon.set_hexpand(True)
+            app_icon.set_margin_top(34)
+            app_icon.set_margin_bottom(34)
 
-        overlay.add(box_1)
+            label_background = Gtk.Label.new()
+            label_background.set_markup(
+                "<span weight='light' size='50000'>{}</span>\n<span weight='light' size='xx-large'>{}</span>".format(
+                    editor_app_pretty_name[:13], editor_app_pretty_name))
+            label_background.set_opacity(0.1)
+            label_background.set_halign(Gtk.Align.END)
+            label_background.set_valign(Gtk.Align.CENTER)
+            label_background.set_justify(Gtk.Justification.CENTER)
+            label_background.set_angle(35.0)
 
-        overlay.add_overlay(label_background)
-        overlay.show_all()
+            box_2.pack_start(label_ps, False, True, 0)
+            box_2.pack_start(label_appname, False, True, 0)
+            box_2.pack_start(label_appdesc, False, True, 0)
 
-        self.ui_banner_stack.add_named(overlay, "0")
+            box_1.pack_start(box_2, True, True, 0)
+            box_1.pack_start(app_icon, True, True, 0)
+
+            overlay.add(box_1)
+
+            overlay.add_overlay(label_background)
+            overlay.show_all()
+
+            self.ui_banner_stack.add_named(overlay, "{}".format(stack_counter))
+            stack_counter += 1
 
         self.ui_banner_stack.show_all()
+
+    def on_ui_banner_left_button_clicked(self, button):
+
+        banner_stack_len = 0
+        for row in self.ui_banner_stack:
+            banner_stack_len += 1
+
+        def get_prev_page(page):
+            increase = 0
+            for i in range(0, banner_stack_len):
+                increase += -1
+                if self.ui_banner_stack.get_child_by_name("{}".format(page + increase)) != None:
+                    return page + increase
+            return banner_stack_len - 1
+
+        self.ui_banner_stack.set_visible_child_name("{}".format(get_prev_page(self.banner_current_page)))
+        self.banner_current_page = int(self.ui_banner_stack.get_visible_child_name())
+
+
+    def on_ui_banner_right_button_clicked(self, button):
+
+        banner_stack_len = 0
+        for row in self.ui_banner_stack:
+            banner_stack_len += 1
+
+        def get_next_page(page):
+            increase = 0
+            for i in range(0, banner_stack_len):
+                increase += 1
+                if self.ui_banner_stack.get_child_by_name("{}".format(page + increase)) != None:
+                    return page + increase
+            return 0
+
+        self.ui_banner_stack.set_visible_child_name("{}".format(get_next_page(self.banner_current_page)))
+        self.banner_current_page = int(self.ui_banner_stack.get_visible_child_name())
 
 
     def setPardusApps(self):

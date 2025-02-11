@@ -1829,13 +1829,14 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="can-focus">False</property>
                                         <property name="hexpand">True</property>
                                         <child>
-                                          <object class="GtkButton">
+                                          <object class="GtkButton" id="ui_banner_left_button">
                                             <property name="visible">True</property>
                                             <property name="can-focus">True</property>
                                             <property name="receives-default">True</property>
                                             <property name="halign">start</property>
                                             <property name="hexpand">True</property>
                                             <property name="relief">none</property>
+                                            <signal name="clicked" handler="on_ui_banner_left_button_clicked" swapped="no"/>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
@@ -1855,6 +1856,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                           <object class="GtkStack" id="ui_banner_stack">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
+                                            <property name="transition-type">slide-left-right</property>
                                             <child>
                                               <placeholder/>
                                             </child>
@@ -1866,13 +1868,14 @@ so that the OS has nothing to do with the health of the application.</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkButton">
+                                          <object class="GtkButton" id="ui_banner_right_button">
                                             <property name="visible">True</property>
                                             <property name="can-focus">True</property>
                                             <property name="receives-default">True</property>
                                             <property name="halign">end</property>
                                             <property name="hexpand">True</property>
                                             <property name="relief">none</property>
+                                            <signal name="clicked" handler="on_ui_banner_right_button_clicked" swapped="no"/>
                                             <child>
                                               <object class="GtkImage">
                                                 <property name="visible">True</property>
