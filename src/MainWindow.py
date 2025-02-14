@@ -162,13 +162,13 @@ class MainWindow(object):
         self.bottomerrordetails_label = self.GtkBuilder.get_object("bottomerrordetails_label")
         self.bottomerrordetails_button = self.GtkBuilder.get_object("bottomerrordetails_button")
 
-        self.sortPardusAppsCombo = self.GtkBuilder.get_object("sortPardusAppsCombo")
-        self.SubCatCombo = self.GtkBuilder.get_object("SubCatCombo")
-        self.ui_showapps_buttonbox = self.GtkBuilder.get_object("ui_showapps_buttonbox")
-        self.ui_showall_button = self.GtkBuilder.get_object("ui_showall_button")
-        self.ui_showinstalled_button = self.GtkBuilder.get_object("ui_showinstalled_button")
-        self.ui_shownotinstalled_button = self.GtkBuilder.get_object("ui_shownotinstalled_button")
-        self.ui_showappcount_label = self.GtkBuilder.get_object("ui_showappcount_label")
+        self.ui_sortby_combo = self.GtkBuilder.get_object("ui_sortby_combo")
+        # self.SubCatCombo = self.GtkBuilder.get_object("SubCatCombo")
+        # self.ui_showapps_buttonbox = self.GtkBuilder.get_object("ui_showapps_buttonbox")
+        # self.ui_showall_button = self.GtkBuilder.get_object("ui_showall_button")
+        # self.ui_showinstalled_button = self.GtkBuilder.get_object("ui_showinstalled_button")
+        # self.ui_shownotinstalled_button = self.GtkBuilder.get_object("ui_shownotinstalled_button")
+        # self.ui_showappcount_label = self.GtkBuilder.get_object("ui_showappcount_label")
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
@@ -177,7 +177,8 @@ class MainWindow(object):
         self.commentstack = self.GtkBuilder.get_object("commentstack")
         self.prefstack = self.GtkBuilder.get_object("prefstack")
         self.activatestack = self.GtkBuilder.get_object("activatestack")
-        self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
+        # self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
+        self.ui_pardusapps_stack = self.GtkBuilder.get_object("ui_pardusapps_stack")
         self.tryfixstack = self.GtkBuilder.get_object("tryfixstack")
         self.queuestack = self.GtkBuilder.get_object("queuestack")
         self.myappsstack = self.GtkBuilder.get_object("myappsstack")
@@ -456,6 +457,10 @@ class MainWindow(object):
         # self.PardusAppsIconView.set_pixbuf_column(0)
         # self.PardusAppsIconView.set_text_column(3)
 
+        self.ui_right_stack = self.GtkBuilder.get_object("ui_right_stack")
+
+        self.ui_currentcat_label = self.GtkBuilder.get_object("ui_currentcat_label")
+
         self.ui_top_searchentry = self.GtkBuilder.get_object("ui_top_searchentry")
         self.ui_top_searchentry.props.primary_icon_activatable = True
         self.ui_top_searchentry.props.primary_icon_sensitive = True
@@ -535,8 +540,8 @@ class MainWindow(object):
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
-        self.NavCategoryImage = self.GtkBuilder.get_object("NavCategoryImage")
-        self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
+        # self.NavCategoryImage = self.GtkBuilder.get_object("NavCategoryImage")
+        # self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
 
         self.menu_suggestapp = self.GtkBuilder.get_object("menu_suggestapp")
         self.menu_statistics = self.GtkBuilder.get_object("menu_statistics")
@@ -575,13 +580,18 @@ class MainWindow(object):
         self.stats3ViewPort = self.GtkBuilder.get_object("stats3ViewPort")
         self.matplot_error = _("matplotlib is not found")
 
-        self.PardusCurrentCategory = -1
+        # self.PardusCurrentCategory = -1
+        # if self.locale == "tr":
+        #     self.PardusCurrentCategoryString = "tümü"
+        #     self.RepoCurrentCategory = "tümü"
+        # else:
+        #     self.PardusCurrentCategoryString = "all"
+        #     self.RepoCurrentCategory = "all"
+
         if self.locale == "tr":
-            self.PardusCurrentCategoryString = "tümü"
-            self.RepoCurrentCategory = "tümü"
+            self.current_category = "tümü"
         else:
-            self.PardusCurrentCategoryString = "all"
-            self.RepoCurrentCategory = "all"
+            self.current_category = "all"
 
         self.PardusCurrentCategorySubCats = False
         self.PardusCurrentCategoryExternal = False
@@ -1317,7 +1327,7 @@ class MainWindow(object):
         GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
         # GLib.idle_add(self.clearBoxes)
-        GLib.idle_add(self.setPardusCategories)
+        GLib.idle_add(self.set_categories)
         GLib.idle_add(self.setPardusApps)
         GLib.idle_add(self.set_banner)
         GLib.idle_add(self.set_most_apps)
@@ -1725,26 +1735,39 @@ class MainWindow(object):
         GLib.idle_add(flowbox.unselect_all)
 
 
-    def setPardusCategories(self):
-        # self.ui_leftcats_flowbox.foreach(lambda child: self.ui_leftcats_flowbox.remove(child))
+    def set_categories(self):
+        # if self.ui_leftcats_flowbox is not None:
+        #     GLib.idle_add(
+        #         lambda: (self.ui_leftcats_flowbox.foreach(lambda child: self.ui_leftcats_flowbox.remove(child)), False))
         if self.Server.connection:
             self.categories = []
             for cat in self.catlist:
-                self.categories.append({"name": cat[self.locale], "icon": cat["en"], "external": cat["external"],
-                                        "subcats": cat["subcats"],
-                                        "subcategories": cat["subcategories"] if "subcategories" in cat.keys() else []})
-            self.categories = sorted(self.categories, key=lambda x: x["name"])
-            if self.locale == "tr":
-                self.categories.insert(0, {"name": "keşfet", "icon": "discover", "external": False, "subcats": False,
-                                           "subcategories": []})
-                self.categories.insert(1, {"name": "tümü", "icon": "all", "external": False, "subcats": False,
-                                           "subcategories": []})
-            else:
-                self.categories.insert(0, {"name": "discover", "icon": "discover", "external": False, "subcats": False,
-                                           "subcategories": []})
-                self.categories.insert(1, {"name": "all", "icon": "all", "external": False, "subcats": False,
-                                           "subcategories": []})
+                self.categories.append({"name": cat[self.locale], "icon": cat["en"]})
 
+            self.categories = sorted(self.categories, key=lambda x: x["name"])
+
+            if self.locale == "tr":
+                self.categories.insert(0, {"name": "tümü", "icon": "all"})
+            else:
+                self.categories.insert(0, {"name": "all", "icon": "all"})
+
+            # discover
+            icon = Gtk.Image.new_from_icon_name("ps-discover-symbolic",  Gtk.IconSize.BUTTON)
+            label = Gtk.Label.new()
+            label.set_text(_("Discover"))
+            box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+            box.pack_start(icon, False, True, 0)
+            box.pack_start(label, False, True, 0)
+            box.set_margin_start(8)
+            box.set_margin_end(50)
+            box.set_margin_top(8)
+            box.set_margin_bottom(8)
+            row = Gtk.ListBoxRow()
+            row.add(box)
+            row.name = "discover"
+            GLib.idle_add(self.ui_leftcats_listbox.add, row)
+
+            # categories
             for cat in self.categories:
 
                 cat["icon"] = "ps-{}-symbolic".format(cat["icon"])
@@ -1813,21 +1836,33 @@ class MainWindow(object):
 
     def on_ui_leftcats_listbox_row_activated(self, listbox, row):
         print(row.name)
+        self.current_category = row.name
+        if self.current_category == "discover":
+            print("in discover")
+            self.ui_right_stack.set_visible_child_name("discover")
+        elif self.current_category == "installed":
+            print("in installed")
+            self.ui_right_stack.set_visible_child_name("installed")
+        else:
+            print("in category")
+            self.ui_pardusapps_flowbox.invalidate_filter()
+            self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_currentcat_label.set_markup("<b>{}</b>".format(self.current_category.title()))
 
     def on_catbutton_clicked(self, button):
 
         self.Logger.info("on_catbutton_clicked")
 
-        if self.mda_clicked and self.sortPardusAppsCombo.get_active() == 1:
-            self.sortPardusAppsCombo.set_active(0)
+        if self.mda_clicked and self.ui_sortby_combo.get_active() == 1:
+            self.ui_sortby_combo.set_active(0)
             self.mda_clicked = False
 
-        if self.mra_clicked and self.sortPardusAppsCombo.get_active() == 2:
-            self.sortPardusAppsCombo.set_active(0)
+        if self.mra_clicked and self.ui_sortby_combo.get_active() == 2:
+            self.ui_sortby_combo.set_active(0)
             self.mra_clicked = False
 
-        if self.la_clicked and self.sortPardusAppsCombo.get_active() == 3:
-            self.sortPardusAppsCombo.set_active(0)
+        if self.la_clicked and self.ui_sortby_combo.get_active() == 3:
+            self.ui_sortby_combo.set_active(0)
             self.la_clicked = False
 
         self.isPardusSearching = False
@@ -1863,7 +1898,7 @@ class MainWindow(object):
         if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
             self.ui_showapps_buttonbox.set_visible(False)
             self.ui_showappcount_label.set_visible(False)
-            self.sortPardusAppsCombo.set_visible(False)
+            self.ui_sortby_combo.set_visible(False)
             self.pardusAppsStack.set_visible_child_name("subcats")
             for row in self.SubCategoryFlowBox:
                 self.SubCategoryFlowBox.remove(row)
@@ -1891,7 +1926,7 @@ class MainWindow(object):
         else:
             self.ui_showapps_buttonbox.set_visible(True)
             self.ui_showappcount_label.set_visible(True)
-            self.sortPardusAppsCombo.set_visible(True)
+            self.ui_sortby_combo.set_visible(True)
             self.pardusAppsStack.set_visible_child_name("normal")
             # self.PardusCategoryFilter.refilter()
             self.ui_pardusapps_flowbox.invalidate_filter()
@@ -2433,8 +2468,8 @@ class MainWindow(object):
             self.homestack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
             self.homestack.set_transition_duration(200)
 
-            self.pardusAppsStack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
-            self.pardusAppsStack.set_transition_duration(200)
+            self.ui_pardusapps_stack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP_DOWN)
+            self.ui_pardusapps_stack.set_transition_duration(200)
 
             self.searchstack.set_transition_type(Gtk.StackTransitionType.SLIDE_UP)
             self.searchstack.set_transition_duration(200)
@@ -2567,7 +2602,7 @@ class MainWindow(object):
                     self.pardusAppsStack.set_visible_child_name("subcats")
                     self.ui_showapps_buttonbox.set_visible(False)
                     self.ui_showappcount_label.set_visible(False)
-                    self.sortPardusAppsCombo.set_visible(False)
+                    self.ui_sortby_combo.set_visible(False)
                 else:
                     self.homestack.set_visible_child_name("pardushome")
                     self.EditorAppsIconView.unselect_all()
@@ -4398,21 +4433,21 @@ class MainWindow(object):
     def pardusapps_filter_function(self, row):
         app = row.get_children()[0].name
 
-        def control_show_filter(show_all, show_installed, app_name=""):
-            if show_all:
-                return True
-            else:
-                if show_installed:
-                    return self.Package.isinstalled(app_name)
-                else:
-                    return not self.Package.isinstalled(app_name)
+        # def control_show_filter(show_all, show_installed, app_name=""):
+        #     if show_all:
+        #         return True
+        #     else:
+        #         if show_installed:
+        #             return self.Package.isinstalled(app_name)
+        #         else:
+        #             return not self.Package.isinstalled(app_name)
 
         category = []
         for i in app["category"]:
             category.append(i[self.locale])
-        subcategory = []
-        for i in app["subcategory"]:
-            subcategory.append(i[self.locale])
+        # subcategory = []
+        # for i in app["subcategory"]:
+        #     subcategory.append(i[self.locale])
         search_entry_text = self.pardus_searchentry.get_text()
         appname = app["name"]
 
@@ -4424,15 +4459,15 @@ class MainWindow(object):
         showall = True
         showinstalled = None
 
-        if self.ui_showall_button.get_active():
-            showall = True
-            showinstalled = None
-        elif self.ui_showinstalled_button.get_active():
-            showall = False
-            showinstalled = True
-        elif self.ui_shownotinstalled_button.get_active():
-            showall = False
-            showinstalled = False
+        # if self.ui_showall_button.get_active():
+        #     showall = True
+        #     showinstalled = None
+        # elif self.ui_showinstalled_button.get_active():
+        #     showall = False
+        #     showinstalled = True
+        # elif self.ui_shownotinstalled_button.get_active():
+        #     showall = False
+        #     showinstalled = False
 
         if self.isPardusSearching:
             for i in self.applist:
@@ -4444,28 +4479,28 @@ class MainWindow(object):
             if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
                     or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en.lower() \
                     or search_entry_text.lower() in desc_tr.lower():
-                return control_show_filter(showall, showinstalled, appname)
+                return True
         else:
-            if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
-                for i in self.applist:
-                    if i["name"] == appname:
-                        if i["external"]:
-                            if i["external"]["reponame"] == self.externalreponame:
-                                return control_show_filter(showall, showinstalled, appname)
+            # if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
+            #     for i in self.applist:
+            #         if i["name"] == appname:
+            #             if i["external"]:
+            #                 if i["external"]["reponame"] == self.externalreponame:
+            #                     return control_show_filter(showall, showinstalled, appname)
+            # else:
+            if self.current_category == "all" or self.current_category == "tümü":
+                return True
             else:
-                if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
-                    return control_show_filter(showall, showinstalled, appname)
-                else:
-                    if self.PardusCurrentCategoryString in category:
-                        if self.SubCatCombo.get_active_text() is not None:
-                            if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
-                                return control_show_filter(showall, showinstalled, appname)
-                            else:
-                                if self.PardusCurrentCategorySubCategories:
-                                    if self.SubCatCombo.get_active_text().lower() in subcategory:
-                                        return control_show_filter(showall, showinstalled, appname)
-                        else:
-                            return control_show_filter(showall, showinstalled, appname)
+                if self.current_category in category:
+                    # if self.SubCatCombo.get_active_text() is not None:
+                    #     if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
+                    #         return control_show_filter(showall, showinstalled, appname)
+                    #     else:
+                    #         if self.PardusCurrentCategorySubCategories:
+                    #             if self.SubCatCombo.get_active_text().lower() in subcategory:
+                    #                 return control_show_filter(showall, showinstalled, appname)
+                    # else:
+                    return True
 
     def on_ui_showinstalled_button_clicked(self, button):
         if button.get_active():
@@ -4567,16 +4602,16 @@ class MainWindow(object):
 
         self.set_app_count_label()
 
-        if self.mda_clicked and self.sortPardusAppsCombo.get_active() == 1:
-            self.sortPardusAppsCombo.set_active(0)
+        if self.mda_clicked and self.ui_sortby_combo.get_active() == 1:
+            self.ui_sortby_combo.set_active(0)
             self.mda_clicked = False
 
-        if self.mra_clicked and self.sortPardusAppsCombo.get_active() == 2:
-            self.sortPardusAppsCombo.set_active(0)
+        if self.mra_clicked and self.ui_sortby_combo.get_active() == 2:
+            self.ui_sortby_combo.set_active(0)
             self.mra_clicked = False
 
-        if self.la_clicked and self.sortPardusAppsCombo.get_active() == 3:
-            self.sortPardusAppsCombo.set_active(0)
+        if self.la_clicked and self.ui_sortby_combo.get_active() == 3:
+            self.ui_sortby_combo.set_active(0)
             self.la_clicked = False
 
         self.isPardusSearching = False
@@ -4612,7 +4647,7 @@ class MainWindow(object):
         if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
             self.ui_showapps_buttonbox.set_visible(False)
             self.ui_showappcount_label.set_visible(False)
-            self.sortPardusAppsCombo.set_visible(False)
+            self.ui_sortby_combo.set_visible(False)
             self.pardusAppsStack.set_visible_child_name("subcats")
             for row in self.SubCategoryFlowBox:
                 self.SubCategoryFlowBox.remove(row)
@@ -4640,7 +4675,7 @@ class MainWindow(object):
         else:
             self.ui_showapps_buttonbox.set_visible(True)
             self.ui_showappcount_label.set_visible(True)
-            self.sortPardusAppsCombo.set_visible(True)
+            self.ui_sortby_combo.set_visible(True)
             self.pardusAppsStack.set_visible_child_name("normal")
             self.PardusCategoryFilter.refilter()
             self.set_app_count_label()
@@ -4649,7 +4684,7 @@ class MainWindow(object):
         self.externalreponame = child.get_children()[0].name
         self.ui_showapps_buttonbox.set_visible(True)
         self.ui_showappcount_label.set_visible(True)
-        self.sortPardusAppsCombo.set_visible(True)
+        self.ui_sortby_combo.set_visible(True)
         self.PardusCategoryFilter.refilter()
         self.set_app_count_label()
         self.pardusAppsStack.set_visible_child_name("normal")
@@ -6436,7 +6471,7 @@ class MainWindow(object):
         self.SubCatCombo.remove_all()
         self.SubCatCombo.set_visible(False)
         self.menubackbutton.set_sensitive(True)
-        if self.sortPardusAppsCombo.get_active() != 1:
+        if self.ui_sortby_combo.get_active() != 1:
             self.mda_clicked = True
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
@@ -6446,8 +6481,8 @@ class MainWindow(object):
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(_("all").title())
-        if self.sortPardusAppsCombo.get_active != 1:
-            self.sortPardusAppsCombo.set_active(1)
+        if self.ui_sortby_combo.get_active != 1:
+            self.ui_sortby_combo.set_active(1)
         if not self.ui_showall_button.get_active():
             self.ui_showall_button.set_active(True)
         # self.PardusCategoryFilter.refilter()
@@ -6459,7 +6494,7 @@ class MainWindow(object):
         self.SubCatCombo.remove_all()
         self.SubCatCombo.set_visible(False)
         self.menubackbutton.set_sensitive(True)
-        if self.sortPardusAppsCombo.get_active() != 2:
+        if self.ui_sortby_combo.get_active() != 2:
             self.mra_clicked = True
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
@@ -6469,8 +6504,8 @@ class MainWindow(object):
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(_("all").title())
-        if self.sortPardusAppsCombo.get_active != 2:
-            self.sortPardusAppsCombo.set_active(2)
+        if self.ui_sortby_combo.get_active != 2:
+            self.ui_sortby_combo.set_active(2)
         if not self.ui_showall_button.get_active():
             self.ui_showall_button.set_active(True)
         # self.PardusCategoryFilter.refilter()
@@ -6482,7 +6517,7 @@ class MainWindow(object):
         self.SubCatCombo.remove_all()
         self.SubCatCombo.set_visible(False)
         self.menubackbutton.set_sensitive(True)
-        if self.sortPardusAppsCombo.get_active() != 3:
+        if self.ui_sortby_combo.get_active() != 3:
             self.la_clicked = True
         self.PardusCurrentCategoryString = "all"
         self.PardusCurrentCategoryIcon = "all"
@@ -6492,8 +6527,8 @@ class MainWindow(object):
             pixbuf = self.getSystemCatIcon(self.PardusCurrentCategoryIcon, 32)
         self.NavCategoryImage.set_from_pixbuf(pixbuf)
         self.NavCategoryLabel.set_text(_("all").title())
-        if self.sortPardusAppsCombo.get_active != 3:
-            self.sortPardusAppsCombo.set_active(3)
+        if self.ui_sortby_combo.get_active != 3:
+            self.ui_sortby_combo.set_active(3)
         if not self.ui_showall_button.get_active():
             self.ui_showall_button.set_active(True)
         # self.PardusCategoryFilter.refilter()

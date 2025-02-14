@@ -1995,9 +1995,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkStack">
+                              <object class="GtkStack" id="ui_right_stack">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
+                                <property name="transition-type">crossfade</property>
                                 <child>
                                   <object class="GtkBox" id="ui_discover_box">
                                     <property name="visible">True</property>
@@ -2156,8 +2157,142 @@
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="name">page0</property>
-                                    <property name="title" translatable="yes">page0</property>
+                                    <property name="name">discover</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="ui_apps_box">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="margin-start">8</property>
+                                        <property name="margin-end">17</property>
+                                        <property name="spacing">21</property>
+                                        <child>
+                                          <object class="GtkLabel" id="ui_currentcat_label">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label">Category</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkComboBoxText" id="ui_sortby_combo">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="active">0</property>
+                                            <property name="active-id">0</property>
+                                            <items>
+                                              <item id="0" translatable="yes">Sort by Name</item>
+                                              <item id="1" translatable="yes">Sort by Download</item>
+                                              <item id="2" translatable="yes">Sort by Popularity</item>
+                                              <item id="3" translatable="yes">Sort by Last Added</item>
+                                            </items>
+                                            <signal name="changed" handler="on_sortPardusAppsCombo_changed" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack-type">end</property>
+                                            <property name="position">4</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkStack" id="ui_pardusapps_stack">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="transition-type">slide-up-down</property>
+                                        <child>
+                                          <object class="GtkScrolledWindow" id="ui_pardusapps_scrolledwindow">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">True</property>
+                                            <child>
+                                              <object class="GtkViewport">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="shadow-type">none</property>
+                                                <child>
+                                                  <object class="GtkFlowBox" id="ui_pardusapps_flowbox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="valign">start</property>
+                                                    <property name="margin-start">5</property>
+                                                    <property name="margin-end">13</property>
+                                                    <property name="margin-top">5</property>
+                                                    <property name="margin-bottom">5</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <property name="column-spacing">5</property>
+                                                    <property name="row-spacing">5</property>
+                                                    <property name="min-children-per-line">3</property>
+                                                    <property name="max-children-per-line">50</property>
+                                                    <signal name="child-activated" handler="on_ui_pardusapps_flowbox_child_activated" swapped="no"/>
+                                                    <style>
+                                                      <class name="pardus-software-flowbox"/>
+                                                    </style>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="name">normal</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="name">apps</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="ui_installed_box">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="label">initial my apps page</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="name">installed</property>
+                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -2696,315 +2831,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="PardusAppsBox">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="margin-start">13</property>
-                            <property name="margin-end">13</property>
-                            <property name="margin-top">5</property>
-                            <property name="margin-bottom">5</property>
-                            <property name="spacing">21</property>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="spacing">7</property>
-                                <child>
-                                  <object class="GtkImage" id="NavCategoryImage">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="icon-name">view-app-grid-symbolic</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="NavCategoryLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">None</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSeparator">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButtonBox" id="ui_showapps_buttonbox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="homogeneous">True</property>
-                                <property name="layout-style">expand</property>
-                                <child>
-                                  <object class="GtkToggleButton" id="ui_showall_button">
-                                    <property name="name">-1</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Show All Applications</property>
-                                    <property name="active">True</property>
-                                    <signal name="clicked" handler="on_ui_showall_button_clicked" swapped="no"/>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="icon-name">view-app-grid-symbolic</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkToggleButton" id="ui_showinstalled_button">
-                                    <property name="name">1</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Show Installed Applications</property>
-                                    <signal name="clicked" handler="on_ui_showinstalled_button_clicked" swapped="no"/>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="icon-name">emblem-ok-symbolic</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkToggleButton" id="ui_shownotinstalled_button">
-                                    <property name="name">0</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Show Not Installed Applications</property>
-                                    <signal name="clicked" handler="on_ui_shownotinstalled_button_clicked" swapped="no"/>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="icon-name">list-remove-symbolic</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="ui_showappcount_label">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="sortPardusAppsCombo">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="active">0</property>
-                                <property name="active-id">0</property>
-                                <items>
-                                  <item id="0" translatable="yes">Sort by Name</item>
-                                  <item id="1" translatable="yes">Sort by Download</item>
-                                  <item id="2" translatable="yes">Sort by Popularity</item>
-                                  <item id="3" translatable="yes">Sort by Last Added</item>
-                                </items>
-                                <signal name="changed" handler="on_sortPardusAppsCombo_changed" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="pack-type">end</property>
-                                <property name="position">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="SubCatCombo">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="active-id">-1</property>
-                                <signal name="changed" handler="on_SubCatCombo_changed" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="pack-type">end</property>
-                                <property name="position">5</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkStack" id="pardusAppsStack">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="transition-type">slide-up-down</property>
-                            <child>
-                              <object class="GtkScrolledWindow" id="PardusAppScroll">
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="shadow-type">in</property>
-                                <child>
-                                  <object class="GtkViewport">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <child>
-                                      <object class="GtkFlowBox" id="ui_pardusapps_flowbox">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="valign">start</property>
-                                        <property name="margin-start">5</property>
-                                        <property name="margin-end">5</property>
-                                        <property name="margin-top">5</property>
-                                        <property name="margin-bottom">5</property>
-                                        <property name="homogeneous">True</property>
-                                        <property name="column-spacing">5</property>
-                                        <property name="row-spacing">5</property>
-                                        <property name="min-children-per-line">3</property>
-                                        <property name="max-children-per-line">50</property>
-                                        <signal name="child-activated" handler="on_ui_pardusapps_flowbox_child_activated" swapped="no"/>
-                                        <style>
-                                          <class name="pardus-software-flowbox"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="name">normal</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="margin-start">13</property>
-                                <property name="margin-end">13</property>
-                                <property name="margin-top">13</property>
-                                <property name="margin-bottom">13</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <object class="GtkFlowBox" id="SubCategoryFlowBox">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="homogeneous">True</property>
-                                    <property name="column-spacing">7</property>
-                                    <property name="row-spacing">7</property>
-                                    <property name="min-children-per-line">3</property>
-                                    <property name="max-children-per-line">50</property>
-                                    <signal name="child-activated" handler="on_SubCategoryFlowBox_child_activated" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="name">subcats</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">3</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="name">pardusapps</property>
-                        <property name="title">page3</property>
-                        <property name="position">2</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <object class="GtkBox" id="PardusAppDetailBox">
