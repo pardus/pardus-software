@@ -476,8 +476,8 @@ class MainWindow(object):
         self.EditorListStore = self.GtkBuilder.get_object("EditorListStore")
         self.RepoAppListStore = self.GtkBuilder.get_object("RepoAppListStore")
 
-        self.HeaderBarMenuButton = self.GtkBuilder.get_object("HeaderBarMenuButton")
-        self.PopoverMenu = self.GtkBuilder.get_object("PopoverMenu")
+        self.ui_headermenu_popover = self.GtkBuilder.get_object("ui_headermenu_popover")
+        self.ui_headermenu_button = self.GtkBuilder.get_object("ui_headermenu_button")
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
         self.aboutdialog.set_program_name(_("Pardus Software Center"))
@@ -2583,7 +2583,7 @@ class MainWindow(object):
             self.toprevealer.set_transition_type(Gtk.StackTransitionType.NONE)
             self.toprevealer.set_transition_duration(0)
 
-        self.PopoverMenu.set_transitions_enabled(self.UserSettings.config_ea)
+        self.ui_headermenu_popover.set_transitions_enabled(self.UserSettings.config_ea)
         self.DisclaimerPopover.set_transitions_enabled(self.UserSettings.config_ea)
         self.ImagePopover.set_transitions_enabled(self.UserSettings.config_ea)
         self.licensePopover.set_transitions_enabled(self.UserSettings.config_ea)
@@ -5703,7 +5703,7 @@ class MainWindow(object):
         else:
             self.prefback = self.homestack.get_visible_child_name()
             self.prefback_preferences = self.prefback
-        self.PopoverMenu.popdown()
+        self.ui_headermenu_popover.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
         self.prefstack.set_visible_child_name("main")
@@ -5771,11 +5771,11 @@ class MainWindow(object):
     def on_menu_statistics_clicked(self, button):
         if self.homestack.get_visible_child_name() == "statistics":
             self.Logger.info("already statistics page")
-            self.PopoverMenu.popdown()
+            self.ui_headermenu_popover.popdown()
             return
         self.prefback = self.homestack.get_visible_child_name()
         self.prefback_statistics = self.prefback
-        self.PopoverMenu.popdown()
+        self.ui_headermenu_popover.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
         self.menubackbutton.set_sensitive(True)
@@ -5921,19 +5921,19 @@ class MainWindow(object):
                 # self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
 
     def on_menu_about_clicked(self, button):
-        self.PopoverMenu.popdown()
+        self.ui_headermenu_popover.popdown()
         self.aboutdialog.run()
         self.aboutdialog.hide()
 
     def on_menu_suggestapp_clicked(self, button):
         if self.homestack.get_visible_child_name() == "suggestapp":
             self.Logger.info("already suggestapp page")
-            self.PopoverMenu.popdown()
+            self.ui_headermenu_popover.popdown()
             return
         self.prefback = self.homestack.get_visible_child_name()
         self.prefback_suggestapp = self.prefback
         self.menubackbutton.set_sensitive(True)
-        self.PopoverMenu.popdown()
+        self.ui_headermenu_popover.popdown()
         self.topsearchbutton.set_active(False)
         self.topsearchbutton.set_sensitive(False)
         self.store_button.get_style_context().remove_class("suggested-action")
