@@ -332,15 +332,15 @@ class MainWindow(object):
         self.rapp_dsize_label = self.GtkBuilder.get_object("rapp_dsize_label")
         self.rapp_isize_label = self.GtkBuilder.get_object("rapp_isize_label")
 
-        self.store_button = self.GtkBuilder.get_object("store_button")
-        self.store_button.get_style_context().add_class("suggested-action")
-        self.repo_button = self.GtkBuilder.get_object("repo_button")
-        self.myapps_button = self.GtkBuilder.get_object("myapps_button")
-        self.updates_button = Gtk.Button.new()
-        self.updates_button.set_label(_("Updates"))
-        self.updates_button.connect("clicked", self.on_updates_button_clicked)
+        # self.store_button = self.GtkBuilder.get_object("store_button")
+        # self.store_button.get_style_context().add_class("suggested-action")
+        # self.repo_button = self.GtkBuilder.get_object("repo_button")
+        # self.myapps_button = self.GtkBuilder.get_object("myapps_button")
+        # self.updates_button = Gtk.Button.new()
+        # self.updates_button.set_label(_("Updates"))
+        # self.updates_button.connect("clicked", self.on_updates_button_clicked)
         self.queue_button = self.GtkBuilder.get_object("queue_button")
-        self.header_buttonbox = self.GtkBuilder.get_object("header_buttonbox")
+        # self.header_buttonbox = self.GtkBuilder.get_object("header_buttonbox")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
@@ -455,6 +455,10 @@ class MainWindow(object):
         # self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
         # self.PardusAppsIconView.set_pixbuf_column(0)
         # self.PardusAppsIconView.set_text_column(3)
+
+        self.ui_top_searchentry = self.GtkBuilder.get_object("ui_top_searchentry")
+        self.ui_top_searchentry.props.primary_icon_activatable = True
+        self.ui_top_searchentry.props.primary_icon_sensitive = True
 
         self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
@@ -615,12 +619,12 @@ class MainWindow(object):
         self.controlDisplay()
         self.mainstack.set_visible_child_name("splash")
 
-        self.HeaderBarMenuButton.set_sensitive(False)
-        self.menubackbutton.set_sensitive(False)
-        self.store_button.set_sensitive(False)
-        self.repo_button.set_sensitive(False)
-        self.myapps_button.set_sensitive(False)
-        self.topsearchbutton.set_sensitive(False)
+        # self.HeaderBarMenuButton.set_sensitive(False)
+        # self.menubackbutton.set_sensitive(False)
+        # self.store_button.set_sensitive(False)
+        # self.repo_button.set_sensitive(False)
+        # self.myapps_button.set_sensitive(False)
+        # self.topsearchbutton.set_sensitive(False)
 
         self.fromexternal = False
         self.externalactioned = False
@@ -762,6 +766,7 @@ class MainWindow(object):
         self.GnomeCommentListBoxTR = self.GtkBuilder.get_object("GnomeCommentListBoxTR")
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
+        self.ui_leftcats_box = self.GtkBuilder.get_object("ui_leftcats_box")
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
         self.ui_banner_stack = self.GtkBuilder.get_object("ui_banner_stack")
 
@@ -901,7 +906,7 @@ class MainWindow(object):
             else:
                 waittime = self.UserSettings.config_forceaptuptime
             if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()):
-                self.headerAptUpdateSpinner.start()
+                # self.headerAptUpdateSpinner.start()
                 command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py"]
                 self.startAptUpdateProcess(command)
             else:
@@ -1020,17 +1025,17 @@ class MainWindow(object):
         if self.Server.connection:
             if not self.isbroken:
                 self.homestack.set_visible_child_name("pardushome")
-                GLib.idle_add(self.topsearchbutton.set_sensitive, True)
+                # GLib.idle_add(self.topsearchbutton.set_sensitive, True)
                 GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
-                if self.myapps_perm == 1:
-                    GLib.idle_add(self.myapps_button.set_sensitive, True)
-                else:
-                    GLib.idle_add(self.myapps_button.set_sensitive, False)
+                # if self.myapps_perm == 1:
+                #     GLib.idle_add(self.myapps_button.set_sensitive, True)
+                # else:
+                #     GLib.idle_add(self.myapps_button.set_sensitive, False)
                 GLib.idle_add(self.menu_statistics.set_sensitive, True)
             else:
                 self.homestack.set_visible_child_name("fixapt")
                 GLib.idle_add(self.topsearchbutton.set_sensitive, False)
-                GLib.idle_add(self.myapps_button.set_sensitive, False)
+                # GLib.idle_add(self.myapps_button.set_sensitive, False)
         else:
             self.homestack.set_visible_child_name("noserver")
             self.noserverlabel.set_markup(
@@ -1047,24 +1052,24 @@ class MainWindow(object):
         self.splashspinner.stop()
         self.splashlabel.set_text("")
 
-        GLib.idle_add(self.HeaderBarMenuButton.set_sensitive, True)
-        GLib.idle_add(self.store_button.set_sensitive, True)
-        if self.repo_perm == 1:
-            GLib.idle_add(self.repo_button.set_sensitive, True)
-        else:
-            GLib.idle_add(self.repo_button.set_sensitive, False)
+        # GLib.idle_add(self.HeaderBarMenuButton.set_sensitive, True)
+        # GLib.idle_add(self.store_button.set_sensitive, True)
+        # if self.repo_perm == 1:
+        #     GLib.idle_add(self.repo_button.set_sensitive, True)
+        # else:
+        #     GLib.idle_add(self.repo_button.set_sensitive, False)
 
-        if self.Server.connection and self.isbroken:
-            GLib.idle_add(self.store_button.set_sensitive, False)
-            GLib.idle_add(self.repo_button.set_sensitive, False)
+        # if self.Server.connection and self.isbroken:
+        #     GLib.idle_add(self.store_button.set_sensitive, False)
+        #     GLib.idle_add(self.repo_button.set_sensitive, False)
 
-        if self.Package.upgradable():
-            GLib.idle_add(self.header_buttonbox.pack_start, self.updates_button, False, True, 0)
-            GLib.idle_add(self.updates_button.set_visible, True)
-            GLib.idle_add(self.updates_button.set_sensitive, True)
-        else:
-            GLib.idle_add(self.updates_button.set_visible, False)
-            GLib.idle_add(self.updates_button.set_sensitive, False)
+        # if self.Package.upgradable():
+        #     GLib.idle_add(self.header_buttonbox.pack_start, self.updates_button, False, True, 0)
+        #     GLib.idle_add(self.updates_button.set_visible, True)
+        #     GLib.idle_add(self.updates_button.set_sensitive, True)
+        # else:
+        #     GLib.idle_add(self.updates_button.set_visible, False)
+        #     GLib.idle_add(self.updates_button.set_sensitive, False)
 
         self.Logger.info("page setted to normal")
 
@@ -5593,6 +5598,18 @@ class MainWindow(object):
         if path is not None:
             self.repoapps_selection_changed(path)
 
+    def on_ui_top_searchentry_focus_in_event(self, widget, event):
+        print("on_ui_top_searchentry_focus_in_event")
+
+    def on_ui_top_searchentry_search_changed(self, entry_search):
+        print("on_top_searchentry_search_changed")
+
+    def on_ui_top_searchentry_activate(self, entry):
+        print("on_top_searchentry_search_changed")
+
+    def on_ui_top_searchentry_icon_press(self, entry, icon_pos, event):
+        print("on_ui_top_searchentry_icon_press")
+
     def on_topsearchbutton_toggled(self, button):
         if self.topsearchbutton.get_active():
             self.toprevealer.set_reveal_child(True)
@@ -5610,39 +5627,40 @@ class MainWindow(object):
             self.toprevealer.set_reveal_child(False)
 
     def on_main_key_press_event(self, widget, event):
-        if self.mainstack.get_visible_child_name() == "home":
-            if self.homestack.get_visible_child_name() == "pardushome" or self.homestack.get_visible_child_name() == "pardusapps":
-                if not self.topsearchbutton.get_active():
-                    if event.string.isdigit() or event.string.isalpha():
-                        self.pardus_searchentry.get_buffer().delete_text(0, -1)
-                        self.pardus_searchentry.grab_focus()
-                        self.topsearchbutton.set_active(True)
-                        self.toprevealer.set_reveal_child(True)
-                        self.pardus_searchentry.get_buffer().insert_text(1, event.string, 1)
-                        self.pardus_searchentry.set_position(2)
-                        return True
-                else:
-                    if event.keyval == Gdk.KEY_Escape:
-                        self.pardus_searchentry.get_buffer().delete_text(0, -1)
-                        self.topsearchbutton.set_active(False)
-                        self.toprevealer.set_reveal_child(False)
-                        return True
-            elif self.homestack.get_visible_child_name() == "myapps" and self.myappsstack.get_visible_child_name() == "myapps":
-                if not self.topsearchbutton.get_active():
-                    if event.string.isdigit() or event.string.isalpha():
-                        self.myapps_searchentry.get_buffer().delete_text(0, -1)
-                        self.myapps_searchentry.grab_focus()
-                        self.topsearchbutton.set_active(True)
-                        self.toprevealer.set_reveal_child(True)
-                        self.myapps_searchentry.get_buffer().insert_text(1, event.string, 1)
-                        self.myapps_searchentry.set_position(2)
-                        return True
-                else:
-                    if event.keyval == Gdk.KEY_Escape:
-                        self.myapps_searchentry.get_buffer().delete_text(0, -1)
-                        self.topsearchbutton.set_active(False)
-                        self.toprevealer.set_reveal_child(False)
-                        return True
+        pass
+        # if self.mainstack.get_visible_child_name() == "home":
+        #     if self.homestack.get_visible_child_name() == "pardushome" or self.homestack.get_visible_child_name() == "pardusapps":
+        #         if not self.topsearchbutton.get_active():
+        #             if event.string.isdigit() or event.string.isalpha():
+        #                 self.pardus_searchentry.get_buffer().delete_text(0, -1)
+        #                 self.pardus_searchentry.grab_focus()
+        #                 self.topsearchbutton.set_active(True)
+        #                 self.toprevealer.set_reveal_child(True)
+        #                 self.pardus_searchentry.get_buffer().insert_text(1, event.string, 1)
+        #                 self.pardus_searchentry.set_position(2)
+        #                 return True
+        #         else:
+        #             if event.keyval == Gdk.KEY_Escape:
+        #                 self.pardus_searchentry.get_buffer().delete_text(0, -1)
+        #                 self.topsearchbutton.set_active(False)
+        #                 self.toprevealer.set_reveal_child(False)
+        #                 return True
+        #     elif self.homestack.get_visible_child_name() == "myapps" and self.myappsstack.get_visible_child_name() == "myapps":
+        #         if not self.topsearchbutton.get_active():
+        #             if event.string.isdigit() or event.string.isalpha():
+        #                 self.myapps_searchentry.get_buffer().delete_text(0, -1)
+        #                 self.myapps_searchentry.grab_focus()
+        #                 self.topsearchbutton.set_active(True)
+        #                 self.toprevealer.set_reveal_child(True)
+        #                 self.myapps_searchentry.get_buffer().insert_text(1, event.string, 1)
+        #                 self.myapps_searchentry.set_position(2)
+        #                 return True
+        #         else:
+        #             if event.keyval == Gdk.KEY_Escape:
+        #                 self.myapps_searchentry.get_buffer().delete_text(0, -1)
+        #                 self.topsearchbutton.set_active(False)
+        #                 self.toprevealer.set_reveal_child(False)
+        #                 return True
 
     def on_menu_settings_clicked(self, button):
         if self.homestack.get_visible_child_name() == "preferences":
@@ -6353,8 +6371,8 @@ class MainWindow(object):
         command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
                    "correctsourceslist"]
 
-        self.headerAptUpdateSpinner.set_visible(True)
-        self.headerAptUpdateSpinner.start()
+        # self.headerAptUpdateSpinner.set_visible(True)
+        # self.headerAptUpdateSpinner.start()
         self.prefcorrectbutton.set_sensitive(False)
 
         self.startSysProcess(command)
@@ -7016,8 +7034,8 @@ class MainWindow(object):
                     _("Fixing of system package manager sources list is done."),
                     _("Package manager cache automatically updated.")))
                 self.Package.updatecache()
-            self.headerAptUpdateSpinner.set_visible(False)
-            self.headerAptUpdateSpinner.stop()
+            # self.headerAptUpdateSpinner.set_visible(False)
+            # self.headerAptUpdateSpinner.stop()
             self.prefcorrectbutton.set_sensitive(True)
 
             self.correctsourcesclicked = False
@@ -7071,8 +7089,8 @@ class MainWindow(object):
 
     def onAptUpdateProcessExit(self, pid, status):
         self.Package.updatecache()
-        self.headerAptUpdateSpinner.set_visible(False)
-        self.headerAptUpdateSpinner.stop()
+        # self.headerAptUpdateSpinner.set_visible(False)
+        # self.headerAptUpdateSpinner.stop()
         if status == 0:
             try:
                 timestamp = int(datetime.now().timestamp())

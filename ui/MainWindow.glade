@@ -834,6 +834,234 @@
   <object class="GtkTreeModelFilter" id="PardusCategoryFilter">
     <property name="child-model">PardusAppListStore</property>
   </object>
+  <object class="GtkPopover" id="PopoverMenu">
+    <property name="can-focus">False</property>
+    <property name="position">bottom</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">5</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkButton" id="menu_settings">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+            <signal name="clicked" handler="on_menu_settings_clicked" swapped="no"/>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">preferences-other-symbolic</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Settings</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="menu_statistics">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+            <signal name="clicked" handler="on_menu_statistics_clicked" swapped="no"/>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">image-x-generic-symbolic</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Statistics</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">6</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">7</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="menu_suggestapp">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+            <signal name="clicked" handler="on_menu_suggestapp_clicked" swapped="no"/>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">list-add-symbolic</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Suggest App</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">8</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">9</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="menu_about">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+            <signal name="clicked" handler="on_menu_about_clicked" swapped="no"/>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">dialog-information-symbolic</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">About</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">10</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkPopover" id="PopoverPrefTip">
     <property name="can-focus">False</property>
     <property name="position">bottom</property>
@@ -872,11 +1100,6 @@
     <mime-types>
       <mime-type>image/svg+xml</mime-type>
     </mime-types>
-  </object>
-  <object class="GtkImage" id="backimage">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">go-previous-symbolic</property>
   </object>
   <object class="GtkImage" id="editimage">
     <property name="visible">True</property>
@@ -918,49 +1141,8 @@
     <property name="can-focus">False</property>
     <property name="icon-name">go-next-symbolic</property>
   </object>
-  <object class="GtkImage" id="retryimage">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">view-refresh-symbolic</property>
-  </object>
-  <object class="GtkImage" id="searchimage">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-find-symbolic</property>
-  </object>
-  <object class="GtkImage" id="sendappimage">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">mail-send-symbolic</property>
-  </object>
-  <object class="GtkImage" id="sendcommentimage">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">mail-send-symbolic</property>
-  </object>
-  <object class="GtkPopover" id="DisclaimerPopover">
-    <property name="can-focus">False</property>
-    <property name="relative-to">dDisclaimerButton</property>
-    <property name="position">left</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">7</property>
-        <property name="margin-end">7</property>
-        <property name="margin-top">7</property>
-        <property name="margin-bottom">7</property>
-        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
-
-This application served from Pardus non-free package repositories,
-so that the OS has nothing to do with the health of the application.</property>
-        <property name="use-markup">True</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkPopover" id="ImagePopover">
     <property name="can-focus">False</property>
-    <property name="relative-to">headerbar</property>
     <property name="position">bottom</property>
     <signal name="closed" handler="on_ImagePopover_closed" swapped="no"/>
     <signal name="key-press-event" handler="on_ImagePopover_key_press_event" swapped="no"/>
@@ -1170,6 +1352,21 @@ so that the OS has nothing to do with the health of the application.</property>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkImage" id="retryimage">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">view-refresh-symbolic</property>
+  </object>
+  <object class="GtkImage" id="sendappimage">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">mail-send-symbolic</property>
+  </object>
+  <object class="GtkImage" id="sendcommentimage">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">mail-send-symbolic</property>
   </object>
   <object class="GtkWindow" id="MainWindow">
     <property name="can-focus">False</property>
@@ -1764,7 +1961,7 @@ so that the OS has nothing to do with the health of the application.</property>
                             <property name="can-focus">False</property>
                             <property name="spacing">16</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkBox" id="ui_leftcats_box">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="vexpand">True</property>
@@ -10916,7 +11113,7 @@ Use with caution. Are you sure you want to continue?</property>
       </object>
     </child>
     <child type="titlebar">
-      <object class="GtkHeaderBar" id="headerbar">
+      <object class="GtkHeaderBar">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="spacing">3</property>
@@ -10925,354 +11122,60 @@ Use with caution. Are you sure you want to continue?</property>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">5</property>
-            <property name="spacing">13</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkButtonBox" id="header_buttonbox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="layout-style">expand</property>
-                <child>
-                  <object class="GtkButton" id="store_button">
-                    <property name="label" translatable="yes">Store</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <signal name="clicked" handler="on_store_button_clicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="repo_button">
-                    <property name="label" translatable="yes">Repo</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <signal name="clicked" handler="on_repo_button_clicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="myapps_button">
-                    <property name="label" translatable="yes">My Apps</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <signal name="clicked" handler="on_myapps_button_clicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
+              <placeholder/>
             </child>
-          </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="menubackbutton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="image">backimage</property>
-            <property name="relief">none</property>
-            <signal name="clicked" handler="on_menubackbutton_clicked" swapped="no"/>
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton" id="HeaderBarMenuButton">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">35</property>
+            <property name="label" translatable="yes">Pardus Store</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSearchEntry" id="ui_top_searchentry">
+            <property name="width-request">350</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="focus-on-click">False</property>
-            <property name="receives-default">True</property>
-            <property name="relief">none</property>
-            <property name="popover">PopoverMenu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">open-menu-symbolic</property>
-              </object>
-            </child>
+            <property name="margin-start">98</property>
+            <property name="primary-icon-name">edit-find-symbolic</property>
+            <property name="placeholder-text" translatable="yes">search for apps</property>
+            <signal name="activate" handler="on_ui_top_searchentry_activate" swapped="no"/>
+            <signal name="focus-in-event" handler="on_ui_top_searchentry_focus_in_event" swapped="no"/>
+            <signal name="icon-press" handler="on_ui_top_searchentry_icon_press" swapped="no"/>
+            <signal name="search-changed" handler="on_ui_top_searchentry_search_changed" swapped="no"/>
           </object>
           <packing>
             <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToggleButton" id="topsearchbutton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="image">searchimage</property>
-            <property name="relief">none</property>
-            <signal name="toggled" handler="on_topsearchbutton_toggled" swapped="no"/>
-          </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinner" id="headerAptUpdateSpinner">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="tooltip-text" translatable="yes">Auto apt update in progress.</property>
-          </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">5</property>
           </packing>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkPopover" id="PopoverMenu">
+  <object class="GtkPopover" id="DisclaimerPopover">
     <property name="can-focus">False</property>
-    <property name="relative-to">HeaderBarMenuButton</property>
-    <property name="position">bottom</property>
+    <property name="relative-to">dDisclaimerButton</property>
+    <property name="position">left</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkButton" id="menu_settings">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="relief">none</property>
-            <signal name="clicked" handler="on_menu_settings_clicked" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="icon-name">preferences-other-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Settings</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="menu_statistics">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="relief">none</property>
-            <signal name="clicked" handler="on_menu_statistics_clicked" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="icon-name">image-x-generic-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Statistics</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">6</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">7</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="menu_suggestapp">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="relief">none</property>
-            <signal name="clicked" handler="on_menu_suggestapp_clicked" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="icon-name">list-add-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Suggest App</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">8</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">9</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="menu_about">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="relief">none</property>
-            <signal name="clicked" handler="on_menu_about_clicked" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="icon-name">dialog-information-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">About</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">10</property>
-          </packing>
-        </child>
+        <property name="margin-start">7</property>
+        <property name="margin-end">7</property>
+        <property name="margin-top">7</property>
+        <property name="margin-bottom">7</property>
+        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
+
+This application served from Pardus non-free package repositories,
+so that the OS has nothing to do with the health of the application.</property>
+        <property name="use-markup">True</property>
       </object>
     </child>
   </object>
