@@ -121,7 +121,6 @@ class MainWindow(object):
 
         self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
 
-        self.ui_leftcats_flowbox = self.GtkBuilder.get_object("ui_leftcats_flowbox")
         self.SubCategoryFlowBox = self.GtkBuilder.get_object("SubCategoryFlowBox")
         self.MostDownFlowBox = self.GtkBuilder.get_object("MostDownFlowBox")
         self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
@@ -1579,8 +1578,9 @@ class MainWindow(object):
 
 
     def setPardusApps(self):
-        for row in self.ui_pardusapps_flowbox:
-            self.ui_pardusapps_flowbox.remove(row)
+        GLib.idle_add(lambda: (self.ui_pardusapps_flowbox and self.ui_pardusapps_flowbox.foreach(
+            lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
+
         if self.Server.connection:
             for app in self.applist:
 
@@ -1655,9 +1655,9 @@ class MainWindow(object):
 
 
     def set_categories(self):
-        # if self.ui_leftcats_flowbox is not None:
-        #     GLib.idle_add(
-        #         lambda: (self.ui_leftcats_flowbox.foreach(lambda child: self.ui_leftcats_flowbox.remove(child)), False))
+        GLib.idle_add(lambda: (self.ui_leftcats_listbox and self.ui_leftcats_listbox.foreach(
+            lambda child: self.ui_leftcats_listbox.remove(child)), False))
+
         if self.Server.connection:
             self.categories = []
             for cat in self.catlist:
