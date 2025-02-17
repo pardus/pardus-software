@@ -1584,19 +1584,7 @@ class MainWindow(object):
         if self.Server.connection:
             for app in self.applist:
 
-                if os.path.isfile("{}appicons/{}.svg".format(self.Server.cachedir, app["name"])):
-
-                    info = GdkPixbuf.Pixbuf.get_file_info("{}appicons/{}.svg".format(self.Server.cachedir, app["name"]))
-
-                    if info.width == 64 and info.height == 64:
-                        app_icon = Gtk.Image.new_from_file("{}appicons/{}.svg".format(self.Server.cachedir, app["name"]))
-                    else:
-                        print("{} icon size: {}x{}".format(app["name"], info.width, info.height))
-                        px = GdkPixbuf.Pixbuf.new_from_file_at_scale("{}appicons/{}.svg".format(self.Server.cachedir, app["name"]), 64, 64, True)
-                        app_icon = Gtk.Image.new_from_pixbuf(px)
-
-                else:
-                    app_icon = Gtk.Image.new_from_icon_name(app["name"], 64)
+                app_icon = Gtk.Image.new_from_icon_name(app["name"], Gtk.IconSize.BUTTON)
                 app_icon.set_pixel_size(64)
 
                 prettyname = app["prettyname"][self.locale]
@@ -1612,13 +1600,11 @@ class MainWindow(object):
                 app_name.props.valign = Gtk.Align.START
                 app_name.props.halign = Gtk.Align.START
 
-
                 down_icon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
                 down_icon.set_pixel_size(12)
 
                 down_label = Gtk.Label.new()
                 down_label.set_markup("<small>{}</small>".format(app["download"]))
-
 
                 rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
                 rate_icon.set_pixel_size(12)
@@ -1626,15 +1612,12 @@ class MainWindow(object):
                 rate_label = Gtk.Label.new()
                 rate_label.set_markup("<small>{:.1f}</small>".format(float(app["rate_average"])))
 
-
                 box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
                 box_stats.pack_start(down_icon, False, True, 0)
                 box_stats.pack_start(down_label, False, True, 0)
                 box_stats.pack_start(rate_icon, False, True, 5)
                 box_stats.pack_start(rate_label, False, True, 0)
                 box_stats.props.valign = Gtk.Align.END
-
-
 
                 box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
                 box_right.pack_start(app_name, False, True, 0)
@@ -1652,7 +1635,6 @@ class MainWindow(object):
                 box.set_margin_bottom(8)
                 box.set_spacing(8)
 
-
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
                 listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
@@ -1663,32 +1645,6 @@ class MainWindow(object):
                 GLib.idle_add(self.ui_pardusapps_flowbox.insert, listbox, -1)
 
             GLib.idle_add(self.ui_pardusapps_flowbox.show_all)
-
-    #             if self.UserSettings.config_usi:
-    #                 appicon = self.getServerAppIcon(app["name"])
-    #             else:
-    #                 appicon = self.getSystemAppIcon(app["name"])
-    #             appname = app['name']
-    #             prettyname = app["prettyname"][self.locale]
-    #             if prettyname == "" or prettyname is None:
-    #                 prettyname = app["prettyname"]["en"]
-    #             category = ""
-    #             for i in app["category"]:
-    #                 category += i[self.locale] + ","
-    #             category = category.rstrip(",")
-    #             categorynumber = self.get_category_number(category)
-    #             subcategory = ""
-    #             if "subcategory" in app.keys():
-    #                 for i in app["subcategory"]:
-    #                     subcategory += i[self.locale].lower() + ","
-    #                 subcategory = subcategory.rstrip(",")
-    #             GLib.idle_add(self.addToPardusApps,
-    #                           [appicon, appname, categorynumber, prettyname, category, subcategory])
-
-
-    # def addToPardusApps(self, list):
-    #     self.PardusAppListStore.append(list)
-
 
     def on_pardus_apps_listbox_released(self, widget, event, listbox):
         print(listbox.name)
