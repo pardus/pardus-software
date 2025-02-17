@@ -40,8 +40,9 @@ class UserSettings(object):
         if not Path(self.configdir).exists():
             self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
-        self.cat_icons_dir = self.cachedir + "caticons"
-        self.app_icons_dir = self.cachedir + "appicons"
+        self.icons_dir = self.cachedir + "icons/"
+        self.app_icons_dir = self.icons_dir + "app-icons"
+        self.cat_icons_dir = self.icons_dir + "cat-icons"
 
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser(strict=False)

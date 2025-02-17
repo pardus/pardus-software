@@ -33,10 +33,11 @@ class Server(object):
         self.serversendsuggestapp = "/api/v2/suggestapp"
         self.serverparduscomments = "/api/v2/parduscomments"
         self.serverfiles = "/files/"
-        self.serverappicons = "appicons"
-        self.servercaticons = "categoryicons"
-        self.servericonty = ".svg"
-        self.serverarchive = ".tar.gz"
+        # self.serverappicons = "appicons"
+        # self.servercaticons = "categoryicons"
+        self.server_icons_archive = "icons.tar.gz"
+        # self.servericonty = ".svg"
+        # self.serverarchive = ".tar.gz"
         self.serversettings = "/api/v2/settings"
         self.settingsfile = "serversettings.ini"
 
@@ -50,6 +51,10 @@ class Server(object):
         if not Path(self.configdir).exists():
             self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
+        self.icons_dir = self.cachedir + "icons/"
+        self.app_icons_dir = self.icons_dir + "app-icons"
+        self.cat_icons_dir = self.icons_dir + "cat-icons"
+
         self.error_message = ""
         self.connection = False
         self.applist = []
@@ -60,7 +65,7 @@ class Server(object):
         self.mostrateapplist = []
         self.lastaddedapplist = []
         self.totalstatistics = []
-        self.servermd5 = []
+        self.servermd5 = {}
         self.appversion = ""
         self.appversion_pardus21 = ""
         self.appversion_pardus23 = ""
@@ -113,73 +118,73 @@ class Server(object):
             self.Logger.warning("{} is not success".format(type))
             self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
 
-    def getIcons(self, url, type, force_download=False, fromsettings=False):
-        if not self.isExists(self.cachedir + type) or force_download:
+    def get_icons(self, url, filename, force_download=False, fromsettings=False):
+        if not self.isExists(self.icons_dir + filename) or force_download:
             file = Gio.File.new_for_uri(url)
-            file.load_contents_async(None, self._open_icon_stream, type, fromsettings)
+            file.load_contents_async(None, self._open_icon_stream, filename, fromsettings)
         else:
-            self.Logger.info("{} already available".format(type))
-            self.ServerIconsCB(True, type, fromsettings)
+            self.Logger.info("{} already available".format(filename))
+            if not self.isExists(self.app_icons_dir) or not self.isExists(self.cat_icons_dir):
+                self.extract_icons(self.icons_dir + filename)
+            self.ServerIconsCB(True, fromsettings)
 
-    def _open_icon_stream(self, file, result, type, fromsettings):
+    def _open_icon_stream(self, file, result, filename, fromsettings):
         try:
             success, data, etag = file.load_contents_finish(result)
         except GLib.Error as error:
-            self.Logger.warning("{} _open_icon_stream Error: {}, {}".format(type, error.domain, error.message))
+            self.Logger.warning("{} _open_icon_stream Error: {}, {}".format(filename, error.domain, error.message))
             self.Logger.exception("{}".format(error))
-            self.ServerIconsCB(False, type, fromsettings)
+            self.ServerIconsCB(False, fromsettings)
             return False
 
         if success:
-            if self.createDir(self.cachedir):
-                with open(self.cachedir + type + self.serverarchive, "wb") as file:
+            if self.createDir(self.icons_dir):
+                with open(self.icons_dir + filename , "wb") as file:
                     file.write(data)
-                if self.controlMD5(type):
-                    if self.extractArchive(self.cachedir + type + self.serverarchive, type):
-                        self.ServerIconsCB(True, type, fromsettings)
+                if self.control_icons_md5(filename):
+                    if self.extract_icons(self.icons_dir + filename):
+                        self.ServerIconsCB(True, fromsettings)
                         return True
                     else:
-                        self.Logger.warning("{} extract error".format(type))
+                        self.Logger.warning("{} extract error".format(filename))
                 else:
-                    self.Logger.warning("md5 value is different (controlMD5) {} ".format(type))
+                    self.Logger.warning("md5 value is different (controlMD5) {} ".format(filename))
         else:
-            self.Logger.warning("{} is not success".format(type))
+            self.Logger.warning("{} is not success".format(filename))
 
-        self.ServerIconsCB(False, type, fromsettings)
+        self.ServerIconsCB(False, fromsettings)
 
-    def controlIcons(self):
-        redown_app_icons = False
-        redown_cat_icons = False
-        if self.isExists(self.cachedir + self.serverappicons + self.serverarchive):
-            localiconmd5 = md5(open(self.cachedir + self.serverappicons + self.serverarchive, "rb").read()).hexdigest()
-            if self.servermd5["appicon"]:
-                if localiconmd5 != self.servermd5["appicon"]:
-                    self.Logger.info("md5 value of app icon is different so trying download new app icons from server")
-                    redown_app_icons = True
+    def control_icons(self):
+        redown_icons = False
+        if self.isExists(self.icons_dir + self.server_icons_archive):
+            localiconmd5 = md5(open(self.icons_dir + self.server_icons_archive, "rb").read()).hexdigest()
+            if "icons" in self.servermd5.keys() and self.servermd5["icons"]:
+                if localiconmd5 != self.servermd5["icons"]:
+                    self.Logger.info("md5 value of icons are different so trying download new icons from server")
+                    redown_icons = True
+        return redown_icons
 
-        if self.isExists(self.cachedir + self.servercaticons + self.serverarchive):
-            localiconmd5 = md5(open(self.cachedir + self.servercaticons + self.serverarchive, "rb").read()).hexdigest()
-            if self.servermd5["caticon"]:
-                if localiconmd5 != self.servermd5["caticon"]:
-                    self.Logger.info("md5 value of cat icon is different so trying download new cat icons from server")
-                    redown_cat_icons = True
-
-        return redown_app_icons, redown_cat_icons
-
-    def controlMD5(self, type):
-        if type == self.serverappicons:
-            servertag = "appicon"
-        elif type == self.servercaticons:
-            servertag = "caticon"
-        else:
-            return False
-
-        if self.isExists(self.cachedir + type + self.serverarchive):
-            localiconmd5 = md5(open(self.cachedir + type + self.serverarchive, "rb").read()).hexdigest()
-            if self.servermd5[servertag]:
-                if localiconmd5 == self.servermd5[servertag]:
+    def control_icons_md5(self, filename):
+        if self.isExists(self.icons_dir + filename):
+            localiconmd5 = md5(open(self.icons_dir + filename, "rb").read()).hexdigest()
+            if self.servermd5["icons"]:
+                if localiconmd5 == self.servermd5["icons"]:
                     return True
         return False
+
+    def extract_icons(self, archive):
+        try:
+            rmtree(self.app_icons_dir, ignore_errors=True)
+            rmtree(self.cat_icons_dir, ignore_errors=True)
+            tar = tarfile.open(archive)
+            extractables = [member for member in tar.getmembers() if member.name.endswith(".svg")]
+            tar.extractall(members=extractables, path=self.icons_dir)
+            tar.close()
+            return True
+        except Exception as error:
+            self.Logger.warning("{} : {}".format("extract error", self.cachedir))
+            self.Logger.exception("{}".format(error))
+            return False
 
     def createDir(self, dir):
         try:
@@ -188,31 +193,6 @@ class Server(object):
         except Exception as error:
             self.Logger.warning("{} : {}".format("mkdir error", self.cachedir))
             self.Logger.exception("{}".format(error))
-            return False
-
-    def extractArchive(self, archive, type):
-        try:
-            tar = tarfile.open(archive)
-            if type == self.serverappicons:
-                extractables = [member for member in tar.getmembers() if
-                                member.name.startswith(self.serverappicons) and member.name.endswith(self.servericonty)]
-            elif type == self.servercaticons:
-                extractables = [member for member in tar.getmembers() if
-                                member.name.startswith(self.servercaticons) and member.name.endswith(self.servericonty)]
-            else:
-                extractables = ""
-            rmtree(self.cachedir + type, ignore_errors=True)
-            try:
-                icons = self.iconnames.split(",")
-                for icon in icons:
-                    rmtree(self.cachedir + type + "-" + icon, ignore_errors=True)
-            except Exception as e:
-                self.Logger.exception("{}".format(e))
-            tar.extractall(members=extractables, path=self.cachedir)
-            tar.close()
-            return True
-        except:
-            self.Logger.warning("tarfile error")
             return False
 
     def isExists(self, dir):

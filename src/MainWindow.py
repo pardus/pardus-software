@@ -794,6 +794,7 @@ class MainWindow(object):
         self.status_serverstatistics = False
         self.serverappicons_done = False
         self.servercaticons_done = False
+        self.server_icons_done = False
 
         self.AppImage = AppImage()
         self.AppImage.Pixbuf = self.Pixbuf
@@ -814,8 +815,8 @@ class MainWindow(object):
         self.usersettings()
 
         icon_theme = Gtk.IconTheme.get_default()
-        icon_theme.prepend_search_path(self.UserSettings.cat_icons_dir)
         icon_theme.prepend_search_path(self.UserSettings.app_icons_dir)
+        icon_theme.prepend_search_path(self.UserSettings.cat_icons_dir)
 
         self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
         self.Logger.info("{}".format(self.user_distro_full))
@@ -1411,70 +1412,32 @@ class MainWindow(object):
 
             if self.status_serverapps and self.status_servercats and self.status_serverhome and self.status_serverstatistics:
                 self.Server.connection = True
-                self.getIcons()
+                self.get_icons_from_server()
         else:
             if not self.connection_error_after:
                 self.Server.connection = False
                 self.afterServers()
                 self.connection_error_after = True
 
-    def ServerIconsCB(self, status, type, fromsettings=False):
+    def ServerIconsCB(self, status, fromsettings=False):
 
         if not fromsettings:
-            if type == self.Server.serverappicons:
-                self.serverappicons_done = True
-                if not status:
-                    self.notify(message_summary=_("Couldn't get icons"),
-                                message_body=_("Application icons could not be retrieved from the server"))
-            elif type == self.Server.servercaticons:
-                self.servercaticons_done = True
-                if not status:
-                    self.notify(message_summary=_("Couldn't get icons"),
-                                message_body=_("Category icons could not be retrieved from the server"))
-            if self.serverappicons_done and self.servercaticons_done:
-                self.afterServers()
+            self.server_icons_done = True
+            if not status:
+                self.notify(message_summary=_("Couldn't get icons"),
+                            message_body=_("Icons could not be retrieved from the server"))
+            self.afterServers()
         else:
-            self.Logger.info("fromsettings, {} re-setting".format(type))
+            self.Logger.info("fromsettings, re-setting icons")
             self.usersettings()
-            if type == self.Server.serverappicons:
-                GLib.idle_add(self.PardusAppListStore.clear)
-                self.EditorListStore.clear()
-                for row in self.MostDownFlowBox:
-                    self.MostDownFlowBox.remove(row)
-                for row in self.MostRateFlowBox:
-                    self.MostRateFlowBox.remove(row)
-                for row in self.LastAddedFlowBox:
-                    self.LastAddedFlowBox.remove(row)
-                self.setPardusApps()
-                self.setEditorApps()
-                self.setMostApps()
-            elif type == self.Server.servercaticons:
-                for row in self.ui_leftcats_flowbox:
-                    self.ui_leftcats_flowbox.remove(row)
-                self.setPardusCategories()
-            self.setSelectIcons()
 
-    def getIcons(self):
+    def get_icons_from_server(self):
         if self.Server.connection:
             self.Logger.info("Getting icons from server")
             GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting icons from server")))
-            redown_app_icons, redown_cat_icons = self.Server.controlIcons()
-            if redown_app_icons:
-                self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
-                    self.Server.serverappicons, force_download=True)
-            else:
-                self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
-                    self.Server.serverappicons)
-            if redown_cat_icons:
-                self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
-                    self.Server.servercaticons, force_download=True)
-            else:
-                self.Server.getIcons(
-                    self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
-                    self.Server.servercaticons)
+            redown_icons = self.Server.control_icons()
+            self.Server.get_icons(url=self.Server.serverurl + "/files/" + self.Server.server_icons_archive,
+                                  filename=self.Server.server_icons_archive, force_download=redown_icons)
         else:
             self.Logger.info("icons cannot downloading because server connection is {}".format(self.Server.connection))
 
@@ -6206,11 +6169,11 @@ class MainWindow(object):
                 self.usersettings()
                 GLib.idle_add(self.clearBoxes)
                 if state:
-                    self.Server.getIcons(
+                    self.Server.get_icons(
                         self.Server.serverurl + self.Server.serverfiles + self.Server.serverappicons + self.Server.serverarchive,
                         self.Server.serverappicons, fromsettings=True)
 
-                    self.Server.getIcons(
+                    self.Server.get_icons(
                         self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
                         self.Server.servercaticons, fromsettings=True)
                 else:
