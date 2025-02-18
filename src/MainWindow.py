@@ -1901,7 +1901,7 @@ class MainWindow(object):
                 prettyname = "{}".format(self.getPrettyName(mda["name"]))
 
                 app_name = Gtk.Label.new()
-                app_name.set_markup("{}".format(prettyname))
+                app_name.set_markup("<b>{}</b>".format(prettyname))
                 app_name.set_line_wrap(False)
                 app_name.set_justify(Gtk.Justification.LEFT)
                 app_name.set_max_width_chars(21)
@@ -1910,19 +1910,23 @@ class MainWindow(object):
 
                 button_action = Gtk.Button.new()
                 button_action.props.halign = Gtk.Align.END
+                button_action.props.valign = Gtk.Align.START
                 button_action.set_hexpand(True)
                 button_action.get_style_context().add_class("pardus-software-mostapp-action-button")
+                button_label = Gtk.Label.new()
+                button_action.add(button_label)
+
                 is_installed = self.Package.isinstalled(mda["name"])
                 if is_installed is not None:
                     if is_installed:
                         self.set_button_class(button_action, 1)
-                        button_action.set_label(_("Uninstall"))
+                        button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
                     else:
                         self.set_button_class(button_action, 0)
-                        button_action.set_label(_("Install"))
+                        button_label.set_markup("<small>{}</small>".format(_("Install")))
                 else:
                     self.set_button_class(button_action, 2)
-                    button_action.set_label(_("Not Found"))
+                    button_label.set_markup("<small>{}</small>".format(_("Not Found")))
 
                 box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
                 box_app.pack_start(app_name, False, True, 0)
