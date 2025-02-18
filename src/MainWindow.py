@@ -869,9 +869,13 @@ class MainWindow(object):
             user_locale = "en"
         return user_locale
 
+    # def on_MainWindow_configure_event(self, widget, event):
+    #     width, height = widget.get_size()
+    #     print("Size: {} x {}".format(width, height))
+
     def controlDisplay(self):
-        width = 950
-        height = 730
+        width = 1071
+        height = 750
         s = 1
         w = 1920
         h = 1080
@@ -884,8 +888,8 @@ class MainWindow(object):
             s = Gdk.Monitor.get_scale_factor(monitor)
 
             if w > 1920 or h > 1080:
-                width = int(w * 0.4948)
-                height = int(h * 0.6759)
+                width = int(w * 0.5578)
+                height = int(h * 0.6944)
 
             self.MainWindow.resize(width, height)
 

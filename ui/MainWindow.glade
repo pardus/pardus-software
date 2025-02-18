@@ -1371,8 +1371,8 @@
   <object class="GtkWindow" id="MainWindow">
     <property name="can-focus">False</property>
     <property name="window-position">center</property>
-    <property name="default-width">950</property>
-    <property name="default-height">730</property>
+    <property name="default-width">1071</property>
+    <property name="default-height">750</property>
     <property name="icon-name">pardus-software</property>
     <signal name="key-press-event" handler="on_main_key_press_event" swapped="no"/>
     <child>
