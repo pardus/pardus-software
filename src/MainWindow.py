@@ -813,10 +813,6 @@ class MainWindow(object):
         self.utils()
         self.usersettings()
 
-        icon_theme = Gtk.IconTheme.get_default()
-        icon_theme.prepend_search_path(self.UserSettings.app_icons_dir)
-        icon_theme.prepend_search_path(self.UserSettings.cat_icons_dir)
-
         self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
         self.Logger.info("{}".format(self.user_distro_full))
 
@@ -1083,6 +1079,11 @@ class MainWindow(object):
 
         self.Logger.info("page setted to normal")
 
+    def prepend_server_icons(self):
+        icon_theme = Gtk.IconTheme.get_default()
+        icon_theme.prepend_search_path(self.UserSettings.app_icons_dir)
+        icon_theme.prepend_search_path(self.UserSettings.cat_icons_dir)
+
     def package(self):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
         self.Package = Package()
@@ -1324,6 +1325,7 @@ class MainWindow(object):
 
     def afterServers(self):
         self.normalpage()
+        self.prepend_server_icons()
         GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
         # GLib.idle_add(self.clearBoxes)
