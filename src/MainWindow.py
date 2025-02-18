@@ -1884,11 +1884,20 @@ class MainWindow(object):
                 app_name.props.halign = Gtk.Align.START
 
                 button_action = Gtk.Button.new()
-                button_action.set_label(_("Get"))
                 button_action.props.halign = Gtk.Align.END
                 button_action.set_hexpand(True)
-                button_action.get_style_context().add_class("suggested-action")
                 button_action.get_style_context().add_class("pardus-software-mostapp-action-button")
+                is_installed = self.Package.isinstalled(mda["name"])
+                if is_installed is not None:
+                    if is_installed:
+                        self.set_button_class(button_action, 1)
+                        button_action.set_label(_("Uninstall"))
+                    else:
+                        self.set_button_class(button_action, 0)
+                        button_action.set_label(_("Install"))
+                else:
+                    self.set_button_class(button_action, 2)
+                    button_action.set_label(_("Not Found"))
 
                 box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
                 box_app.pack_start(app_name, False, True, 0)
