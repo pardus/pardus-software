@@ -1662,10 +1662,10 @@ class MainWindow(object):
                 box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
                 box.pack_start(app_icon, False, True, 0)
                 box.pack_start(box_right, False, True, 0)
-                box.set_margin_start(8)
-                box.set_margin_end(8)
-                box.set_margin_top(8)
-                box.set_margin_bottom(8)
+                box.set_margin_start(13)
+                box.set_margin_end(5)
+                box.set_margin_top(13)
+                box.set_margin_bottom(13)
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
@@ -2058,7 +2058,7 @@ class MainWindow(object):
                 box.pack_start(app_icon, False, True, 0)
                 box.pack_start(box_right, False, True, 0)
                 box.set_margin_start(13)
-                box.set_margin_end(13)
+                box.set_margin_end(5)
                 box.set_margin_top(13)
                 box.set_margin_bottom(13)
 
