@@ -1588,6 +1588,7 @@ class MainWindow(object):
 
                 app_icon = Gtk.Image.new_from_icon_name(app["name"], Gtk.IconSize.BUTTON)
                 app_icon.set_pixel_size(64)
+                app_icon.set_margin_end(12)
 
                 prettyname = app["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
@@ -1599,34 +1600,59 @@ class MainWindow(object):
                 app_name.set_justify(Gtk.Justification.LEFT)
                 app_name.set_max_width_chars(21)
                 app_name.set_ellipsize(Pango.EllipsizeMode.END)
-                app_name.props.valign = Gtk.Align.START
                 app_name.props.halign = Gtk.Align.START
+                app_name.props.valign = Gtk.Align.START
 
-                down_icon = Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON)
-                down_icon.set_pixel_size(12)
+                button_action = Gtk.Button.new()
+                button_action.props.halign = Gtk.Align.END
+                button_action.props.valign = Gtk.Align.START
+                button_action.set_hexpand(True)
+                button_action.get_style_context().add_class("pardus-software-apps-action-button")
+                button_label = Gtk.Label.new()
+                button_action.add(button_label)
 
-                down_label = Gtk.Label.new()
-                down_label.set_markup("<small>{}</small>".format(app["download"]))
+                is_installed = self.Package.isinstalled(app["name"])
+                if is_installed is not None:
+                    if is_installed:
+                        self.set_button_class(button_action, 1)
+                        button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                    else:
+                        self.set_button_class(button_action, 0)
+                        button_label.set_markup("<small>{}</small>".format(_("Install")))
+                else:
+                    self.set_button_class(button_action, 2)
+                    button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+
+                box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
+                box_app.pack_start(app_name, False, True, 0)
+                box_app.pack_start(button_action, True, True, 0)
 
                 rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
-                rate_icon.set_pixel_size(12)
+                rate_icon.set_pixel_size(10)
+                rate_icon.set_opacity(0.7)
+                rate_icon.props.valign = Gtk.Align.CENTER
 
                 rate_label = Gtk.Label.new()
-                rate_label.set_markup("<small>{:.1f}</small>".format(float(app["rate_average"])))
+                rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(app["rate_average"])))
 
-                box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-                box_stats.pack_start(down_icon, False, True, 0)
-                box_stats.pack_start(down_label, False, True, 0)
-                box_stats.pack_start(rate_icon, False, True, 5)
+                box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
                 box_stats.pack_start(rate_label, False, True, 0)
-                box_stats.props.valign = Gtk.Align.END
+                box_stats.pack_start(rate_icon, False, True, 0)
+                box_stats.props.valign = Gtk.Align.START
+                box_stats.props.halign = Gtk.Align.START
+
+                category_label = Gtk.Label.new()
+                category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
+                    self.get_category_name_from_app_name(app["name"])))
+                category_label.props.valign = Gtk.Align.START
+                category_label.props.halign = Gtk.Align.START
 
                 box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-                box_right.pack_start(app_name, False, True, 0)
-                box_right.pack_end(box_stats, False, True, 0)
-                box_right.set_margin_top(3)
-                box_right.set_margin_bottom(3)
-                box_right.set_spacing(5)
+                box_right.props.valign = Gtk.Align.CENTER
+                # box_right.props.halign = Gtk.Align.START
+                box_right.pack_start(box_app, False, True, 0)
+                box_right.pack_start(category_label, False, True, 0)
+                box_right.pack_start(box_stats, False, True, 0)
 
                 box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
                 box.pack_start(app_icon, False, True, 0)
@@ -1635,7 +1661,6 @@ class MainWindow(object):
                 box.set_margin_end(8)
                 box.set_margin_top(8)
                 box.set_margin_bottom(8)
-                box.set_spacing(8)
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
