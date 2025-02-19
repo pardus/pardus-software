@@ -470,6 +470,14 @@ class MainWindow(object):
         self.ui_mostdown_flowbox = self.GtkBuilder.get_object("ui_mostdown_flowbox")
         self.ui_recent_flowbox = self.GtkBuilder.get_object("ui_recent_flowbox")
 
+        self.ui_ad_name = self.GtkBuilder.get_object("ui_ad_name")
+        self.ui_ad_icon = self.GtkBuilder.get_object("ui_ad_icon")
+        self.ui_ad_avgrate_label = self.GtkBuilder.get_object("ui_ad_avgrate_label")
+        self.ui_ad_download_label = self.GtkBuilder.get_object("ui_ad_download_label")
+        self.ui_ad_size_label = self.GtkBuilder.get_object("ui_ad_size_label")
+        self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
+        self.ui_ad_actionbutton_label = self.GtkBuilder.get_object("ui_ad_actionbutton_label")
+
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
 
         self.PardusAppListStore = self.GtkBuilder.get_object("PardusAppListStore")
@@ -1669,7 +1677,7 @@ class MainWindow(object):
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-                listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
+                # listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
                 listbox.name = app
                 listbox.get_style_context().add_class("pardus-software-listbox")
                 GLib.idle_add(listbox.add, box)
@@ -1678,12 +1686,15 @@ class MainWindow(object):
 
             GLib.idle_add(self.ui_pardusapps_flowbox.show_all)
 
-    def on_pardus_apps_listbox_released(self, widget, event, listbox):
-        print(listbox.name)
+    # def on_pardus_apps_listbox_released(self, widget, event, listbox):
+    #     print("on_pardus_apps_listbox_released")
+    #     print(listbox.name)
 
     def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
         print(f"Left clicked: {child.get_children()[0].name}")
         GLib.idle_add(flowbox.unselect_all)
+
+        self.set_app_details_page(child.get_children()[0].name["name"])
 
 
     def set_categories(self):
@@ -2078,9 +2089,31 @@ class MainWindow(object):
 
     def on_mostdown_listbox_row_activated(self, listbox, row):
         print(row.name)
+        self.set_app_details_page(row.name)
 
     def on_recent_listbox_row_activated(self, listbox, row):
         print(row.name)
+        self.set_app_details_page(row.name)
+
+    def set_app_details_page(self, app_name):
+        self.ui_right_stack.set_visible_child_name("appdetails")
+
+        self.ui_ad_name.set_markup("<b>{}</b>".format(app_name))
+
+        self.ui_ad_icon.set_from_icon_name(app_name, 96)
+        self.ui_ad_icon.set_pixel_size(96)
+
+        is_installed = self.Package.isinstalled(app_name)
+        if is_installed is not None:
+            if is_installed:
+                self.set_button_class(self.ui_ad_action_button, 1)
+                self.ui_ad_actionbutton_label.set_markup("{}".format(_("Uninstall")))
+            else:
+                self.set_button_class(self.ui_ad_action_button, 0)
+                self.ui_ad_actionbutton_label.set_markup("{}".format(_("Install")))
+        else:
+            self.set_button_class(self.ui_ad_action_button, 2)
+            self.ui_ad_actionbutton_label.set_markup("{}".format(_("Not Found")))
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
