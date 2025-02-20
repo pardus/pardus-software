@@ -24,7 +24,7 @@ class Server(object):
     def __init__(self):
         self.Logger = Logger(__name__)
         self.serverurl = ""  # This is setting from MainWindow server func
-        self.serverapps = "/api/v2/apps/"
+        self.serverapps = "/api/v3/apps/"
         self.servercats = "/api/v2/cats/"
         self.serverhomepage = "/api/v2/homepage"
         self.serverstatistics = "/api/v2/statistics"

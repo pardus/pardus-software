@@ -62,7 +62,7 @@ class MainWindow(object):
             self.Logger.exception("{}".format(e))
             raise
 
-        self.applist = []
+        self.applist = {}
         self.catlist = []
 
         self.locale = self.getLocale()
@@ -691,8 +691,8 @@ class MainWindow(object):
         self.upgrade_inprogress = False
         self.keep_ok_clicked = False
 
-        self.applist = []
-        self.fullapplist = []
+        self.applist = {}
+        self.fullapplist = {}
         self.catlist = []
         self.fullcatlist = []
         self.upgradable_packages = []
@@ -1371,7 +1371,8 @@ class MainWindow(object):
             if type == "apps":
                 self.Logger.info("server apps successful")
                 self.status_serverapps = True
-                self.applist = sorted(response["app-list"], key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
+                # self.applist = sorted(response, key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
+                self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
                 self.fullapplist = self.applist
             elif type == "cats":
                 self.Logger.info("server cats successful")
@@ -1597,15 +1598,15 @@ class MainWindow(object):
             lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
 
         if self.Server.connection:
-            for app in self.applist:
+            for app, details in self.applist.items():
 
-                app_icon = Gtk.Image.new_from_icon_name(app["name"], Gtk.IconSize.BUTTON)
+                app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.BUTTON)
                 app_icon.set_pixel_size(64)
                 app_icon.set_margin_end(12)
 
-                prettyname = app["prettyname"][self.locale]
+                prettyname = details["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
-                    prettyname = app["prettyname"]["en"]
+                    prettyname = details["prettyname"]["en"]
 
                 app_name = Gtk.Label.new()
                 app_name.set_markup("<b>{}</b>".format(prettyname))
@@ -1624,7 +1625,7 @@ class MainWindow(object):
                 button_label = Gtk.Label.new()
                 button_action.add(button_label)
 
-                is_installed = self.Package.isinstalled(app["name"])
+                is_installed = self.Package.isinstalled(app)
                 if is_installed is not None:
                     if is_installed:
                         self.set_button_class(button_action, 1)
@@ -1646,7 +1647,7 @@ class MainWindow(object):
                 rate_icon.props.valign = Gtk.Align.CENTER
 
                 rate_label = Gtk.Label.new()
-                rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(app["rate_average"])))
+                rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(details["rate_average"])))
 
                 box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
                 box_stats.pack_start(rate_label, False, True, 0)
@@ -1656,7 +1657,7 @@ class MainWindow(object):
 
                 category_label = Gtk.Label.new()
                 category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
-                    self.get_category_name_from_app_name(app["name"])))
+                    self.get_category_name_from_app_name(app)))
                 category_label.props.valign = Gtk.Align.START
                 category_label.props.halign = Gtk.Align.START
 
@@ -1678,7 +1679,7 @@ class MainWindow(object):
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
                 # listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
-                listbox.name = app
+                listbox.name = {app: details}
                 listbox.get_style_context().add_class("pardus-software-listbox")
                 GLib.idle_add(listbox.add, box)
 
@@ -1693,9 +1694,7 @@ class MainWindow(object):
     def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
         print(f"Left clicked: {child.get_children()[0].name}")
         GLib.idle_add(flowbox.unselect_all)
-
-        self.set_app_details_page(child.get_children()[0].name["name"])
-
+        self.set_app_details_page(child.get_children()[0].name)
 
     def set_categories(self):
         GLib.idle_add(lambda: (self.ui_leftcats_listbox and self.ui_leftcats_listbox.foreach(
@@ -1921,7 +1920,7 @@ class MainWindow(object):
                 app_name.set_markup("<b>{}</b>".format(prettyname))
                 app_name.set_line_wrap(False)
                 app_name.set_justify(Gtk.Justification.LEFT)
-                app_name.set_max_width_chars(21)
+                app_name.set_max_width_chars(16)
                 app_name.set_ellipsize(Pango.EllipsizeMode.END)
                 app_name.props.halign = Gtk.Align.START
 
@@ -2010,7 +2009,7 @@ class MainWindow(object):
                 app_name.set_markup("<b>{}</b>".format(prettyname))
                 app_name.set_line_wrap(False)
                 app_name.set_justify(Gtk.Justification.LEFT)
-                app_name.set_max_width_chars(21)
+                app_name.set_max_width_chars(16)
                 app_name.set_ellipsize(Pango.EllipsizeMode.END)
                 app_name.props.halign = Gtk.Align.START
 
@@ -2095,10 +2094,29 @@ class MainWindow(object):
         print(row.name)
         self.set_app_details_page(row.name)
 
-    def set_app_details_page(self, app_name):
+    def set_app_details_page(self, app):
+
+        if isinstance(app, dict):
+            app_name, details = next(iter(app.items()))
+        elif isinstance(app, str):
+            app_name = app
+            details = self.fullapplist.get(app_name, {})
+        else:
+            self.Logger.warning("{} {}".format("set_app_details_page func ERROR for: ", app))
+            return
+
+        if not details:
+            self.Logger.warning("{} details not found.".format(app_name))
+            return
+
+        print("app_name: {}".format(app_name))
+        print("details: {}".format(details))
+
         self.ui_right_stack.set_visible_child_name("appdetails")
 
-        self.ui_ad_name.set_markup("<b>{}</b>".format(app_name))
+        pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
+
+        self.ui_ad_name.set_markup("<b>{}</b>".format(pretty_name))
 
         self.ui_ad_icon.set_from_icon_name(app_name, 96)
         self.ui_ad_icon.set_pixel_size(96)
@@ -2336,24 +2354,21 @@ class MainWindow(object):
         GLib.idle_add(self.LastAddedFlowBox.show_all)
 
     def getPrettyName(self, name, split=True):
-        prettyname = name
-        # look full list of apps
-        for i in self.fullapplist:
-            if i["name"] == name:
-                prettyname = i["prettyname"][self.locale]
-                if prettyname == "" or prettyname is None:
-                    prettyname = i["prettyname"]["en"]
-        if split:
-            if len(prettyname.split(" ")) > 3:
-                prettyname = " ".join(prettyname.split(" ")[:3]) + " ..."
+        details = self.fullapplist.get(name)
+        if details:
+            prettyname = details["prettyname"].get(self.locale) or details["prettyname"].get("en", name)
+        else:
+            prettyname = name
+
         return prettyname
 
-    def get_category_name_from_app_name(self, name, split=True):
-        cat = _("Unknowm")
-        # look full list of apps
-        for i in self.fullapplist:
-            if i["name"] == name:
-                cat = i["category"][0][self.locale].title()
+    def get_category_name_from_app_name(self, name):
+        details = self.fullapplist.get(name)
+        if details and "category" in details and details["category"]:
+            cat = details["category"][0].get(self.locale, _("Unknown")).title()
+        else:
+            cat = _("Unknown")
+
         return cat
 
     def getSystemCatIcon(self, cat, size=48):
@@ -4449,146 +4464,27 @@ class MainWindow(object):
         else:
             self.Logger.info("wpc star error")
 
-    # def PardusCategoryFilterFunction(self, model, iteration, data):
-    #     def control_show_filter(show_all, show_installed, app_name=""):
-    #         if show_all:
-    #             return True
-    #         else:
-    #             if show_installed:
-    #                 return self.Package.isinstalled(app_name)
-    #             else:
-    #                 return not self.Package.isinstalled(app_name)
-    #
-    #     search_entry_text = self.pardus_searchentry.get_text()
-    #     categorynumber = int(model[iteration][2])
-    #     category = list(model[iteration][4].split(","))
-    #     subcategory = list(model[iteration][5].split(","))
-    #     # category = model[iteration][4]
-    #     appname = model[iteration][1]
-    #     # showinstalled = self.pardusicb.get_active()
-    #     pn_en = ""
-    #     pn_tr = ""
-    #     desc_en = ""
-    #     desc_tr = ""
-    #
-    #     showall = True
-    #     showinstalled = None
-    #
-    #     if self.ui_showall_button.get_active():
-    #         showall = True
-    #         showinstalled = None
-    #     elif self.ui_showinstalled_button.get_active():
-    #         showall = False
-    #         showinstalled = True
-    #     elif self.ui_shownotinstalled_button.get_active():
-    #         showall = False
-    #         showinstalled = False
-    #
-    #     if self.isPardusSearching:
-    #         for i in self.applist:
-    #             if i["name"] == appname:
-    #                 pn_en = i["prettyname"]["en"]
-    #                 pn_tr = i["prettyname"]["tr"]
-    #                 desc_en = i["description"]["en"]
-    #                 desc_tr = i["description"]["tr"]
-    #         if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
-    #                 or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en.lower() \
-    #                 or search_entry_text.lower() in desc_tr.lower():
-    #             return control_show_filter(showall, showinstalled, appname)
-    #     else:
-    #         if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
-    #             for i in self.applist:
-    #                 if i["name"] == appname:
-    #                     if i["external"]:
-    #                         if i["external"]["reponame"] == self.externalreponame:
-    #                             return control_show_filter(showall, showinstalled, appname)
-    #         else:
-    #             if self.PardusCurrentCategoryString == "all" or self.PardusCurrentCategoryString == "tümü":
-    #                 return control_show_filter(showall, showinstalled, appname)
-    #             else:
-    #                 if self.PardusCurrentCategoryString in category:
-    #                     if self.SubCatCombo.get_active_text() is not None:
-    #                         if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
-    #                             return control_show_filter(showall, showinstalled, appname)
-    #                         else:
-    #                             if self.PardusCurrentCategorySubCategories:
-    #                                 if self.SubCatCombo.get_active_text().lower() in subcategory:
-    #                                     return control_show_filter(showall, showinstalled, appname)
-    #                     else:
-    #                         return control_show_filter(showall, showinstalled, appname)
-
-
     def pardusapps_filter_function(self, row):
         app = row.get_children()[0].name
+        appname, details = next(iter(app.items()))
 
-        # def control_show_filter(show_all, show_installed, app_name=""):
-        #     if show_all:
-        #         return True
-        #     else:
-        #         if show_installed:
-        #             return self.Package.isinstalled(app_name)
-        #         else:
-        #             return not self.Package.isinstalled(app_name)
+        categories = {cat[self.locale] for cat in details.get("category", [])}
 
-        category = []
-        for i in app["category"]:
-            category.append(i[self.locale])
-        # subcategory = []
-        # for i in app["subcategory"]:
-        #     subcategory.append(i[self.locale])
-        search_entry_text = self.pardus_searchentry.get_text()
-        appname = app["name"]
+        search_entry_text = self.pardus_searchentry.get_text().lower()
 
-        pn_en = ""
-        pn_tr = ""
-        desc_en = ""
-        desc_tr = ""
-
-        showall = True
-        showinstalled = None
-
-        # if self.ui_showall_button.get_active():
-        #     showall = True
-        #     showinstalled = None
-        # elif self.ui_showinstalled_button.get_active():
-        #     showall = False
-        #     showinstalled = True
-        # elif self.ui_shownotinstalled_button.get_active():
-        #     showall = False
-        #     showinstalled = False
+        pn_en = details.get("prettyname", {}).get("en", "")
+        pn_tr = details.get("prettyname", {}).get("tr", "")
+        desc_en = details.get("description", {}).get("en", "")
+        desc_tr = details.get("description", {}).get("tr", "")
 
         if self.isPardusSearching:
-            for i in self.applist:
-                if i["name"] == appname:
-                    pn_en = i["prettyname"]["en"]
-                    pn_tr = i["prettyname"]["tr"]
-                    desc_en = i["description"]["en"]
-                    desc_tr = i["description"]["tr"]
-            if search_entry_text.lower() in appname.lower() or search_entry_text.lower() in pn_en.lower() \
-                    or search_entry_text.lower() in pn_tr.lower() or search_entry_text.lower() in desc_en.lower() \
-                    or search_entry_text.lower() in desc_tr.lower():
+            if any(search_entry_text in field.lower() for field in [appname, pn_en, pn_tr, desc_en, desc_tr]):
                 return True
         else:
-            # if self.PardusCurrentCategorySubCats and self.PardusCurrentCategoryExternal:
-            #     for i in self.applist:
-            #         if i["name"] == appname:
-            #             if i["external"]:
-            #                 if i["external"]["reponame"] == self.externalreponame:
-            #                     return control_show_filter(showall, showinstalled, appname)
-            # else:
-            if self.current_category == "all" or self.current_category == "tümü":
+            if self.current_category in {"all", "tümü"} or self.current_category in categories:
                 return True
-            else:
-                if self.current_category in category:
-                    # if self.SubCatCombo.get_active_text() is not None:
-                    #     if self.SubCatCombo.get_active_text().lower() == "all" or self.SubCatCombo.get_active_text().lower() == "tümü":
-                    #         return control_show_filter(showall, showinstalled, appname)
-                    #     else:
-                    #         if self.PardusCurrentCategorySubCategories:
-                    #             if self.SubCatCombo.get_active_text().lower() in subcategory:
-                    #                 return control_show_filter(showall, showinstalled, appname)
-                    # else:
-                    return True
+
+        return False
 
     def on_ui_showinstalled_button_clicked(self, button):
         if button.get_active():
@@ -6434,34 +6330,19 @@ class MainWindow(object):
             self.LastAddedFlowBox.remove(row)
 
     def setAvailableApps(self, available, hideextapps):
-        newlist = []
-        for app in self.fullapplist:
-            inrepo = False
-            incodename = False
-            inexternalrepo = False
-
-            if available:
-                if self.Package.isinstalled(app["name"]) is not None:
-                    inrepo = True
-                for code in app["codename"]:
-                    if code["name"] == self.UserSettings.usercodename:
-                        incodename = True
-            else:
-                inrepo = True
-                incodename = True
-
-            if not hideextapps and app["external"]:
-                inexternalrepo = True
-
-            if hideextapps and app["external"]:
-                inrepo = False
-                incodename = False
-                inexternalrepo = False
-
-            if inrepo or incodename or inexternalrepo:
-                newlist.append(app)
-
-        self.applist = newlist
+        self.applist = {
+            app: details
+            for app, details in self.fullapplist.items()
+            if (
+                    (not hideextapps or not details["external"]) and
+                    (
+                            (available and (self.Package.isinstalled(app) is not None or any(
+                                code["name"] == self.UserSettings.usercodename for code in details["codename"])))
+                            or
+                            (not available)
+                    )
+            )
+        }
 
         if hideextapps:  # control category list too
             newlist = []
