@@ -25,6 +25,7 @@ class Server(object):
         self.Logger = Logger(__name__)
         self.serverurl = ""  # This is setting from MainWindow server func
         self.serverapps = "/api/v3/apps/"
+        self.serverapps_v2 = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
         self.serverhomepage = "/api/v2/homepage"
         self.serverstatistics = "/api/v2/statistics"
@@ -79,6 +80,8 @@ class Server(object):
         self.osexplode = []
         self.aptuptime = 86400  # default control value is 1 day if server value is none
 
+        self.old_server_tried = False
+
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
 
@@ -106,11 +109,23 @@ class Server(object):
         try:
             success, data, etag = file.load_contents_finish(result)
         except GLib.Error as error:
-            self.error_message = error.message
-            self.Logger.warning("{} _open_stream Error: {}, {}".format(type, error.domain, error.message))
-            self.Logger.exception("{}".format(error))
-            self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
-            return False
+            # if error.domain == GLib.quark_to_string(Gio.io_error_quark()):
+            if error.matches(Gio.io_error_quark(), Gio.IOErrorEnum.NOT_FOUND):
+                if not self.old_server_tried and type == "apps":
+                    self.Logger.warning("_open_stream: trying old server apps url")
+                    self.get(self.serverurl + self.serverapps_v2, type)
+                    self.old_server_tried = True
+                    return
+                else:
+                    self.Logger.warning("{} is not success from old server apps too".format(type))
+                    self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
+                    return False
+            else:
+                self.error_message = error.message
+                self.Logger.warning("{} _open_stream Error: {}, {}".format(type, error.domain, error.message))
+                self.Logger.exception("{}".format(error))
+                self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
+                return False
 
         if success:
             self.ServerAppsCB(True, json.loads(data), type)

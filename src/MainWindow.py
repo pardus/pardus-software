@@ -1371,8 +1371,12 @@ class MainWindow(object):
             if type == "apps":
                 self.Logger.info("server apps successful")
                 self.status_serverapps = True
-                # self.applist = sorted(response, key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
-                self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+                if not "app-list" in response:
+                    self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+                else:
+                    self.Logger.warning("it loooks like v2 apps so converting")
+                    converted_applist = {app["name"]: {k: v for k, v in app.items() if k != "name"} for app in response["app-list"]}
+                    self.applist = dict(sorted(converted_applist.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
                 self.fullapplist = self.applist
             elif type == "cats":
                 self.Logger.info("server cats successful")
