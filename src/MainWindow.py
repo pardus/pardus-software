@@ -1039,58 +1039,26 @@ class MainWindow(object):
                 except Exception as e:
                     self.Logger.exception("{}".format(e))
 
-    def normalpage(self):
-        self.mainstack.set_visible_child_name("home")
+    def set_initial_home(self):
+        GLib.idle_add(self.mainstack.set_visible_child_name, "home")
         if self.Server.connection:
             if not self.isbroken:
-                self.homestack.set_visible_child_name("pardushome")
-                # GLib.idle_add(self.topsearchbutton.set_sensitive, True)
-                GLib.idle_add(self.menu_suggestapp.set_sensitive, True)
-                # if self.myapps_perm == 1:
-                #     GLib.idle_add(self.myapps_button.set_sensitive, True)
-                # else:
-                #     GLib.idle_add(self.myapps_button.set_sensitive, False)
-                GLib.idle_add(self.menu_statistics.set_sensitive, True)
+                GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
+
             else:
-                self.homestack.set_visible_child_name("fixapt")
-                GLib.idle_add(self.topsearchbutton.set_sensitive, False)
-                # GLib.idle_add(self.myapps_button.set_sensitive, False)
+                GLib.idle_add(self.homestack.set_visible_child_name, "fixapt")
         else:
-            self.homestack.set_visible_child_name("noserver")
-            self.noserverlabel.set_markup(
-                "<b>{}\n\n{}\n\n{}: {}</b>".format(_("Could not connect to server."), self.Server.error_message,
-                                                   _("Server address"), self.Server.serverurl))
-            GLib.idle_add(self.topsearchbutton.set_sensitive, False)
-            GLib.idle_add(self.menu_suggestapp.set_sensitive, False)
-            if self.myapps_perm == 1:
-                GLib.idle_add(self.myapps_button.set_sensitive, True)
-            else:
-                GLib.idle_add(self.myapps_button.set_sensitive, False)
-            GLib.idle_add(self.menu_statistics.set_sensitive, False)
+            GLib.idle_add(self.homestack.set_visible_child_name, "noserver")
+            GLib.idle_add(self.noserverlabel.set_markup, "<b>{}\n\n{}\n\n{}: {}</b>".format(
+                _("Could not connect to server."),
+                self.Server.error_message,
+                _("Server address"),
+                self.Server.serverurl))
 
-        self.splashspinner.stop()
-        self.splashlabel.set_text("")
+        GLib.idle_add(self.splashspinner.stop)
+        GLib.idle_add(self.splashlabel.set_text, "")
 
-        # GLib.idle_add(self.HeaderBarMenuButton.set_sensitive, True)
-        # GLib.idle_add(self.store_button.set_sensitive, True)
-        # if self.repo_perm == 1:
-        #     GLib.idle_add(self.repo_button.set_sensitive, True)
-        # else:
-        #     GLib.idle_add(self.repo_button.set_sensitive, False)
-
-        # if self.Server.connection and self.isbroken:
-        #     GLib.idle_add(self.store_button.set_sensitive, False)
-        #     GLib.idle_add(self.repo_button.set_sensitive, False)
-
-        # if self.Package.upgradable():
-        #     GLib.idle_add(self.header_buttonbox.pack_start, self.updates_button, False, True, 0)
-        #     GLib.idle_add(self.updates_button.set_visible, True)
-        #     GLib.idle_add(self.updates_button.set_sensitive, True)
-        # else:
-        #     GLib.idle_add(self.updates_button.set_visible, False)
-        #     GLib.idle_add(self.updates_button.set_sensitive, False)
-
-        self.Logger.info("page setted to normal")
+        self.Logger.info("set_initial_home done.")
 
     def prepend_server_icons(self):
         icon_theme = Gtk.IconTheme.get_default()
@@ -1337,7 +1305,7 @@ class MainWindow(object):
         self.Logger.info("server func done")
 
     def afterServers(self):
-        self.normalpage()
+        GLib.idle_add(self.set_initial_home)
         self.prepend_server_icons()
         GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
