@@ -14,6 +14,9 @@ import subprocess
 import sys
 import threading
 import time
+import json
+from pathlib import Path
+from hashlib import md5
 from datetime import datetime
 from locale import getlocale
 from locale import gettext as _
@@ -796,6 +799,11 @@ class MainWindow(object):
         except:
             pass
 
+        self.status_server_apps = False
+        self.status_server_icons = False
+        self.status_server_cats = False
+        self.status_server_home = False
+
         self.status_serverapps = False
         self.status_servercats = False
         self.status_serverhome = False
@@ -1040,6 +1048,8 @@ class MainWindow(object):
                     self.Logger.exception("{}".format(e))
 
     def set_initial_home(self):
+        self.Logger.info("in set_initial_home")
+
         GLib.idle_add(self.mainstack.set_visible_child_name, "home")
         if self.Server.connection:
             if not self.isbroken:
@@ -1297,7 +1307,9 @@ class MainWindow(object):
         self.Logger.info("repo permission: {}".format(self.repo_perm))
         self.Logger.info("myapps permission: {}".format(self.myapps_perm))
 
-        self.Server.ServerAppsControlCB = self.ServerAppsControlCB
+        self.Server.ServerAppsURLControlCB = self.ServerAppsURLControlCB
+        self.Server.ServerHashesCB = self.ServerHashesCB
+        self.Server.ServerFilesCB = self.ServerFilesCB
         self.Server.ServerAppsCB = self.ServerAppsCB
         self.Server.ServerIconsCB = self.ServerIconsCB
         self.Server.control_server(self.Server.serverurl + "/api/v2/test")
@@ -1322,84 +1334,195 @@ class MainWindow(object):
         GLib.idle_add(self.aptUpdate)
         GLib.idle_add(self.myapps_worker_thread)
 
-    def ServerAppsControlCB(self, status):
-        self.Logger.info("ServerAppsControlCB : {}".format(status))
+    def ServerAppsURLControlCB(self, status):
+        self.Logger.info("ServerAppsURLControlCB : {}".format(status))
 
         if not status:
             self.Server.serverurl = self.Server.serverurl.replace("https://", "http://")
             self.Logger.info("{}".format(self.Server.serverurl))
 
-        self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
-        self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
-        self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
-        self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
+        self.Server.get_hashes(self.Server.serverurl + self.Server.serverhash)
+
+        # self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
+        # self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
+        # self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
+        # self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
+
+    def ServerHashesCB(self, status, response=None):
+        self.Logger.info("ServerHashesCB : {}".format(status))
+        def compare_md5_re_download(local_file, server_md5):
+            if not Path(local_file).exists():
+                return True
+            local_md5 = md5(open(local_file, "rb").read()).hexdigest()
+            return local_md5 != server_md5
+
+        if status:
+            download_apps = compare_md5_re_download(self.UserSettings.apps_dir + self.UserSettings.apps_archive, response["md5"]["apps"])
+            download_icons = compare_md5_re_download(self.UserSettings.icons_dir + self.UserSettings.icons_archive, response["md5"]["icons"])
+            download_cats = compare_md5_re_download(self.UserSettings.cats_dir + self.UserSettings.cats_archive, response["md5"]["cats"])
+            download_home = compare_md5_re_download(self.UserSettings.home_dir + self.UserSettings.home_archive, response["md5"]["home"])
+
+            print("download_apps: {}".format(download_apps))
+            print("download_icons: {}".format(download_icons))
+            print("download_cats: {}".format(download_cats))
+            print("download_home: {}".format(download_home))
+
+            self.status_server_apps = not download_apps
+            self.status_server_icons = not download_icons
+            self.status_server_cats = not download_cats
+            self.status_server_home = not download_home
+
+            if download_apps or download_icons or download_cats or download_home:
+
+                if download_apps:
+                    self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_apps_archive,
+                                         download_location=self.UserSettings.apps_dir + self.UserSettings.apps_archive,
+                                         server_md5=response["md5"]["apps"], type="apps")
+
+                if download_icons:
+                    self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_icons_archive,
+                                         download_location=self.UserSettings.icons_dir + self.UserSettings.icons_archive,
+                                         server_md5=response["md5"]["icons"], type="icons")
+                if download_cats:
+                    self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_cats_archive,
+                                         download_location=self.UserSettings.cats_dir + self.UserSettings.cats_archive,
+                                         server_md5=response["md5"]["cats"], type="cats")
+                if download_home:
+                    self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_home_archive,
+                                         download_location=self.UserSettings.home_dir + self.UserSettings.home_archive,
+                                         server_md5=response["md5"]["home"], type="home")
+            else:
+                self.ServerFilesCB(True, "ok")
+
+
+    def ServerFilesCB(self, status, type):
+        self.Logger.info("ServerFilesCB {} : {}".format(type, status))
+
+        if status:
+            if type == "apps":
+                self.status_server_apps = True
+            elif type == "icons":
+                self.status_server_icons = True
+            elif type == "cats":
+                self.status_server_cats = True
+            elif type == "home":
+                self.status_server_home = True
+
+            if self.status_server_apps and self.status_server_icons and self.status_server_cats and self.status_server_home:
+                with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
+                    response = json.load(f)
+                    self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+                    self.fullapplist = self.applist
+
+                with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
+                    response = json.load(f)
+                    self.catlist = response["cat-list"]
+                    self.fullcatlist = self.catlist
+
+
+                with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
+                    response = json.load(f)
+
+                    self.Server.ediapplist = response["editor-apps"]
+                    self.Server.mostdownapplist = response["mostdown-apps"]
+                    self.Server.mostrateapplist = response["mostrate-apps"]
+                    if "last-apps" in response:
+                        self.Server.lastaddedapplist = response["last-apps"]
+                    self.Server.totalstatistics = response["total"]
+                    self.Server.servermd5 = response["md5"]
+                    self.Server.appversion = response["version"]
+                    if "version_pardus21" in response.keys():
+                        self.Server.appversion_pardus21 = response["version_pardus21"]
+                    else:
+                        self.Server.appversion_pardus21 = self.Server.appversion
+                    if "version_pardus23" in response.keys():
+                        self.Server.appversion_pardus23 = response["version_pardus23"]
+                    else:
+                        self.Server.appversion_pardus23 = self.Server.appversion
+                    self.Server.iconnames = response["iconnames"]
+                    self.Server.badwords = response["badwords"]
+                    if "important-packages" in response and response["important-packages"]:
+                        self.important_packages = response["important-packages"]
+                    if "i386-packages" in response and response["i386-packages"]:
+                        self.i386_packages = response["i386-packages"]
+                    self.Server.aptuptime = response["aptuptime"]
+
+
+                self.Server.connection = True
+                self.afterServers()
+
+
+                # self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
+                # self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
+                # self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
+
 
     def ServerAppsCB(self, success, response=None, type=None):
         if success:
-            if type == "apps":
-                self.Logger.info("server apps successful")
-                self.status_serverapps = True
-                if not "app-list" in response:
-                    self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
-                else:
-                    self.Logger.warning("it loooks like v2 apps so converting")
-                    converted_applist = {app["name"]: {k: v for k, v in app.items() if k != "name"} for app in response["app-list"]}
-                    self.applist = dict(sorted(converted_applist.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
-                self.fullapplist = self.applist
-            elif type == "cats":
-                self.Logger.info("server cats successful")
-                self.status_servercats = True
-                self.catlist = response["cat-list"]
-                self.fullcatlist = self.catlist
-            elif type == "home":
-                self.Logger.info("server home successful")
-                self.status_serverhome = True
-                self.Server.ediapplist = response["editor-apps"]
-                self.Server.mostdownapplist = response["mostdown-apps"]
-                self.Server.mostrateapplist = response["mostrate-apps"]
-                if "last-apps" in response:
-                    self.Server.lastaddedapplist = response["last-apps"]
-                self.Server.totalstatistics = response["total"]
-                self.Server.servermd5 = response["md5"]
-                self.Server.appversion = response["version"]
-                if "version_pardus21" in response.keys():
-                    self.Server.appversion_pardus21 = response["version_pardus21"]
-                else:
-                    self.Server.appversion_pardus21 = self.Server.appversion
-                if "version_pardus23" in response.keys():
-                    self.Server.appversion_pardus23 = response["version_pardus23"]
-                else:
-                    self.Server.appversion_pardus23 = self.Server.appversion
-                self.Server.iconnames = response["iconnames"]
-                self.Server.badwords = response["badwords"]
-                if "important-packages" in response and response["important-packages"]:
-                    self.important_packages = response["important-packages"]
-                if "i386-packages" in response and response["i386-packages"]:
-                    self.i386_packages = response["i386-packages"]
-                self.Server.aptuptime = response["aptuptime"]
-            elif type == "statistics":
-                self.Logger.info("server statistics successful")
-                self.status_serverstatistics = True
-                self.Server.dailydowns = response["dailydowns"]
-                if "osdownsv23" in response.keys():
-                    self.Server.osdowns = response["osdownsv23"]
-                else:
-                    self.Server.osdowns = response["osdowns"]
-                if "oscolorsv23" in response.keys():
-                    self.Server.oscolors = response["oscolorsv23"]
-                else:
-                    self.Server.oscolors = response["oscolors"]
-                self.Server.appdowns = response["appdowns"]
-                self.Server.appcolors = response["appcolors"]
-                if "osexplode" in response.keys():
-                    self.Server.osexplode = response["osexplode"]
-                else:
-                    for os in self.Server.osdowns:
-                        self.Server.osexplode.append(0.2)
+            # if type == "apps":
+            #     self.Logger.info("server apps successful")
+            #     self.status_serverapps = True
+            #     if not "app-list" in response:
+            #         self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+            #     else:
+            #         self.Logger.warning("it loooks like v2 apps so converting")
+            #         converted_applist = {app["name"]: {k: v for k, v in app.items() if k != "name"} for app in response["app-list"]}
+            #         self.applist = dict(sorted(converted_applist.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+            #     self.fullapplist = self.applist
+            # if type == "cats":
+            #     self.Logger.info("server cats successful")
+            #     self.status_servercats = True
+            #     self.catlist = response["cat-list"]
+            #     self.fullcatlist = self.catlist
+            # if type == "home":
+            #     self.Logger.info("server home successful")
+            #     self.status_serverhome = True
+            #     self.Server.ediapplist = response["editor-apps"]
+            #     self.Server.mostdownapplist = response["mostdown-apps"]
+            #     self.Server.mostrateapplist = response["mostrate-apps"]
+            #     if "last-apps" in response:
+            #         self.Server.lastaddedapplist = response["last-apps"]
+            #     self.Server.totalstatistics = response["total"]
+            #     self.Server.servermd5 = response["md5"]
+            #     self.Server.appversion = response["version"]
+            #     if "version_pardus21" in response.keys():
+            #         self.Server.appversion_pardus21 = response["version_pardus21"]
+            #     else:
+            #         self.Server.appversion_pardus21 = self.Server.appversion
+            #     if "version_pardus23" in response.keys():
+            #         self.Server.appversion_pardus23 = response["version_pardus23"]
+            #     else:
+            #         self.Server.appversion_pardus23 = self.Server.appversion
+            #     self.Server.iconnames = response["iconnames"]
+            #     self.Server.badwords = response["badwords"]
+            #     if "important-packages" in response and response["important-packages"]:
+            #         self.important_packages = response["important-packages"]
+            #     if "i386-packages" in response and response["i386-packages"]:
+            #         self.i386_packages = response["i386-packages"]
+            #     self.Server.aptuptime = response["aptuptime"]
+            # elif type == "statistics":
+            #     self.Logger.info("server statistics successful")
+            #     self.status_serverstatistics = True
+            #     self.Server.dailydowns = response["dailydowns"]
+            #     if "osdownsv23" in response.keys():
+            #         self.Server.osdowns = response["osdownsv23"]
+            #     else:
+            #         self.Server.osdowns = response["osdowns"]
+            #     if "oscolorsv23" in response.keys():
+            #         self.Server.oscolors = response["oscolorsv23"]
+            #     else:
+            #         self.Server.oscolors = response["oscolors"]
+            #     self.Server.appdowns = response["appdowns"]
+            #     self.Server.appcolors = response["appcolors"]
+            #     if "osexplode" in response.keys():
+            #         self.Server.osexplode = response["osexplode"]
+            #     else:
+            #         for os in self.Server.osdowns:
+            #             self.Server.osexplode.append(0.2)
 
-            if self.status_serverapps and self.status_servercats and self.status_serverhome and self.status_serverstatistics:
+            if self.status_serverhome:
                 self.Server.connection = True
-                self.get_icons_from_server()
+                self.afterServers()
         else:
             if not self.connection_error_after:
                 self.Server.connection = False

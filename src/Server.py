@@ -7,6 +7,7 @@ Created on Fri Sep 18 14:53:00 2020
 """
 
 import json
+import os.path
 import tarfile
 from hashlib import md5
 from pathlib import Path
@@ -24,6 +25,7 @@ class Server(object):
     def __init__(self):
         self.Logger = Logger(__name__)
         self.serverurl = ""  # This is setting from MainWindow server func
+        self.serverhash = "/api/v3/hash"
         self.serverapps = "/api/v3/apps/"
         self.serverapps_v2 = "/api/v2/apps/"
         self.servercats = "/api/v2/cats/"
@@ -36,7 +38,10 @@ class Server(object):
         self.serverfiles = "/files/"
         # self.serverappicons = "appicons"
         # self.servercaticons = "categoryicons"
+        self.server_apps_archive = "apps.tar.gz"
         self.server_icons_archive = "icons.tar.gz"
+        self.server_cats_archive = "cats.tar.gz"
+        self.server_home_archive = "home.tar.gz"
         # self.servericonty = ".svg"
         # self.serverarchive = ".tar.gz"
         self.serversettings = "/api/v2/settings"
@@ -97,9 +102,18 @@ class Server(object):
             if error.domain == GLib.quark_to_string(Gio.tls_error_quark()):
                 self.Logger.warning("_open_control_stream Error: {}, {}".format(error.domain, error.message))
                 self.Logger.exception("{}".format(error))
-                self.ServerAppsControlCB(False)  # Send to MainWindow
+                self.ServerAppsURLControlCB(False)  # Send to MainWindow
                 return False
-        self.ServerAppsControlCB(True)  # Send to MainWindow
+        self.ServerAppsURLControlCB(True)  # Send to MainWindow
+
+    def get_hashes(self, url):
+        file = Gio.File.new_for_uri(url)
+        file.load_contents_async(None, self._open_hashes_stream)
+
+    def _open_hashes_stream(self, file, result):
+        success, data, etag = file.load_contents_finish(result)
+        if success:
+            self.ServerHashesCB(True, json.loads(data))
 
     def get(self, url, type):
         file = Gio.File.new_for_uri(url)
@@ -132,6 +146,26 @@ class Server(object):
         else:
             self.Logger.warning("{} is not success".format(type))
             self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
+
+    def get_file(self, url, download_location, server_md5, type=""):
+        print(url)
+        file = Gio.File.new_for_uri(url)
+        file.load_contents_async(None, self._open_file_stream, download_location, server_md5, type)
+
+    def _open_file_stream(self, file, result, download_location, server_md5, type):
+        success, data, etag = file.load_contents_finish(result)
+        print(download_location)
+        print(os.path.dirname(download_location))
+        Path(os.path.dirname(download_location)).mkdir(parents=True, exist_ok=True)
+        with open(download_location, "wb") as file:
+            file.write(data)
+
+        if md5(open(download_location, "rb").read()).hexdigest() == server_md5:
+            self.extract_archive(download_location)
+        else:
+            print("{} file downloaded but md5 is different!".format(download_location))
+
+        self.ServerFilesCB(True, type=type)  # Send to MainWindow
 
     def get_icons(self, url, filename, force_download=False, fromsettings=False):
         if not self.isExists(self.icons_dir + filename) or force_download:
@@ -194,6 +228,28 @@ class Server(object):
             tar = tarfile.open(archive)
             extractables = [member for member in tar.getmembers() if member.name.endswith(".svg")]
             tar.extractall(members=extractables, path=self.icons_dir)
+            tar.close()
+            return True
+        except Exception as error:
+            self.Logger.warning("{} : {}".format("extract error", self.cachedir))
+            self.Logger.exception("{}".format(error))
+            return False
+
+    def extract_archive(self, archive):
+        def remove_subdirectories_and_files(directory, excepted_file):
+            for root, dirs, files in os.walk(directory, topdown=False):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    if file_path != excepted_file:
+                        os.remove(file_path)
+                for dir in dirs:
+                    dir_path = os.path.join(root, dir)
+                    rmtree(dir_path, ignore_errors=True)
+        try:
+            remove_subdirectories_and_files(os.path.dirname(archive), excepted_file=archive)
+            tar = tarfile.open(archive)
+            extractables = [member for member in tar.getmembers() if member.name.endswith(".svg") or member.name.endswith(".json")]
+            tar.extractall(members=extractables, path=os.path.dirname(archive))
             tar.close()
             return True
         except Exception as error:
