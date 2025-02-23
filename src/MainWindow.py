@@ -1343,11 +1343,6 @@ class MainWindow(object):
 
         self.Server.get_hashes(self.Server.serverurl + self.Server.serverhash)
 
-        # self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
-        # self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
-        # self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
-        # self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
-
     def ServerHashesCB(self, status, response=None):
         self.Logger.info("ServerHashesCB : {}".format(status))
         def compare_md5_re_download(local_file, server_md5):
@@ -1393,7 +1388,11 @@ class MainWindow(object):
                                          server_md5=response["md5"]["home"], type="home")
             else:
                 self.ServerFilesCB(True, "ok")
-
+        else:
+            if not self.connection_error_after:
+                self.Server.connection = False
+                self.afterServers()
+                self.connection_error_after = True
 
     def ServerFilesCB(self, status, type):
         self.Logger.info("ServerFilesCB {} : {}".format(type, status))
@@ -1411,7 +1410,8 @@ class MainWindow(object):
             if self.status_server_apps and self.status_server_icons and self.status_server_cats and self.status_server_home:
                 with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
-                    self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+                    self.applist = dict(sorted(response.items(),
+                                               key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
                     self.fullapplist = self.applist
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
@@ -1419,10 +1419,8 @@ class MainWindow(object):
                     self.catlist = response["cat-list"]
                     self.fullcatlist = self.catlist
 
-
                 with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
-
                     self.Server.ediapplist = response["editor-apps"]
                     self.Server.mostdownapplist = response["mostdown-apps"]
                     self.Server.mostrateapplist = response["mostrate-apps"]
@@ -1447,15 +1445,8 @@ class MainWindow(object):
                         self.i386_packages = response["i386-packages"]
                     self.Server.aptuptime = response["aptuptime"]
 
-
                 self.Server.connection = True
                 self.afterServers()
-
-
-                # self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
-                # self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
-                # self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
-
 
     def ServerAppsCB(self, success, response=None, type=None):
         if success:

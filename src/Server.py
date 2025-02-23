@@ -111,9 +111,20 @@ class Server(object):
         file.load_contents_async(None, self._open_hashes_stream)
 
     def _open_hashes_stream(self, file, result):
-        success, data, etag = file.load_contents_finish(result)
+        try:
+            success, data, etag = file.load_contents_finish(result)
+        except GLib.Error as error:
+            self.error_message = error
+            self.Logger.warning("_open_hashes_stream Error: {}, {}".format(error.domain, error.message))
+            self.Logger.exception("{}".format(error))
+            self.ServerHashesCB(False)
+            return False
+
         if success:
             self.ServerHashesCB(True, json.loads(data))
+        else:
+            self.Logger.warning("_open_hashes_stream is not success")
+            self.ServerHashesCB(False)  # Send to MainWindow
 
     def get(self, url, type):
         file = Gio.File.new_for_uri(url)
