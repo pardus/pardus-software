@@ -159,24 +159,42 @@ class Server(object):
             self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
 
     def get_file(self, url, download_location, server_md5, type=""):
-        print(url)
         file = Gio.File.new_for_uri(url)
         file.load_contents_async(None, self._open_file_stream, download_location, server_md5, type)
 
     def _open_file_stream(self, file, result, download_location, server_md5, type):
-        success, data, etag = file.load_contents_finish(result)
-        print(download_location)
-        print(os.path.dirname(download_location))
-        Path(os.path.dirname(download_location)).mkdir(parents=True, exist_ok=True)
-        with open(download_location, "wb") as file:
-            file.write(data)
+        try:
+            success, data, etag = file.load_contents_finish(result)
+        except GLib.Error as error:
+            print()
+            self.error_message = "{} : {}".format(error, type)
+            self.Logger.warning("{} _open_file_stream Error: {}, {}".format(type, error.domain, error.message))
+            self.Logger.exception("{}".format(error))
+            self.ServerFilesCB(False)
+            return False
+
+        try:
+            Path(os.path.dirname(download_location)).mkdir(parents=True, exist_ok=True)
+            with open(download_location, "wb") as file:
+                file.write(data)
+        except Exception as e:
+            self.error_message = "{}".format(e)
+            self.Logger.warning("_open_file_stream Error: {}".format(e))
+            self.Logger.exception("{}".format(e))
+            self.ServerFilesCB(False)
+            return False
 
         if md5(open(download_location, "rb").read()).hexdigest() == server_md5:
-            self.extract_archive(download_location)
+            if self.extract_archive(download_location):
+                self.ServerFilesCB(True, type=type)
+            else:
+                self.error_message = "{} extract error".format(type)
+                self.Logger.warning("{} extract error".format(type))
+                self.ServerFilesCB(False)
         else:
-            print("{} file downloaded but md5 is different!".format(download_location))
-
-        self.ServerFilesCB(True, type=type)  # Send to MainWindow
+            self.error_message = "{} file downloaded but md5 is different!".format(download_location)
+            self.Logger.warning("{} file downloaded but md5 is different!".format(download_location))
+            self.ServerFilesCB(False)
 
     def get_icons(self, url, filename, force_download=False, fromsettings=False):
         if not self.isExists(self.icons_dir + filename) or force_download:

@@ -1357,10 +1357,10 @@ class MainWindow(object):
             download_cats = compare_md5_re_download(self.UserSettings.cats_dir + self.UserSettings.cats_archive, response["md5"]["cats"])
             download_home = compare_md5_re_download(self.UserSettings.home_dir + self.UserSettings.home_archive, response["md5"]["home"])
 
-            print("download_apps: {}".format(download_apps))
-            print("download_icons: {}".format(download_icons))
-            print("download_cats: {}".format(download_cats))
-            print("download_home: {}".format(download_home))
+            self.Logger.info("download_apps: {}".format(download_apps))
+            self.Logger.info("download_icons: {}".format(download_icons))
+            self.Logger.info("download_cats: {}".format(download_cats))
+            self.Logger.info("download_home: {}".format(download_home))
 
             self.status_server_apps = not download_apps
             self.status_server_icons = not download_icons
@@ -1394,7 +1394,7 @@ class MainWindow(object):
                 self.afterServers()
                 self.connection_error_after = True
 
-    def ServerFilesCB(self, status, type):
+    def ServerFilesCB(self, status, type=""):
         self.Logger.info("ServerFilesCB {} : {}".format(type, status))
 
         if status:
@@ -1447,6 +1447,11 @@ class MainWindow(object):
 
                 self.Server.connection = True
                 self.afterServers()
+        else:
+            if not self.connection_error_after:
+                self.Server.connection = False
+                self.afterServers()
+                self.connection_error_after = True
 
     def ServerAppsCB(self, success, response=None, type=None):
         if success:
