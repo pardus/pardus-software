@@ -4649,23 +4649,29 @@ class MainWindow(object):
 
     def on_sortPardusAppsCombo_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
-            self.applist = sorted(self.applist, key=lambda x: locale.strxfrm(x["prettyname"][self.locale]))
-            # GLib.idle_add(self.PardusAppListStore.clear)
+            self.applist = dict(sorted(self.applist.items(),
+                                       key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
             GLib.idle_add(self.setPardusApps)
         elif combo_box.get_active() == 1:  # sort by download
-            self.applist = sorted(self.applist, key=lambda x: (x["download"], x["rate_average"]), reverse=True)
-            # GLib.idle_add(self.PardusAppListStore.clear)
+            self.applist = dict(sorted(
+                self.applist.items(),
+                key=lambda item: (item[1]["download"], item[1]["rate_average"]),
+                reverse=True
+            ))
             GLib.idle_add(self.setPardusApps)
         elif combo_box.get_active() == 2:  # sort by popularity
-            self.applist = sorted(self.applist,
-                                  key=lambda x: (x["popularity"] if "popularity" in x.keys() else x["rate_average"],
-                                                 x["download"]), reverse=True)
-            # GLib.idle_add(self.PardusAppListStore.clear)
+            self.applist = dict(sorted(
+                self.applist.items(),
+                key=lambda item: (item[1].get("popularity", item[1]["rate_average"]), item[1]["download"]),
+                reverse=True
+            ))
             GLib.idle_add(self.setPardusApps)
         elif combo_box.get_active() == 3:  # sort by last added
-            self.applist = sorted(self.applist, key=lambda x: datetime.strptime(x["date"], "%d-%m-%Y %H:%M"),
-                                  reverse=True)
-            # GLib.idle_add(self.PardusAppListStore.clear)
+            self.applist = dict(sorted(
+                self.applist.items(),
+                key=lambda item: datetime.strptime(item[1]["date"], "%d-%m-%Y %H:%M"),
+                reverse=True
+            ))
             GLib.idle_add(self.setPardusApps)
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
