@@ -1257,8 +1257,6 @@ class MainWindow(object):
         self.Logger.info("cell toggled")
 
     def server(self):
-        self.Logger.info("Getting applications from server")
-        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting applications from server")))
         self.Server = Server()
 
         conffile = "/etc/pardus/pardus-software.conf"
@@ -1312,6 +1310,9 @@ class MainWindow(object):
         self.Server.ServerFilesCB = self.ServerFilesCB
         self.Server.ServerAppsCB = self.ServerAppsCB
         self.Server.ServerIconsCB = self.ServerIconsCB
+
+        self.Logger.info("Controlling server")
+        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Controlling server")))
         self.Server.control_server(self.Server.serverurl + "/api/v2/test")
 
         self.Logger.info("server func done")
@@ -1341,10 +1342,13 @@ class MainWindow(object):
             self.Server.serverurl = self.Server.serverurl.replace("https://", "http://")
             self.Logger.info("{}".format(self.Server.serverurl))
 
+        self.Logger.info("Controlling server hashes")
+        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Controlling server hashes")))
         self.Server.get_hashes(self.Server.serverurl + self.Server.serverhash)
 
     def ServerHashesCB(self, status, response=None):
         self.Logger.info("ServerHashesCB : {}".format(status))
+
         def compare_md5_re_download(local_file, server_md5):
             if not Path(local_file).exists():
                 return True
@@ -1369,20 +1373,39 @@ class MainWindow(object):
 
             if download_apps or download_icons or download_cats or download_home:
 
+                self.Logger.info("Getting application metadata from server")
+                GLib.idle_add(self.splashlabel.set_markup,
+                              "<b>{}</b>".format(_("Getting application metadata from server")))
+
                 if download_apps:
+                    self.Logger.info("Getting applications from server")
+                    # GLib.idle_add(self.splashlabel.set_markup,
+                    #               "<b>{}</b>".format(_("Getting applications from server")))
+
                     self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_apps_archive,
                                          download_location=self.UserSettings.apps_dir + self.UserSettings.apps_archive,
                                          server_md5=response["md5"]["apps"], type="apps")
-
                 if download_icons:
+                    self.Logger.info("Getting icons from server")
+                    # GLib.idle_add(self.splashlabel.set_markup,
+                    #               "<b>{}</b>".format(_("Getting icons from server")))
+
                     self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_icons_archive,
                                          download_location=self.UserSettings.icons_dir + self.UserSettings.icons_archive,
                                          server_md5=response["md5"]["icons"], type="icons")
                 if download_cats:
+                    self.Logger.info("Getting categories from server")
+                    # GLib.idle_add(self.splashlabel.set_markup,
+                    #               "<b>{}</b>".format(_("Getting categories from server")))
+
                     self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_cats_archive,
                                          download_location=self.UserSettings.cats_dir + self.UserSettings.cats_archive,
                                          server_md5=response["md5"]["cats"], type="cats")
                 if download_home:
+                    self.Logger.info("Getting homepage from server")
+                    # GLib.idle_add(self.splashlabel.set_markup,
+                    #               "<b>{}</b>".format(_("Getting homepage from server")))
+
                     self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_home_archive,
                                          download_location=self.UserSettings.home_dir + self.UserSettings.home_archive,
                                          server_md5=response["md5"]["home"], type="home")
@@ -1444,6 +1467,10 @@ class MainWindow(object):
                     if "i386-packages" in response and response["i386-packages"]:
                         self.i386_packages = response["i386-packages"]
                     self.Server.aptuptime = response["aptuptime"]
+
+                self.Logger.info("Preparing the application interface")
+                GLib.idle_add(self.splashlabel.set_markup,
+                              "<b>{}</b>".format(_("Preparing the application interface")))
 
                 self.Server.connection = True
                 self.afterServers()
