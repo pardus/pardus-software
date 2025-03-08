@@ -22,17 +22,13 @@ class AppDetail(object):
         self.session = Soup.Session(user_agent="application/json")
         self.Logger = Logger(__name__)
 
-    def get(self, method, uri, dic, appname=""):
-        # self.Logger.info("{} : {} {}".format(method, uri, dic))
-        message = Soup.Message.new(method, uri)
-
-        if method == "POST":
-            message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
-
+    def get_details(self, uri, dic):
+        message = Soup.Message.new("POST", uri)
+        message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
         message.request_headers.append('Content-type', 'application/json')
-        self.session.send_async(message, None, self.on_finished, message, appname)
+        self.session.send_async(message, None, self.on_finished, message, dic["app"])
 
-    def on_finished(self, session, result, message, appname):
+    def on_finished(self, session, result, message, app):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
@@ -40,17 +36,13 @@ class AppDetail(object):
                 self.session.props.ssl_strict = False
             self.Logger.warning("AppDetail stream Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
-            self.Detail(False, None)  # Send to MainWindow
+            self.app_details_from_server(False)
             return False
-
-        status_code = message.status_code
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)
             line, length = data_input_stream.read_line_utf8()
-
-            self.Detail(True, json.loads(line), appname)
-
+            self.app_details_from_server(True, json.loads(line), app)
         input_stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
 
     def _close_stream(self, session, result, data):

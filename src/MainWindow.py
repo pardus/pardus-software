@@ -816,7 +816,7 @@ class MainWindow(object):
         self.AppImage.Pixbuf = self.Pixbuf
 
         self.AppDetail = AppDetail()
-        self.AppDetail.Detail = self.Detail
+        self.AppDetail.app_details_from_server = self.app_details_from_server
 
         self.AppRequest = AppRequest()
         self.AppRequest.Request = self.Request
@@ -2229,6 +2229,8 @@ class MainWindow(object):
 
         print("app_name: {}".format(app_name))
         print("details: {}".format(details))
+
+        self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
 
         self.ui_right_stack.set_visible_child_name("appdetails")
 
@@ -4037,66 +4039,69 @@ class MainWindow(object):
         else:
             self.wpcresultLabel.set_text(_("Error"))
 
-    def Detail(self, status, response, appname=""):
-        if status and appname == self.getActiveAppOnUI():
-            self.dtDownload.set_markup(
-                "{} {}".format(response["details"]["download"]["count"], _("Download")))
-
-            self.dtTotalRating.set_markup(
-                "( {} )".format(response["details"]["rate"]["count"]))
-
-            self.dtAverageRating.set_markup(
-                "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
-
-            if response["details"]["rate"]["individual"] == 0:
-                self.rate_individual = _("is None")
-                self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), _("is None")))
-                self.commentstack.set_visible_child_name("sendcomment")
-                self.wpcgetnameLabel.set_text("")
-                self.wpcgetcommentLabel.set_text("")
-            else:
-                self.rate_individual = response["details"]["individual"]["rate"]
-                self.rate_author = response["details"]["individual"]["author"]
-                self.rate_comment = response["details"]["individual"]["comment"]
-
-                self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), response["details"]["rate"]["individual"]))
-                self.commentstack.set_visible_child_name("alreadysent")
-                self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
-                self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
-
-                if response["details"]["individual"]["recommentable"]:
-                    self.addCommentButton.set_visible(True)
-                    self.addCommentInfoLabel.set_visible(True)
-                else:
-                    self.addCommentButton.set_visible(False)
-                    self.addCommentInfoLabel.set_visible(False)
-
-                if self.rate_comment == "" or self.rate_comment is None:
-                    self.wpcCommentBox.set_visible(False)
-                    self.addCommentButton.set_label(_("Add Comment"))
-                else:
-                    self.wpcCommentBox.set_visible(True)
-                    self.addCommentButton.set_label(_("Edit Comment"))
-
-            self.rate_average = response["details"]["rate"]["average"]
-            self.setAppStar(response["details"]["rate"]["average"])
-
-            self.setPardusRatings(response["details"]["rate"]["count"], response["details"]["rate"]["average"],
-                                  response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
-                                  response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
-                                  response["details"]["rate"]["rates"]["5"])
-
-        else:
-            self.rate_average = 0
-            self.rate_individual = ""
-            self.rate_author = ""
-            self.rate_comment = ""
-            self.dtDownload.set_markup("")
-            self.dtTotalRating.set_markup("")
-            self.dtAverageRating.set_markup("")
-            self.setAppStar(0)
-            self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
-            self.setPardusComments(None)
+    def app_details_from_server(self, status, response=None, appname=None):
+        print("app_details_from_server, status: {}".format(status))
+        print("app_details_from_server, appname: {}".format(appname))
+        print("{}".format(response))
+        # if status and appname == self.getActiveAppOnUI():
+        #     self.dtDownload.set_markup(
+        #         "{} {}".format(response["details"]["download"]["count"], _("Download")))
+        #
+        #     self.dtTotalRating.set_markup(
+        #         "( {} )".format(response["details"]["rate"]["count"]))
+        #
+        #     self.dtAverageRating.set_markup(
+        #         "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
+        #
+        #     if response["details"]["rate"]["individual"] == 0:
+        #         self.rate_individual = _("is None")
+        #         self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), _("is None")))
+        #         self.commentstack.set_visible_child_name("sendcomment")
+        #         self.wpcgetnameLabel.set_text("")
+        #         self.wpcgetcommentLabel.set_text("")
+        #     else:
+        #         self.rate_individual = response["details"]["individual"]["rate"]
+        #         self.rate_author = response["details"]["individual"]["author"]
+        #         self.rate_comment = response["details"]["individual"]["comment"]
+        #
+        #         self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), response["details"]["rate"]["individual"]))
+        #         self.commentstack.set_visible_child_name("alreadysent")
+        #         self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
+        #         self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
+        #
+        #         if response["details"]["individual"]["recommentable"]:
+        #             self.addCommentButton.set_visible(True)
+        #             self.addCommentInfoLabel.set_visible(True)
+        #         else:
+        #             self.addCommentButton.set_visible(False)
+        #             self.addCommentInfoLabel.set_visible(False)
+        #
+        #         if self.rate_comment == "" or self.rate_comment is None:
+        #             self.wpcCommentBox.set_visible(False)
+        #             self.addCommentButton.set_label(_("Add Comment"))
+        #         else:
+        #             self.wpcCommentBox.set_visible(True)
+        #             self.addCommentButton.set_label(_("Edit Comment"))
+        #
+        #     self.rate_average = response["details"]["rate"]["average"]
+        #     self.setAppStar(response["details"]["rate"]["average"])
+        #
+        #     self.setPardusRatings(response["details"]["rate"]["count"], response["details"]["rate"]["average"],
+        #                           response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
+        #                           response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
+        #                           response["details"]["rate"]["rates"]["5"])
+        #
+        # else:
+        #     self.rate_average = 0
+        #     self.rate_individual = ""
+        #     self.rate_author = ""
+        #     self.rate_comment = ""
+        #     self.dtDownload.set_markup("")
+        #     self.dtTotalRating.set_markup("")
+        #     self.dtAverageRating.set_markup("")
+        #     self.setAppStar(0)
+        #     self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
+        #     self.setPardusComments(None)
 
     def gComment(self, status, response, appname="", lang=""):
         if status:
