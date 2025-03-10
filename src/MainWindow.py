@@ -1074,6 +1074,7 @@ class MainWindow(object):
         icon_theme = Gtk.IconTheme.get_default()
         icon_theme.prepend_search_path(self.UserSettings.app_icons_dir)
         icon_theme.prepend_search_path(self.UserSettings.cat_icons_dir)
+        icon_theme.prepend_search_path(self.UserSettings.slider_icons_dir)
 
     def package(self):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
@@ -1613,64 +1614,65 @@ class MainWindow(object):
             else:
                 editor_app_short_desc = ""
 
-            overlay = Gtk.Overlay()
+            flowbox = Gtk.FlowBox()
+            flowbox.set_min_children_per_line(1)
+            flowbox.set_max_children_per_line(1)
+            flowbox.set_row_spacing(0)
+            flowbox.set_column_spacing(0)
+            flowbox.set_homogeneous(True)
 
-            box_1 = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 55)
-            box_1.set_margin_start(12)
-            box_1.set_margin_end(12)
+            label_name = Gtk.Label.new()
+            label_name.props.halign = Gtk.Align.START
+            label_name.set_markup("<b>{}</b>".format(editor_app_pretty_name))
 
-            box_2 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-            box_2.props.halign = Gtk.Align.START
-            box_2.set_hexpand(True)
-            box_2.set_margin_top(48)
-            box_2.set_margin_bottom(48)
+            label_summary = Gtk.Label.new()
+            label_summary.props.halign = Gtk.Align.START
+            label_summary.set_line_wrap(True)
+            label_summary.set_max_width_chars(35)
+            label_summary.set_lines(4)
+            label_summary.set_ellipsize(Pango.EllipsizeMode.END)
 
-            label_ps = Gtk.Label.new()
-            label_ps.props.halign = Gtk.Align.START
-            label_ps.set_margin_bottom(6)
-            label_ps.set_markup(_("PARDUS STORE"))
+            label_summary.set_markup("<span size='x-large'>{}</span>".format(editor_app_short_desc))
 
-            label_appname = Gtk.Label.new()
-            label_appname.props.halign = Gtk.Align.START
-            label_appname.set_margin_bottom(16)
-            label_appname.set_markup("<b>{}</b>".format(editor_app_pretty_name))
+            label_summary_1 = Gtk.Label.new()
+            label_summary_1.props.halign = Gtk.Align.START
+            label_summary_1.set_markup("<span weight='light'>{}</span>".format(editor_app_pretty_name))
 
-            label_appdesc = Gtk.Label.new()
-            label_appdesc.props.halign = Gtk.Align.START
-            label_appdesc.set_line_wrap(True)
-            label_appdesc.set_line_wrap_mode(0)  # WORD
-            label_appdesc.set_markup("<span weight='light'>{}</span>".format(editor_app_short_desc))
+            # image = Gtk.Image.new_from_icon_name(editor_app_name, Gtk.IconSize.BUTTON)
+            # image.set_pixel_size(96)
+            vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 12)
+            vbox.set_border_width(6)
+            vbox.pack_start(label_name, False, False, 0)
+            vbox.pack_start(label_summary, False, False, 0)
+            vbox.pack_start(label_summary_1, False, False, 0)
+            vbox.set_margin_top(24)
+            vbox.set_margin_start(24)
 
-            app_icon = Gtk.Image.new_from_icon_name(editor_app_name, Gtk.IconSize.BUTTON)
-            app_icon.set_pixel_size(96)
-            app_icon.props.halign = Gtk.Align.END
-            app_icon.set_hexpand(True)
-            app_icon.set_margin_top(34)
-            app_icon.set_margin_bottom(34)
+            hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+            # hbox.pack_start(image, False, False, 0)
+            hbox.pack_start(vbox, True, True, 0)
+            hbox.show_all()
 
-            label_background = Gtk.Label.new()
-            label_background.set_markup(
-                "<span weight='light' size='50000'>{}</span>\n<span weight='light' size='xx-large'>{}</span>".format(
-                    editor_app_pretty_name[:13], editor_app_pretty_name))
-            label_background.set_opacity(0.1)
-            label_background.set_halign(Gtk.Align.END)
-            label_background.set_valign(Gtk.Align.CENTER)
-            label_background.set_justify(Gtk.Justification.CENTER)
-            label_background.set_angle(35.0)
+            css = """
+            .pardus-software-banner {{
+                background-image: url("{}");
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                border-radius: 8px;
+            }}
+            """.format(os.path.join(self.UserSettings.slider_icons_dir, "slider-{}.svg".format(stack_counter + 1)))
 
-            box_2.pack_start(label_ps, False, True, 0)
-            box_2.pack_start(label_appname, False, True, 0)
-            box_2.pack_start(label_appdesc, False, True, 0)
+            style_provider = Gtk.CssProvider()
+            style_provider.load_from_data(str.encode(css))
 
-            box_1.pack_start(box_2, True, True, 0)
-            box_1.pack_start(app_icon, True, True, 0)
+            flowbox_child = Gtk.FlowBoxChild()
+            flowbox_child.add(hbox)
+            flowbox_child.set_size_request(-1, 200)
+            flowbox_child.get_style_context().add_class("pardus-software-banner")
+            flowbox_child.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-            overlay.add(box_1)
-
-            overlay.add_overlay(label_background)
-            overlay.show_all()
-
-            self.ui_banner_stack.add_named(overlay, "{}".format(stack_counter))
+            self.ui_banner_stack.add_named(flowbox_child, "{}".format(stack_counter))
             stack_counter += 1
 
         self.ui_banner_stack.show_all()

@@ -46,6 +46,7 @@ class UserSettings(object):
         self.icons_dir = self.cachedir + "icons/"
         self.app_icons_dir = self.icons_dir + "app-icons"
         self.cat_icons_dir = self.icons_dir + "cat-icons"
+        self.slider_icons_dir = self.icons_dir + "slider-icons"
 
         self.icons_archive = "icons.tar.gz"
         self.apps_archive = "apps.tar.gz"
