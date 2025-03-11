@@ -2027,8 +2027,8 @@ class MainWindow(object):
                 number_label.props.halign = Gtk.Align.CENTER
                 number_label.props.valign = Gtk.Align.CENTER
 
-                app_icon = Gtk.Image.new_from_icon_name(mda["name"], 48)
-                app_icon.set_pixel_size(48)
+                app_icon = Gtk.Image.new_from_icon_name(mda["name"], Gtk.IconSize.DND)
+                app_icon.set_pixel_size(32)
                 app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
                 app_icon.props.halign = Gtk.Align.CENTER
                 app_icon.props.valign = Gtk.Align.CENTER
