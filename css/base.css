@@ -85,8 +85,11 @@ list row {
 }
 
 .pardus-software-mostapp-action-button{
-    padding: 0px 3px 0px 3px;
+    padding: 1px 5px 1px 5px;
     margin: 0px;
+    /*border-width: 0px;*/
+    min-height: 0px;
+    min-width: 0px;
 }
 
 .pardus-software-apps-action-button{
