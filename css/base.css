@@ -95,3 +95,27 @@ list row {
     margin-top: -5px;
 
 }
+
+.pardus-software-listbox-mostdown{
+    background-color:transparent;
+}
+
+.pardus-software-listbox-mostdown row {
+    margin: 0px;
+    padding: 0px;
+}
+
+.pardus-software-listbox-mostdown row:hover{
+    background-color: alpha(@unfocused_borders, 0.5);
+}
+
+.pardus-software-mostdown-bottom-seperator{
+    margin: 0px;
+}
+
+.pardus-software-mostapp-icon{
+    background-color: alpha(@unfocused_borders, 0.3);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}

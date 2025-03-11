@@ -2102,6 +2102,7 @@
                                                     <property name="receives-default">True</property>
                                                     <property name="halign">center</property>
                                                     <property name="valign">center</property>
+                                                    <property name="margin-top">28</property>
                                                     <property name="relief">none</property>
                                                     <child>
                                                       <object class="GtkImage">
@@ -2173,6 +2174,7 @@
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
                                                         <property name="homogeneous">True</property>
+                                                        <property name="column-spacing">12</property>
                                                         <property name="min-children-per-line">3</property>
                                                         <property name="max-children-per-line">4</property>
                                                         <property name="selection-mode">none</property>
@@ -2197,6 +2199,7 @@
                                                     <property name="receives-default">True</property>
                                                     <property name="halign">center</property>
                                                     <property name="valign">center</property>
+                                                    <property name="margin-top">28</property>
                                                     <property name="relief">none</property>
                                                     <child>
                                                       <object class="GtkImage">
@@ -2217,7 +2220,7 @@
                                               <packing>
                                                 <property name="expand">False</property>
                                                 <property name="fill">True</property>
-                                                <property name="position">1</property>
+                                                <property name="position">2</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -2347,7 +2350,7 @@
                                               <packing>
                                                 <property name="expand">False</property>
                                                 <property name="fill">True</property>
-                                                <property name="position">2</property>
+                                                <property name="position">3</property>
                                               </packing>
                                             </child>
                                           </object>

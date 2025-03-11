@@ -2023,16 +2023,15 @@ class MainWindow(object):
             for mda in self.Server.mostdownapplist:
 
                 number_label = Gtk.Label.new()
-                number_label.set_markup("<small>{}</small>".format(mda_counter))
-                number_label.get_style_context().add_class("pardus-software-mostapp-number-label")
+                number_label.set_markup("{}".format(mda_counter))
+                number_label.props.halign = Gtk.Align.CENTER
+                number_label.props.valign = Gtk.Align.CENTER
 
-                number_label1 = Gtk.Label.new()
-                number_label1.set_markup("{}".format(mda_counter))
-                number_label1.get_style_context().add_class("pardus-software-mostapp-empty-label")
-
-                app_icon = Gtk.Image.new_from_icon_name(mda["name"], 64)
-                app_icon.set_pixel_size(64)
-                app_icon.set_margin_end(12)
+                app_icon = Gtk.Image.new_from_icon_name(mda["name"], 48)
+                app_icon.set_pixel_size(48)
+                app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
+                app_icon.props.halign = Gtk.Align.CENTER
+                app_icon.props.valign = Gtk.Align.CENTER
 
                 prettyname = "{}".format(self.getPrettyName(mda["name"]))
 
@@ -2076,11 +2075,7 @@ class MainWindow(object):
                 rate_label = Gtk.Label.new()
                 rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(mda["rate"])))
 
-                box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
-                box_stats.pack_start(rate_label, False, True, 0)
-                box_stats.pack_start(rate_icon, False, True, 0)
-                box_stats.props.valign = Gtk.Align.START
-                box_stats.props.halign = Gtk.Align.START
+                separator = Gtk.Separator.new(Gtk.Orientation.VERTICAL)
 
                 category_label = Gtk.Label.new()
                 category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
@@ -2088,31 +2083,56 @@ class MainWindow(object):
                 category_label.props.valign = Gtk.Align.START
                 category_label.props.halign = Gtk.Align.START
 
-                box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+                box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
+                box_stats.pack_start(rate_label, False, True, 0)
+                box_stats.pack_start(rate_icon, False, True, 0)
+                box_stats.pack_start(separator, False, True, 0)
+                box_stats.pack_start(category_label, False, True, 0)
+                box_stats.props.valign = Gtk.Align.START
+                box_stats.props.halign = Gtk.Align.START
+
+                summary_label = Gtk.Label.new()
+                summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
+                    self.get_description_from_app_name(mda["name"]), -1)[:50].replace("\n", "").replace("\r", "")))
+                summary_label.props.valign = Gtk.Align.START
+                summary_label.props.halign = Gtk.Align.START
+                summary_label.set_line_wrap(False)
+                summary_label.set_max_width_chars(18)
+                summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+
+                box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
                 box_right.props.valign = Gtk.Align.CENTER
-                # box_right.props.halign = Gtk.Align.START
                 box_right.pack_start(box_app, False, True, 0)
-                box_right.pack_start(category_label, False, True, 0)
+                box_right.pack_start(summary_label, False, True, 0)
                 box_right.pack_start(box_stats, False, True, 0)
 
-                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
-                box.pack_start(app_icon, False, True, 0)
-                box.pack_start(box_right, False, True, 0)
+                box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+                box_h.pack_start(number_label, False, True, 0)
+                box_h.pack_start(app_icon, False, True, 0)
+                box_h.pack_start(box_right, False, True, 0)
+                box_h.set_margin_start(5)
+                box_h.set_margin_end(5)
+                box_h.set_margin_top(5)
+                box_h.set_margin_bottom(5)
 
-                grid = Gtk.Grid.new()
-                grid.attach(number_label, 0, 0, 1, 1)
-                grid.attach(box, 1, 1, 1, 1)
-                grid.attach(number_label1, 2, 2, 1, 1)
+                bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+                bottom_separator.props.valign = Gtk.Align.END
+                button_action.set_vexpand(True)
+                GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
+
+                box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
+                box.pack_start(box_h, False, True, 0)
+                box.pack_end(bottom_separator, True, True, 0)
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
                 listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
                 listbox_row = Gtk.ListBoxRow()
-                GLib.idle_add(listbox_row.add, grid)
+                GLib.idle_add(listbox_row.add, box)
                 listbox_row.name = mda["name"]
                 GLib.idle_add(listbox.add, listbox_row)
 
-                GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox")
+                GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
                 GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
 
                 mda_counter += 1
@@ -2492,6 +2512,14 @@ class MainWindow(object):
             cat = _("Unknown")
 
         return cat
+
+    def get_description_from_app_name(self, name):
+        details = self.fullapplist.get(name)
+        if details and "description" in details and details["description"]:
+            desc = details["description"].get(self.locale, _("Unknown")).title()
+        else:
+            desc = _("Unknown")
+        return desc
 
     def getSystemCatIcon(self, cat, size=48):
         try:
