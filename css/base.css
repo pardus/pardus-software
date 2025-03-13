@@ -122,3 +122,10 @@ list row {
     padding: 8px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
+
+.pardus-software-editorapp-icon{
+    border-radius: 8px;
+    background-color: alpha(@unfocused_borders, 0.5);
+    border-radius: 8px;
+    padding: 8px;
+}
