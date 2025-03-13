@@ -2034,7 +2034,6 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="icon-name">go-previous-symbolic</property>
-                                                        <property name="icon_size">3</property>
                                                       </object>
                                                     </child>
                                                   </object>
@@ -2073,7 +2072,6 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="icon-name">go-next-symbolic</property>
-                                                        <property name="icon_size">3</property>
                                                       </object>
                                                     </child>
                                                   </object>
@@ -2109,7 +2107,6 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="icon-name">go-previous-symbolic</property>
-                                                        <property name="icon_size">3</property>
                                                       </object>
                                                     </child>
                                                   </object>
@@ -2206,7 +2203,6 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="icon-name">go-next-symbolic</property>
-                                                        <property name="icon_size">3</property>
                                                       </object>
                                                     </child>
                                                   </object>
@@ -2241,7 +2237,6 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="icon-name">go-previous-symbolic</property>
-                                                        <property name="icon_size">3</property>
                                                       </object>
                                                     </child>
                                                   </object>
@@ -2336,7 +2331,6 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="icon-name">go-next-symbolic</property>
-                                                        <property name="icon_size">3</property>
                                                       </object>
                                                     </child>
                                                   </object>
