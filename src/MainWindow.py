@@ -1450,11 +1450,11 @@ class MainWindow(object):
                     response = json.load(f)
                     self.Server.ediapplist = response["editor-apps"]
                     self.Server.mostdownapplist = response["mostdown-apps"]
-                    self.Server.mostrateapplist = response["mostrate-apps"]
+                    self.Server.popularapplist = response["popular-apps"]
                     if "last-apps" in response:
                         self.Server.lastaddedapplist = response["last-apps"]
-                    self.Server.totalstatistics = response["total"]
-                    self.Server.servermd5 = response["md5"]
+                    # self.Server.totalstatistics = response["total"]
+                    # self.Server.servermd5 = response["md5"]
                     self.Server.appversion = response["version"]
                     if "version_pardus21" in response.keys():
                         self.Server.appversion_pardus21 = response["version_pardus21"]
@@ -1464,7 +1464,7 @@ class MainWindow(object):
                         self.Server.appversion_pardus23 = response["version_pardus23"]
                     else:
                         self.Server.appversion_pardus23 = self.Server.appversion
-                    self.Server.iconnames = response["iconnames"]
+                    # self.Server.iconnames = response["iconnames"]
                     self.Server.badwords = response["badwords"]
                     if "important-packages" in response and response["important-packages"]:
                         self.important_packages = response["important-packages"]
@@ -2537,7 +2537,7 @@ class MainWindow(object):
 
                 GLib.idle_add(self.MostDownFlowBox.insert, listbox, GLib.PRIORITY_DEFAULT_IDLE)
 
-            for mra in self.Server.mostrateapplist:
+            for mra in self.Server.popularapplist:
                 icon = Gtk.Image.new()
                 if self.UserSettings.config_usi:
                     icon.set_from_pixbuf(self.getServerAppIcon(mra["name"], 64))

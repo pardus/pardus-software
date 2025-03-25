@@ -68,7 +68,7 @@ class Server(object):
         self.catlist = []
         self.ediapplist = []
         self.mostdownapplist = []
-        self.mostrateapplist = []
+        self.popularapplist = []
         self.lastaddedapplist = []
         self.totalstatistics = []
         self.servermd5 = {}
