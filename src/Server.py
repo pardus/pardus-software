@@ -67,6 +67,7 @@ class Server(object):
         self.orgapplist = []
         self.catlist = []
         self.ediapplist = []
+        self.sliderapplist = []
         self.mostdownapplist = []
         self.popularapplist = []
         self.lastaddedapplist = []

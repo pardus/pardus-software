@@ -741,7 +741,7 @@ class MainWindow(object):
         self.imgfullscreen_count = 0
         self.down_image = 0
 
-        self.banner_current_page = 0
+        self.slider_current_page = 0
 
         self.last_width = 0
 
@@ -792,7 +792,7 @@ class MainWindow(object):
 
         self.ui_leftcats_box = self.GtkBuilder.get_object("ui_leftcats_box")
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
-        self.ui_banner_stack = self.GtkBuilder.get_object("ui_banner_stack")
+        self.ui_slider_stack = self.GtkBuilder.get_object("ui_slider_stack")
 
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
@@ -1329,7 +1329,7 @@ class MainWindow(object):
         # GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.set_categories)
         GLib.idle_add(self.setPardusApps)
-        GLib.idle_add(self.set_banner)
+        GLib.idle_add(self.set_slider)
         GLib.idle_add(self.set_most_apps)
         # GLib.idle_add(self.setEditorApps)
         # GLib.idle_add(self.setMostApps)
@@ -1449,6 +1449,7 @@ class MainWindow(object):
                 with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
                     self.Server.ediapplist = response["editor-apps"]
+                    self.Server.sliderapplist = response["slider-apps"]
                     self.Server.mostdownapplist = response["mostdown-apps"]
                     self.Server.popularapplist = response["popular-apps"]
                     if "last-apps" in response:
@@ -1600,22 +1601,15 @@ class MainWindow(object):
             self.gnomeratings = []
             self.Logger.info("gnomeratings not successful")
 
-    def set_banner(self):
+    def set_slider(self):
 
         stack_counter = 0
-        for editor_app in self.Server.ediapplist:
+        for slider_app in self.Server.sliderapplist:
 
-            editor_app_name = editor_app["name"]
-            editor_app_pretty_name = editor_app["prettyname"][self.locale]
-            if editor_app_pretty_name == "" or editor_app_pretty_name is None:
-                editor_app_pretty_name = editor_app["prettyname"]["en"]
-
-            if "shortdesc" in editor_app.keys():
-                editor_app_short_desc = editor_app["shortdesc"][self.locale]
-                if editor_app_short_desc == "" or editor_app_short_desc is None:
-                    editor_app_short_desc = editor_app["shortdesc"]["en"]
-            else:
-                editor_app_short_desc = ""
+            slider_app_name = slider_app["name"]
+            slider_app_pretty_name = slider_app["prettyname"].get(self.locale) or slider_app["prettyname"].get("en")
+            slider_app_slogan = slider_app["slogan"].get(self.locale) or slider_app["slogan"].get("en")
+            slider_app_short_desc = slider_app["shortdesc"].get(self.locale) or slider_app["shortdesc"].get("en")
 
             flowbox = Gtk.FlowBox()
             flowbox.set_min_children_per_line(1)
@@ -1626,38 +1620,34 @@ class MainWindow(object):
 
             label_name = Gtk.Label.new()
             label_name.props.halign = Gtk.Align.START
-            label_name.set_markup("<b>{}</b>".format(editor_app_pretty_name))
+            label_name.set_markup("<b>{}</b>".format(slider_app_pretty_name))
+
+            label_slogan = Gtk.Label.new()
+            label_slogan.props.halign = Gtk.Align.START
+            label_slogan.set_line_wrap(True)
+            label_slogan.set_max_width_chars(35)
+            label_slogan.set_lines(4)
+            label_slogan.set_ellipsize(Pango.EllipsizeMode.END)
+            label_slogan.set_markup("<span size='x-large'>{}</span>".format(slider_app_slogan))
 
             label_summary = Gtk.Label.new()
             label_summary.props.halign = Gtk.Align.START
-            label_summary.set_line_wrap(True)
-            label_summary.set_max_width_chars(35)
-            label_summary.set_lines(4)
-            label_summary.set_ellipsize(Pango.EllipsizeMode.END)
+            label_summary.set_markup("<span weight='light'>{}</span>".format(slider_app_short_desc))
 
-            label_summary.set_markup("<span size='x-large'>{}</span>".format(editor_app_short_desc))
-
-            label_summary_1 = Gtk.Label.new()
-            label_summary_1.props.halign = Gtk.Align.START
-            label_summary_1.set_markup("<span weight='light'>{}</span>".format(editor_app_pretty_name))
-
-            # image = Gtk.Image.new_from_icon_name(editor_app_name, Gtk.IconSize.BUTTON)
-            # image.set_pixel_size(96)
             vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 12)
             vbox.set_border_width(6)
             vbox.pack_start(label_name, False, False, 0)
+            vbox.pack_start(label_slogan, False, False, 0)
             vbox.pack_start(label_summary, False, False, 0)
-            vbox.pack_start(label_summary_1, False, False, 0)
             vbox.set_margin_top(24)
             vbox.set_margin_start(24)
 
             hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
-            # hbox.pack_start(image, False, False, 0)
             hbox.pack_start(vbox, True, True, 0)
             hbox.show_all()
 
             css = """
-            .pardus-software-banner {{
+            .pardus-software-slider {{
                 background-image: url("{}");
                 background-size: cover;
                 background-repeat: no-repeat;
@@ -1672,48 +1662,48 @@ class MainWindow(object):
             flowbox_child = Gtk.FlowBoxChild()
             flowbox_child.add(hbox)
             flowbox_child.set_size_request(-1, 200)
-            flowbox_child.get_style_context().add_class("pardus-software-banner")
+            flowbox_child.get_style_context().add_class("pardus-software-slider")
             flowbox_child.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-            self.ui_banner_stack.add_named(flowbox_child, "{}".format(stack_counter))
+            self.ui_slider_stack.add_named(flowbox_child, "{}".format(stack_counter))
             stack_counter += 1
 
-        self.ui_banner_stack.show_all()
+        self.ui_slider_stack.show_all()
 
-    def on_ui_banner_left_button_clicked(self, button):
+    def on_ui_slider_left_button_clicked(self, button):
 
-        banner_stack_len = 0
-        for row in self.ui_banner_stack:
-            banner_stack_len += 1
+        slider_stack_len = 0
+        for row in self.ui_slider_stack:
+            slider_stack_len += 1
 
         def get_prev_page(page):
             increase = 0
-            for i in range(0, banner_stack_len):
+            for i in range(0, slider_stack_len):
                 increase += -1
-                if self.ui_banner_stack.get_child_by_name("{}".format(page + increase)) != None:
+                if self.ui_slider_stack.get_child_by_name("{}".format(page + increase)) != None:
                     return page + increase
-            return banner_stack_len - 1
+            return slider_stack_len - 1
 
-        self.ui_banner_stack.set_visible_child_name("{}".format(get_prev_page(self.banner_current_page)))
-        self.banner_current_page = int(self.ui_banner_stack.get_visible_child_name())
+        self.ui_slider_stack.set_visible_child_name("{}".format(get_prev_page(self.slider_current_page)))
+        self.slider_current_page = int(self.ui_slider_stack.get_visible_child_name())
 
 
-    def on_ui_banner_right_button_clicked(self, button):
+    def on_ui_slider_right_button_clicked(self, button):
 
-        banner_stack_len = 0
-        for row in self.ui_banner_stack:
-            banner_stack_len += 1
+        slider_stack_len = 0
+        for row in self.ui_slider_stack:
+            slider_stack_len += 1
 
         def get_next_page(page):
             increase = 0
-            for i in range(0, banner_stack_len):
+            for i in range(0, slider_stack_len):
                 increase += 1
-                if self.ui_banner_stack.get_child_by_name("{}".format(page + increase)) != None:
+                if self.ui_slider_stack.get_child_by_name("{}".format(page + increase)) != None:
                     return page + increase
             return 0
 
-        self.ui_banner_stack.set_visible_child_name("{}".format(get_next_page(self.banner_current_page)))
-        self.banner_current_page = int(self.ui_banner_stack.get_visible_child_name())
+        self.ui_slider_stack.set_visible_child_name("{}".format(get_next_page(self.slider_current_page)))
+        self.slider_current_page = int(self.ui_slider_stack.get_visible_child_name())
 
 
     def setPardusApps(self):
@@ -2145,7 +2135,7 @@ class MainWindow(object):
 
             category_label = Gtk.Label.new()
             category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
-                self.get_category_name_from_app_name(editor_app_name)))
+                (editor_app["category"].get(self.locale) or editor_app["category"].get("en") or _("Unknown")).title()))
 
             box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
             box_stats.pack_start(rate_label, False, True, 0)
