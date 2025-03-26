@@ -40,6 +40,7 @@ class Server(object):
         # self.servercaticons = "categoryicons"
         self.server_apps_archive = "apps.tar.gz"
         self.server_icons_archive = "icons.tar.gz"
+        self.server_images_archive = "images.tar.gz"
         self.server_cats_archive = "cats.tar.gz"
         self.server_home_archive = "home.tar.gz"
         # self.servericonty = ".svg"
@@ -278,7 +279,7 @@ class Server(object):
         try:
             remove_subdirectories_and_files(os.path.dirname(archive), excepted_file=archive)
             tar = tarfile.open(archive)
-            extractables = [member for member in tar.getmembers() if member.name.endswith(".svg") or member.name.endswith(".json")]
+            extractables = [member for member in tar.getmembers() if member.name.endswith(".svg") or member.name.endswith(".png") or member.name.endswith(".json")]
             tar.extractall(members=extractables, path=os.path.dirname(archive))
             tar.close()
             return True

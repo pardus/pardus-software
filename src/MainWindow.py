@@ -804,6 +804,7 @@ class MainWindow(object):
 
         self.status_server_apps = False
         self.status_server_icons = False
+        self.status_server_images = False
         self.status_server_cats = False
         self.status_server_home = False
 
@@ -1077,7 +1078,6 @@ class MainWindow(object):
         icon_theme = Gtk.IconTheme.get_default()
         icon_theme.prepend_search_path(self.UserSettings.app_icons_dir)
         icon_theme.prepend_search_path(self.UserSettings.cat_icons_dir)
-        icon_theme.prepend_search_path(self.UserSettings.slider_icons_dir)
 
     def package(self):
         GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Updating Cache")))
@@ -1362,20 +1362,23 @@ class MainWindow(object):
         if status:
             download_apps = compare_md5_re_download(self.UserSettings.apps_dir + self.UserSettings.apps_archive, response["md5"]["apps"])
             download_icons = compare_md5_re_download(self.UserSettings.icons_dir + self.UserSettings.icons_archive, response["md5"]["icons"])
+            download_images = compare_md5_re_download(self.UserSettings.images_dir + self.UserSettings.images_archive, response["md5"]["images"])
             download_cats = compare_md5_re_download(self.UserSettings.cats_dir + self.UserSettings.cats_archive, response["md5"]["cats"])
             download_home = compare_md5_re_download(self.UserSettings.home_dir + self.UserSettings.home_archive, response["md5"]["home"])
 
             self.Logger.info("download_apps: {}".format(download_apps))
             self.Logger.info("download_icons: {}".format(download_icons))
+            self.Logger.info("download_images: {}".format(download_images))
             self.Logger.info("download_cats: {}".format(download_cats))
             self.Logger.info("download_home: {}".format(download_home))
 
             self.status_server_apps = not download_apps
             self.status_server_icons = not download_icons
+            self.status_server_images = not download_images
             self.status_server_cats = not download_cats
             self.status_server_home = not download_home
 
-            if download_apps or download_icons or download_cats or download_home:
+            if download_apps or download_icons or download_images or download_cats or download_home:
 
                 self.Logger.info("Getting application metadata from server")
                 GLib.idle_add(self.splashlabel.set_markup,
@@ -1397,6 +1400,16 @@ class MainWindow(object):
                     self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_icons_archive,
                                          download_location=self.UserSettings.icons_dir + self.UserSettings.icons_archive,
                                          server_md5=response["md5"]["icons"], type="icons")
+
+                if download_images:
+                    self.Logger.info("Getting images from server")
+                    # GLib.idle_add(self.splashlabel.set_markup,
+                    #               "<b>{}</b>".format(_("Getting icons from server")))
+
+                    self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_images_archive,
+                                         download_location=self.UserSettings.images_dir + self.UserSettings.images_archive,
+                                         server_md5=response["md5"]["images"], type="images")
+
                 if download_cats:
                     self.Logger.info("Getting categories from server")
                     # GLib.idle_add(self.splashlabel.set_markup,
@@ -1429,12 +1442,14 @@ class MainWindow(object):
                 self.status_server_apps = True
             elif type == "icons":
                 self.status_server_icons = True
+            elif type == "images":
+                self.status_server_images = True
             elif type == "cats":
                 self.status_server_cats = True
             elif type == "home":
                 self.status_server_home = True
 
-            if self.status_server_apps and self.status_server_icons and self.status_server_cats and self.status_server_home:
+            if self.status_server_apps and self.status_server_icons and self.status_server_images and self.status_server_cats and self.status_server_home:
                 with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
                     self.applist = dict(sorted(response.items(),
@@ -1654,7 +1669,7 @@ class MainWindow(object):
                 background-position: center;
                 border-radius: 8px;
             }}
-            """.format(os.path.join(self.UserSettings.slider_icons_dir, "slider-{}.svg".format(stack_counter + 1)))
+            """.format(os.path.join(self.UserSettings.slider_images_dir, "{}.svg".format(slider_app_name)))
 
             style_provider = Gtk.CssProvider()
             style_provider.load_from_data(str.encode(css))
@@ -2079,7 +2094,7 @@ class MainWindow(object):
                 background-position: center;
                 border-radius: 8px;
             }}
-            """.format(os.path.join(self.UserSettings.editor_icons_dir, "{}.png".format(editor_app_name)))
+            """.format(os.path.join(self.UserSettings.editor_images_dir, "{}.png".format(editor_app_name)))
             style_provider = Gtk.CssProvider()
             style_provider.load_from_data(str.encode(css))
             app_icon.get_style_context().add_class("pardus-software-editor")
