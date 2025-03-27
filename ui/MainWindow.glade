@@ -2091,7 +2091,8 @@
                                                   <object class="GtkStack" id="ui_slider_stack">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="transition-type">slide-left-right</property>
+                                                    <property name="transition-duration">250</property>
+                                                    <property name="transition-type">crossfade</property>
                                                     <child>
                                                       <placeholder/>
                                                     </child>
