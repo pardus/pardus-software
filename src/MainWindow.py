@@ -792,6 +792,7 @@ class MainWindow(object):
 
         self.ui_leftcats_box = self.GtkBuilder.get_object("ui_leftcats_box")
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
+        self.ui_leftinstalled_listbox = self.GtkBuilder.get_object("ui_leftinstalled_listbox")
         self.ui_slider_stack = self.GtkBuilder.get_object("ui_slider_stack")
 
         # Set version
@@ -1880,63 +1881,82 @@ class MainWindow(object):
                 GLib.idle_add(self.ui_leftcats_listbox.add, row)
 
             # seperator
-            separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
-            row = Gtk.ListBoxRow()
-            row.add(separator)
-            row.set_selectable(False)
-            row.set_activatable(False)
-            GLib.idle_add(self.ui_leftcats_listbox.add, row)
+            # separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+            # row = Gtk.ListBoxRow()
+            # row.add(separator)
+            # row.set_selectable(False)
+            # row.set_activatable(False)
+            # GLib.idle_add(self.ui_leftcats_listbox.add, row)
 
             # installed
-            installed_icon = Gtk.Image.new_from_icon_name("ps-installed-symbolic", Gtk.IconSize.BUTTON)
+            installed_icon = Gtk.Image.new_from_icon_name("ps-installed-updates", Gtk.IconSize.BUTTON)
+            installed_icon.set_pixel_size(20)
             label = Gtk.Label.new()
             label.set_text(_("Installed"))
-            box_updates = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 2)
+            box_installed_count = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+            label_installed_count = Gtk.Label.new()
+            label_installed_count.set_markup("<small>{}</small>".format("13"))
+            label_installed_count.set_margin_start(5)
+            label_installed_count.set_margin_end(5)
+            label_installed_count.set_margin_top(3)
+            label_installed_count.set_margin_bottom(3)
+            box_installed_count.pack_start(label_installed_count, False, True, 0)
+            box_installed_count.props.halign = Gtk.Align.END
+            box_installed_count.get_style_context().add_class("pardus-software-left-installed-count-box")
+
             label_updates = Gtk.Label.new()
-            label_updates.set_text("13")
-            label_updates.set_margin_end(8)
-            label_updates.set_margin_top(3)
-            label_updates.set_margin_bottom(3)
-            icon_updates = Gtk.Image.new_from_icon_name("ps-updates-symbolic", Gtk.IconSize.BUTTON)
-            icon_updates.set_margin_start(3)
-            icon_updates.set_margin_top(3)
-            icon_updates.set_margin_bottom(3)
-            box_updates.pack_start(icon_updates, False, True, 0)
-            box_updates.pack_start(label_updates, False, True, 0)
-            box_updates.props.halign = Gtk.Align.END
-            box_updates.get_style_context().add_class("pardus-software-left-updates-box")
-            box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
-            box.pack_start(installed_icon, False, True, 0)
-            box.pack_start(label, False, True, 0)
-            box.pack_end(box_updates, True, True, 0)
-            box.set_margin_start(8)
-            box.set_margin_end(12)
-            box.set_margin_top(5)
-            box.set_margin_bottom(5)
+            label_updates.set_markup("<small>{}</small>".format(_("8 Updates...")))
+            label_updates.props.halign = Gtk.Align.START
+            label_updates.set_margin_start(24)
+            label_updates.set_opacity(0.7)
+
+            box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+            box_h.pack_start(installed_icon, False, True, 0)
+            box_h.pack_start(label, False, True, 0)
+            box_h.pack_end(box_installed_count, True, True, 0)
+
+            box_v = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
+            box_v.pack_start(box_h, False, True, 0)
+            box_v.pack_start(label_updates, False, True, 0)
+            box_v.set_margin_start(8)
+            box_v.set_margin_end(12)
+            box_v.set_margin_top(5)
+            box_v.set_margin_bottom(5)
+
             row = Gtk.ListBoxRow()
-            row.add(box)
+            row.add(box_v)
             row.name = "installed"
-            GLib.idle_add(self.ui_leftcats_listbox.add, row)
+            row.props.valign = Gtk.Align.END
+            row.set_vexpand(True)
+
+            GLib.idle_add(self.ui_leftinstalled_listbox.add, row)
 
             GLib.idle_add(self.ui_leftcats_listbox.show_all)
+            GLib.idle_add(self.ui_leftinstalled_listbox.show_all)
 
             # GLib.idle_add(self.ui_leftcats_listbox.select_row, self.ui_leftcats_listbox.get_row_at_index(0))
             GLib.idle_add(lambda: self.ui_leftcats_listbox.select_row(self.ui_leftcats_listbox.get_row_at_index(0)))
 
     def on_ui_leftcats_listbox_row_activated(self, listbox, row):
+        self.ui_leftinstalled_listbox.unselect_all()
         print(row.name)
         self.current_category = row.name
         if self.current_category == "discover":
             print("in discover")
             self.ui_right_stack.set_visible_child_name("discover")
-        elif self.current_category == "installed":
-            print("in installed")
-            self.ui_right_stack.set_visible_child_name("installed")
+        # elif self.current_category == "installed":
+        #     print("in installed")
+        #     self.ui_right_stack.set_visible_child_name("installed")
         else:
             print("in category")
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.ui_right_stack.set_visible_child_name("apps")
             self.ui_currentcat_label.set_markup("<b>{}</b>".format(self.current_category.title()))
+
+    def on_ui_leftinstalled_listbox_row_activated(self, listbox, row):
+        self.ui_leftcats_listbox.unselect_all()
+        print("in installed")
+        self.ui_right_stack.set_visible_child_name("installed")
 
     def on_catbutton_clicked(self, button):
 

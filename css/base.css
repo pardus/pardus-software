@@ -62,9 +62,10 @@ list row {
     border-radius:8px;
 }
 
-.pardus-software-left-updates-box {
-    background-color:alpha(@unfocused_borders, 0.5);
-    border-radius: 8px;
+.pardus-software-left-installed-count-box {
+    background-color: #f27a1a;
+    border-radius: 30px;
+    color: @view_bg_color;
 }
 
 .pardus-software-mostapp-empty-label{
