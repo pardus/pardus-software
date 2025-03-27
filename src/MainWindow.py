@@ -2090,16 +2090,8 @@ class MainWindow(object):
         for editor_app in self.Server.ediapplist[:count]:
 
             editor_app_name = editor_app["name"]
-            editor_app_pretty_name = editor_app["prettyname"][self.locale]
-            if editor_app_pretty_name == "" or editor_app_pretty_name is None:
-                editor_app_pretty_name = editor_app["prettyname"]["en"]
-
-            if "shortdesc" in editor_app.keys():
-                editor_app_short_desc = editor_app["shortdesc"][self.locale]
-                if editor_app_short_desc == "" or editor_app_short_desc is None:
-                    editor_app_short_desc = editor_app["shortdesc"]["en"]
-            else:
-                editor_app_short_desc = ""
+            editor_app_pretty_name = editor_app["prettyname"].get(self.locale) or editor_app["prettyname"].get("en")
+            editor_app_short_desc = editor_app["shortdesc"].get(self.locale) or editor_app["shortdesc"].get("en")
 
             app_icon = Gtk.Image.new()
             app_icon.set_pixel_size(128)
