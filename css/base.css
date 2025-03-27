@@ -46,7 +46,7 @@ list row {
 
 .pardus-software-left-cats-box{
     background-color:alpha(@unfocused_borders, 0.3);
-    border-radius:8px;
+    /*border-radius:8px;*/
 }
 
 .pardus-software-left-cats-listbox{
