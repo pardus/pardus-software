@@ -64,7 +64,7 @@ class UserSettings(object):
         self.config_usi = None
         self.config_ea = None
         self.config_saa = None
-        self.config_hera = None
+        self.config_sera = None
         self.config_icon = None
         self.config_sgc = None
         self.config_udt = None
@@ -78,7 +78,7 @@ class UserSettings(object):
         self.config['DEFAULT'] = {'UseServerIcons': 'yes',
                                   'Animations': 'yes',
                                   'ShowAvailableApps': 'yes',
-                                  'HideExternalRepoApps': 'yes',
+                                  'ShowExternalRepoApps': 'no',
                                   'IconName': 'default',
                                   'ShowGnomeComments': 'yes',
                                   'UseDarkTheme': 'no',
@@ -98,7 +98,7 @@ class UserSettings(object):
             self.config_usi = self.config.getboolean('DEFAULT', 'UseServerIcons')
             self.config_ea = self.config.getboolean('DEFAULT', 'Animations')
             self.config_saa = self.config.getboolean('DEFAULT', 'ShowAvailableApps')
-            self.config_hera = self.config.getboolean('DEFAULT', 'HideExternalRepoApps')
+            self.config_sera = self.config.getboolean('DEFAULT', 'ShowExternalRepoApps')
             self.config_icon = self.config.get('DEFAULT', 'IconName')
             self.config_sgc = self.config.getboolean('DEFAULT', 'ShowGnomeComments')
             self.config_udt = self.config.getboolean('DEFAULT', 'UseDarkTheme')
@@ -112,7 +112,7 @@ class UserSettings(object):
             self.config_usi = True
             self.config_ea = True
             self.config_saa = True
-            self.config_hera = True
+            self.config_sera = False
             self.config_icon = "default"
             self.config_sgc = True
             self.config_udt = False
@@ -129,7 +129,7 @@ class UserSettings(object):
         self.config['DEFAULT'] = {'UseServerIcons': srvicons,
                                   'Animations': anims,
                                   'ShowAvailableApps': avaiapps,
-                                  'HideExternalRepoApps': extapps,
+                                  'ShowExternalRepoApps': extapps,
                                   'IconName': iconname,
                                   'ShowGnomeComments': gnomecom,
                                   'UseDarkTheme': darktheme,

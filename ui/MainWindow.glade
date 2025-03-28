@@ -7417,7 +7417,7 @@ This application served from Pardus non-free package repositories, so that the O
                                     <property name="can-focus">False</property>
                                     <property name="halign">end</property>
                                     <property name="hexpand">True</property>
-                                    <property name="label" translatable="yes">Hide External Repo Applications</property>
+                                    <property name="label" translatable="yes">Show External Repo Applications</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7426,7 +7426,7 @@ This application served from Pardus non-free package repositories, so that the O
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkSwitch" id="switchHERA">
+                                  <object class="GtkSwitch" id="switchSERA">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="halign">end</property>
@@ -7441,8 +7441,8 @@ This application served from Pardus non-free package repositories, so that the O
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tip_hera">
-                                    <property name="name">tip_hera</property>
+                                  <object class="GtkButton" id="tip_sera">
+                                    <property name="name">tip_sera</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>

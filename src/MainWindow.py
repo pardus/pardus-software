@@ -504,7 +504,7 @@ class MainWindow(object):
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
         self.switchSAA = self.GtkBuilder.get_object("switchSAA")
-        self.switchHERA = self.GtkBuilder.get_object("switchHERA")
+        self.switchSERA = self.GtkBuilder.get_object("switchSERA")
         self.switchSGC = self.GtkBuilder.get_object("switchSGC")
         self.switchUDT = self.GtkBuilder.get_object("switchUDT")
         self.switchAPTU = self.GtkBuilder.get_object("switchAPTU")
@@ -518,7 +518,7 @@ class MainWindow(object):
         self.tip_usi = self.GtkBuilder.get_object("tip_usi")
         self.tip_ea = self.GtkBuilder.get_object("tip_ea")
         self.tip_soaa = self.GtkBuilder.get_object("tip_soaa")
-        self.tip_hera = self.GtkBuilder.get_object("tip_hera")
+        self.tip_sera = self.GtkBuilder.get_object("tip_sera")
         self.tip_icons = self.GtkBuilder.get_object("tip_icons")
         self.tip_sgc = self.GtkBuilder.get_object("tip_sgc")
         self.tip_udt = self.GtkBuilder.get_object("tip_udt")
@@ -962,7 +962,7 @@ class MainWindow(object):
 
     def controlAvailableApps(self):
         if self.Server.connection:
-            self.setAvailableApps(available=self.UserSettings.config_saa, hideextapps=self.UserSettings.config_hera)
+            self.setAvailableApps(available=self.UserSettings.config_saa, showextapps=self.UserSettings.config_sera)
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
@@ -1107,7 +1107,7 @@ class MainWindow(object):
         self.Logger.info("{} {}".format("config_usi", self.UserSettings.config_usi))
         self.Logger.info("{} {}".format("config_anim", self.UserSettings.config_ea))
         self.Logger.info("{} {}".format("config_availableapps", self.UserSettings.config_saa))
-        self.Logger.info("{} {}".format("config_hideextapps", self.UserSettings.config_hera))
+        self.Logger.info("{} {}".format("config_showextapps", self.UserSettings.config_sera))
         self.Logger.info("{} {}".format("config_icon", self.UserSettings.config_icon))
         self.Logger.info("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
         self.Logger.info("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
@@ -6035,24 +6035,18 @@ class MainWindow(object):
             self.prefback = self.homestack.get_visible_child_name()
             self.prefback_preferences = self.prefback
         self.ui_headermenu_popover.popdown()
-        self.topsearchbutton.set_active(False)
-        self.topsearchbutton.set_sensitive(False)
         self.prefstack.set_visible_child_name("main")
         self.homestack.set_visible_child_name("preferences")
-        self.menubackbutton.set_sensitive(True)
         self.UserSettings.readConfig()
         self.switchUSI.set_state(self.UserSettings.config_usi)
         self.switchEA.set_state(self.UserSettings.config_ea)
         self.switchSAA.set_state(self.UserSettings.config_saa)
-        self.switchHERA.set_state(self.UserSettings.config_hera)
+        self.switchSERA.set_state(self.UserSettings.config_sera)
         self.switchSGC.set_state(self.UserSettings.config_sgc)
         self.switchUDT.set_state(self.UserSettings.config_udt)
         self.switchAPTU.set_state(self.UserSettings.config_aptup)
         self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
             _("Server Address"), self.Server.serverurl))
-        self.store_button.get_style_context().remove_class("suggested-action")
-        self.repo_button.get_style_context().remove_class("suggested-action")
-        self.myapps_button.get_style_context().remove_class("suggested-action")
         self.queue_button.get_style_context().remove_class("suggested-action")
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
@@ -6435,10 +6429,10 @@ class MainWindow(object):
                 _("If you turn this option off, all apps will be shown, but"),
                 _("'Not Found' will be displayed for apps not available in the repository.")))
             self.PopoverPrefTip.popup()
-        elif button.get_name() == "tip_hera":
-            self.PopoverPrefTip.set_relative_to(self.tip_hera)
+        elif button.get_name() == "tip_sera":
+            self.PopoverPrefTip.set_relative_to(self.tip_sera)
             self.prefTipLabel.set_text("{}\n{}".format(
-                _("Hide applications offered from external repositories (other than Official Pardus repository)."),
+                _("Show applications offered from external repositories (other than Official Pardus repository)."),
                 _("For example, publisher's applications in the Publishers category.")
             ))
             self.PopoverPrefTip.popup()
@@ -6530,7 +6524,7 @@ class MainWindow(object):
             self.Logger.info("Updating user icon state")
             try:
                 self.UserSettings.writeConfig(state, self.UserSettings.config_ea, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
+                                              self.UserSettings.config_sera, self.UserSettings.config_icon,
                                               self.UserSettings.config_sgc, self.UserSettings.config_udt,
                                               self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                               self.UserSettings.config_forceaptuptime)
@@ -6560,7 +6554,7 @@ class MainWindow(object):
             self.Logger.info("Updating user animation state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
+                                              self.UserSettings.config_sera, self.UserSettings.config_icon,
                                               self.UserSettings.config_sgc, self.UserSettings.config_udt,
                                               self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                               self.UserSettings.config_forceaptuptime)
@@ -6575,12 +6569,12 @@ class MainWindow(object):
             self.Logger.info("Updating show available apps state")
             try:
                 self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
-                                              self.UserSettings.config_hera, self.UserSettings.config_icon,
+                                              self.UserSettings.config_sera, self.UserSettings.config_icon,
                                               self.UserSettings.config_sgc, self.UserSettings.config_udt,
                                               self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                               self.UserSettings.config_forceaptuptime)
                 self.usersettings()
-                self.setAvailableApps(available=state, hideextapps=self.UserSettings.config_hera)
+                self.setAvailableApps(available=state, showextapps=self.UserSettings.config_sera)
             except Exception as e:
                 self.preflabel_settext("{}".format(e))
 
@@ -6591,7 +6585,7 @@ class MainWindow(object):
             self.setMostApps()
 
     def on_switchHERA_state_set(self, switch, state):
-        user_config_hera = self.UserSettings.config_hera
+        user_config_hera = self.UserSettings.config_sera
         if state != user_config_hera:
             self.Logger.info("Updating hide external apps state")
             try:
@@ -6617,7 +6611,7 @@ class MainWindow(object):
         if active != user_config_icon and active is not None:
             self.Logger.info("changing icons to {}".format(combo_box.get_active_id()))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera, active,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera, active,
                                           self.UserSettings.config_sgc, self.UserSettings.config_udt,
                                           self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                           self.UserSettings.config_forceaptuptime)
@@ -6633,7 +6627,7 @@ class MainWindow(object):
         if state != user_config_sgc:
             self.Logger.info("Updating show gnome apps state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
                                           self.UserSettings.config_icon, state, self.UserSettings.config_udt,
                                           self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                           self.UserSettings.config_forceaptuptime)
@@ -6644,7 +6638,7 @@ class MainWindow(object):
         if state != user_config_udt:
             self.Logger.info("Updating use dark theme state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
                                           self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                           self.UserSettings.config_forceaptuptime)
@@ -6658,7 +6652,7 @@ class MainWindow(object):
         if state != user_config_aptup:
             self.Logger.info("Updating auto apt update state as {}".format(state))
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc,
                                           self.UserSettings.config_udt, state,
                                           self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
@@ -6676,12 +6670,12 @@ class MainWindow(object):
         for row in self.LastAddedFlowBox:
             self.LastAddedFlowBox.remove(row)
 
-    def setAvailableApps(self, available, hideextapps):
+    def setAvailableApps(self, available, showextapps):
         self.applist = {
             app: details
             for app, details in self.fullapplist.items()
             if (
-                    (not hideextapps or not details["external"]) and
+                    (showextapps or not details["external"]) and
                     (
                             (available and (self.Package.isinstalled(app) is not None or any(
                                 code["name"] == self.UserSettings.usercodename for code in details["codename"])))
@@ -6691,14 +6685,14 @@ class MainWindow(object):
             )
         }
 
-        if hideextapps:  # control category list too
+        if showextapps:  # control category list too
+            self.catlist = self.fullcatlist
+        else:
             newlist = []
             for cat in self.fullcatlist:
                 if cat["external"] is False:
                     newlist.append(cat)
             self.catlist = newlist
-        else:
-            self.catlist = self.fullcatlist
 
     def on_prefcachebutton_clicked(self, button):
         state, message = self.Server.deleteCache()
@@ -7451,7 +7445,7 @@ class MainWindow(object):
 
                 timestamp = 0
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_hera,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc,
                                           self.UserSettings.config_udt, self.UserSettings.config_aptup,
                                           timestamp, self.UserSettings.config_forceaptuptime)
