@@ -11,6 +11,7 @@ import random
 import string
 import subprocess
 import sys
+import re
 from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
@@ -75,6 +76,16 @@ def main():
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def externalrepo(key, sources, name):
+        if not re.match(r'^[\w\-]+\.(list|sources)$', name):
+            print("wrong source name for sources.list.d, (re)")
+            return
+
+        base_dir = Path("/etc/apt/sources.list.d").resolve()
+        source_file_path = (base_dir / name).resolve()
+        if base_dir not in source_file_path.parents:
+            print("wrong source name for sources.list.d, (resolve)")
+            return
+
         tmpkeyfilename = ''.join(random.choice(string.ascii_lowercase) for i in range(13))
         tmpkeyfile = open(os.path.join("/tmp", tmpkeyfilename), "w")
         tmpkeyfile.write(key)
@@ -84,8 +95,8 @@ def main():
 
         subprocess.call(["apt-key", "add", tmpkey])
 
-        Path("/etc/apt/sources.list.d/").mkdir(parents=True, exist_ok=True)
-        sdfile = open("/etc/apt/sources.list.d/" + name, "w")
+        base_dir.mkdir(parents=True, exist_ok=True)
+        sdfile = open(source_file_path, "w")
         sdfile.write(sources)
         sdfile.flush()
         sdfile.close()
