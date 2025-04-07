@@ -2008,7 +2008,7 @@ class MainWindow(object):
             self.ui_showapps_buttonbox.set_visible(False)
             self.ui_showappcount_label.set_visible(False)
             self.ui_sortby_combo.set_visible(False)
-            self.pardusAppsStack.set_visible_child_name("subcats")
+            self.ui_pardusapps_stack.set_visible_child_name("subcats")
             for row in self.SubCategoryFlowBox:
                 self.SubCategoryFlowBox.remove(row)
             subcats = []
@@ -2036,7 +2036,7 @@ class MainWindow(object):
             self.ui_showapps_buttonbox.set_visible(True)
             self.ui_showappcount_label.set_visible(True)
             self.ui_sortby_combo.set_visible(True)
-            self.pardusAppsStack.set_visible_child_name("normal")
+            self.ui_pardusapps_stack.set_visible_child_name("normal")
             # self.PardusCategoryFilter.refilter()
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
@@ -2970,8 +2970,8 @@ class MainWindow(object):
             self.homestack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.homestack.set_transition_duration(0)
 
-            self.pardusAppsStack.set_transition_type(Gtk.StackTransitionType.NONE)
-            self.pardusAppsStack.set_transition_duration(0)
+            self.ui_pardusapps_stack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.ui_pardusapps_stack.set_transition_duration(0)
 
             self.searchstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.searchstack.set_transition_duration(0)
@@ -3039,8 +3039,8 @@ class MainWindow(object):
 
             if self.PardusCurrentCategorySubCats:
                 self.SubCategoryFlowBox.unselect_all()
-                if self.pardusAppsStack.get_visible_child_name() != "subcats":
-                    self.pardusAppsStack.set_visible_child_name("subcats")
+                if self.ui_pardusapps_stack.get_visible_child_name() != "subcats":
+                    self.ui_pardusapps_stack.set_visible_child_name("subcats")
                     self.ui_showapps_buttonbox.set_visible(False)
                     self.ui_showappcount_label.set_visible(False)
                     self.ui_sortby_combo.set_visible(False)
@@ -4979,7 +4979,7 @@ class MainWindow(object):
             self.ui_showapps_buttonbox.set_visible(False)
             self.ui_showappcount_label.set_visible(False)
             self.ui_sortby_combo.set_visible(False)
-            self.pardusAppsStack.set_visible_child_name("subcats")
+            self.ui_pardusapps_stack.set_visible_child_name("subcats")
             for row in self.SubCategoryFlowBox:
                 self.SubCategoryFlowBox.remove(row)
             subcats = []
@@ -5007,7 +5007,7 @@ class MainWindow(object):
             self.ui_showapps_buttonbox.set_visible(True)
             self.ui_showappcount_label.set_visible(True)
             self.ui_sortby_combo.set_visible(True)
-            self.pardusAppsStack.set_visible_child_name("normal")
+            self.ui_pardusapps_stack.set_visible_child_name("normal")
             self.PardusCategoryFilter.refilter()
             self.set_app_count_label()
 
@@ -5018,7 +5018,7 @@ class MainWindow(object):
         self.ui_sortby_combo.set_visible(True)
         self.PardusCategoryFilter.refilter()
         self.set_app_count_label()
-        self.pardusAppsStack.set_visible_child_name("normal")
+        self.ui_pardusapps_stack.set_visible_child_name("normal")
 
     def on_HomeCategoryFlowBox_selected_children_changed(self, flow_box):
         self.Logger.info("on_HomeCategoryFlowBox_selected_children_changed")
