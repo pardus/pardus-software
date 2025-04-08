@@ -92,21 +92,21 @@ class Server(object):
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
 
-    def control_server(self, url):
-        file = Gio.File.new_for_uri(url)
-        file.load_contents_async(None, self._open_control_stream)
-
-    def _open_control_stream(self, file, result):
-        try:
-            file.load_contents_finish(result)
-        except GLib.Error as error:
-            # if error.matches(Gio.tls_error_quark(),  Gio.TlsError.BAD_CERTIFICATE):
-            if error.domain == GLib.quark_to_string(Gio.tls_error_quark()):
-                self.Logger.warning("_open_control_stream Error: {}, {}".format(error.domain, error.message))
-                self.Logger.exception("{}".format(error))
-                self.ServerAppsURLControlCB(False)  # Send to MainWindow
-                return False
-        self.ServerAppsURLControlCB(True)  # Send to MainWindow
+    # def control_server(self, url):
+    #     file = Gio.File.new_for_uri(url)
+    #     file.load_contents_async(None, self._open_control_stream)
+    #
+    # def _open_control_stream(self, file, result):
+    #     try:
+    #         file.load_contents_finish(result)
+    #     except GLib.Error as error:
+    #         # if error.matches(Gio.tls_error_quark(),  Gio.TlsError.BAD_CERTIFICATE):
+    #         if error.domain == GLib.quark_to_string(Gio.tls_error_quark()):
+    #             self.Logger.warning("_open_control_stream Error: {}, {}".format(error.domain, error.message))
+    #             self.Logger.exception("{}".format(error))
+    #             self.ServerAppsURLControlCB(False)  # Send to MainWindow
+    #             return False
+    #     self.ServerAppsURLControlCB(True)  # Send to MainWindow
 
     def get_hashes(self, url):
         file = Gio.File.new_for_uri(url)
@@ -127,38 +127,6 @@ class Server(object):
         else:
             self.Logger.warning("_open_hashes_stream is not success")
             self.ServerHashesCB(False)  # Send to MainWindow
-
-    def get(self, url, type):
-        file = Gio.File.new_for_uri(url)
-        file.load_contents_async(None, self._open_stream, type)
-
-    def _open_stream(self, file, result, type):
-        try:
-            success, data, etag = file.load_contents_finish(result)
-        except GLib.Error as error:
-            # if error.domain == GLib.quark_to_string(Gio.io_error_quark()):
-            if error.matches(Gio.io_error_quark(), Gio.IOErrorEnum.NOT_FOUND):
-                if not self.old_server_tried and type == "apps":
-                    self.Logger.warning("_open_stream: trying old server apps url")
-                    self.get(self.serverurl + self.serverapps_v2, type)
-                    self.old_server_tried = True
-                    return
-                else:
-                    self.Logger.warning("{} is not success from old server apps too".format(type))
-                    self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
-                    return False
-            else:
-                self.error_message = error.message
-                self.Logger.warning("{} _open_stream Error: {}, {}".format(type, error.domain, error.message))
-                self.Logger.exception("{}".format(error))
-                self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
-                return False
-
-        if success:
-            self.ServerAppsCB(True, json.loads(data), type)
-        else:
-            self.Logger.warning("{} is not success".format(type))
-            self.ServerAppsCB(False, response=None, type=type)  # Send to MainWindow
 
     def get_file(self, url, download_location, server_md5, type=""):
         file = Gio.File.new_for_uri(url)
@@ -197,74 +165,6 @@ class Server(object):
             self.error_message = "{} file downloaded but md5 is different!".format(download_location)
             self.Logger.warning("{} file downloaded but md5 is different!".format(download_location))
             self.ServerFilesCB(False)
-
-    def get_icons(self, url, filename, force_download=False, fromsettings=False):
-        if not self.isExists(self.icons_dir + filename) or force_download:
-            file = Gio.File.new_for_uri(url)
-            file.load_contents_async(None, self._open_icon_stream, filename, fromsettings)
-        else:
-            self.Logger.info("{} already available".format(filename))
-            if not self.isExists(self.app_icons_dir) or not self.isExists(self.cat_icons_dir):
-                self.extract_icons(self.icons_dir + filename)
-            self.ServerIconsCB(True, fromsettings)
-
-    def _open_icon_stream(self, file, result, filename, fromsettings):
-        try:
-            success, data, etag = file.load_contents_finish(result)
-        except GLib.Error as error:
-            self.Logger.warning("{} _open_icon_stream Error: {}, {}".format(filename, error.domain, error.message))
-            self.Logger.exception("{}".format(error))
-            self.ServerIconsCB(False, fromsettings)
-            return False
-
-        if success:
-            if self.createDir(self.icons_dir):
-                with open(self.icons_dir + filename , "wb") as file:
-                    file.write(data)
-                if self.control_icons_md5(filename):
-                    if self.extract_icons(self.icons_dir + filename):
-                        self.ServerIconsCB(True, fromsettings)
-                        return True
-                    else:
-                        self.Logger.warning("{} extract error".format(filename))
-                else:
-                    self.Logger.warning("md5 value is different (controlMD5) {} ".format(filename))
-        else:
-            self.Logger.warning("{} is not success".format(filename))
-
-        self.ServerIconsCB(False, fromsettings)
-
-    def control_icons(self):
-        redown_icons = False
-        if self.isExists(self.icons_dir + self.server_icons_archive):
-            localiconmd5 = md5(open(self.icons_dir + self.server_icons_archive, "rb").read()).hexdigest()
-            if "icons" in self.servermd5.keys() and self.servermd5["icons"]:
-                if localiconmd5 != self.servermd5["icons"]:
-                    self.Logger.info("md5 value of icons are different so trying download new icons from server")
-                    redown_icons = True
-        return redown_icons
-
-    def control_icons_md5(self, filename):
-        if self.isExists(self.icons_dir + filename):
-            localiconmd5 = md5(open(self.icons_dir + filename, "rb").read()).hexdigest()
-            if self.servermd5["icons"]:
-                if localiconmd5 == self.servermd5["icons"]:
-                    return True
-        return False
-
-    def extract_icons(self, archive):
-        try:
-            rmtree(self.app_icons_dir, ignore_errors=True)
-            rmtree(self.cat_icons_dir, ignore_errors=True)
-            tar = tarfile.open(archive)
-            extractables = [member for member in tar.getmembers() if member.name.endswith(".svg")]
-            tar.extractall(members=extractables, path=self.icons_dir)
-            tar.close()
-            return True
-        except Exception as error:
-            self.Logger.warning("{} : {}".format("extract error", self.cachedir))
-            self.Logger.exception("{}".format(error))
-            return False
 
     def extract_archive(self, archive):
         def remove_subdirectories_and_files(directory, excepted_file):

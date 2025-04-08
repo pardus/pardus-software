@@ -1310,22 +1310,24 @@ class MainWindow(object):
         self.Logger.info("repo permission: {}".format(self.repo_perm))
         self.Logger.info("myapps permission: {}".format(self.myapps_perm))
 
-        self.Server.ServerAppsURLControlCB = self.ServerAppsURLControlCB
+        # self.Server.ServerAppsURLControlCB = self.ServerAppsURLControlCB
         self.Server.ServerHashesCB = self.ServerHashesCB
         self.Server.ServerFilesCB = self.ServerFilesCB
-        self.Server.ServerAppsCB = self.ServerAppsCB
-        self.Server.ServerIconsCB = self.ServerIconsCB
 
-        self.Logger.info("Controlling server")
-        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Controlling server")))
-        self.Server.control_server(self.Server.serverurl + "/api/v2/test")
+        # self.Logger.info("Controlling server")
+        # GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Controlling server")))
+        # self.Server.control_server(self.Server.serverurl + "/api/v2/test")
+
+        self.Logger.info("Controlling server hashes")
+        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Controlling server hashes")))
+        self.Server.get_hashes(self.Server.serverurl + self.Server.serverhash)
 
         self.Logger.info("server func done")
 
     def afterServers(self):
         GLib.idle_add(self.set_initial_home)
         self.prepend_server_icons()
-        GLib.idle_add(self.controlServer)
+        # GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
         # GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.set_categories)
@@ -1340,16 +1342,16 @@ class MainWindow(object):
         GLib.idle_add(self.aptUpdate)
         GLib.idle_add(self.myapps_worker_thread)
 
-    def ServerAppsURLControlCB(self, status):
-        self.Logger.info("ServerAppsURLControlCB : {}".format(status))
-
-        if not status:
-            self.Server.serverurl = self.Server.serverurl.replace("https://", "http://")
-            self.Logger.info("{}".format(self.Server.serverurl))
-
-        self.Logger.info("Controlling server hashes")
-        GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Controlling server hashes")))
-        self.Server.get_hashes(self.Server.serverurl + self.Server.serverhash)
+    # def ServerAppsURLControlCB(self, status):
+    #     self.Logger.info("ServerAppsURLControlCB : {}".format(status))
+    #
+    #     if not status:
+    #         self.Server.serverurl = self.Server.serverurl.replace("https://", "http://")
+    #         self.Logger.info("{}".format(self.Server.serverurl))
+    #
+    #     self.Logger.info("Controlling server hashes")
+    #     GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Controlling server hashes")))
+    #     self.Server.get_hashes(self.Server.serverurl + self.Server.serverhash)
 
     def ServerHashesCB(self, status, response=None):
         self.Logger.info("ServerHashesCB : {}".format(status))
@@ -1501,106 +1503,12 @@ class MainWindow(object):
                 self.afterServers()
                 self.connection_error_after = True
 
-    def ServerAppsCB(self, success, response=None, type=None):
-        if success:
-            # if type == "apps":
-            #     self.Logger.info("server apps successful")
-            #     self.status_serverapps = True
-            #     if not "app-list" in response:
-            #         self.applist = dict(sorted(response.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
-            #     else:
-            #         self.Logger.warning("it loooks like v2 apps so converting")
-            #         converted_applist = {app["name"]: {k: v for k, v in app.items() if k != "name"} for app in response["app-list"]}
-            #         self.applist = dict(sorted(converted_applist.items(), key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
-            #     self.fullapplist = self.applist
-            # if type == "cats":
-            #     self.Logger.info("server cats successful")
-            #     self.status_servercats = True
-            #     self.catlist = response["cat-list"]
-            #     self.fullcatlist = self.catlist
-            # if type == "home":
-            #     self.Logger.info("server home successful")
-            #     self.status_serverhome = True
-            #     self.Server.ediapplist = response["editor-apps"]
-            #     self.Server.mostdownapplist = response["mostdown-apps"]
-            #     self.Server.mostrateapplist = response["mostrate-apps"]
-            #     if "last-apps" in response:
-            #         self.Server.lastaddedapplist = response["last-apps"]
-            #     self.Server.totalstatistics = response["total"]
-            #     self.Server.servermd5 = response["md5"]
-            #     self.Server.appversion = response["version"]
-            #     if "version_pardus21" in response.keys():
-            #         self.Server.appversion_pardus21 = response["version_pardus21"]
-            #     else:
-            #         self.Server.appversion_pardus21 = self.Server.appversion
-            #     if "version_pardus23" in response.keys():
-            #         self.Server.appversion_pardus23 = response["version_pardus23"]
-            #     else:
-            #         self.Server.appversion_pardus23 = self.Server.appversion
-            #     self.Server.iconnames = response["iconnames"]
-            #     self.Server.badwords = response["badwords"]
-            #     if "important-packages" in response and response["important-packages"]:
-            #         self.important_packages = response["important-packages"]
-            #     if "i386-packages" in response and response["i386-packages"]:
-            #         self.i386_packages = response["i386-packages"]
-            #     self.Server.aptuptime = response["aptuptime"]
-            # elif type == "statistics":
-            #     self.Logger.info("server statistics successful")
-            #     self.status_serverstatistics = True
-            #     self.Server.dailydowns = response["dailydowns"]
-            #     if "osdownsv23" in response.keys():
-            #         self.Server.osdowns = response["osdownsv23"]
-            #     else:
-            #         self.Server.osdowns = response["osdowns"]
-            #     if "oscolorsv23" in response.keys():
-            #         self.Server.oscolors = response["oscolorsv23"]
-            #     else:
-            #         self.Server.oscolors = response["oscolors"]
-            #     self.Server.appdowns = response["appdowns"]
-            #     self.Server.appcolors = response["appcolors"]
-            #     if "osexplode" in response.keys():
-            #         self.Server.osexplode = response["osexplode"]
-            #     else:
-            #         for os in self.Server.osdowns:
-            #             self.Server.osexplode.append(0.2)
-
-            if self.status_serverhome:
-                self.Server.connection = True
-                self.afterServers()
-        else:
-            if not self.connection_error_after:
-                self.Server.connection = False
-                self.afterServers()
-                self.connection_error_after = True
-
-    def ServerIconsCB(self, status, fromsettings=False):
-
-        if not fromsettings:
-            self.server_icons_done = True
-            if not status:
-                self.notify(message_summary=_("Couldn't get icons"),
-                            message_body=_("Icons could not be retrieved from the server"))
-            self.afterServers()
-        else:
-            self.Logger.info("fromsettings, re-setting icons")
-            self.usersettings()
-
-    def get_icons_from_server(self):
-        if self.Server.connection:
-            self.Logger.info("Getting icons from server")
-            GLib.idle_add(self.splashlabel.set_markup, "<b>{}</b>".format(_("Getting icons from server")))
-            redown_icons = self.Server.control_icons()
-            self.Server.get_icons(url=self.Server.serverurl + "/files/" + self.Server.server_icons_archive,
-                                  filename=self.Server.server_icons_archive, force_download=redown_icons)
-        else:
-            self.Logger.info("icons cannot downloading because server connection is {}".format(self.Server.connection))
-
-    def controlServer(self):
-        if self.Server.connection:
-            self.Logger.info("Controlling {}".format(self.Server.serverurl))
-            self.AppDetail.control(self.Server.serverurl + "/api/v2/test")
-            self.AppRequest.control(self.Server.serverurl + "/api/v2/test")
-            self.PardusComment.control(self.Server.serverurl + "/api/v2/test")
+    # def controlServer(self):
+    #     if self.Server.connection:
+    #         self.Logger.info("Controlling {}".format(self.Server.serverurl))
+    #         self.AppDetail.control(self.Server.serverurl + "/api/v2/test")
+    #         self.AppRequest.control(self.Server.serverurl + "/api/v2/test")
+    #         self.PardusComment.control(self.Server.serverurl + "/api/v2/test")
 
     def gnomeRatings(self):
         self.Logger.info("Getting ratings from gnome odrs")

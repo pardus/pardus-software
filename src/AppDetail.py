@@ -52,23 +52,23 @@ class AppDetail(object):
             self.Logger.warning("AppDetail Close Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
 
-    def control(self, uri):
-        message = Soup.Message.new("POST", uri)
-        message.request_headers.append('Content-type', 'application/json')
-        self.session.send_async(message, None, self.on_control_finished, message)
-
-    def on_control_finished(self, session, result, message):
-        if message.status_code == Soup.Status.SSL_FAILED:
-            self.session.props.ssl_strict = False
-        try:
-            input_stream = session.send_finish(result)
-        except GLib.Error:
-            return False
-
-        input_stream.close_async(GLib.PRIORITY_LOW, None, self._control_close_stream, None)
-
-    def _control_close_stream(self, session, result, data):
-        try:
-            session.close_finish(result)
-        except GLib.Error:
-            pass
+    # def control(self, uri):
+    #     message = Soup.Message.new("POST", uri)
+    #     message.request_headers.append('Content-type', 'application/json')
+    #     self.session.send_async(message, None, self.on_control_finished, message)
+    #
+    # def on_control_finished(self, session, result, message):
+    #     if message.status_code == Soup.Status.SSL_FAILED:
+    #         self.session.props.ssl_strict = False
+    #     try:
+    #         input_stream = session.send_finish(result)
+    #     except GLib.Error:
+    #         return False
+    #
+    #     input_stream.close_async(GLib.PRIORITY_LOW, None, self._control_close_stream, None)
+    #
+    # def _control_close_stream(self, session, result, data):
+    #     try:
+    #         session.close_finish(result)
+    #     except GLib.Error:
+    #         pass
