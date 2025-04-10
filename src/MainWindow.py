@@ -1846,6 +1846,7 @@ class MainWindow(object):
             GLib.idle_add(lambda: self.ui_leftcats_listbox.select_row(self.ui_leftcats_listbox.get_row_at_index(0)))
 
     def on_ui_leftcats_listbox_row_activated(self, listbox, row):
+        self.isPardusSearching = False
         self.ui_leftinstalled_listbox.unselect_all()
         print(row.name)
         self.current_category = row.name
@@ -4719,7 +4720,7 @@ class MainWindow(object):
 
         categories = {cat[self.locale] for cat in details.get("category", [])}
 
-        search_entry_text = self.pardus_searchentry.get_text().lower()
+        search_entry_text = self.ui_top_searchentry.get_text().lower()
 
         pn_en = details.get("prettyname", {}).get("en", "")
         pn_tr = details.get("prettyname", {}).get("tr", "")
@@ -5875,8 +5876,20 @@ class MainWindow(object):
     def on_ui_top_searchentry_focus_in_event(self, widget, event):
         print("on_ui_top_searchentry_focus_in_event")
 
+        self.homestack.set_visible_child_name("pardushome")
+        self.ui_right_stack.set_visible_child_name("apps")
+
+        self.ui_currentcat_label.set_markup("<b>{}</b>".format(self.categories[0]["name"].title()))
+        self.isPardusSearching = True
+        self.ui_pardusapps_flowbox.invalidate_filter()
+
     def on_ui_top_searchentry_search_changed(self, entry_search):
         print("on_top_searchentry_search_changed")
+
+        self.homestack.set_visible_child_name("pardushome")
+        self.ui_right_stack.set_visible_child_name("apps")
+        self.isPardusSearching = True
+        self.ui_pardusapps_flowbox.invalidate_filter()
 
     def on_ui_top_searchentry_activate(self, entry):
         print("on_top_searchentry_search_changed")
