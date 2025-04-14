@@ -77,22 +77,6 @@ class Server(object):
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
 
-    def control_server(self, url):
-        file = Gio.File.new_for_uri(url)
-        file.load_contents_async(None, self._open_control_stream)
-
-    def _open_control_stream(self, file, result):
-        try:
-            file.load_contents_finish(result)
-        except GLib.Error as error:
-            # if error.matches(Gio.tls_error_quark(),  Gio.TlsError.BAD_CERTIFICATE):
-            if error.domain == GLib.quark_to_string(Gio.tls_error_quark()):
-                self.Logger.warning("_open_control_stream Error: {}, {}".format(error.domain, error.message))
-                self.Logger.exception("{}".format(error))
-                self.ServerAppsControlCB(False)  # Send to MainWindow
-                return False
-        self.ServerAppsControlCB(True)  # Send to MainWindow
-
     def get(self, url, type):
         file = Gio.File.new_for_uri(url)
         file.load_contents_async(None, self._open_stream, type)

@@ -1290,10 +1290,12 @@ class MainWindow(object):
         self.Logger.info("repo permission: {}".format(self.repo_perm))
         self.Logger.info("myapps permission: {}".format(self.myapps_perm))
 
-        self.Server.ServerAppsControlCB = self.ServerAppsControlCB
         self.Server.ServerAppsCB = self.ServerAppsCB
         self.Server.ServerIconsCB = self.ServerIconsCB
-        self.Server.control_server(self.Server.serverurl + "/api/v2/test")
+        self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
+        self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
+        self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
+        self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
 
         self.Logger.info("server func done")
 
@@ -1311,18 +1313,6 @@ class MainWindow(object):
         GLib.idle_add(self.controlPSUpdate)
         GLib.idle_add(self.aptUpdate)
         GLib.idle_add(self.myapps_worker_thread)
-
-    def ServerAppsControlCB(self, status):
-        self.Logger.info("ServerAppsControlCB : {}".format(status))
-
-        if not status:
-            self.Server.serverurl = self.Server.serverurl.replace("https://", "http://")
-            self.Logger.info("{}".format(self.Server.serverurl))
-
-        self.Server.get(self.Server.serverurl + self.Server.serverapps, "apps")
-        self.Server.get(self.Server.serverurl + self.Server.servercats, "cats")
-        self.Server.get(self.Server.serverurl + self.Server.serverhomepage, "home")
-        self.Server.get(self.Server.serverurl + self.Server.serverstatistics, "statistics")
 
     def ServerAppsCB(self, success, response=None, type=None):
         if success:
