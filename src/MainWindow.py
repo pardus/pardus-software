@@ -558,23 +558,11 @@ class MainWindow(object):
         self.menu_suggestapp = self.GtkBuilder.get_object("menu_suggestapp")
         self.menu_statistics = self.GtkBuilder.get_object("menu_statistics")
 
-        self.SuggestAppName = self.GtkBuilder.get_object("SuggestAppName")
-        self.SuggestCat = self.GtkBuilder.get_object("SuggestCat")
-        self.SuggestDescTR = self.GtkBuilder.get_object("SuggestDescTR")
-        self.SuggestDescEN = self.GtkBuilder.get_object("SuggestDescEN")
-        self.SuggestLicense = self.GtkBuilder.get_object("SuggestLicense")
-        self.SuggestCopyright = self.GtkBuilder.get_object("SuggestCopyright")
-        self.SuggestWeb = self.GtkBuilder.get_object("SuggestWeb")
-        self.SuggestIconChooser = self.GtkBuilder.get_object("SuggestIconChooser")
-        self.SuggestInRepo = self.GtkBuilder.get_object("SuggestInRepo")
-
-        self.SuggestName = self.GtkBuilder.get_object("SuggestName")
-        self.SuggestMail = self.GtkBuilder.get_object("SuggestMail")
-
-        self.SuggestInfoLabel = self.GtkBuilder.get_object("SuggestInfoLabel")
-        self.SuggestSend = self.GtkBuilder.get_object("SuggestSend")
-
-        self.SuggestStack = self.GtkBuilder.get_object("SuggestStack")
+        self.ui_suggest_app_entry = self.GtkBuilder.get_object("ui_suggest_app_entry")
+        self.ui_suggest_web_entry = self.GtkBuilder.get_object("ui_suggest_web_entry")
+        self.ui_suggest_send_button = self.GtkBuilder.get_object("ui_suggest_send_button")
+        self.ui_suggest_stack = self.GtkBuilder.get_object("ui_suggest_stack")
+        self.ui_suggest_info_label = self.GtkBuilder.get_object("ui_suggest_info_label")
 
         self.SuggestScroll = self.GtkBuilder.get_object("SuggestScroll")
         self.PardusAppDetailScroll = self.GtkBuilder.get_object("PardusAppDetailScroll")
@@ -2851,8 +2839,8 @@ class MainWindow(object):
             self.statmainstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
             self.statmainstack.set_transition_duration(250)
 
-            self.SuggestStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-            self.SuggestStack.set_transition_duration(200)
+            self.ui_suggest_stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+            self.ui_suggest_stack.set_transition_duration(200)
 
             self.prefstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.prefstack.set_transition_duration(200)
@@ -2912,8 +2900,8 @@ class MainWindow(object):
             self.statmainstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.statmainstack.set_transition_duration(0)
 
-            self.SuggestStack.set_transition_type(Gtk.StackTransitionType.NONE)
-            self.SuggestStack.set_transition_duration(0)
+            self.ui_suggest_stack.set_transition_type(Gtk.StackTransitionType.NONE)
+            self.ui_suggest_stack.set_transition_duration(0)
 
             self.prefstack.set_transition_type(Gtk.StackTransitionType.NONE)
             self.prefstack.set_transition_duration(0)
@@ -6176,80 +6164,28 @@ class MainWindow(object):
             self.Logger.info("already suggestapp page")
             self.ui_headermenu_popover.popdown()
             return
-        self.prefback = self.homestack.get_visible_child_name()
-        self.prefback_suggestapp = self.prefback
-        self.menubackbutton.set_sensitive(True)
         self.ui_headermenu_popover.popdown()
-        self.topsearchbutton.set_active(False)
-        self.topsearchbutton.set_sensitive(False)
-        self.store_button.get_style_context().remove_class("suggested-action")
-        self.repo_button.get_style_context().remove_class("suggested-action")
-        self.myapps_button.get_style_context().remove_class("suggested-action")
-        self.queue_button.get_style_context().remove_class("suggested-action")
-        self.SuggestCat.remove_all()
-        self.SuggestCat.append_text(_("Select Category"))
-        self.SuggestCat.set_active(0)
-        cats = []
-        for cat in self.fullcatlist:
-            cats.append(cat[self.locale])
-        cats = sorted(cats)
-        for cat in cats:
-            self.SuggestCat.append_text(cat)
         self.homestack.set_visible_child_name("suggestapp")
-        self.SuggestStack.set_visible_child_name("suggest")
-        self.SuggestSend.set_sensitive(True)
+        self.ui_suggest_stack.set_visible_child_name("suggest")
+        self.ui_suggest_send_button.set_sensitive(True)
 
-    def on_SuggestSend_clicked(self, button):
-        self.sug_appname = self.SuggestAppName.get_text()
+    def on_ui_suggest_send_button_clicked(self, button):
+        self.sug_appname = self.ui_suggest_app_entry.get_text()
+        self.sug_website = self.ui_suggest_web_entry.get_text()
 
-        self.sug_category_id = self.SuggestCat.get_active()
-        self.sug_category = self.SuggestCat.get_active_text()
-
-        desc_tr_buffer = self.SuggestDescTR.get_buffer()
-        self.sug_desc_tr = desc_tr_buffer.get_text(desc_tr_buffer.get_start_iter(), desc_tr_buffer.get_end_iter(), True)
-
-        desc_en_buffer = self.SuggestDescEN.get_buffer()
-        self.sug_desc_en = desc_en_buffer.get_text(desc_en_buffer.get_start_iter(), desc_en_buffer.get_end_iter(), True)
-
-        self.sug_license = self.SuggestLicense.get_text()
-
-        copyright_buffer = self.SuggestCopyright.get_buffer()
-        self.sug_copyright = copyright_buffer.get_text(copyright_buffer.get_start_iter(),
-                                                       copyright_buffer.get_end_iter(), True)
-
-        self.sug_website = self.SuggestWeb.get_text()
-        self.sug_icon = self.SuggestIconChooser.get_filename()
-        self.sug_inrepo = self.SuggestInRepo.get_active()
-
-        self.sug_name = self.SuggestName.get_text()
-        self.sug_mail = self.SuggestMail.get_text()
-
-        valid, message = self.controlSuggest()
-
+        valid, message = self.control_suggest_entries()
         if valid:
-            self.SuggestInfoLabel.set_text("")
-            img_valid = True
-            if self.sug_icon:
-                img_valid, img_message = self.controlSuggestIcon()
-            else:
-                self.sug_icon_raw = ""
-            if img_valid:
-                self.SuggestSend.set_sensitive(False)
-                self.SuggestInfoLabel.set_text("")
-                dic = {"appname": self.controlText(self.sug_appname), "category": self.controlText(self.sug_category),
-                       "desc_tr": self.controlText(self.sug_desc_tr), "desc_en": self.controlText(self.sug_desc_en),
-                       "license": self.controlText(self.sug_license), "copyright": self.controlText(self.sug_copyright),
-                       "website": self.controlText(self.sug_website), "icon": self.sug_icon_raw,
-                       "inrepo": self.sug_inrepo, "name": self.controlText(self.sug_name),
-                       "mail": self.controlText(self.sug_mail), "mac": self.mac}
-                self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendsuggestapp, dic)
-            else:
-                self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(img_message))
+            self.ui_suggest_info_label.set_text("")
+            self.ui_suggest_send_button.set_sensitive(False)
+            dic = {"appname": self.control_suggest_text(self.sug_appname),
+                   "website": self.control_suggest_text(self.sug_website),
+                   "mac": self.mac}
+            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendsuggestapp, dic)
         else:
-            self.SuggestInfoLabel.set_markup("<b><span color='red'>{} : {} {}</span></b>".format(
+            self.ui_suggest_info_label.set_markup("<b><span color='red'>{} : {} {}</span></b>".format(
                 _("Error"), message, _("is empty")))
 
-    def controlText(self, text):
+    def control_suggest_text(self, text):
 
         text = str(text).strip()
 
@@ -6258,37 +6194,13 @@ class MainWindow(object):
 
         return text
 
-    def controlSuggest(self):
+    def control_suggest_entries(self):
 
         if self.sug_appname.strip() == "":
             return False, _("Application Name")
 
-        if self.sug_category_id == 0 or self.sug_category_id == -1:
-            return False, _("Category")
-
-        if self.sug_desc_tr.strip() == "":
-            return False, _("Description (Turkish)")
-
-        if self.sug_desc_en.strip() == "":
-            return False, _("Description (English)")
-
-        if self.sug_license.strip() == "":
-            return False, _("License")
-
-        # if self.sug_copyright.strip() == "":
-        #     return False, _("Copyright Text")
-
         if self.sug_website.strip() == "":
             return False, _("Website")
-
-        # if self.sug_icon is None:
-        #     return False, _("Icon")
-
-        if self.sug_name.strip() == "":
-            return False, _("Name")
-
-        if self.sug_mail.strip() == "":
-            return False, _("Mail")
 
         return True, "ok"
 
