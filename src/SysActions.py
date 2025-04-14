@@ -85,7 +85,7 @@ def main():
         subprocess.call(["apt-key", "add", tmpkey])
 
         Path("/etc/apt/sources.list.d/").mkdir(parents=True, exist_ok=True)
-        sdfile = open("/etc/apt/sources.list.d/" + name, "w")
+        sdfile= open(os.path.join("/etc/apt/sources.list.d", os.path.basename(name)), "w")
         sdfile.write(sources)
         sdfile.flush()
         sdfile.close()
