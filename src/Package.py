@@ -63,6 +63,13 @@ class Package(object):
             return None
         return package.is_installed
 
+    def is_upgradable(self, packagename):
+        try:
+            package = self.cache[packagename]
+        except:
+            return None
+        return package.is_upgradable
+
     def missingdeps(self, packagename):
         package = self.cache[packagename]
         for rd in package.candidate.get_dependencies("Depends"):

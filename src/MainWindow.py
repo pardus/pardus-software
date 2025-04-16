@@ -474,6 +474,10 @@ class MainWindow(object):
         self.ui_recent_flowbox = self.GtkBuilder.get_object("ui_recent_flowbox")
         self.ui_editor_flowbox = self.GtkBuilder.get_object("ui_editor_flowbox")
 
+        self.ui_other_actions_popover = self.GtkBuilder.get_object("ui_other_actions_popover")
+        self.ui_other_actions_open_button = self.GtkBuilder.get_object("ui_other_actions_open_button")
+        self.ui_other_actions_uninstall_button = self.GtkBuilder.get_object("ui_other_actions_uninstall_button")
+
         self.ui_ad_name = self.GtkBuilder.get_object("ui_ad_name")
         self.ui_ad_icon = self.GtkBuilder.get_object("ui_ad_icon")
         self.ui_ad_avgrate_label = self.GtkBuilder.get_object("ui_ad_avgrate_label")
@@ -2123,29 +2127,48 @@ class MainWindow(object):
             app_name.set_ellipsize(Pango.EllipsizeMode.END)
             app_name.props.halign = Gtk.Align.START
 
-            button_action = Gtk.Button.new()
-            button_action.props.halign = Gtk.Align.END
-            button_action.props.valign = Gtk.Align.START
-            button_action.set_hexpand(True)
-            button_action.get_style_context().add_class("pardus-software-mostapp-action-button")
-            button_label = Gtk.Label.new()
-            button_action.add(button_label)
+            action_buttonbox = Gtk.ButtonBox.new(Gtk.Orientation.HORIZONTAL)
+            action_buttonbox.set_layout(Gtk.ButtonBoxStyle.EXPAND)
+            action_buttonbox.set_homogeneous(False)
+            action_buttonbox.props.halign = Gtk.Align.END
+            action_buttonbox.props.valign = Gtk.Align.START
+            action_buttonbox.set_hexpand(True)
+
+            action_button = Gtk.Button.new()
+            action_button.get_style_context().add_class("pardus-software-mostapp-action-button")
+            action_button_label = Gtk.Label.new()
+            action_button.add(action_button_label)
+
+            action_buttonbox.add(action_button)
 
             is_installed = self.Package.isinstalled(mda["name"])
+            is_upgradable = self.Package.is_upgradable(mda["name"])
             if is_installed is not None:
                 if is_installed:
-                    self.set_button_class(button_action, 1)
-                    button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                    others_button = Gtk.Button.new()
+                    others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
+                    others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
+                    others_button.name = {"name": mda["name"], "upgradable": is_upgradable}
+                    others_button.connect("clicked", self.on_other_actions_button_clicked)
+                    action_buttonbox.add(others_button)
+                    if is_upgradable:
+                        self.set_button_class(action_button, 1)
+                        self.set_button_class(others_button, 1)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                    else:
+                        self.set_button_class(action_button, 1)
+                        self.set_button_class(others_button, 1)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
                 else:
-                    self.set_button_class(button_action, 0)
-                    button_label.set_markup("<small>{}</small>".format(_("Install")))
+                    self.set_button_class(action_button, 0)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Install")))
             else:
-                self.set_button_class(button_action, 2)
-                button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+                self.set_button_class(action_button, 2)
+                action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
 
             box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
             box_app.pack_start(app_name, False, True, 0)
-            box_app.pack_start(button_action, True, True, 0)
+            box_app.pack_start(action_buttonbox, False, True, 0)
 
             rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
             rate_icon.set_pixel_size(10)
@@ -2197,7 +2220,7 @@ class MainWindow(object):
 
             bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
             bottom_separator.props.valign = Gtk.Align.END
-            button_action.set_vexpand(True)
+            bottom_separator.set_vexpand(True)
             GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
 
             box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
@@ -2359,6 +2382,11 @@ class MainWindow(object):
         else:
             self.set_button_class(self.ui_ad_action_button, 2)
             self.ui_ad_actionbutton_label.set_markup("{}".format(_("Not Found")))
+
+    def on_other_actions_button_clicked(self, button):
+        self.ui_other_actions_popover.set_relative_to(button)
+        self.ui_other_actions_popover.popup()
+        self.ui_other_actions_uninstall_button.set_visible(button.name["upgradable"])
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
