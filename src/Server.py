@@ -36,15 +36,12 @@ class Server(object):
         self.serversendsuggestapp = "/api/v3/suggestapp"
         self.serverparduscomments = "/api/v2/parduscomments"
         self.serverfiles = "/files/"
-        # self.serverappicons = "appicons"
-        # self.servercaticons = "categoryicons"
         self.server_apps_archive = "apps.tar.gz"
         self.server_icons_archive = "icons.tar.gz"
         self.server_images_archive = "images.tar.gz"
         self.server_cats_archive = "cats.tar.gz"
         self.server_home_archive = "home.tar.gz"
-        # self.servericonty = ".svg"
-        # self.serverarchive = ".tar.gz"
+
         self.serversettings = "/api/v2/settings"
         self.settingsfile = "serversettings.ini"
 
@@ -188,28 +185,11 @@ class Server(object):
             self.Logger.exception("{}".format(error))
             return False
 
-    def createDir(self, dir):
-        try:
-            Path(dir).mkdir(parents=True, exist_ok=True)
-            return True
-        except Exception as error:
-            self.Logger.warning("{} : {}".format("mkdir error", self.cachedir))
-            self.Logger.exception("{}".format(error))
-            return False
-
-    def isExists(self, dir):
-        if Path(dir).exists():
-            self.Logger.info("{} exists".format(dir))
-            return True
-        else:
-            self.Logger.info("{} not exists".format(dir))
-            return False
-
-    def deleteCache(self):
+    def delete_cache(self):
         try:
             rmtree(self.cachedir)
             self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
-            self.createDir(self.cachedir)
+            Path(self.cachedir).mkdir(parents=True, exist_ok=True)
             self.Logger.info("{} removed".format(self.cachedir))
             return True, ""
         except Exception as e:

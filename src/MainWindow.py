@@ -6528,7 +6528,7 @@ class MainWindow(object):
             self.catlist = newlist
 
     def on_prefcachebutton_clicked(self, button):
-        state, message = self.Server.deleteCache()
+        state, message = self.Server.delete_cache()
         if state:
             self.prefcachebutton.set_sensitive(False)
             self.prefcachebutton.set_label(_("Cleared"))
