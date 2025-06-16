@@ -470,7 +470,7 @@ class MainWindow(object):
         self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
 
-        self.ui_mostdown_flowbox = self.GtkBuilder.get_object("ui_mostdown_flowbox")
+        self.ui_mostdown_stack = self.GtkBuilder.get_object("ui_mostdown_stack")
         self.ui_recent_flowbox = self.GtkBuilder.get_object("ui_recent_flowbox")
         self.ui_editor_flowbox = self.GtkBuilder.get_object("ui_editor_flowbox")
 
@@ -1943,7 +1943,7 @@ class MainWindow(object):
             self.set_app_count_label()
 
     def set_most_apps(self):
-        GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
+        GLib.idle_add(lambda: self.ui_mostdown_stack.foreach(lambda child: self.ui_mostdown_stack.remove(child)))
         GLib.idle_add(lambda: self.ui_recent_flowbox.foreach(lambda child: self.ui_recent_flowbox.remove(child)))
         GLib.idle_add(lambda: self.ui_editor_flowbox.foreach(lambda child: self.ui_editor_flowbox.remove(child)))
 
@@ -1965,8 +1965,8 @@ class MainWindow(object):
         if self.last_width and self.last_width < 1453:
             self.ui_editor_flowbox.set_min_children_per_line(3)
             self.ui_editor_flowbox.set_max_children_per_line(3)
-            self.ui_mostdown_flowbox.set_min_children_per_line(3)
-            self.ui_mostdown_flowbox.set_max_children_per_line(3)
+            # self.ui_mostdown_flowbox.set_min_children_per_line(3)
+            # self.ui_mostdown_flowbox.set_max_children_per_line(3)
             self.ui_recent_flowbox.set_min_children_per_line(3)
             self.ui_recent_flowbox.set_max_children_per_line(3)
             GLib.idle_add(self.set_editor_apps, 3)
@@ -1975,8 +1975,8 @@ class MainWindow(object):
         else:
             self.ui_editor_flowbox.set_min_children_per_line(4)
             self.ui_editor_flowbox.set_max_children_per_line(4)
-            self.ui_mostdown_flowbox.set_min_children_per_line(5)
-            self.ui_mostdown_flowbox.set_max_children_per_line(5)
+            # self.ui_mostdown_flowbox.set_min_children_per_line(5)
+            # self.ui_mostdown_flowbox.set_max_children_per_line(5)
             self.ui_recent_flowbox.set_min_children_per_line(5)
             self.ui_recent_flowbox.set_max_children_per_line(5)
             GLib.idle_add(self.set_editor_apps, 4)
@@ -2101,10 +2101,9 @@ class MainWindow(object):
 
     def set_mostdown_apps(self, count):
         self.Logger.info("in set_mostdown_apps: count: {}".format(count))
-        GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
+        GLib.idle_add(lambda: self.ui_mostdown_stack.foreach(lambda child: self.ui_mostdown_stack.remove(child)))
 
-        mda_counter = 1
-        for mda in self.Server.mostdownapplist[:count]:
+        def create_mda_widget(mda, mda_counter):
 
             number_label = Gtk.Label.new()
             number_label.set_markup("{}".format(mda_counter))
@@ -2236,11 +2235,31 @@ class MainWindow(object):
             GLib.idle_add(listbox.add, listbox_row)
 
             GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
-            GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
+            # GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
+            return listbox
 
-            mda_counter += 1
+        page_count = int(len(self.Server.mostdownapplist) / count)
 
-        GLib.idle_add(self.ui_mostdown_flowbox.show_all)
+        for page in range(page_count):
+            flowbox = Gtk.FlowBox()
+            flowbox.set_min_children_per_line(count / 2)
+            flowbox.set_max_children_per_line(count / 2)
+            flowbox.set_selection_mode(Gtk.SelectionMode.NONE)
+            flowbox.set_column_spacing(12)
+            flowbox.set_row_spacing(0)
+
+            start_index = page * count
+            end_index = min(start_index + count, len(self.Server.mostdownapplist))
+
+            for i in range(start_index, end_index):
+                app_data = self.Server.mostdownapplist[i]
+                listbox = create_mda_widget(app_data, i+1)
+                GLib.idle_add(flowbox.insert, listbox, -1)
+
+            GLib.idle_add(self.ui_mostdown_stack.add_named, flowbox, "{}".format(page))
+            GLib.idle_add(flowbox.show_all)
+
+        # GLib.idle_add(self.ui_mostdown_stack.show_all)
 
     def set_recent_apps(self, count):
         self.Logger.info("in set_recent_apps: count: {}".format(count))
@@ -2333,6 +2352,21 @@ class MainWindow(object):
 
         GLib.idle_add(self.ui_recent_flowbox.show_all)
 
+    def on_ui_mostdown_next_button_clicked(self, button):
+        current = int(self.ui_mostdown_stack.get_visible_child_name())
+        if self.ui_mostdown_stack.get_child_by_name("{}".format(current + 1)) != None:
+            next = current + 1
+        else:
+            next = 0
+        self.ui_mostdown_stack.set_visible_child_name("{}".format(next))
+
+    def on_ui_mostdown_prev_button_clicked(self, button):
+        current = int(self.ui_mostdown_stack.get_visible_child_name())
+        if self.ui_mostdown_stack.get_child_by_name("{}".format(current - 1)) != None:
+            prev = current - 1
+        else:
+            prev = len(self.ui_mostdown_stack) - 1
+        self.ui_mostdown_stack.set_visible_child_name("{}".format(prev))
 
     def on_mostdown_listbox_row_activated(self, listbox, row):
         print(row.name)
