@@ -2341,13 +2341,14 @@
                                                 <property name="can-focus">False</property>
                                                 <property name="spacing">6</property>
                                                 <child>
-                                                  <object class="GtkButton" id="ui_banner_left_button2">
+                                                  <object class="GtkButton" id="ui_recent_prev_button">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
                                                     <property name="halign">center</property>
                                                     <property name="valign">center</property>
                                                     <property name="relief">none</property>
+                                                    <signal name="clicked" handler="on_ui_recent_prev_button_clicked" swapped="no"/>
                                                     <child>
                                                       <object class="GtkImage">
                                                         <property name="visible">True</property>
@@ -2412,14 +2413,14 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkFlowBox" id="ui_recent_flowbox">
+                                                      <object class="GtkStack" id="ui_recent_stack">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
-                                                        <property name="homogeneous">True</property>
-                                                        <property name="min-children-per-line">3</property>
-                                                        <property name="max-children-per-line">3</property>
-                                                        <property name="selection-mode">none</property>
+                                                        <property name="transition-type">crossfade</property>
+                                                        <child>
+                                                          <placeholder/>
+                                                        </child>
                                                       </object>
                                                       <packing>
                                                         <property name="expand">False</property>
@@ -2435,13 +2436,14 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkButton" id="ui_banner_right_button2">
+                                                  <object class="GtkButton" id="ui_recent_next_button">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
                                                     <property name="halign">center</property>
                                                     <property name="valign">center</property>
                                                     <property name="relief">none</property>
+                                                    <signal name="clicked" handler="on_ui_recent_next_button_clicked" swapped="no"/>
                                                     <child>
                                                       <object class="GtkImage">
                                                         <property name="visible">True</property>
