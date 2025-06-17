@@ -15,6 +15,7 @@ import sys
 import threading
 import time
 import json
+import math
 from pathlib import Path
 from hashlib import md5
 from datetime import datetime
@@ -2238,7 +2239,7 @@ class MainWindow(object):
             # GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
             return listbox
 
-        page_count = int(len(self.Server.mostdownapplist) / count)
+        page_count = math.ceil(len(self.Server.mostdownapplist) / count)
 
         for page in range(page_count):
             flowbox = Gtk.FlowBox()
