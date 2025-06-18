@@ -1673,8 +1673,8 @@ class MainWindow(object):
                         others_button.name = {"name": app, "upgradable": is_upgradable, "openable": is_openable}
                         others_button.connect("clicked", self.on_other_actions_button_clicked)
                         if is_upgradable:
-                            self.set_button_class(action_button, 1)
-                            self.set_button_class(others_button, 1)
+                            self.set_button_class(action_button, 3)
+                            self.set_button_class(others_button, 3)
                             action_button_label.set_markup("<small>{}</small>".format(_("Update")))
                         else:
                             self.set_button_class(action_button, 1)
@@ -2366,8 +2366,8 @@ class MainWindow(object):
                     others_button.name = {"name": la["name"], "upgradable": is_upgradable, "openable": is_openable}
                     others_button.connect("clicked", self.on_other_actions_button_clicked)
                     if is_upgradable:
-                        self.set_button_class(action_button, 1)
-                        self.set_button_class(others_button, 1)
+                        self.set_button_class(action_button, 3)
+                        self.set_button_class(others_button, 3)
                         action_button_label.set_markup("<small>{}</small>".format(_("Update")))
                     else:
                         self.set_button_class(action_button, 1)
