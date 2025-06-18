@@ -1629,6 +1629,10 @@ class MainWindow(object):
     def set_applications(self):
         GLib.idle_add(lambda: (self.ui_pardusapps_flowbox and self.ui_pardusapps_flowbox.foreach(
             lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
+        GLib.idle_add(lambda: (self.ui_upgradableapps_flowbox and self.ui_upgradableapps_flowbox.foreach(
+            lambda row: self.ui_upgradableapps_flowbox.remove(row)), False))
+        GLib.idle_add(lambda: (self.ui_installedapps_flowbox and self.ui_installedapps_flowbox.foreach(
+            lambda row: self.ui_installedapps_flowbox.remove(row)), False))
 
         if self.Server.connection:
             for app, details in self.applist.items():
