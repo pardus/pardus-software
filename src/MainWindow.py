@@ -1676,7 +1676,9 @@ class MainWindow(object):
                     if is_installed:
                         others_button = Gtk.Button.new()
                         others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
-                        others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
+                        pan_down_image = Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON)
+                        pan_down_image.set_pixel_size(12)
+                        others_button.add(pan_down_image)
                         others_button.name = {"name": app, "upgradable": is_upgradable, "openable": is_openable}
                         others_button.connect("clicked", self.on_other_actions_button_clicked)
                         if is_upgradable:
@@ -2044,7 +2046,9 @@ class MainWindow(object):
             if is_installed:
                 others_button = Gtk.Button.new()
                 others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
-                others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
+                pan_down_image = Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON)
+                pan_down_image.set_pixel_size(12)
+                others_button.add(pan_down_image)
                 others_button.name = {"name": app, "upgradable": is_upgradable, "openable": is_openable}
                 others_button.connect("clicked", self.on_other_actions_button_clicked)
                 if is_upgradable:
@@ -2342,7 +2346,9 @@ class MainWindow(object):
                 if is_installed:
                     others_button = Gtk.Button.new()
                     others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
-                    others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
+                    pan_down_image = Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON)
+                    pan_down_image.set_pixel_size(12)
+                    others_button.add(pan_down_image)
                     others_button.name = {"name": mda["name"], "upgradable": is_upgradable, "openable": is_openable}
                     others_button.connect("clicked", self.on_other_actions_button_clicked)
                     if is_upgradable:
@@ -2508,7 +2514,9 @@ class MainWindow(object):
                 if is_installed:
                     others_button = Gtk.Button.new()
                     others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
-                    others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
+                    pan_down_image = Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON)
+                    pan_down_image.set_pixel_size(12)
+                    others_button.add(pan_down_image)
                     others_button.name = {"name": la["name"], "upgradable": is_upgradable, "openable": is_openable}
                     others_button.connect("clicked", self.on_other_actions_button_clicked)
                     if is_upgradable:
