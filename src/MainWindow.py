@@ -1664,14 +1664,14 @@ class MainWindow(object):
 
                 is_installed = self.Package.isinstalled(app)
                 is_upgradable = self.Package.is_upgradable(app)
+                is_openable = details["desktop"] != ""
                 if is_installed is not None:
                     if is_installed:
                         others_button = Gtk.Button.new()
                         others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
                         others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
-                        others_button.name = {"name": app, "upgradable": is_upgradable}
+                        others_button.name = {"name": app, "upgradable": is_upgradable, "openable": is_openable}
                         others_button.connect("clicked", self.on_other_actions_button_clicked)
-                        action_buttonbox.add(others_button)
                         if is_upgradable:
                             self.set_button_class(action_button, 1)
                             self.set_button_class(others_button, 1)
@@ -1680,6 +1680,8 @@ class MainWindow(object):
                             self.set_button_class(action_button, 1)
                             self.set_button_class(others_button, 1)
                             action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                        if is_upgradable or is_openable:
+                            action_buttonbox.add(others_button)
                     else:
                         self.set_button_class(action_button, 0)
                         action_button_label.set_markup("<small>{}</small>".format(_("Install")))
@@ -2189,22 +2191,24 @@ class MainWindow(object):
 
             is_installed = self.Package.isinstalled(mda["name"])
             is_upgradable = self.Package.is_upgradable(mda["name"])
+            is_openable = self.get_desktop_filename_from_app_name(mda["name"]) != ""
             if is_installed is not None:
                 if is_installed:
                     others_button = Gtk.Button.new()
                     others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
                     others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
-                    others_button.name = {"name": mda["name"], "upgradable": is_upgradable}
+                    others_button.name = {"name": mda["name"], "upgradable": is_upgradable, "openable": is_openable}
                     others_button.connect("clicked", self.on_other_actions_button_clicked)
-                    action_buttonbox.add(others_button)
                     if is_upgradable:
-                        self.set_button_class(action_button, 1)
-                        self.set_button_class(others_button, 1)
+                        self.set_button_class(action_button, 3)
+                        self.set_button_class(others_button, 3)
                         action_button_label.set_markup("<small>{}</small>".format(_("Update")))
                     else:
                         self.set_button_class(action_button, 1)
                         self.set_button_class(others_button, 1)
                         action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                    if is_upgradable or is_openable:
+                        action_buttonbox.add(others_button)
                 else:
                     self.set_button_class(action_button, 0)
                     action_button_label.set_markup("<small>{}</small>".format(_("Install")))
@@ -2353,14 +2357,14 @@ class MainWindow(object):
 
             is_installed = self.Package.isinstalled(la["name"])
             is_upgradable = self.Package.is_upgradable(la["name"])
+            is_openable = self.get_desktop_filename_from_app_name(la["name"]) != ""
             if is_installed is not None:
                 if is_installed:
                     others_button = Gtk.Button.new()
                     others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
                     others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
-                    others_button.name = {"name": la["name"], "upgradable": is_upgradable}
+                    others_button.name = {"name": la["name"], "upgradable": is_upgradable, "openable": is_openable}
                     others_button.connect("clicked", self.on_other_actions_button_clicked)
-                    action_buttonbox.add(others_button)
                     if is_upgradable:
                         self.set_button_class(action_button, 1)
                         self.set_button_class(others_button, 1)
@@ -2369,6 +2373,8 @@ class MainWindow(object):
                         self.set_button_class(action_button, 1)
                         self.set_button_class(others_button, 1)
                         action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                    if is_upgradable or is_openable:
+                        action_buttonbox.add(others_button)
                 else:
                     self.set_button_class(action_button, 0)
                     action_button_label.set_markup("<small>{}</small>".format(_("Install")))
@@ -2553,6 +2559,7 @@ class MainWindow(object):
     def on_other_actions_button_clicked(self, button):
         self.ui_other_actions_popover.set_relative_to(button)
         self.ui_other_actions_popover.popup()
+        self.ui_other_actions_open_button.set_visible(button.name["openable"])
         self.ui_other_actions_uninstall_button.set_visible(button.name["upgradable"])
 
     def setEditorApps(self):
@@ -2800,6 +2807,13 @@ class MainWindow(object):
         else:
             desc = _("Unknown")
         return desc
+
+    def get_desktop_filename_from_app_name(self, name):
+        details = self.fullapplist.get(name)
+        desktop = ""
+        if details and "desktop" in details and details["desktop"]:
+            desktop = details["desktop"]
+        return desktop
 
     def getSystemCatIcon(self, cat, size=48):
         try:
@@ -3288,7 +3302,10 @@ class MainWindow(object):
 
     def set_button_class(self, button, state):
         '''
-        state 0 = app is not installed, state 1 = app is installed, state 2 = app is not found
+        state 0 = app is not installed
+        state 1 = app is installed
+        state 2 = app is not found
+        state 3 = app is upgradable
         '''
         if state == 1:
             if button.get_style_context().has_class("suggested-action"):
@@ -3306,6 +3323,13 @@ class MainWindow(object):
             if button.get_style_context().has_class("destructive-action"):
                 button.get_style_context().remove_class("destructive-action")
             button.set_sensitive(False)
+        elif state == 3:
+            if button.get_style_context().has_class("suggested-action"):
+                button.get_style_context().remove_class("suggested-action")
+            if button.get_style_context().has_class("destructive-action"):
+                button.get_style_context().remove_class("destructive-action")
+            button.get_style_context().add_class("upgradable-action")
+            button.set_sensitive(True)
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
         self.set_stack_n_search(1)

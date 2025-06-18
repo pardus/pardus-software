@@ -138,3 +138,7 @@ headerbar {
     border-bottom: none;
     box-shadow: none;
 }
+
+button.upgradable-action { color: white; outline-color: alpha(@accent_color, 0.5); background-color: mix(currentColor, @orange_3, 0.9); }
+button.upgradable-action:hover { color: white; background-color: mix(currentColor, @orange_3, 0.853); box-shadow: none; }
+button.upgradable-action:disabled { color: mix(@window_fg_color, @window_bg_color, 0.5); background-color: mix(currentColor, @window_bg_color,0.9); text-shadow: none; -gtk-icon-shadow: none; box-shadow: none; }
