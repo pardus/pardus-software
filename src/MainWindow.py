@@ -1324,7 +1324,7 @@ class MainWindow(object):
         GLib.idle_add(self.controlAvailableApps)
         # GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.set_categories)
-        GLib.idle_add(self.setPardusApps)
+        GLib.idle_add(self.set_applications)
         GLib.idle_add(self.set_slider)
         GLib.idle_add(self.set_most_apps)
         # GLib.idle_add(self.setEditorApps)
@@ -1623,16 +1623,18 @@ class MainWindow(object):
         self.slider_current_page = int(self.ui_slider_stack.get_visible_child_name())
 
 
-    def setPardusApps(self):
+    def set_applications(self):
         GLib.idle_add(lambda: (self.ui_pardusapps_flowbox and self.ui_pardusapps_flowbox.foreach(
             lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
 
         if self.Server.connection:
             for app, details in self.applist.items():
 
-                app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.BUTTON)
-                app_icon.set_pixel_size(64)
-                app_icon.set_margin_end(12)
+                app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
+                app_icon.set_pixel_size(32)
+                app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
+                app_icon.props.halign = Gtk.Align.CENTER
+                app_icon.props.valign = Gtk.Align.CENTER
 
                 prettyname = details["prettyname"][self.locale]
                 if prettyname == "" or prettyname is None:
@@ -1642,34 +1644,52 @@ class MainWindow(object):
                 app_name.set_markup("<b>{}</b>".format(prettyname))
                 app_name.set_line_wrap(False)
                 app_name.set_justify(Gtk.Justification.LEFT)
-                app_name.set_max_width_chars(21)
+                app_name.set_max_width_chars(16)
                 app_name.set_ellipsize(Pango.EllipsizeMode.END)
                 app_name.props.halign = Gtk.Align.START
-                app_name.props.valign = Gtk.Align.START
 
-                button_action = Gtk.Button.new()
-                button_action.props.halign = Gtk.Align.END
-                button_action.props.valign = Gtk.Align.START
-                button_action.set_hexpand(True)
-                button_action.get_style_context().add_class("pardus-software-apps-action-button")
-                button_label = Gtk.Label.new()
-                button_action.add(button_label)
+                action_buttonbox = Gtk.ButtonBox.new(Gtk.Orientation.HORIZONTAL)
+                action_buttonbox.set_layout(Gtk.ButtonBoxStyle.EXPAND)
+                action_buttonbox.set_homogeneous(False)
+                action_buttonbox.props.halign = Gtk.Align.END
+                action_buttonbox.props.valign = Gtk.Align.START
+                action_buttonbox.set_hexpand(True)
+
+                action_button = Gtk.Button.new()
+                action_button.get_style_context().add_class("pardus-software-mostapp-action-button")
+                action_button_label = Gtk.Label.new()
+                action_button.add(action_button_label)
+
+                action_buttonbox.add(action_button)
 
                 is_installed = self.Package.isinstalled(app)
+                is_upgradable = self.Package.is_upgradable(app)
                 if is_installed is not None:
                     if is_installed:
-                        self.set_button_class(button_action, 1)
-                        button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                        others_button = Gtk.Button.new()
+                        others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
+                        others_button.add(Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON))
+                        others_button.name = {"name": app, "upgradable": is_upgradable}
+                        others_button.connect("clicked", self.on_other_actions_button_clicked)
+                        action_buttonbox.add(others_button)
+                        if is_upgradable:
+                            self.set_button_class(action_button, 1)
+                            self.set_button_class(others_button, 1)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                        else:
+                            self.set_button_class(action_button, 1)
+                            self.set_button_class(others_button, 1)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
                     else:
-                        self.set_button_class(button_action, 0)
-                        button_label.set_markup("<small>{}</small>".format(_("Install")))
+                        self.set_button_class(action_button, 0)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Install")))
                 else:
-                    self.set_button_class(button_action, 2)
-                    button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+                    self.set_button_class(action_button, 2)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
 
                 box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
                 box_app.pack_start(app_name, False, True, 0)
-                box_app.pack_start(button_action, True, True, 0)
+                box_app.pack_start(action_buttonbox, False, True, 0)
 
                 rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
                 rate_icon.set_pixel_size(10)
@@ -1677,42 +1697,68 @@ class MainWindow(object):
                 rate_icon.props.valign = Gtk.Align.CENTER
 
                 rate_label = Gtk.Label.new()
-                rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(details["rate_average"])))
+                rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(
+                    float(details["rate_average"])))
+
+                separator = Gtk.Separator.new(Gtk.Orientation.VERTICAL)
+
+                category_label = Gtk.Label.new()
+                category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
+                    details["category"][0].get(self.locale, _("Unknown")).title()))
+                category_label.props.valign = Gtk.Align.START
+                category_label.props.halign = Gtk.Align.START
 
                 box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
                 box_stats.pack_start(rate_label, False, True, 0)
                 box_stats.pack_start(rate_icon, False, True, 0)
+                box_stats.pack_start(separator, False, True, 0)
+                box_stats.pack_start(category_label, False, True, 0)
                 box_stats.props.valign = Gtk.Align.START
                 box_stats.props.halign = Gtk.Align.START
 
-                category_label = Gtk.Label.new()
-                category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
-                    self.get_category_name_from_app_name(app)))
-                category_label.props.valign = Gtk.Align.START
-                category_label.props.halign = Gtk.Align.START
+                summary_label = Gtk.Label.new()
+                summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
+                    details["description"].get(self.locale, _("Unknown")).title(), -1)[:50].replace("\n", "").replace("\r", "")))
+                summary_label.props.valign = Gtk.Align.START
+                summary_label.props.halign = Gtk.Align.START
+                summary_label.set_line_wrap(False)
+                summary_label.set_max_width_chars(18)
+                summary_label.set_ellipsize(Pango.EllipsizeMode.END)
 
-                box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+                box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
                 box_right.props.valign = Gtk.Align.CENTER
-                # box_right.props.halign = Gtk.Align.START
                 box_right.pack_start(box_app, False, True, 0)
-                box_right.pack_start(category_label, False, True, 0)
+                box_right.pack_start(summary_label, False, True, 0)
                 box_right.pack_start(box_stats, False, True, 0)
 
-                box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
-                box.pack_start(app_icon, False, True, 0)
-                box.pack_start(box_right, False, True, 0)
-                box.set_margin_start(13)
-                box.set_margin_end(5)
-                box.set_margin_top(13)
-                box.set_margin_bottom(13)
+                box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+                # box_h.pack_start(number_label, False, True, 0)
+                box_h.pack_start(app_icon, False, True, 0)
+                box_h.pack_start(box_right, False, True, 0)
+                box_h.set_margin_start(5)
+                box_h.set_margin_end(5)
+                box_h.set_margin_top(5)
+                box_h.set_margin_bottom(5)
+
+                bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+                bottom_separator.props.valign = Gtk.Align.END
+                bottom_separator.set_vexpand(True)
+                GLib.idle_add(bottom_separator.get_style_context().add_class,
+                              "pardus-software-mostdown-bottom-seperator")
+
+                box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
+                box.pack_start(box_h, False, True, 0)
+                box.pack_end(bottom_separator, True, True, 0)
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-                # listbox.connect("button-release-event", self.on_pardus_apps_listbox_released, listbox)
-                listbox.name = {app: details}
-                listbox.get_style_context().add_class("pardus-software-listbox")
-                GLib.idle_add(listbox.add, box)
+                listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
+                listbox_row = Gtk.ListBoxRow()
+                GLib.idle_add(listbox_row.add, box)
+                listbox_row.name = {app: details}
+                GLib.idle_add(listbox.add, listbox_row)
 
+                GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
                 GLib.idle_add(self.ui_pardusapps_flowbox.insert, listbox, -1)
 
             GLib.idle_add(self.ui_pardusapps_flowbox.show_all)
@@ -1722,9 +1768,9 @@ class MainWindow(object):
     #     print(listbox.name)
 
     def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
-        print(f"Left clicked: {child.get_children()[0].name}")
+        print(f"Left clicked: {child.get_children()[0].get_children()[0].name}")
         GLib.idle_add(flowbox.unselect_all)
-        self.set_app_details_page(child.get_children()[0].name)
+        self.set_app_details_page(child.get_children()[0].get_children()[0].name)
 
     def set_categories(self):
         GLib.idle_add(lambda: (self.ui_leftcats_listbox and self.ui_leftcats_listbox.foreach(
@@ -4852,7 +4898,7 @@ class MainWindow(object):
             self.Logger.info("wpc star error")
 
     def pardusapps_filter_function(self, row):
-        app = row.get_children()[0].name
+        app = row.get_children()[0].get_children()[0].name
         appname, details = next(iter(app.items()))
 
         categories = {cat[self.locale] for cat in details.get("category", [])}
@@ -4943,28 +4989,28 @@ class MainWindow(object):
         if combo_box.get_active() == 0:  # sort by name
             self.applist = dict(sorted(self.applist.items(),
                                        key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
-            GLib.idle_add(self.setPardusApps)
+            GLib.idle_add(self.set_applications)
         elif combo_box.get_active() == 1:  # sort by download
             self.applist = dict(sorted(
                 self.applist.items(),
                 key=lambda item: (item[1]["download"], item[1]["rate_average"]),
                 reverse=True
             ))
-            GLib.idle_add(self.setPardusApps)
+            GLib.idle_add(self.set_applications)
         elif combo_box.get_active() == 2:  # sort by popularity
             self.applist = dict(sorted(
                 self.applist.items(),
                 key=lambda item: (item[1].get("popularity", item[1]["rate_average"]), item[1]["download"]),
                 reverse=True
             ))
-            GLib.idle_add(self.setPardusApps)
+            GLib.idle_add(self.set_applications)
         elif combo_box.get_active() == 3:  # sort by last added
             self.applist = dict(sorted(
                 self.applist.items(),
                 key=lambda item: datetime.strptime(item[1]["date"], "%d-%m-%Y %H:%M"),
                 reverse=True
             ))
-            GLib.idle_add(self.setPardusApps)
+            GLib.idle_add(self.set_applications)
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
@@ -6521,7 +6567,7 @@ class MainWindow(object):
                         self.Server.serverurl + self.Server.serverfiles + self.Server.servercaticons + self.Server.serverarchive,
                         self.Server.servercaticons, fromsettings=True)
                 else:
-                    self.setPardusApps()
+                    self.set_applications()
                     self.setPardusCategories()
                     self.setEditorApps()
                     self.setMostApps()
@@ -6561,7 +6607,7 @@ class MainWindow(object):
                 self.preflabel_settext("{}".format(e))
 
             GLib.idle_add(self.clearBoxes)
-            self.setPardusApps()
+            self.set_applications()
             self.setPardusCategories()
             self.setEditorApps()
             self.setMostApps()
@@ -6582,7 +6628,7 @@ class MainWindow(object):
                 self.preflabel_settext("{}".format(e))
 
             GLib.idle_add(self.clearBoxes)
-            self.setPardusApps()
+            self.set_applications()
             self.setPardusCategories()
             self.setEditorApps()
             self.setMostApps()
@@ -6599,7 +6645,7 @@ class MainWindow(object):
                                           self.UserSettings.config_forceaptuptime)
             self.usersettings()
             GLib.idle_add(self.clearBoxes)
-            self.setPardusApps()
+            self.set_applications()
             self.setPardusCategories()
             self.setEditorApps()
             self.setMostApps()
