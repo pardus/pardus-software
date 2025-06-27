@@ -2287,7 +2287,7 @@ class MainWindow(object):
 
             listbox = Gtk.ListBox.new()
             listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-            # listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
+            listbox.connect("row-activated", self.on_app_listbox_row_activated)
             listbox_row = Gtk.ListBoxRow()
             GLib.idle_add(listbox_row.add, box)
             listbox_row.name = editor_app_name
