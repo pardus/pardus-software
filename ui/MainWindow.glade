@@ -2554,7 +2554,6 @@
                                                     <property name="row-spacing">5</property>
                                                     <property name="min-children-per-line">3</property>
                                                     <property name="max-children-per-line">50</property>
-                                                    <signal name="child-activated" handler="on_ui_pardusapps_flowbox_child_activated" swapped="no"/>
                                                     <style>
                                                       <class name="pardus-software-flowbox"/>
                                                     </style>

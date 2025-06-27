@@ -1767,7 +1767,7 @@ class MainWindow(object):
 
                 listbox = Gtk.ListBox.new()
                 listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-                listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
+                listbox.connect("row-activated", self.on_app_listbox_row_activated)
                 listbox_row = Gtk.ListBoxRow()
                 GLib.idle_add(listbox_row.add, box)
                 listbox_row.name = {app: details}
@@ -1784,10 +1784,10 @@ class MainWindow(object):
     #     print("on_pardus_apps_listbox_released")
     #     print(listbox.name)
 
-    def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
-        print(f"Left clicked: {child.get_children()[0].get_children()[0].name}")
-        GLib.idle_add(flowbox.unselect_all)
-        self.set_app_details_page(child.get_children()[0].get_children()[0].name)
+    # def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
+    #     print(f"Left clicked: {child.get_children()[0].get_children()[0].name}")
+    #     GLib.idle_add(flowbox.unselect_all)
+    #     self.set_app_details_page(child.get_children()[0].get_children()[0].name)
 
     def set_categories(self):
         GLib.idle_add(lambda: (self.ui_leftcats_listbox and self.ui_leftcats_listbox.foreach(
@@ -2132,7 +2132,7 @@ class MainWindow(object):
 
         listbox = Gtk.ListBox.new()
         listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
+        listbox.connect("row-activated", self.on_app_listbox_row_activated)
         listbox_row = Gtk.ListBoxRow()
         GLib.idle_add(listbox_row.add, box)
         listbox_row.name = {app: details}
@@ -2431,7 +2431,7 @@ class MainWindow(object):
 
             listbox = Gtk.ListBox.new()
             listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-            listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
+            listbox.connect("row-activated", self.on_app_listbox_row_activated)
             listbox_row = Gtk.ListBoxRow()
             GLib.idle_add(listbox_row.add, box)
             listbox_row.name = mda["name"]
@@ -2599,7 +2599,7 @@ class MainWindow(object):
 
             listbox = Gtk.ListBox.new()
             listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-            listbox.connect("row-activated", self.on_mostdown_listbox_row_activated)
+            listbox.connect("row-activated", self.on_app_listbox_row_activated)
             listbox_row = Gtk.ListBoxRow()
             GLib.idle_add(listbox_row.add, box)
             listbox_row.name = la["name"]
@@ -2661,12 +2661,10 @@ class MainWindow(object):
             prev = len(self.ui_recent_stack) - 1
         self.ui_recent_stack.set_visible_child_name("{}".format(prev))
 
-    def on_mostdown_listbox_row_activated(self, listbox, row):
+    def on_app_listbox_row_activated(self, listbox, row):
         print(row.name)
-        self.set_app_details_page(row.name)
-
-    def on_recent_listbox_row_activated(self, listbox, row):
-        print(row.name)
+        # unselect the flowbox
+        GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
         self.set_app_details_page(row.name)
 
     def set_app_details_page(self, app):
