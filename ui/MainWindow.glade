@@ -1957,9 +1957,9 @@
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="spacing">16</property>
                             <child>
                               <object class="GtkBox" id="ui_leftcats_box">
+                                <property name="width-request">240</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="vexpand">True</property>
@@ -2035,6 +2035,17 @@
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSeparator">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
@@ -3071,7 +3082,7 @@
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>
@@ -11341,9 +11352,10 @@ Use with caution. Are you sure you want to continue?</property>
         </child>
         <child>
           <object class="GtkBox">
+            <property name="width-request">219</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="margin-start">15</property>
+            <property name="margin-start">16</property>
             <property name="spacing">8</property>
             <child>
               <object class="GtkImage">
@@ -11363,7 +11375,12 @@ Use with caution. Are you sure you want to continue?</property>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Pardus Store</property>
+                <property name="halign">start</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Pardus Store </property>
+                <property name="wrap">True</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">20</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -11372,6 +11389,22 @@ Use with caution. Are you sure you want to continue?</property>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
+                <style>
+                  <class name="headersep"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
