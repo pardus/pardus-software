@@ -2113,30 +2113,6 @@
                                                 <property name="can-focus">False</property>
                                                 <property name="spacing">6</property>
                                                 <child>
-                                                  <object class="GtkButton" id="ui_mostdown_prev_button">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="margin-top">28</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_ui_mostdown_prev_button_clicked" swapped="no"/>
-                                                    <child>
-                                                      <object class="GtkImage">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="icon-name">go-previous-symbolic</property>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
                                                   <object class="GtkBox" id="ui_mostdown_box">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
@@ -2208,30 +2184,6 @@
                                                     <property name="position">1</property>
                                                   </packing>
                                                 </child>
-                                                <child>
-                                                  <object class="GtkButton" id="ui_mostdown_next_button">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="margin-top">28</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_ui_mostdown_next_button_clicked" swapped="no"/>
-                                                    <child>
-                                                      <object class="GtkImage">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="icon-name">go-next-symbolic</property>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">2</property>
-                                                  </packing>
-                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -2243,8 +2195,6 @@
                                               <object class="GtkBox" id="ui_editor_box">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="margin-start">43</property>
-                                                <property name="margin-end">43</property>
                                                 <property name="spacing">6</property>
                                                 <child>
                                                   <object class="GtkBox">
@@ -2360,29 +2310,6 @@
                                                 <property name="can-focus">False</property>
                                                 <property name="spacing">6</property>
                                                 <child>
-                                                  <object class="GtkButton" id="ui_recent_prev_button">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_ui_recent_prev_button_clicked" swapped="no"/>
-                                                    <child>
-                                                      <object class="GtkImage">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="icon-name">go-previous-symbolic</property>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
                                                   <object class="GtkBox" id="ui_recent_box">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
@@ -2452,29 +2379,6 @@
                                                     <property name="expand">False</property>
                                                     <property name="fill">True</property>
                                                     <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkButton" id="ui_recent_next_button">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_ui_recent_next_button_clicked" swapped="no"/>
-                                                    <child>
-                                                      <object class="GtkImage">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="icon-name">go-next-symbolic</property>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">2</property>
                                                   </packing>
                                                 </child>
                                               </object>
