@@ -11203,7 +11203,7 @@ Use with caution. Are you sure you want to continue?</property>
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
-            <property name="margin-end">5</property>
+            <property name="margin-end">8</property>
             <property name="popover">ui_headermenu_popover</property>
             <child>
               <object class="GtkImage">
@@ -11280,6 +11280,24 @@ Use with caution. Are you sure you want to continue?</property>
           </packing>
         </child>
         <child>
+          <object class="GtkButton" id="ui_back_button">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="margin-start">8</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">go-previous-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkSearchEntry" id="ui_top_searchentry">
             <property name="width-request">350</property>
             <property name="visible">True</property>
@@ -11293,7 +11311,7 @@ Use with caution. Are you sure you want to continue?</property>
             <signal name="search-changed" handler="on_ui_top_searchentry_search_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>
