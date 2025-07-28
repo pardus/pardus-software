@@ -2074,22 +2074,24 @@
                                               <object class="GtkBox" id="ui_slider_box">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="spacing">6</property>
+                                                <property name="orientation">vertical</property>
                                                 <child>
-                                                  <object class="GtkButton" id="ui_slider_left_button">
+                                                  <object class="GtkOverlay" id="ui_slider_overlay">
                                                     <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_ui_slider_left_button_clicked" swapped="no"/>
+                                                    <property name="can-focus">False</property>
                                                     <child>
-                                                      <object class="GtkImage">
+                                                      <object class="GtkStack" id="ui_slider_stack">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="icon-name">go-previous-symbolic</property>
+                                                        <property name="transition-duration">250</property>
+                                                        <property name="transition-type">crossfade</property>
+                                                        <child>
+                                                          <placeholder/>
+                                                        </child>
                                                       </object>
+                                                      <packing>
+                                                        <property name="index">-1</property>
+                                                      </packing>
                                                     </child>
                                                   </object>
                                                   <packing>
@@ -2098,48 +2100,9 @@
                                                     <property name="position">0</property>
                                                   </packing>
                                                 </child>
-                                                <child>
-                                                  <object class="GtkStack" id="ui_slider_stack">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="transition-duration">250</property>
-                                                    <property name="transition-type">crossfade</property>
-                                                    <child>
-                                                      <placeholder/>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkButton" id="ui_slider_right_button">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">True</property>
-                                                    <property name="receives-default">True</property>
-                                                    <property name="halign">center</property>
-                                                    <property name="valign">center</property>
-                                                    <property name="relief">none</property>
-                                                    <signal name="clicked" handler="on_ui_slider_right_button_clicked" swapped="no"/>
-                                                    <child>
-                                                      <object class="GtkImage">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <property name="icon-name">go-next-symbolic</property>
-                                                      </object>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">2</property>
-                                                  </packing>
-                                                </child>
                                               </object>
                                               <packing>
-                                                <property name="expand">False</property>
+                                                <property name="expand">True</property>
                                                 <property name="fill">True</property>
                                                 <property name="position">0</property>
                                               </packing>

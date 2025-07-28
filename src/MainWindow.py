@@ -794,6 +794,7 @@ class MainWindow(object):
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
         self.ui_leftinstalled_listbox = self.GtkBuilder.get_object("ui_leftinstalled_listbox")
         self.ui_slider_stack = self.GtkBuilder.get_object("ui_slider_stack")
+        self.ui_slider_overlay = self.GtkBuilder.get_object("ui_slider_overlay")
 
         # Set version
         # If not getted from __version__ file then accept version in MainWindow.glade file
@@ -1592,7 +1593,30 @@ class MainWindow(object):
             self.ui_slider_stack.add_named(flowbox_child, "{}".format(stack_counter))
             stack_counter += 1
 
-        self.ui_slider_stack.show_all()
+        # Slider back button
+        btn_prev = Gtk.Button()
+        btn_prev.set_image(Gtk.Image.new_from_icon_name("go-previous-symbolic", Gtk.IconSize.BUTTON))
+        btn_prev.set_relief(Gtk.ReliefStyle.NONE)
+        btn_prev.set_valign(Gtk.Align.END)
+        btn_prev.set_halign(Gtk.Align.END)
+        btn_prev.set_margin_end(50)
+        btn_prev.set_margin_bottom(10)
+        btn_prev.connect("clicked", self.on_ui_slider_left_button_clicked)
+        GLib.idle_add(self.ui_slider_overlay.add_overlay, btn_prev)
+
+        # Slider next button
+        btn_next = Gtk.Button()
+        btn_next.set_image(Gtk.Image.new_from_icon_name("go-next-symbolic", Gtk.IconSize.BUTTON))
+        btn_next.set_relief(Gtk.ReliefStyle.NONE)
+        btn_next.set_valign(Gtk.Align.END)
+        btn_next.set_halign(Gtk.Align.END)
+        btn_next.set_margin_end(10)
+        btn_next.set_margin_bottom(10)
+        btn_next.connect("clicked", self.on_ui_slider_right_button_clicked)
+        GLib.idle_add(self.ui_slider_overlay.add_overlay, btn_next)
+
+        GLib.idle_add(self.ui_slider_overlay.show_all)
+        # GLib.idle_add(self.ui_slider_stack.show_all)
 
     def on_ui_slider_left_button_clicked(self, button):
 
