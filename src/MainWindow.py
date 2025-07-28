@@ -471,7 +471,7 @@ class MainWindow(object):
         self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
 
-        self.ui_mostdown_stack = self.GtkBuilder.get_object("ui_mostdown_stack")
+        self.ui_mostdown_flowbox = self.GtkBuilder.get_object("ui_mostdown_flowbox")
         self.ui_recent_stack = self.GtkBuilder.get_object("ui_recent_stack")
         self.ui_editor_flowbox = self.GtkBuilder.get_object("ui_editor_flowbox")
         self.ui_editor_others_flowbox = self.GtkBuilder.get_object("ui_editor_others_flowbox")
@@ -2167,8 +2167,107 @@ class MainWindow(object):
 
         return listbox
 
+
+    def create_app_widget(self, app, details, number=0):
+
+        app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
+        app_icon.set_pixel_size(32)
+        app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
+        app_icon.props.halign = Gtk.Align.CENTER
+        app_icon.props.valign = Gtk.Align.CENTER
+
+        prettyname = "{}".format(self.getPrettyName(app))
+
+        app_name = Gtk.Label.new()
+        app_name.set_markup("<b>{}</b>".format(prettyname))
+        app_name.set_line_wrap(False)
+        app_name.set_justify(Gtk.Justification.LEFT)
+        app_name.set_max_width_chars(16)
+        app_name.set_ellipsize(Pango.EllipsizeMode.END)
+        app_name.props.halign = Gtk.Align.START
+
+        action_button = Gtk.Button.new()
+        action_button.props.halign = Gtk.Align.END
+        action_button.props.valign = Gtk.Align.CENTER
+        action_button.set_hexpand(True)
+        action_button.set_size_request(77, -1)
+
+        action_button_label = Gtk.Label.new()
+        action_button_label.set_line_wrap(False)
+        action_button_label.set_justify(Gtk.Justification.LEFT)
+        action_button_label.set_max_width_chars(6)
+        action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+        action_button.add(action_button_label)
+
+        is_installed = self.Package.isinstalled(app)
+        is_upgradable = self.Package.is_upgradable(app)
+        is_openable = self.get_desktop_filename_from_app_name(app) != ""
+        if is_installed is not None:
+            if is_installed:
+                if is_upgradable:
+                    self.set_button_class(action_button, 3)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                else:
+                    self.set_button_class(action_button, 1)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+            else:
+                self.set_button_class(action_button, 0)
+                action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+        else:
+            self.set_button_class(action_button, 2)
+            action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+
+        summary_label = Gtk.Label.new()
+        summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
+            self.get_description_from_app_name(app), -1)[:50].replace("\n", "").replace("\r", "")))
+        summary_label.props.valign = Gtk.Align.START
+        summary_label.props.halign = Gtk.Align.START
+        summary_label.set_line_wrap(False)
+        summary_label.set_max_width_chars(18)
+        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+
+        box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        box_app.props.valign = Gtk.Align.CENTER
+        box_app.pack_start(app_name, False, True, 0)
+        box_app.pack_start(summary_label, False, True, 0)
+
+        box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+        if number != 0:
+            number_label = Gtk.Label.new()
+            number_label.set_markup("{}".format(number))
+            number_label.props.halign = Gtk.Align.CENTER
+            number_label.props.valign = Gtk.Align.CENTER
+            box_h.pack_start(number_label, False, True, 0)
+        box_h.pack_start(app_icon, False, True, 0)
+        box_h.pack_start(box_app, False, True, 0)
+        box_h.pack_start(action_button, False, True, 0)
+        box_h.set_margin_start(5)
+        box_h.set_margin_end(5)
+        box_h.set_margin_top(5)
+        box_h.set_margin_bottom(5)
+
+        bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+        bottom_separator.props.valign = Gtk.Align.END
+        bottom_separator.set_vexpand(True)
+        GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
+
+        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
+        box.pack_start(box_h, False, True, 0)
+        box.pack_end(bottom_separator, True, True, 0)
+
+        listbox = Gtk.ListBox.new()
+        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        listbox.connect("row-activated", self.on_app_listbox_row_activated)
+        listbox_row = Gtk.ListBoxRow()
+        GLib.idle_add(listbox_row.add, box)
+        listbox_row.name = app
+        GLib.idle_add(listbox.add, listbox_row)
+
+        GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
+        return listbox
+
     def set_most_apps(self):
-        GLib.idle_add(lambda: self.ui_mostdown_stack.foreach(lambda child: self.ui_mostdown_stack.remove(child)))
+        GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
         GLib.idle_add(lambda: self.ui_recent_stack.foreach(lambda child: self.ui_recent_stack.remove(child)))
         GLib.idle_add(lambda: self.ui_editor_flowbox.foreach(lambda child: self.ui_editor_flowbox.remove(child)))
 
@@ -2296,7 +2395,7 @@ class MainWindow(object):
 
     def set_mostdown_apps(self, count):
         self.Logger.info("in set_mostdown_apps: count: {}".format(count))
-        GLib.idle_add(lambda: self.ui_mostdown_stack.foreach(lambda child: self.ui_mostdown_stack.remove(child)))
+        GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
 
         def create_mda_widget(mda, mda_counter):
 
@@ -2437,33 +2536,22 @@ class MainWindow(object):
             # GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
             return listbox
 
-        page_count = math.ceil(len(self.Server.mostdownapplist) / count)
+        counter = 0
+        for app in self.Server.mostdownapplist:
+            counter += 1
 
-        for page in range(page_count):
-            flowbox = Gtk.FlowBox()
-            flowbox.set_min_children_per_line(count / 2)
-            flowbox.set_max_children_per_line(count / 2)
-            flowbox.set_selection_mode(Gtk.SelectionMode.NONE)
-            flowbox.set_column_spacing(12)
-            flowbox.set_row_spacing(0)
+            listbox = self.create_app_widget(app["name"], app, counter)
+            GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
 
-            start_index = page * count
-            end_index = min(start_index + count, len(self.Server.mostdownapplist))
 
-            for i in range(start_index, end_index):
-                app_data = self.Server.mostdownapplist[i]
-                listbox = create_mda_widget(app_data, i+1)
-                GLib.idle_add(flowbox.insert, listbox, -1)
+        GLib.idle_add(self.ui_mostdown_flowbox.show_all)
 
-            GLib.idle_add(self.ui_mostdown_stack.add_named, flowbox, "{}".format(page))
-            GLib.idle_add(flowbox.show_all)
 
-        # GLib.idle_add(self.ui_mostdown_stack.show_all)
+
 
     def set_recent_apps(self, count):
         self.Logger.info("in set_recent_apps: count: {}".format(count))
         GLib.idle_add(lambda: self.ui_recent_stack.foreach(lambda child: self.ui_recent_stack.remove(child)))
-
 
 
         def create_la_widget(la, la_counter):
@@ -2624,22 +2712,6 @@ class MainWindow(object):
 
             GLib.idle_add(self.ui_recent_stack.add_named, flowbox, "{}".format(page))
             GLib.idle_add(flowbox.show_all)
-
-    def on_ui_mostdown_next_button_clicked(self, button):
-        current = int(self.ui_mostdown_stack.get_visible_child_name())
-        if self.ui_mostdown_stack.get_child_by_name("{}".format(current + 1)) != None:
-            next = current + 1
-        else:
-            next = 0
-        self.ui_mostdown_stack.set_visible_child_name("{}".format(next))
-
-    def on_ui_mostdown_prev_button_clicked(self, button):
-        current = int(self.ui_mostdown_stack.get_visible_child_name())
-        if self.ui_mostdown_stack.get_child_by_name("{}".format(current - 1)) != None:
-            prev = current - 1
-        else:
-            prev = len(self.ui_mostdown_stack) - 1
-        self.ui_mostdown_stack.set_visible_child_name("{}".format(prev))
 
     def on_ui_recent_next_button_clicked(self, button):
         current = int(self.ui_recent_stack.get_visible_child_name())
