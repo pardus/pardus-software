@@ -492,6 +492,8 @@ class MainWindow(object):
         self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
         self.ui_ad_actionbutton_label = self.GtkBuilder.get_object("ui_ad_actionbutton_label")
 
+        self.home_view_style = 0
+
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
 
         self.PardusAppListStore = self.GtkBuilder.get_object("PardusAppListStore")
@@ -2164,25 +2166,29 @@ class MainWindow(object):
         self.Logger.info("on_ui_pardus_home_box_size_allocate: {}".format(allocation.width))
         self.last_width = allocation.width
         if self.last_width and self.last_width < 1453:
-            self.ui_editor_flowbox.set_min_children_per_line(1)
-            self.ui_editor_flowbox.set_max_children_per_line(1)
-            # self.ui_mostdown_flowbox.set_min_children_per_line(3)
-            # self.ui_mostdown_flowbox.set_max_children_per_line(3)
-            # self.ui_recent_flowbox.set_min_children_per_line(3)
-            # self.ui_recent_flowbox.set_max_children_per_line(3)
-            GLib.idle_add(self.set_editor_apps, 3)
-            GLib.idle_add(self.set_mostdown_apps, 6)
-            GLib.idle_add(self.set_recent_apps, 6)
+            if self.home_view_style != 1:
+                self.ui_editor_flowbox.set_min_children_per_line(1)
+                self.ui_editor_flowbox.set_max_children_per_line(1)
+                # self.ui_mostdown_flowbox.set_min_children_per_line(3)
+                # self.ui_mostdown_flowbox.set_max_children_per_line(3)
+                # self.ui_recent_flowbox.set_min_children_per_line(3)
+                # self.ui_recent_flowbox.set_max_children_per_line(3)
+                GLib.idle_add(self.set_editor_apps, 3)
+                GLib.idle_add(self.set_mostdown_apps, 6)
+                GLib.idle_add(self.set_recent_apps, 6)
+                self.home_view_style = 1
         else:
-            self.ui_editor_flowbox.set_min_children_per_line(1)
-            self.ui_editor_flowbox.set_max_children_per_line(1)
-            # self.ui_mostdown_flowbox.set_min_children_per_line(5)
-            # self.ui_mostdown_flowbox.set_max_children_per_line(5)
-            # self.ui_recent_flowbox.set_min_children_per_line(5)
-            # self.ui_recent_flowbox.set_max_children_per_line(5)
-            GLib.idle_add(self.set_editor_apps, 4, 2)
-            GLib.idle_add(self.set_mostdown_apps, 10)
-            GLib.idle_add(self.set_recent_apps, 10)
+            if self.home_view_style != 2:
+                self.ui_editor_flowbox.set_min_children_per_line(1)
+                self.ui_editor_flowbox.set_max_children_per_line(1)
+                # self.ui_mostdown_flowbox.set_min_children_per_line(5)
+                # self.ui_mostdown_flowbox.set_max_children_per_line(5)
+                # self.ui_recent_flowbox.set_min_children_per_line(5)
+                # self.ui_recent_flowbox.set_max_children_per_line(5)
+                GLib.idle_add(self.set_editor_apps, 4, 2)
+                GLib.idle_add(self.set_mostdown_apps, 10)
+                GLib.idle_add(self.set_recent_apps, 10)
+                self.home_view_style = 2
 
     def set_editor_apps(self, count, style=1):
         self.Logger.info("in set_editor_apps: count: {}, style: {}".format(count, style))
