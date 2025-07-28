@@ -2316,14 +2316,15 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkStack" id="ui_recent_stack">
+                                                      <object class="GtkFlowBox" id="ui_recent_flowbox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
-                                                        <property name="transition-type">crossfade</property>
-                                                        <child>
-                                                          <placeholder/>
-                                                        </child>
+                                                        <property name="homogeneous">True</property>
+                                                        <property name="column-spacing">12</property>
+                                                        <property name="min-children-per-line">2</property>
+                                                        <property name="max-children-per-line">5</property>
+                                                        <property name="selection-mode">none</property>
                                                       </object>
                                                       <packing>
                                                         <property name="expand">False</property>
