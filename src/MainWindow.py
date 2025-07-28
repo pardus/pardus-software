@@ -2191,8 +2191,8 @@ class MainWindow(object):
         self.last_width = allocation.width
         if self.last_width and self.last_width < 1453:
             if self.home_view_style != 1:
-                self.ui_editor_flowbox.set_min_children_per_line(1)
-                self.ui_editor_flowbox.set_max_children_per_line(1)
+                self.ui_editor_flowbox.set_min_children_per_line(3)
+                self.ui_editor_flowbox.set_max_children_per_line(3)
                 # self.ui_mostdown_flowbox.set_min_children_per_line(3)
                 # self.ui_mostdown_flowbox.set_max_children_per_line(3)
                 # self.ui_recent_flowbox.set_min_children_per_line(3)
@@ -2203,8 +2203,8 @@ class MainWindow(object):
                 self.home_view_style = 1
         else:
             if self.home_view_style != 2:
-                self.ui_editor_flowbox.set_min_children_per_line(1)
-                self.ui_editor_flowbox.set_max_children_per_line(1)
+                self.ui_editor_flowbox.set_min_children_per_line(4)
+                self.ui_editor_flowbox.set_max_children_per_line(4)
                 # self.ui_mostdown_flowbox.set_min_children_per_line(5)
                 # self.ui_mostdown_flowbox.set_max_children_per_line(5)
                 # self.ui_recent_flowbox.set_min_children_per_line(5)
@@ -2218,10 +2218,8 @@ class MainWindow(object):
         self.Logger.info("in set_editor_apps: count: {}, style: {}".format(count, style))
 
         GLib.idle_add(lambda: self.ui_editor_flowbox.foreach(lambda child: self.ui_editor_flowbox.remove(child)))
-        GLib.idle_add(lambda: self.ui_editor_others_flowbox.foreach(lambda child: self.ui_editor_others_flowbox.remove(child)))
-        GLib.idle_add(lambda: self.ui_editor_side_flowbox.foreach(lambda child: self.ui_editor_side_flowbox.remove(child)))
 
-        for editor_app in self.Server.ediapplist[:1]:
+        for editor_app in self.Server.ediapplist[:count]:
 
             editor_app_name = editor_app["name"]
             editor_app_pretty_name = editor_app["prettyname"].get(self.locale) or editor_app["prettyname"].get("en")
@@ -2330,127 +2328,7 @@ class MainWindow(object):
             GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
             GLib.idle_add(self.ui_editor_flowbox.insert, listbox, -1)
 
-
-
-
-        for editor_app in self.Server.ediapplist[1:3]:
-
-            editor_app_name = editor_app["name"]
-            editor_app_pretty_name = editor_app["prettyname"].get(self.locale) or editor_app["prettyname"].get("en")
-            editor_app_short_desc = editor_app["shortdesc"].get(self.locale) or editor_app["shortdesc"].get("en")
-
-            app_icon = Gtk.Image.new()
-            app_icon.set_pixel_size(128)
-            app_icon.set_hexpand(True)
-            app_icon.props.halign = Gtk.Align.FILL
-
-            css = """
-            .pardus-software-editor {{
-                background-image: url("{}");
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-position: center;
-                border-radius: 8px;
-            }}
-            """.format(os.path.join(self.UserSettings.editor_images_dir, "{}.png".format(editor_app_name)))
-            style_provider = Gtk.CssProvider()
-            style_provider.load_from_data(str.encode(css))
-            app_icon.get_style_context().add_class("pardus-software-editor")
-            app_icon.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-
-            app_name = Gtk.Label.new()
-            app_name.set_markup("<b>{}</b>".format(editor_app_pretty_name))
-            app_name.set_line_wrap(False)
-            app_name.set_justify(Gtk.Justification.LEFT)
-            # app_name.set_max_width_chars(16)
-            app_name.set_ellipsize(Pango.EllipsizeMode.END)
-            app_name.props.halign = Gtk.Align.START
-
-            button_action = Gtk.Button.new()
-            button_action.props.halign = Gtk.Align.END
-            button_action.set_hexpand(True)
-            button_action.get_style_context().add_class("pardus-software-mostapp-action-button")
-            button_label = Gtk.Label.new()
-            button_action.add(button_label)
-
-            is_installed = self.Package.isinstalled(editor_app_name)
-            if is_installed is not None:
-                if is_installed:
-                    self.set_button_class(button_action, 1)
-                    button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
-                else:
-                    self.set_button_class(button_action, 0)
-                    button_label.set_markup("<small>{}</small>".format(_("Install")))
-            else:
-                self.set_button_class(button_action, 2)
-                button_label.set_markup("<small>{}</small>".format(_("Not Found")))
-
-            box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
-            box_app.pack_start(app_name, False, True, 0)
-            box_app.pack_start(button_action, True, True, 0)
-
-            summary_label = Gtk.Label.new()
-            summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(editor_app_short_desc))
-            summary_label.props.halign = Gtk.Align.START
-            summary_label.set_line_wrap(False)
-            summary_label.set_max_width_chars(18)
-            summary_label.set_ellipsize(Pango.EllipsizeMode.END)
-
-            rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
-            rate_icon.set_pixel_size(10)
-            rate_icon.set_opacity(0.7)
-            rate_icon.props.valign = Gtk.Align.CENTER
-
-            rate_label = Gtk.Label.new()
-            rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(4.5)))
-
-            separator = Gtk.Separator.new(Gtk.Orientation.VERTICAL)
-
-            category_label = Gtk.Label.new()
-            category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
-                (editor_app["category"].get(self.locale) or editor_app["category"].get("en") or _("Unknown")).title()))
-
-            box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
-            box_stats.pack_start(rate_label, False, True, 0)
-            box_stats.pack_start(rate_icon, False, True, 0)
-            box_stats.pack_start(separator, False, True, 0)
-            box_stats.pack_start(category_label, False, True, 0)
-
-            bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
-            bottom_separator.props.valign = Gtk.Align.END
-            button_action.set_vexpand(True)
-            GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
-
-            box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
-            box.pack_start(app_icon, False, True, 0)
-            box.pack_start(box_app, True, True, 0)
-            box.pack_start(summary_label, True, True, 0)
-            box.pack_start(box_stats, True, True, 0)
-            box.pack_start(bottom_separator, True, True, 0)
-            box.set_margin_start(5)
-            box.set_margin_end(5)
-            box.set_margin_top(5)
-
-            listbox = Gtk.ListBox.new()
-            listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-            listbox.connect("row-activated", self.on_app_listbox_row_activated)
-            listbox_row = Gtk.ListBoxRow()
-            GLib.idle_add(listbox_row.add, box)
-            listbox_row.name = editor_app_name
-            GLib.idle_add(listbox.add, listbox_row)
-
-            GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
-            if style == 1:
-                GLib.idle_add(self.ui_editor_others_flowbox.insert, listbox, -1)
-            elif style == 2:
-                GLib.idle_add(self.ui_editor_side_flowbox.insert, listbox, -1)
-
-
         GLib.idle_add(self.ui_editor_flowbox.show_all)
-        if style == 1:
-            GLib.idle_add(self.ui_editor_others_flowbox.show_all)
-        elif style == 2:
-            GLib.idle_add(self.ui_editor_side_flowbox.show_all)
 
     def set_mostdown_apps(self, count):
         self.Logger.info("in set_mostdown_apps: count: {}".format(count))
