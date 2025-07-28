@@ -2052,7 +2052,6 @@
                               <object class="GtkStack" id="ui_right_stack">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="margin-top">24</property>
                                 <property name="transition-type">crossfade</property>
                                 <child>
                                   <object class="GtkScrolledWindow" id="ui_discover_scrolledwindow">
@@ -2068,6 +2067,9 @@
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
                                             <property name="halign">center</property>
+                                            <property name="margin-start">32</property>
+                                            <property name="margin-end">20</property>
+                                            <property name="margin-top">32</property>
                                             <property name="orientation">vertical</property>
                                             <property name="spacing">32</property>
                                             <child>
