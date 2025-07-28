@@ -1952,7 +1952,6 @@
                         <property name="margin-end">13</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">8</property>
-                        <signal name="size-allocate" handler="on_ui_pardus_home_box_size_allocate" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
