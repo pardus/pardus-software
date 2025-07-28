@@ -2324,8 +2324,8 @@ class MainWindow(object):
 
         self.ui_ad_name.set_markup("<b>{}</b>".format(pretty_name))
 
-        self.ui_ad_icon.set_from_icon_name(app_name, 96)
-        self.ui_ad_icon.set_pixel_size(96)
+        self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
+        self.ui_ad_icon.set_pixel_size(68)
 
         is_installed = self.Package.isinstalled(app_name)
         if is_installed is not None:
