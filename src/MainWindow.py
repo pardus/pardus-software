@@ -791,6 +791,7 @@ class MainWindow(object):
         self.ui_leftcats_box = self.GtkBuilder.get_object("ui_leftcats_box")
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
         self.ui_leftupdates_listbox = self.GtkBuilder.get_object("ui_leftupdates_listbox")
+        self.ui_leftinstalled_listbox = self.GtkBuilder.get_object("ui_leftinstalled_listbox")
         self.ui_slider_stack = self.GtkBuilder.get_object("ui_slider_stack")
         self.ui_slider_overlay = self.GtkBuilder.get_object("ui_slider_overlay")
 
@@ -1749,15 +1750,27 @@ class MainWindow(object):
 
                 GLib.idle_add(self.ui_leftcats_listbox.add, row)
 
-            # seperator
-            # separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
-            # row = Gtk.ListBoxRow()
-            # row.add(separator)
-            # row.set_selectable(False)
-            # row.set_activatable(False)
-            # GLib.idle_add(self.ui_leftcats_listbox.add, row)
-
             # installed
+            installed_icon = Gtk.Image.new_from_icon_name("ps-installed-symbolic",  Gtk.IconSize.BUTTON)
+
+            label = Gtk.Label.new()
+            label.set_text(_("Installed Apps"))
+
+            box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+            box.pack_start(installed_icon, False, True, 0)
+            box.pack_start(label, False, True, 0)
+            box.set_margin_start(8)
+            box.set_margin_end(50)
+            box.set_margin_top(8)
+            box.set_margin_bottom(8)
+
+            row = Gtk.ListBoxRow()
+            row.add(box)
+            row.name = "installed"
+
+            GLib.idle_add(self.ui_leftinstalled_listbox.add, row)
+
+            # updates
             updates_icon = Gtk.Image.new_from_icon_name("ps-updates-symbolic", Gtk.IconSize.BUTTON)
             updates_icon.props.halign = Gtk.Align.START
 
@@ -1804,6 +1817,7 @@ class MainWindow(object):
 
             GLib.idle_add(self.ui_leftcats_listbox.show_all)
             GLib.idle_add(self.ui_leftupdates_listbox.show_all)
+            GLib.idle_add(self.ui_leftinstalled_listbox.show_all)
 
             # GLib.idle_add(self.ui_leftcats_listbox.select_row, self.ui_leftcats_listbox.get_row_at_index(0))
             GLib.idle_add(lambda: self.ui_leftcats_listbox.select_row(self.ui_leftcats_listbox.get_row_at_index(0)))
@@ -1827,8 +1841,15 @@ class MainWindow(object):
 
     def on_ui_leftupdates_listbox_row_activated(self, listbox, row):
         self.ui_leftcats_listbox.unselect_all()
+        self.ui_leftinstalled_listbox.unselect_all()
         print("in updates")
         self.ui_right_stack.set_visible_child_name("updates")
+
+    def on_ui_leftinstalled_listbox_row_activated(self, listbox, row):
+        self.ui_leftcats_listbox.unselect_all()
+        self.ui_leftupdates_listbox.unselect_all()
+        print("in installed")
+        self.ui_right_stack.set_visible_child_name("installed")
 
     def on_catbutton_clicked(self, button):
 
