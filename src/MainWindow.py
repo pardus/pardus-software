@@ -1714,7 +1714,7 @@ class MainWindow(object):
             # discover
             icon = Gtk.Image.new_from_icon_name("ps-discover-symbolic",  Gtk.IconSize.BUTTON)
             label = Gtk.Label.new()
-            label.set_text(_("Discover"))
+            label.set_markup("<b>{}</b>".format(_("Discover")))
             box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
             box.pack_start(icon, False, True, 0)
             box.pack_start(label, False, True, 0)
@@ -1734,7 +1734,7 @@ class MainWindow(object):
                 cat_icon = Gtk.Image.new_from_icon_name(cat["icon"],  Gtk.IconSize.BUTTON)
 
                 label = Gtk.Label.new()
-                label.set_text(cat["name"].title())
+                label.set_markup("<b>{}</b>".format(cat["name"].title()))
 
                 box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
                 box.pack_start(cat_icon, False, True, 0)
@@ -1754,7 +1754,7 @@ class MainWindow(object):
             installed_icon = Gtk.Image.new_from_icon_name("ps-installed-symbolic",  Gtk.IconSize.BUTTON)
 
             label = Gtk.Label.new()
-            label.set_text(_("Installed Apps"))
+            label.set_markup("<b>{}</b>".format(_("Installed Apps")))
 
             box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
             box.pack_start(installed_icon, False, True, 0)
@@ -1775,7 +1775,7 @@ class MainWindow(object):
             updates_icon.props.halign = Gtk.Align.START
 
             label = Gtk.Label.new()
-            label.set_text(_("Updates"))
+            label.set_markup("<b>{}</b>".format(_("Updates")))
             box_updates_count = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
             label_updates_count = Gtk.Label.new()
             label_updates_count.set_markup("{}".format("13"))
