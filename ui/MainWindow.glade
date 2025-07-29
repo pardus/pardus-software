@@ -11313,7 +11313,22 @@ Use with caution. Are you sure you want to continue?</property>
             <property name="can-focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <placeholder/>
+              <object class="GtkSearchEntry" id="ui_top_searchentry">
+                <property name="width-request">350</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="primary-icon-name">edit-find-symbolic</property>
+                <property name="placeholder-text" translatable="yes">search for apps</property>
+                <signal name="activate" handler="on_ui_top_searchentry_activate" swapped="no"/>
+                <signal name="focus-in-event" handler="on_ui_top_searchentry_focus_in_event" swapped="no"/>
+                <signal name="icon-press" handler="on_ui_top_searchentry_icon_press" swapped="no"/>
+                <signal name="search-changed" handler="on_ui_top_searchentry_search_changed" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -11365,11 +11380,9 @@ Use with caution. Are you sure you want to continue?</property>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Pardus Store </property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">Pardus Store</property>
                 <property name="ellipsize">end</property>
+                <property name="single-line-mode">True</property>
                 <property name="max-width-chars">20</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -11385,7 +11398,6 @@ Use with caution. Are you sure you want to continue?</property>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
                 <style>
                   <class name="headersep"/>
@@ -11394,6 +11406,7 @@ Use with caution. Are you sure you want to continue?</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="pack-type">end</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -11403,38 +11416,33 @@ Use with caution. Are you sure you want to continue?</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="ui_back_button">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="margin-start">8</property>
+            <property name="can-focus">False</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton" id="ui_back_button">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">go-previous-symbolic</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="halign">start</property>
+                <property name="margin-start">8</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">go-previous-symbolic</property>
+                  </object>
+                </child>
               </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </object>
           <packing>
             <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSearchEntry" id="ui_top_searchentry">
-            <property name="width-request">350</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="margin-start">98</property>
-            <property name="primary-icon-name">edit-find-symbolic</property>
-            <property name="placeholder-text" translatable="yes">search for apps</property>
-            <signal name="activate" handler="on_ui_top_searchentry_activate" swapped="no"/>
-            <signal name="focus-in-event" handler="on_ui_top_searchentry_focus_in_event" swapped="no"/>
-            <signal name="icon-press" handler="on_ui_top_searchentry_icon_press" swapped="no"/>
-            <signal name="search-changed" handler="on_ui_top_searchentry_search_changed" swapped="no"/>
-          </object>
-          <packing>
-            <property name="position">3</property>
           </packing>
         </child>
       </object>
