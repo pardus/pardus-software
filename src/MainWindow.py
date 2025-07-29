@@ -1825,6 +1825,7 @@ class MainWindow(object):
     def on_ui_leftcats_listbox_row_activated(self, listbox, row):
         self.isPardusSearching = False
         self.ui_leftupdates_listbox.unselect_all()
+        self.ui_leftinstalled_listbox.unselect_all()
         print(row.name)
         self.current_category = row.name
         if self.current_category == "discover":
