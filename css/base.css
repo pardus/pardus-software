@@ -65,10 +65,11 @@ list row {
     border-radius:8px;
 }
 
-.pardus-software-left-installed-count-box {
-    background-color: #f27a1a;
-    border-radius: 30px;
-    color: @view_bg_color;
+.pardus-software-left-updates-count-box {
+    background-color: alpha(@accent_bg_color, 0.2);
+    border-radius: 8px;
+    border: 1px solid @accent_bg_color;
+    color: @accent_bg_color;
 }
 
 .pardus-software-mostapp-empty-label{
