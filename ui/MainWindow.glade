@@ -2525,42 +2525,6 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkFlowBox" id="ui_upgradableapps_flowbox">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="valign">start</property>
-                                                    <property name="margin-start">5</property>
-                                                    <property name="margin-end">13</property>
-                                                    <property name="margin-top">5</property>
-                                                    <property name="margin-bottom">5</property>
-                                                    <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">12</property>
-                                                    <property name="min-children-per-line">2</property>
-                                                    <property name="max-children-per-line">4</property>
-                                                    <style>
-                                                      <class name="pardus-software-flowbox"/>
-                                                    </style>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkSeparator">
-                                                    <property name="visible">True</property>
-                                                    <property name="can-focus">False</property>
-                                                    <property name="margin-start">8</property>
-                                                    <property name="margin-end">17</property>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">2</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
                                                   <object class="GtkFlowBox" id="ui_installedapps_flowbox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
@@ -2598,6 +2562,95 @@
                                   <packing>
                                     <property name="name">installed</property>
                                     <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="ui_updates_box">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkScrolledWindow" id="ui_updates_scrolledwindow">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <child>
+                                          <object class="GtkViewport">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="shadow-type">none</property>
+                                            <child>
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="orientation">vertical</property>
+                                                <property name="spacing">13</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-start">8</property>
+                                                    <property name="margin-end">17</property>
+                                                    <property name="spacing">21</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label">Updates</property>
+                                                        <attributes>
+                                                          <attribute name="weight" value="bold"/>
+                                                        </attributes>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkFlowBox" id="ui_upgradableapps_flowbox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="valign">start</property>
+                                                    <property name="margin-start">5</property>
+                                                    <property name="margin-end">13</property>
+                                                    <property name="margin-top">5</property>
+                                                    <property name="margin-bottom">5</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <property name="column-spacing">12</property>
+                                                    <property name="min-children-per-line">2</property>
+                                                    <property name="max-children-per-line">4</property>
+                                                    <style>
+                                                      <class name="pardus-software-flowbox"/>
+                                                    </style>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="name">updates</property>
+                                    <property name="position">3</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -3012,7 +3065,7 @@
                                   </object>
                                   <packing>
                                     <property name="name">appdetails</property>
-                                    <property name="position">3</property>
+                                    <property name="position">4</property>
                                   </packing>
                                 </child>
                               </object>
