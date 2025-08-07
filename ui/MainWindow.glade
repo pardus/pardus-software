@@ -2130,7 +2130,7 @@
                                                 <property name="can-focus">False</property>
                                                 <property name="spacing">6</property>
                                                 <child>
-                                                  <object class="GtkBox" id="ui_mostdown_box">
+                                                  <object class="GtkBox" id="ui_trend_box">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="orientation">vertical</property>
@@ -2143,7 +2143,7 @@
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">Most Downloaded</property>
+                                                            <property name="label" translatable="yes">Trending Apps</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
                                                             </attributes>
@@ -2179,7 +2179,7 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkFlowBox" id="ui_mostdown_flowbox">
+                                                      <object class="GtkFlowBox" id="ui_trend_flowbox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
@@ -2283,6 +2283,91 @@
                                                 <property name="can-focus">False</property>
                                                 <property name="spacing">6</property>
                                                 <child>
+                                                  <object class="GtkBox" id="ui_mostdown_box">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <property name="spacing">16</property>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <child>
+                                                          <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">Most Downloaded</property>
+                                                            <attributes>
+                                                            <attribute name="weight" value="bold"/>
+                                                            </attributes>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">See all</property>
+                                                            <attributes>
+                                                            <attribute name="underline" value="True"/>
+                                                            <attribute name="foreground" value="#21207b7aeaea"/>
+                                                            </attributes>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="pack-type">end</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkFlowBox" id="ui_mostdown_flowbox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="valign">start</property>
+                                                        <property name="homogeneous">True</property>
+                                                        <property name="column-spacing">12</property>
+                                                        <property name="min-children-per-line">2</property>
+                                                        <property name="max-children-per-line">5</property>
+                                                        <property name="selection-mode">none</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">3</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="spacing">6</property>
+                                                <child>
                                                   <object class="GtkBox" id="ui_recent_box">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
@@ -2359,7 +2444,7 @@
                                               <packing>
                                                 <property name="expand">False</property>
                                                 <property name="fill">True</property>
-                                                <property name="position">3</property>
+                                                <property name="position">4</property>
                                               </packing>
                                             </child>
                                           </object>
@@ -2640,9 +2725,6 @@
                                     <property name="name">installed</property>
                                     <property name="position">2</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                                 <child>
                                   <object class="GtkScrolledWindow" id="ui_appdetails_scrolledwindow">
@@ -3056,7 +3138,7 @@
                                   </object>
                                   <packing>
                                     <property name="name">appdetails</property>
-                                    <property name="position">4</property>
+                                    <property name="position">3</property>
                                   </packing>
                                 </child>
                               </object>

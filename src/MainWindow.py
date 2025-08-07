@@ -471,6 +471,7 @@ class MainWindow(object):
         self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
 
+        self.ui_trend_flowbox = self.GtkBuilder.get_object("ui_trend_flowbox")
         self.ui_mostdown_flowbox = self.GtkBuilder.get_object("ui_mostdown_flowbox")
         self.ui_recent_flowbox = self.GtkBuilder.get_object("ui_recent_flowbox")
         self.ui_editor_flowbox = self.GtkBuilder.get_object("ui_editor_flowbox")
@@ -1469,9 +1470,8 @@ class MainWindow(object):
                     self.Server.ediapplist = response["editor-apps"]
                     self.Server.sliderapplist = response["slider-apps"]
                     self.Server.mostdownapplist = response["mostdown-apps"]
-                    self.Server.popularapplist = response["popular-apps"]
-                    if "last-apps" in response:
-                        self.Server.lastaddedapplist = response["last-apps"]
+                    self.Server.trendapplist = response["trend-apps"]
+                    self.Server.lastaddedapplist = response["last-apps"]
                     # self.Server.totalstatistics = response["total"]
                     # self.Server.servermd5 = response["md5"]
                     self.Server.appversion = response["version"]
@@ -2175,9 +2175,10 @@ class MainWindow(object):
 
         if self.Server.connection:
             self.Logger.info("in set_most_apps")
+            GLib.idle_add(self.set_trend_apps)
             GLib.idle_add(self.set_editor_apps)
-            GLib.idle_add(self.set_recent_apps)
             GLib.idle_add(self.set_mostdown_apps)
+            GLib.idle_add(self.set_recent_apps)
 
     def set_editor_apps(self):
         self.Logger.info("in set_editor_apps")
@@ -2293,6 +2294,18 @@ class MainWindow(object):
             GLib.idle_add(self.ui_editor_flowbox.insert, listbox, -1)
 
         GLib.idle_add(self.ui_editor_flowbox.show_all)
+
+    def set_trend_apps(self):
+        self.Logger.info("in set_trend_apps")
+        GLib.idle_add(lambda: self.ui_trend_flowbox.foreach(lambda child: self.ui_trend_flowbox.remove(child)))
+
+        counter = 0
+        for app in self.Server.trendapplist:
+            counter += 1
+            listbox = self.create_app_widget(app["name"], None, counter)
+            GLib.idle_add(self.ui_trend_flowbox.insert, listbox, -1)
+
+        GLib.idle_add(self.ui_trend_flowbox.show_all)
 
     def set_mostdown_apps(self):
         self.Logger.info("in set_mostdown_apps")
