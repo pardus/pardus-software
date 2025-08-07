@@ -2313,8 +2313,7 @@ class MainWindow(object):
 
         counter = 0
         for app in self.Server.mostdownapplist:
-            counter += 1
-            listbox = self.create_app_widget(app["name"], None, counter)
+            listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
 
         GLib.idle_add(self.ui_mostdown_flowbox.show_all)
