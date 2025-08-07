@@ -2084,7 +2084,7 @@ class MainWindow(object):
         app_name.set_markup("<b>{}</b>".format(prettyname))
         app_name.set_line_wrap(False)
         app_name.set_justify(Gtk.Justification.LEFT)
-        app_name.set_max_width_chars(16)
+        app_name.set_max_width_chars(23 if number==0 else 21)
         app_name.set_ellipsize(Pango.EllipsizeMode.END)
         app_name.props.halign = Gtk.Align.START
 
@@ -2125,7 +2125,7 @@ class MainWindow(object):
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(18)
+        summary_label.set_max_width_chars(23 if number==0 else 21)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
 
         box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
@@ -2214,7 +2214,7 @@ class MainWindow(object):
             app_name.set_markup("<b>{}</b>".format(editor_app_pretty_name))
             app_name.set_line_wrap(False)
             app_name.set_justify(Gtk.Justification.LEFT)
-            app_name.set_max_width_chars(16)
+            app_name.set_max_width_chars(22)
             app_name.set_ellipsize(Pango.EllipsizeMode.END)
             app_name.props.halign = Gtk.Align.START
 
@@ -2253,7 +2253,7 @@ class MainWindow(object):
             summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(editor_app_short_desc))
             summary_label.props.halign = Gtk.Align.START
             summary_label.set_line_wrap(False)
-            summary_label.set_max_width_chars(18)
+            summary_label.set_max_width_chars(22)
             summary_label.set_ellipsize(Pango.EllipsizeMode.END)
 
             box_v = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
