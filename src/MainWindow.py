@@ -1844,7 +1844,7 @@ class MainWindow(object):
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftinstalled_listbox.unselect_all()
         print("in updates")
-        self.ui_right_stack.set_visible_child_name("updates")
+        self.ui_right_stack.set_visible_child_name("installed")
 
     def on_ui_leftinstalled_listbox_row_activated(self, listbox, row):
         self.ui_leftcats_listbox.unselect_all()
