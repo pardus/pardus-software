@@ -2242,10 +2242,20 @@ class MainWindow(object):
             action_button.add(action_button_label)
 
             is_installed = self.Package.isinstalled(editor_app_name)
+            is_upgradable = self.Package.is_upgradable(editor_app_name)
+            is_openable = self.get_desktop_filename_from_app_name(editor_app_name) != ""
             if is_installed is not None:
                 if is_installed:
-                    self.set_button_class(action_button, 1)
-                    action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                    if is_upgradable:
+                        self.set_button_class(action_button, 3)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                    else:
+                        if is_openable:
+                            self.set_button_class(action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                        else:
+                            self.set_button_class(action_button, 1)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
                 else:
                     self.set_button_class(action_button, 0)
                     action_button_label.set_markup("<small>{}</small>".format(_("Install")))
