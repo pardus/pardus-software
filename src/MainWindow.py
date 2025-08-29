@@ -2110,8 +2110,12 @@ class MainWindow(object):
                     self.set_button_class(action_button, 3)
                     action_button_label.set_markup("<small>{}</small>".format(_("Update")))
                 else:
-                    self.set_button_class(action_button, 1)
-                    action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                    if is_openable:
+                        self.set_button_class(action_button, 4)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                    else:
+                        self.set_button_class(action_button, 1)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
             else:
                 self.set_button_class(action_button, 0)
                 action_button_label.set_markup("<small>{}</small>".format(_("Install")))
@@ -3125,6 +3129,7 @@ class MainWindow(object):
         state 1 = app is installed
         state 2 = app is not found
         state 3 = app is upgradable
+        state 4 = app is openable
         '''
         if state == 1:
             if button.get_style_context().has_class("suggested-action"):
@@ -3148,6 +3153,13 @@ class MainWindow(object):
             if button.get_style_context().has_class("destructive-action"):
                 button.get_style_context().remove_class("destructive-action")
             button.get_style_context().add_class("upgradable-action")
+            button.set_sensitive(True)
+        elif state == 4:
+            if button.get_style_context().has_class("suggested-action"):
+                button.get_style_context().remove_class("suggested-action")
+            if button.get_style_context().has_class("destructive-action"):
+                button.get_style_context().remove_class("destructive-action")
+            button.get_style_context().add_class("openable-action")
             button.set_sensitive(True)
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
