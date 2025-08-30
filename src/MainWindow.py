@@ -2070,6 +2070,26 @@ class MainWindow(object):
 
         return listbox
 
+    def app_widget_action_clicked(self, button):
+
+        app = button.get_parent().get_parent().get_parent().name
+
+        if isinstance(app, dict):
+            app_name, details = next(iter(app.items()))
+        elif isinstance(app, str):
+            app_name = app
+            details = self.fullapplist.get(app_name, {})
+        else:
+            self.Logger.warning("{} {}".format("set_app_details_page func ERROR for: ", app))
+            return
+
+        if not details:
+            self.Logger.warning("{} details not found.".format(app_name))
+            return
+
+        print("app_name: {}".format(app_name))
+        print("details: {}".format(details))
+
     def create_app_widget(self, app, details=None, number=0):
 
         app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
@@ -2089,6 +2109,7 @@ class MainWindow(object):
         app_name.props.halign = Gtk.Align.START
 
         action_button = Gtk.Button.new()
+        action_button.connect("clicked", self.app_widget_action_clicked)
         action_button.props.halign = Gtk.Align.END
         action_button.props.valign = Gtk.Align.CENTER
         action_button.set_hexpand(True)
