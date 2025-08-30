@@ -2080,11 +2080,11 @@ class MainWindow(object):
             app_name = app
             details = self.fullapplist.get(app_name, {})
         else:
-            self.Logger.warning("{} {}".format("set_app_details_page func ERROR for: ", app))
+            self.Logger.warning("{} {}".format("app_widget_action_clicked func ERROR for: ", app))
             return
 
         if not details:
-            self.Logger.warning("{} details not found.".format(app_name))
+            self.Logger.warning("{} details not found on app_widget_action_clicked.".format(app_name))
             return
 
         print("app_name: {}".format(app_name))
