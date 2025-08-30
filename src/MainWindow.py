@@ -2087,8 +2087,26 @@ class MainWindow(object):
             self.Logger.warning("{} details not found on app_widget_action_clicked.".format(app_name))
             return
 
+        if button.name == 2:
+            print("{} opening".format(app_name))
+            if not self.launch_desktop_file(details["desktop"]):
+                if details["desktopextras"] != "":
+                    extras = details["desktopextras"].split(",")
+                    for extra in extras:
+                        if self.launch_desktop_file(extra):
+                            break
+
         print("app_name: {}".format(app_name))
         print("details: {}".format(details))
+
+    def launch_desktop_file(self, desktop):
+        try:
+            subprocess.check_call(["gtk-launch", desktop])
+            return True
+        except subprocess.CalledProcessError as e:
+            self.Logger.warning("error opening {}".format(desktop))
+            self.Logger.exception("{}".format(e))
+            return False
 
     def create_app_widget(self, app, details=None, number=0):
 
@@ -2130,16 +2148,20 @@ class MainWindow(object):
                 if is_upgradable:
                     self.set_button_class(action_button, 3)
                     action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                    action_button.name = 1
                 else:
                     if is_openable:
                         self.set_button_class(action_button, 4)
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                        action_button.name = 2
                     else:
                         self.set_button_class(action_button, 1)
                         action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                        action_button.name = 0
             else:
                 self.set_button_class(action_button, 0)
                 action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                action_button.name = 1
         else:
             self.set_button_class(action_button, 2)
             action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
