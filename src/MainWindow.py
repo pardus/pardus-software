@@ -654,6 +654,10 @@ class MainWindow(object):
 
         self.dpkgconfiguring = False
 
+        self.inprogress_app_name = ""
+        self.inprogress_command = ""
+        self.inprogress_desktop = ""
+
         self.actionedappname = ""
         self.actionedenablingappname = ""
         self.actionedappdesktop = ""
@@ -2095,9 +2099,28 @@ class MainWindow(object):
                     for extra in extras:
                         if self.launch_desktop_file(extra):
                             break
+            return
 
         print("app_name: {}".format(app_name))
         print("details: {}".format(details))
+
+        self.update_app_widget_label(app_name)
+
+        command = app_name
+        cmd = details.get("command", [])
+        if isinstance(cmd, dict):
+            command = cmd.get(self.locale, "").strip()
+            packages = [p for p in command.split() if self.Package.controlPackageCache(p)]
+            command = " ".join(packages) if packages else app_name
+
+        self.bottomstack.set_visible_child_name("queue")
+        self.bottomrevealer.set_reveal_child(True)
+        self.queuestack.set_visible_child_name("inprogress")
+        self.queue.append({"name": app_name, "command": command})
+        self.add_to_queue_ui(app_name)
+        if not self.inprogress:
+            self.action_package(app_name, command)
+            self.Logger.info("action {}".format(app_name))
 
     def launch_desktop_file(self, desktop):
         try:
@@ -2107,6 +2130,124 @@ class MainWindow(object):
             self.Logger.warning("error opening {}".format(desktop))
             self.Logger.exception("{}".format(e))
             return False
+
+    def add_to_queue_ui(self, app_name):
+
+        appicon = Gtk.Image.new_from_icon_name(app_name, Gtk.IconSize.DND)
+        appicon.set_pixel_size(32)
+        label = Gtk.Label.new()
+        label.set_text(self.getPrettyName(app_name, split=False))
+        actlabel = Gtk.Label.new()
+
+        isinstalled = self.Package.isinstalled(app_name)
+        if isinstalled:
+            actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Will be removed")))
+        else:
+            actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Will be installed")))
+
+        button = Gtk.Button.new()
+        button.name = app_name
+        button.connect("clicked", self.remove_from_queue_clicked)
+        button.props.valign = Gtk.Align.CENTER
+        button.props.halign = Gtk.Align.CENTER
+        button.props.always_show_image = True
+        button.set_image(Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON))
+        if len(self.queue) == 1:
+            button.set_sensitive(False)
+            button.set_tooltip_text(_("You cannot cancel because the application is in progress."))
+            if isinstalled:
+                actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
+            else:
+                actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
+        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+        box.set_margin_top(5)
+        box.set_margin_bottom(5)
+        box.set_margin_start(5)
+        box.set_margin_end(5)
+        box.pack_start(appicon, False, True, 0)
+        box.pack_start(label, False, True, 0)
+        box.pack_end(button, False, True, 13)
+        box.pack_end(actlabel, False, True, 13)
+        box.name = app_name
+        self.QueueListBox.add(box)
+        self.QueueListBox.show_all()
+
+    def action_package(self, app_name, command):
+        self.inprogress = True
+        self.topspinner.start()
+
+        self.inprogress_app_name = app_name
+        self.inprogress_command = command
+        self.inprogress_desktop = self.desktop_file
+
+        isinstalled = self.Package.isinstalled(app_name)
+
+        if isinstalled is True:
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
+                       self.inprogress_command]
+        elif isinstalled is False:
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
+                       self.inprogress_command]
+            packagelist = self.inprogress_command.split(" ")
+            if [i for i in self.i386_packages if i in packagelist]:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                           "enablei386andinstall", self.inprogress_command]
+        else:
+            self.Logger.info("actionPackage func error")
+
+        self.pid = self.action_process(command)
+        self.Logger.info("started pid : {}".format(self.pid))
+
+    def update_app_widget_label(self, app_name):
+
+        for fbc in self.ui_pardusapps_flowbox:
+            if next(iter(fbc.get_children()[0].get_children()[0].name)) == app_name:
+                if self.inprogress_app_name != app_name:
+                    action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
+                    action_button.remove(action_button.get_children()[0])
+                    action_button.set_sensitive(False)
+                    spinner = Gtk.Spinner()
+                    action_button.add(spinner)
+                    spinner.start()
+                    spinner.show_all()
+                else:
+                    action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
+                    action_button.remove(action_button.get_children()[0])
+
+                    action_button_label = Gtk.Label.new()
+                    action_button_label.set_line_wrap(False)
+                    action_button_label.set_justify(Gtk.Justification.LEFT)
+                    action_button_label.set_max_width_chars(6)
+                    action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+                    action_button.add(action_button_label)
+
+                    is_installed = self.Package.isinstalled(app_name)
+                    is_upgradable = self.Package.is_upgradable(app_name)
+                    is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
+                    if is_installed is not None:
+                        if is_installed:
+                            if is_upgradable:
+                                self.set_button_class(action_button, 3)
+                                action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                                action_button.name = 1
+                            else:
+                                if is_openable:
+                                    self.set_button_class(action_button, 4)
+                                    action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                                    action_button.name = 2
+                                else:
+                                    self.set_button_class(action_button, 1)
+                                    action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                                    action_button.name = 0
+                        else:
+                            self.set_button_class(action_button, 0)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                            action_button.name = 1
+                    else:
+                        self.set_button_class(action_button, 2)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+
+                    action_button_label.show_all()
 
     def create_app_widget(self, app, details=None, number=0):
 
@@ -6887,16 +7028,16 @@ class MainWindow(object):
     def on_start_kill_process_exit(self, pid, status):
         self.Logger.info("on_start_kill_process_exit: {}".format(pid))
 
-    def startProcess(self, params):
+    def action_process(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onProcessStderr)
-        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onProcessExit)
+        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.on_action_process_stdout)
+        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.on_action_process_stderr)
+        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.on_action_process_exit)
 
         return pid
 
-    def onProcessStdout(self, source, condition):
+    def on_action_process_stdout(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
 
@@ -6905,7 +7046,7 @@ class MainWindow(object):
 
         return True
 
-    def onProcessStderr(self, source, condition):
+    def on_action_process_stderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
 
@@ -6916,16 +7057,16 @@ class MainWindow(object):
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             self.progresstextlabel.set_text(
-                "{} | {} : {} %".format(self.actionedappname, _("Downloading"), percent))
+                "{} | {} : {} %".format(self.inprogress_app_name, _("Downloading"), percent))
             self.dActionCancelButton.set_visible(True)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             if self.isinstalled:
                 self.progresstextlabel.set_text(
-                    "{} | {} : {} %".format(self.actionedappname, _("Removing"), percent))
+                    "{} | {} : {} %".format(self.inprogress_app_name, _("Removing"), percent))
             else:
                 self.progresstextlabel.set_text(
-                    "{} | {} : {} %".format(self.actionedappname, _("Installing"), percent))
+                    "{} | {} : {} %".format(self.inprogress_app_name, _("Installing"), percent))
             self.dActionCancelButton.set_visible(False)
         elif "E:" in line and ".deb" in line:
             self.Logger.warning("connection error")
@@ -6942,21 +7083,21 @@ class MainWindow(object):
             self.dpkglockerror_message += line
         elif "pardus-software-i386-start" in line:
             self.progresstextlabel.set_text(
-                "{} | {}".format(self.actionedappname, _("i386 activating")))
+                "{} | {}".format(self.inprogress_app_name, _("i386 activating")))
         return True
 
-    def onProcessExit(self, pid, status):
-        self.dActionCancelButton.set_visible(False)
+    def on_action_process_exit(self, pid, status):
+        # self.dActionCancelButton.set_visible(False)
         self.bottomerrordetails_button.set_visible(False)
 
         if not self.error:
             if status == 0:
                 if self.isinstalled:
-                    self.progresstextlabel.set_text(self.actionedappname + _(" | Removed: 100%"))
+                    self.progresstextlabel.set_text(self.inprogress_app_name + _(" | Removed: 100%"))
                 else:
-                    self.progresstextlabel.set_text(self.actionedappname + _(" | Installed: 100%"))
+                    self.progresstextlabel.set_text(self.inprogress_app_name + _(" | Installed: 100%"))
             else:
-                self.progresstextlabel.set_text(self.actionedappname + _(" | Not Completed"))
+                self.progresstextlabel.set_text(self.inprogress_app_name + _(" | Not Completed"))
         else:
             self.errormessage = _("<b><span color='red'>Connection Error!</span></b>")
             if self.dpkglockerror:
@@ -6967,28 +7108,29 @@ class MainWindow(object):
         cachestatus = self.Package.updatecache()
 
         self.Logger.info("Cache Status: {}, Package Cache Status: {}".format(
-            cachestatus, self.Package.controlPackageCache(self.actionedappname)))
+            cachestatus, self.Package.controlPackageCache(self.inprogress_app_name)))
 
         if status == 0 and not self.error and cachestatus:
-            if self.Package.controlPackageCache(self.actionedappname):
+            if self.Package.controlPackageCache(self.inprogress_app_name):
                 self.notify()
-                self.sendDownloaded(self.actionedappname)
+                self.sendDownloaded(self.inprogress_app_name)
             else:
                 if self.isinstalled:
                     self.notify()
 
-        self.control_myapps(self.actionedappname, self.actionedappdesktop, status, self.error, cachestatus)
+        # self.control_myapps(self.actionedappname, self.actionedappdesktop, status, self.error, cachestatus)
+        # self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
 
-        self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
+        # ui_appname = self.getActiveAppOnUI()
+        # if ui_appname == self.actionedappname:
+        #     if cachestatus and self.Package.controlPackageCache(ui_appname):
+        #         self.dActionButton.set_sensitive(True)
+        #         self.dActionInfoButton.set_sensitive(True)
+        #         self.raction.set_sensitive(True)
 
-        ui_appname = self.getActiveAppOnUI()
-        if ui_appname == self.actionedappname:
-            if cachestatus and self.Package.controlPackageCache(ui_appname):
-                self.dActionButton.set_sensitive(True)
-                self.dActionInfoButton.set_sensitive(True)
-                self.raction.set_sensitive(True)
 
-        self.topspinner.stop()
+        self.update_app_widget_label(self.inprogress_app_name)
+
         self.Logger.info("Exit Code: {}".format(status))
 
         self.inprogress = False
@@ -6997,13 +7139,13 @@ class MainWindow(object):
             self.queue.pop(0)
             self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
         if len(self.queue) > 0:
-            self.actionPackage(self.queue[0]["name"], self.queue[0]["command"])
+            self.action_package(self.queue[0]["name"], self.queue[0]["command"])
             # Update QueueListBox's first element too
             queuecancelbutton = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[3]
             queuecancelbutton.set_sensitive(False)
             queuecancelbutton.set_tooltip_text(_("You cannot cancel because the application is in progress."))
             queueactlabel = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[2]
-            if self.Package.isinstalled(self.actionedappname):
+            if self.Package.isinstalled(self.inprogress_app_name):
                 queueactlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
             else:
                 queueactlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
@@ -7229,18 +7371,16 @@ class MainWindow(object):
                 Notify.uninit()
 
             if message_summary == "" and message_body == "":
-                Notify.init(self.actionedappname)
+                Notify.init(self.inprogress_app_name)
                 if self.isinstalled:
                     notification = Notify.Notification.new(
-                        self.getPrettyName(self.actionedappname, False) + _(" Removed"))
+                        self.getPrettyName(self.inprogress_app_name, False) + _(" Removed"))
                 else:
                     notification = Notify.Notification.new(
-                        self.getPrettyName(self.actionedappname, False) + _(" Installed"))
-                if self.UserSettings.config_usi:
-                    pixbuf = self.getServerAppIcon(self.actionedappname, 96, notify=True)
-                else:
-                    pixbuf = self.getSystemAppIcon(self.actionedappname, 96, notify=True)
-                notification.set_icon_from_pixbuf(pixbuf)
+                        self.getPrettyName(self.inprogress_app_name, False) + _(" Installed"))
+                # notification.set_app_icon(self.inprogress_app_name)
+                notification.set_icon_from_pixbuf(Gtk.IconTheme.get_default().load_icon(self.inprogress_app_name, 64,
+                                                                        Gtk.IconLookupFlags(16)))
             else:
                 Notify.init(message_summary)
                 notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
