@@ -5647,11 +5647,11 @@ class MainWindow(object):
         if self.homestack.get_visible_child_name() == "queue":
             self.Logger.info("already queue page")
             return
-        self.menubackbutton.set_sensitive(True)
-        self.prefback = self.homestack.get_visible_child_name()
-        self.prefback_queue = self.prefback
+        # self.menubackbutton.set_sensitive(True)
+        # self.prefback = self.homestack.get_visible_child_name()
+        # self.prefback_queue = self.prefback
         self.homestack.set_visible_child_name("queue")
-        self.set_stack_n_search(4)
+        # self.set_stack_n_search(4)
 
     def addtoQueue(self, appname, myappicon=False):
 
