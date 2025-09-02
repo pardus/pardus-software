@@ -66,10 +66,10 @@ list row {
 }
 
 .pardus-software-left-updates-count-box {
-    background-color: alpha(@accent_bg_color, 0.2);
+    background-color: alpha(@theme_selected_bg_color, 0.2);
     border-radius: 8px;
-    border: 1px solid @accent_bg_color;
-    color: @accent_bg_color;
+    border: 1px solid @theme_selected_bg_color;
+    color: @theme_selected_bg_color;
 }
 
 .pardus-software-mostapp-empty-label{
