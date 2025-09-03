@@ -1599,7 +1599,6 @@ class MainWindow(object):
         # Slider back button
         btn_prev = Gtk.Button()
         btn_prev.set_image(Gtk.Image.new_from_icon_name("go-previous-symbolic", Gtk.IconSize.BUTTON))
-        btn_prev.set_relief(Gtk.ReliefStyle.NONE)
         btn_prev.set_valign(Gtk.Align.END)
         btn_prev.set_halign(Gtk.Align.END)
         btn_prev.set_margin_end(50)
@@ -1610,7 +1609,6 @@ class MainWindow(object):
         # Slider next button
         btn_next = Gtk.Button()
         btn_next.set_image(Gtk.Image.new_from_icon_name("go-next-symbolic", Gtk.IconSize.BUTTON))
-        btn_next.set_relief(Gtk.ReliefStyle.NONE)
         btn_next.set_valign(Gtk.Align.END)
         btn_next.set_halign(Gtk.Align.END)
         btn_next.set_margin_end(10)
