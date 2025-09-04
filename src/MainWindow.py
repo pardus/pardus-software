@@ -2348,6 +2348,106 @@ class MainWindow(object):
         GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
         return listbox
 
+    def create_myapp_widget(self, app):
+
+        app_name = Gtk.Label.new()
+        app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(app["name"], -1)))
+        app_name.props.halign = Gtk.Align.START
+        app_name.set_line_wrap(False)
+        app_name.set_justify(Gtk.Justification.LEFT)
+        app_name.set_max_width_chars(33)
+        app_name.set_ellipsize(Pango.EllipsizeMode.END)
+        app_name.props.halign = Gtk.Align.START
+
+        try:
+            if os.path.isfile(app["icon_name"]):
+                px = GdkPixbuf.Pixbuf.new_from_file_at_size(app["icon_name"], 32, 32)
+                app_icon = Gtk.Image.new()
+                app_icon.set_from_pixbuf(px)
+            else:
+                app_icon = Gtk.Image.new_from_icon_name(app["icon_name"], Gtk.IconSize.DND)
+        except Exception as e:
+            app_icon = Gtk.Image.new_from_icon_name("image-missing-symbolic", Gtk.IconSize.DND)
+            print("Exception on create_myapp_widget: {}, app: {}".format(e, app))
+        app_icon.set_pixel_size(32)
+        app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
+        app_icon.props.halign = Gtk.Align.CENTER
+        app_icon.props.valign = Gtk.Align.CENTER
+
+        action_button = Gtk.Button.new()
+        action_button.connect("clicked", self.open_from_myapps)
+        action_button.props.halign = Gtk.Align.END
+        action_button.props.valign = Gtk.Align.CENTER
+        action_button.set_hexpand(True)
+        action_button.set_size_request(77, -1)
+        action_button_label = Gtk.Label.new()
+        action_button_label.set_line_wrap(False)
+        action_button_label.set_justify(Gtk.Justification.LEFT)
+        action_button_label.set_max_width_chars(6)
+        action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+        action_button.add(action_button_label)
+        self.set_button_class(action_button, 4)
+        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+        action_button.name = app["id"]
+
+        uninstallbutton = Gtk.Button.new()
+        uninstallbutton.name = {"name": app["name"], "filename": app["filename"], "icon_name": app["icon_name"],
+                                "description": app["description"], "keywords": app["keywords"],
+                                "executable": app["executable"]}
+        uninstallbutton.props.valign = Gtk.Align.CENTER
+        uninstallbutton.props.halign = Gtk.Align.CENTER
+        uninstallbutton.props.always_show_image = True
+        uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+        uninstallbutton.set_label("")
+        uninstallbutton.set_tooltip_text(_("Uninstall"))
+        uninstallbutton.set_relief(Gtk.ReliefStyle.NONE)
+        uninstallbutton.connect("clicked", self.remove_from_myapps)
+
+        summary_label = Gtk.Label.new()
+        summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(
+            GLib.markup_escape_text(app["description"], -1)))
+        summary_label.props.valign = Gtk.Align.START
+        summary_label.props.halign = Gtk.Align.START
+        summary_label.set_line_wrap(False)
+        summary_label.set_max_width_chars(33)
+        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+
+        box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        box_app.props.valign = Gtk.Align.CENTER
+        box_app.pack_start(app_name, False, True, 0)
+        box_app.pack_start(summary_label, False, True, 0)
+
+        box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+        box_h.pack_start(app_icon, False, True, 0)
+        box_h.pack_start(box_app, False, True, 0)
+        box_h.pack_start(action_button, False, True, 0)
+        box_h.pack_start(uninstallbutton, False, True, 0)
+        box_h.set_margin_start(5)
+        box_h.set_margin_end(5)
+        box_h.set_margin_top(5)
+        box_h.set_margin_bottom(5)
+
+        bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+        bottom_separator.props.valign = Gtk.Align.END
+        bottom_separator.set_vexpand(True)
+        GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
+
+        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
+        box.pack_start(box_h, False, True, 0)
+        box.pack_end(bottom_separator, True, True, 0)
+
+        listbox = Gtk.ListBox.new()
+        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        # listbox.connect("row-activated", self.on_app_listbox_row_activated)
+        listbox_row = Gtk.ListBoxRow()
+        GLib.idle_add(listbox_row.add, box)
+        listbox_row.name = app
+        GLib.idle_add(listbox.add, listbox_row)
+
+        GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
+
+        return listbox
+
     def set_most_apps(self):
         # GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
         # GLib.idle_add(lambda: self.ui_recent_flowbox.foreach(lambda child: self.ui_recent_flowbox.remove(child)))
@@ -3877,7 +3977,7 @@ class MainWindow(object):
 
         valid, myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
         self.Logger.info("{}".format(myapp_details))
-        return valid, myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
+        return valid, myapp_details, myapp_package, app["name"], app["icon_name"], app["filename"], app["description"]
 
     def myapp_popup_details(self, myapp):
 
@@ -3965,22 +4065,24 @@ class MainWindow(object):
             self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=128))
             self.ui_myapps_description.set_markup("{}".format(description))
 
-            name = any(package == e["name"] for e in self.fullapplist)
+            name = self.fullapplist.get(package)
             if name:
                 self.ui_myapp_to_store_button.set_visible(True)
                 self.ui_myapp_to_store_button.name = package
             else:
-                command = any(package in e["command"][self.locale] for e in self.fullapplist if e["command"])
-                if command:
-                    appname = None
-                    for app in self.fullapplist:
-                        if app["command"]:
-                            if package in app["command"][self.locale]:
-                                appname = app["name"]
-                                break
-                    if appname:
-                        self.ui_myapp_to_store_button.set_visible(True)
-                        self.ui_myapp_to_store_button.name = appname
+                # command = any(package in e["command"][self.locale] for e in self.fullapplist if e["command"])
+                # if command:
+                #     appname = None
+                #     for app in self.fullapplist:
+                #         if app["command"]:
+                #             if package in app["command"][self.locale]:
+                #                 appname = app["name"]
+                #                 break
+                #     if appname:
+                #         self.ui_myapp_to_store_button.set_visible(True)
+                #         self.ui_myapp_to_store_button.name = appname
+                # TODO FIXME
+                pass
 
             if details["to_delete"] and details["to_delete"] is not None:
                 self.ui_myapp_pop_toremove_label.set_markup(
@@ -5709,59 +5811,8 @@ class MainWindow(object):
 
     def add_to_myapps_ui(self, app):
 
-        appicon = Gtk.Image.new()
-        appicon.set_from_pixbuf(self.getMyAppIcon(app["icon"]))
-
-        name = Gtk.Label.new()
-        name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(app["name"], -1)))
-        name.props.halign = Gtk.Align.START
-
-        summarylabel = Gtk.Label.new()
-        summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(app["description"], -1)))
-        summarylabel.set_line_wrap(True)
-        summarylabel.set_line_wrap_mode(2)  # WORD_CHAR
-        summarylabel.props.halign = Gtk.Align.START
-
-        uninstallbutton = Gtk.Button.new()
-        uninstallbutton.name = {"name": app["name"], "filename": app["filename"], "icon": app["icon"],
-                                "description": app["description"], "keywords": app["keywords"],
-                                "executable": app["executable"]}
-        uninstallbutton.props.valign = Gtk.Align.CENTER
-        uninstallbutton.props.halign = Gtk.Align.CENTER
-        uninstallbutton.props.always_show_image = True
-        uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
-        uninstallbutton.set_label("")
-        uninstallbutton.set_tooltip_text(_("Uninstall"))
-        uninstallbutton.get_style_context().add_class("destructive-action")
-        uninstallbutton.connect("clicked", self.remove_from_myapps)
-
-        openbutton = Gtk.Button.new()
-        openbutton.name = app["id"]
-        openbutton.props.valign = Gtk.Align.CENTER
-        openbutton.props.halign = Gtk.Align.CENTER
-        openbutton.props.always_show_image = True
-        openbutton.set_image(Gtk.Image.new_from_icon_name("media-playback-start-symbolic", Gtk.IconSize.BUTTON))
-        openbutton.set_label("")
-        openbutton.set_tooltip_text(_("Open"))
-        openbutton.connect("clicked", self.open_from_myapps)
-
-        box1 = Gtk.Box.new(Gtk.Orientation.VERTICAL, 3)
-        box1.pack_start(name, False, True, 0)
-        box1.pack_start(summarylabel, False, True, 0)
-        box1.props.valign = Gtk.Align.CENTER
-
-        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-        box.set_margin_top(5)
-        box.set_margin_bottom(5)
-        box.set_margin_start(5)
-        box.set_margin_end(5)
-        box.pack_start(appicon, False, True, 5)
-        box.pack_start(box1, False, True, 5)
-        box.pack_end(uninstallbutton, False, True, 13)
-        box.pack_end(openbutton, False, True, 5)
-        box.name = app["filename"]
-
-        GLib.idle_add(self.ui_installedapps_flowbox.insert, box, -1)
+        listbox = self.create_myapp_widget(app)
+        GLib.idle_add(self.ui_installedapps_flowbox.insert, listbox, -1)
 
     def remove_from_myapps(self, button):
         self.Logger.info("remove_from_myapps {}".format(button.name))
@@ -5784,8 +5835,8 @@ class MainWindow(object):
         myappsdetailsthread.start()
 
     def open_from_myapps(self, button):
-        self.Logger.info("{}".format(button.name))
-        self.openDesktop(os.path.basename(button.name))
+        self.Logger.info("Opening {}".format(button.name))
+        self.launch_desktop_file(button.name)
 
     def on_ui_myapps_cancel_clicked(self, button):
         self.menubackbutton.set_sensitive(False)

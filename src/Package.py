@@ -440,8 +440,8 @@ class Package(object):
             keywords = " ".join(app.get_keywords())
 
             if executable and not nodisplay:
-                apps.append({"id": id, "name": name, "icon": icon, "description": description, "filename": filename,
-                             "keywords": keywords, "executable": executable})
+                apps.append({"id": id, "name": name, "icon_name": icon, "description": description,
+                             "filename": filename, "keywords": keywords, "executable": executable})
 
         apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: locale.strxfrm(x["name"]))
 
@@ -459,7 +459,7 @@ class Package(object):
                 description = app.get_description() or app.get_generic_name() or app.get_name()
                 filename = app.get_filename()
                 keywords = " ".join(app.get_keywords())
-                return True, {"id": id, "name": name, "icon": icon, "description": description,
+                return True, {"id": id, "name": name, "icon_name": icon, "description": description,
                               "filename": filename, "keywords": keywords, "executable": executable}
             else:
                 self.Logger.warning("parse_desktopfile: {} app not exists".format(desktopfilename))
