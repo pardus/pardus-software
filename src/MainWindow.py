@@ -1675,7 +1675,7 @@ class MainWindow(object):
                 if is_installed is not None:
                     if is_installed:
                         if is_upgradable:
-                            listbox = self.create_app_widget(app, details)
+                            listbox = self.create_upgradable_myapp_widget(app, details)
                             GLib.idle_add(self.ui_upgradableapps_flowbox.insert, listbox, -1)
 
             GLib.idle_add(self.ui_pardusapps_flowbox.show_all)
@@ -2442,6 +2442,119 @@ class MainWindow(object):
         listbox_row = Gtk.ListBoxRow()
         GLib.idle_add(listbox_row.add, box)
         listbox_row.name = app
+        GLib.idle_add(listbox.add, listbox_row)
+
+        GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
+
+        return listbox
+
+    def create_upgradable_myapp_widget(self, app, details=None):
+
+        app_name = Gtk.Label.new()
+        app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text("{}".format(self.getPrettyName(app)), -1)))
+        app_name.props.halign = Gtk.Align.START
+        app_name.set_line_wrap(False)
+        app_name.set_justify(Gtk.Justification.LEFT)
+        app_name.set_max_width_chars(33)
+        app_name.set_ellipsize(Pango.EllipsizeMode.END)
+        app_name.props.halign = Gtk.Align.START
+
+        app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
+        app_icon.set_pixel_size(32)
+        app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
+        app_icon.props.halign = Gtk.Align.CENTER
+        app_icon.props.valign = Gtk.Align.CENTER
+
+        action_button = Gtk.Button.new()
+        action_button.connect("clicked", self.app_widget_action_clicked)
+        action_button.props.halign = Gtk.Align.END
+        action_button.props.valign = Gtk.Align.CENTER
+        action_button.set_hexpand(True)
+        action_button.set_size_request(77, -1)
+
+        action_button_label = Gtk.Label.new()
+        action_button_label.set_line_wrap(False)
+        action_button_label.set_justify(Gtk.Justification.LEFT)
+        action_button_label.set_max_width_chars(6)
+        action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+        action_button.add(action_button_label)
+
+        is_installed = self.Package.isinstalled(app)
+        is_upgradable = self.Package.is_upgradable(app)
+        is_openable = self.get_desktop_filename_from_app_name(app) != ""
+        if is_installed is not None:
+            if is_installed:
+                if is_upgradable:
+                    self.set_button_class(action_button, 3)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                    action_button.name = 1
+                else:
+                    if is_openable:
+                        self.set_button_class(action_button, 4)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                        action_button.name = 2
+                    else:
+                        self.set_button_class(action_button, 1)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                        action_button.name = 0
+            else:
+                self.set_button_class(action_button, 0)
+                action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                action_button.name = 1
+        else:
+            self.set_button_class(action_button, 2)
+            action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+
+        uninstallbutton = Gtk.Button.new()
+        uninstallbutton.name = 0
+        uninstallbutton.props.valign = Gtk.Align.CENTER
+        uninstallbutton.props.halign = Gtk.Align.CENTER
+        uninstallbutton.props.always_show_image = True
+        uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
+        uninstallbutton.set_label("")
+        uninstallbutton.set_tooltip_text(_("Uninstall"))
+        uninstallbutton.set_relief(Gtk.ReliefStyle.NONE)
+        uninstallbutton.connect("clicked", self.app_widget_action_clicked)
+
+        summary_label = Gtk.Label.new()
+        summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
+            self.get_description_from_app_name(app), -1)[:50].replace("\n", "").replace("\r", "")))
+        summary_label.props.valign = Gtk.Align.START
+        summary_label.props.halign = Gtk.Align.START
+        summary_label.set_line_wrap(False)
+        summary_label.set_max_width_chars(33)
+        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+
+        box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        box_app.props.valign = Gtk.Align.CENTER
+        box_app.pack_start(app_name, False, True, 0)
+        box_app.pack_start(summary_label, False, True, 0)
+
+        box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+        box_h.pack_start(app_icon, False, True, 0)
+        box_h.pack_start(box_app, False, True, 0)
+        box_h.pack_start(action_button, False, True, 0)
+        box_h.pack_start(uninstallbutton, False, True, 0)
+        box_h.set_margin_start(5)
+        box_h.set_margin_end(5)
+        box_h.set_margin_top(5)
+        box_h.set_margin_bottom(5)
+
+        bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+        bottom_separator.props.valign = Gtk.Align.END
+        bottom_separator.set_vexpand(True)
+        GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
+
+        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
+        box.pack_start(box_h, False, True, 0)
+        box.pack_end(bottom_separator, True, True, 0)
+
+        listbox = Gtk.ListBox.new()
+        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        # listbox.connect("row-activated", self.on_app_listbox_row_activated)
+        listbox_row = Gtk.ListBoxRow()
+        GLib.idle_add(listbox_row.add, box)
+        listbox_row.name = {app: details} if details else app
         GLib.idle_add(listbox.add, listbox_row)
 
         GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
