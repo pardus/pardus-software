@@ -2578,13 +2578,58 @@
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
+                                                <property name="margin-start">16</property>
+                                                <property name="margin-top">16</property>
                                                 <property name="orientation">vertical</property>
+                                                <property name="spacing">16</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="valign">center</property>
+                                                    <property name="margin-start">8</property>
+                                                    <property name="spacing">16</property>
+                                                    <child>
+                                                      <object class="GtkImage">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="pixel-size">55</property>
+                                                        <property name="icon-name">ps-installed-symbolic</property>
+                                                        <property name="icon_size">6</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="label" translatable="yes">&lt;span size='x-large'&gt;&lt;b&gt;Installed Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="use-markup">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
                                                 <child>
                                                   <object class="GtkBox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="orientation">vertical</property>
-                                                    <property name="spacing">13</property>
                                                     <child>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
@@ -2596,10 +2641,8 @@
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">Updates</property>
-                                                            <attributes>
-                                                            <attribute name="weight" value="bold"/>
-                                                            </attributes>
+                                                            <property name="label">&lt;span size='large'&gt;&lt;b&gt;Updates (3)&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -2642,7 +2685,7 @@
                                                   <packing>
                                                     <property name="expand">False</property>
                                                     <property name="fill">True</property>
-                                                    <property name="position">0</property>
+                                                    <property name="position">1</property>
                                                   </packing>
                                                 </child>
                                                 <child>
@@ -2650,7 +2693,6 @@
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="orientation">vertical</property>
-                                                    <property name="spacing">13</property>
                                                     <child>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
@@ -2662,10 +2704,8 @@
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">Installed</property>
-                                                            <attributes>
-                                                            <attribute name="weight" value="bold"/>
-                                                            </attributes>
+                                                            <property name="label">&lt;span size='large'&gt;&lt;b&gt;All Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -2708,7 +2748,7 @@
                                                   <packing>
                                                     <property name="expand">False</property>
                                                     <property name="fill">True</property>
-                                                    <property name="position">1</property>
+                                                    <property name="position">2</property>
                                                   </packing>
                                                 </child>
                                               </object>
