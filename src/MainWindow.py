@@ -1331,7 +1331,6 @@ class MainWindow(object):
 
     def afterServers(self):
         GLib.idle_add(self.set_initial_home)
-        self.prepend_server_icons()
         # GLib.idle_add(self.controlServer)
         GLib.idle_add(self.controlAvailableApps)
         # GLib.idle_add(self.clearBoxes)
@@ -1345,7 +1344,7 @@ class MainWindow(object):
         GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlPSUpdate)
         GLib.idle_add(self.aptUpdate)
-        GLib.idle_add(self.myapps_worker_thread)
+        GLib.idle_add(self.set_myapps)
 
     # def ServerAppsURLControlCB(self, status):
     #     self.Logger.info("ServerAppsURLControlCB : {}".format(status))
@@ -1439,7 +1438,7 @@ class MainWindow(object):
         else:
             if not self.connection_error_after:
                 self.Server.connection = False
-                self.afterServers()
+                GLib.idle_add(self.afterServers)
                 self.connection_error_after = True
 
     def ServerFilesCB(self, status, type=""):
@@ -1495,16 +1494,18 @@ class MainWindow(object):
                         self.i386_packages = response["i386-packages"]
                     self.Server.aptuptime = response["aptuptime"]
 
+                self.prepend_server_icons()
+
                 self.Logger.info("Preparing the application interface")
                 GLib.idle_add(self.splashlabel.set_markup,
                               "<b>{}</b>".format(_("Preparing the application interface")))
 
                 self.Server.connection = True
-                self.afterServers()
+                GLib.idle_add(self.afterServers)
         else:
             if not self.connection_error_after:
                 self.Server.connection = False
-                self.afterServers()
+                GLib.idle_add(self.afterServers)
                 self.connection_error_after = True
 
     # def controlServer(self):
@@ -1660,8 +1661,8 @@ class MainWindow(object):
             lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
         GLib.idle_add(lambda: (self.ui_upgradableapps_flowbox and self.ui_upgradableapps_flowbox.foreach(
             lambda row: self.ui_upgradableapps_flowbox.remove(row)), False))
-        GLib.idle_add(lambda: (self.ui_installedapps_flowbox and self.ui_installedapps_flowbox.foreach(
-            lambda row: self.ui_installedapps_flowbox.remove(row)), False))
+        # GLib.idle_add(lambda: (self.ui_installedapps_flowbox and self.ui_installedapps_flowbox.foreach(
+        #     lambda row: self.ui_installedapps_flowbox.remove(row)), False))
 
         if self.Server.connection:
             for app, details in self.applist.items():
@@ -1676,17 +1677,10 @@ class MainWindow(object):
                         if is_upgradable:
                             listbox = self.create_app_widget(app, details)
                             GLib.idle_add(self.ui_upgradableapps_flowbox.insert, listbox, -1)
-                        else:
-                            listbox = self.create_app_widget(app, details)
-                            GLib.idle_add(self.ui_installedapps_flowbox.insert, listbox, -1)
-
-
-
-
 
             GLib.idle_add(self.ui_pardusapps_flowbox.show_all)
             GLib.idle_add(self.ui_upgradableapps_flowbox.show_all)
-            GLib.idle_add(self.ui_installedapps_flowbox.show_all)
+            # GLib.idle_add(self.ui_installedapps_flowbox.show_all)
 
     # def on_pardus_apps_listbox_released(self, widget, event, listbox):
     #     print("on_pardus_apps_listbox_released")
@@ -3850,19 +3844,28 @@ class MainWindow(object):
             self.dSizeTitle.set_text(_("Download Size"))
             self.dSizeGrid.set_tooltip_text(None)
 
-    def myapps_worker_thread(self):
-        for row in self.MyAppsListBox:
-            self.MyAppsListBox.remove(row)
-        myapps = self.myapps_worker()
-        GLib.idle_add(self.on_myapps_worker_done, myapps)
+    def set_myapps(self):
+
+        def clear_flowbox():
+            if self.ui_installedapps_flowbox:
+                self.ui_installedapps_flowbox.foreach(lambda row: self.ui_installedapps_flowbox.remove(row))
+            return False
+
+        GLib.idle_add(clear_flowbox)
+
+        def run_worker():
+            myapps = self.myapps_worker()
+            GLib.idle_add(self.on_myapps_worker_done, myapps)
+
+        threading.Thread(target=run_worker, daemon=True).start()
 
     def myapps_worker(self):
         return self.Package.get_installed_apps()
 
     def on_myapps_worker_done(self, myapps):
         for pkg in myapps:
-            self.addtoMyApps(pkg)
-        GLib.idle_add(self.MyAppsListBox.show_all)
+            self.add_to_myapps_ui(pkg)
+        GLib.idle_add(self.ui_installedapps_flowbox.show_all)
         GLib.idle_add(self.controlArgs)
         self.Logger.info("on_myapps_worker_done")
 
@@ -3876,7 +3879,7 @@ class MainWindow(object):
         self.Logger.info("{}".format(myapp_details))
         return valid, myapp_details, myapp_package, app["name"], app["icon"], app["filename"], app["description"]
 
-    def set_myapp_popup_details(self, myapp):
+    def myapp_popup_details(self, myapp):
 
         self.ui_myapp_pop_toremove_box.set_visible(False)
         self.ui_myapp_pop_toinstall_box.set_visible(False)
@@ -5704,7 +5707,7 @@ class MainWindow(object):
                     index = next((index for (index, app) in enumerate(self.queue) if app["name"] == button.name), None)
                     self.queue.pop(index)
 
-    def addtoMyApps(self, app):
+    def add_to_myapps_ui(self, app):
 
         appicon = Gtk.Image.new()
         appicon.set_from_pixbuf(self.getMyAppIcon(app["icon"]))
@@ -5712,10 +5715,6 @@ class MainWindow(object):
         name = Gtk.Label.new()
         name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(app["name"], -1)))
         name.props.halign = Gtk.Align.START
-
-        # sizelabel = Gtk.Label.new()
-        # sizelabel.set_markup("{}".format(self.Package.beauty_size(app["size"])))
-        # sizelabel.props.valign = Gtk.Align.CENTER
 
         summarylabel = Gtk.Label.new()
         summarylabel.set_markup("<small>{}</small>".format(GLib.markup_escape_text(app["description"], -1)))
@@ -5760,10 +5759,9 @@ class MainWindow(object):
         box.pack_start(box1, False, True, 5)
         box.pack_end(uninstallbutton, False, True, 13)
         box.pack_end(openbutton, False, True, 5)
-        # box.pack_end(sizelabel, False, True, 13)
         box.name = app["filename"]
 
-        GLib.idle_add(self.MyAppsListBox.add, box)
+        GLib.idle_add(self.ui_installedapps_flowbox.insert, box, -1)
 
     def remove_from_myapps(self, button):
         self.Logger.info("remove_from_myapps {}".format(button.name))
