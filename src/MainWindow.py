@@ -1336,6 +1336,8 @@ class MainWindow(object):
         # GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.set_categories)
         GLib.idle_add(self.set_applications)
+        GLib.idle_add(self.get_upgradables)
+        GLib.idle_add(self.set_upgradables)
         GLib.idle_add(self.set_slider)
         GLib.idle_add(self.set_most_apps)
         # GLib.idle_add(self.setEditorApps)
@@ -1655,14 +1657,35 @@ class MainWindow(object):
         self.ui_slider_stack.set_visible_child_name("{}".format(get_next_page(self.slider_current_page)))
         self.slider_current_page = int(self.ui_slider_stack.get_visible_child_name())
 
+    def get_upgradables(self):
+        if self.Server.connection:
+            self.upgradables = {}
+            for app, details in self.applist.items():
+                is_installed = self.Package.isinstalled(app)
+                is_upgradable = self.Package.is_upgradable(app)
 
-    def set_applications(self):
-        GLib.idle_add(lambda: (self.ui_pardusapps_flowbox and self.ui_pardusapps_flowbox.foreach(
-            lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
+                if is_installed and is_upgradable:
+                    self.upgradables[app] = details
+
+    def set_upgradables(self):
+        self.Logger.info("in set_upgradables")
+
         GLib.idle_add(lambda: (self.ui_upgradableapps_flowbox and self.ui_upgradableapps_flowbox.foreach(
             lambda row: self.ui_upgradableapps_flowbox.remove(row)), False))
-        # GLib.idle_add(lambda: (self.ui_installedapps_flowbox and self.ui_installedapps_flowbox.foreach(
-        #     lambda row: self.ui_installedapps_flowbox.remove(row)), False))
+
+        if self.Server.connection:
+            for app, details in self.upgradables.items():
+                listbox = self.create_upgradable_myapp_widget(app, details)
+                GLib.idle_add(self.ui_upgradableapps_flowbox.insert, listbox, -1)
+
+            GLib.idle_add(self.ui_upgradableapps_flowbox.show_all)
+
+        self.Logger.info("set_upgradables done")
+
+    def set_applications(self):
+        self.Logger.info("in set_applications")
+        GLib.idle_add(lambda: (self.ui_pardusapps_flowbox and self.ui_pardusapps_flowbox.foreach(
+            lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
 
         if self.Server.connection:
             for app, details in self.applist.items():
@@ -1670,17 +1693,9 @@ class MainWindow(object):
                 listbox = self.create_app_widget(app, details)
                 GLib.idle_add(self.ui_pardusapps_flowbox.insert, listbox, -1)
 
-                is_installed = self.Package.isinstalled(app)
-                is_upgradable = self.Package.is_upgradable(app)
-                if is_installed is not None:
-                    if is_installed:
-                        if is_upgradable:
-                            listbox = self.create_upgradable_myapp_widget(app, details)
-                            GLib.idle_add(self.ui_upgradableapps_flowbox.insert, listbox, -1)
-
             GLib.idle_add(self.ui_pardusapps_flowbox.show_all)
-            GLib.idle_add(self.ui_upgradableapps_flowbox.show_all)
-            # GLib.idle_add(self.ui_installedapps_flowbox.show_all)
+
+        self.Logger.info("set_applications done")
 
     # def on_pardus_apps_listbox_released(self, widget, event, listbox):
     #     print("on_pardus_apps_listbox_released")
@@ -5276,6 +5291,33 @@ class MainWindow(object):
                 reverse=True
             ))
             GLib.idle_add(self.set_applications)
+
+    def on_ui_upgradables_combobox_changed(self, combo_box):
+        if combo_box.get_active() == 0:  # sort by name
+            self.upgradables = dict(sorted(self.upgradables.items(),
+                                       key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+            GLib.idle_add(self.set_upgradables)
+        elif combo_box.get_active() == 1:  # sort by download
+            self.upgradables = dict(sorted(
+                self.upgradables.items(),
+                key=lambda item: (item[1]["download"], item[1]["rate_average"]),
+                reverse=True
+            ))
+            GLib.idle_add(self.set_upgradables)
+        elif combo_box.get_active() == 2:  # sort by popularity
+            self.upgradables = dict(sorted(
+                self.upgradables.items(),
+                key=lambda item: (item[1].get("popularity", item[1]["rate_average"]), item[1]["download"]),
+                reverse=True
+            ))
+            GLib.idle_add(self.set_upgradables)
+        elif combo_box.get_active() == 3:  # sort by last added
+            self.upgradables = dict(sorted(
+                self.upgradables.items(),
+                key=lambda item: datetime.strptime(item[1]["date"], "%d-%m-%Y %H:%M"),
+                reverse=True
+            ))
+            GLib.idle_add(self.set_upgradables)
 
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
