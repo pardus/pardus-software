@@ -140,15 +140,10 @@ headerbar {
     box-shadow: none;
 }
 */
-button.upgradable-action { color: white; outline-color: alpha(@accent_color, 0.5); background-color: mix(currentColor, @orange_3, 0.9); }
-button.upgradable-action:hover { color: white; background-color: mix(currentColor, @orange_3, 0.853); box-shadow: none; }
-button.upgradable-action:active, button.upgradable-action:checked { color: white; background-color: mix(currentColor, @orange_3, 0.7); box-shadow: none; text-shadow: none; -gtk-icon-shadow: none; }
-button.upgradable-action:disabled { color: mix(@window_fg_color, @window_bg_color, 0.5); background-color: mix(currentColor, @window_bg_color,0.9); text-shadow: none; -gtk-icon-shadow: none; box-shadow: none; }
-
-button.openable-action { color: @blue_4; outline-color: alpha(@accent_color, 0.5); background-color: mix(alpha(@accent_color, 0.2), @accent_fg_color, 0.85); }
-button.openable-action:hover { color: @blue_4; background-color: mix(alpha(@accent_color, 0.2), @accent_fg_color, 0.8); box-shadow: none; }
-button.openable-action:active, button.openable-action:checked { color: @blue_4; background-color: mix(alpha(@accent_color, 0.2), @accent_fg_color, 0.7); box-shadow: none; text-shadow: none; -gtk-icon-shadow: none; }
-button.openable-action:disabled { color: mix(@window_fg_color, @window_bg_color, 0.5); background-color: mix(currentColor, @window_bg_color,0.9); text-shadow: none; -gtk-icon-shadow: none; box-shadow: none; }
+button.openup-action { color: @accent_bg_color; outline-color: alpha(@accent_color, 0.5); background-color: mix(@accent_bg_color, @accent_fg_color, 0.86); }
+button.openup-action:hover { color: @accent_bg_color; background-color: mix(@accent_bg_color, @accent_fg_color, 0.81); box-shadow: none; }
+button.openup-action:active, button.openable-action:checked { color: @accent_bg_color; background-color: mix(@accent_bg_color, @accent_fg_color, 0.77); box-shadow: none; text-shadow: none; -gtk-icon-shadow: none; }
+button.openup-action:disabled { color: mix(@window_fg_color, @window_bg_color, 0.5); background-color: mix(currentColor, @window_bg_color,0.9); text-shadow: none; -gtk-icon-shadow: none; box-shadow: none; }
 
 
 .headersep{

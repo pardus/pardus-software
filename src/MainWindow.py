@@ -3566,14 +3566,14 @@ class MainWindow(object):
                 button.get_style_context().remove_class("suggested-action")
             if button.get_style_context().has_class("destructive-action"):
                 button.get_style_context().remove_class("destructive-action")
-            button.get_style_context().add_class("upgradable-action")
+            button.get_style_context().add_class("openup-action")
             button.set_sensitive(True)
         elif state == 4:
             if button.get_style_context().has_class("suggested-action"):
                 button.get_style_context().remove_class("suggested-action")
             if button.get_style_context().has_class("destructive-action"):
                 button.get_style_context().remove_class("destructive-action")
-            button.get_style_context().add_class("openable-action")
+            button.get_style_context().add_class("openup-action")
             button.set_sensitive(True)
 
     def on_PardusAppsIconView_selection_changed(self, iconview):
