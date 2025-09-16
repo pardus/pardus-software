@@ -426,9 +426,9 @@ class Package(object):
             return "size not found"
         return GLib.format_size(size)
 
-    def get_installed_apps(self):
+    def get_installed_apps(self, du=False):
         apps = []
-        for app in Gio.DesktopAppInfo.get_all():
+        for app in Gio.DesktopAppInfo.get_all()[:7]:
 
             id = app.get_id()
             name = app.get_name()
@@ -439,11 +439,24 @@ class Package(object):
             filename = app.get_filename()
             keywords = " ".join(app.get_keywords())
 
+            package_name = "-"
+            disk_usage = 0
+
+            if du:
+                package_name_found, required_changes, package_name = self.myapps_remove_details(filename)
+
+                if package_name_found:
+                    disk_usage = required_changes["freed_size"]
+
             if executable and not nodisplay:
                 apps.append({"id": id, "name": name, "icon_name": icon, "description": description,
-                             "filename": filename, "keywords": keywords, "executable": executable})
+                             "filename": filename, "keywords": keywords, "executable": executable,
+                             "disk_usage": disk_usage, "package_name": package_name})
 
-        apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: locale.strxfrm(x["name"]))
+        if du:
+            apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: x["disk_usage"], reverse=True)
+        else:
+            apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: locale.strxfrm(x["name"]))
 
         return apps
 

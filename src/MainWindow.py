@@ -901,6 +901,7 @@ class MainWindow(object):
     #     print("Size: {} x {}".format(width, height))
 
     def controlDisplay(self):
+        self.display_width = 1920
         width = 1071
         height = 750
         s = 1
@@ -913,6 +914,8 @@ class MainWindow(object):
             w = geometry.width
             h = geometry.height
             s = Gdk.Monitor.get_scale_factor(monitor)
+
+            self.display_width = w
 
             if w > 1920 or h > 1080:
                 width = int(w * 0.5578)
@@ -2363,14 +2366,14 @@ class MainWindow(object):
         GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
         return listbox
 
-    def create_myapp_widget(self, app):
+    def create_myapp_widget(self, app, du=False):
 
         app_name = Gtk.Label.new()
         app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(app["name"], -1)))
         app_name.props.halign = Gtk.Align.START
         app_name.set_line_wrap(False)
         app_name.set_justify(Gtk.Justification.LEFT)
-        app_name.set_max_width_chars(33)
+        app_name.set_max_width_chars(23 if self.display_width >= 1920 else 21)
         app_name.set_ellipsize(Pango.EllipsizeMode.END)
         app_name.props.halign = Gtk.Align.START
 
@@ -2391,9 +2394,7 @@ class MainWindow(object):
 
         action_button = Gtk.Button.new()
         action_button.connect("clicked", self.open_from_myapps)
-        action_button.props.halign = Gtk.Align.END
         action_button.props.valign = Gtk.Align.CENTER
-        action_button.set_hexpand(True)
         action_button.set_size_request(77, -1)
         action_button_label = Gtk.Label.new()
         action_button_label.set_line_wrap(False)
@@ -2410,7 +2411,6 @@ class MainWindow(object):
                                 "description": app["description"], "keywords": app["keywords"],
                                 "executable": app["executable"]}
         uninstallbutton.props.valign = Gtk.Align.CENTER
-        uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
         uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
         uninstallbutton.set_label("")
@@ -2424,19 +2424,41 @@ class MainWindow(object):
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(33)
+        summary_label.set_max_width_chars(23 if self.display_width >= 1920 else 21)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
 
         box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
         box_app.props.valign = Gtk.Align.CENTER
         box_app.pack_start(app_name, False, True, 0)
         box_app.pack_start(summary_label, False, True, 0)
+        # box_app.set_hexpand(True)
+
+        du_static = Gtk.Label.new()
+        du_static.set_line_wrap(False)
+
+        du_size = Gtk.Label.new()
+        du_size.set_line_wrap(False)
+
+        box_du = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        box_du.props.halign = Gtk.Align.START
+        box_du.pack_start(du_static, False, True, 0)
+        box_du.pack_start(du_size, False, True, 0)
+        box_du.set_size_request(77, -1)
+
+        if du:
+            du_static.set_markup("<b>{}</b>".format(_("Disk Usage")))
+            du_size.set_markup("<span weight='light' size='small'>{}</span>".format(self.Package.beauty_size(app["disk_usage"])))
+        else:
+            du_static.set_markup("")
+            du_size.set_markup("")
 
         box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
         box_h.pack_start(app_icon, False, True, 0)
         box_h.pack_start(box_app, False, True, 0)
-        box_h.pack_start(action_button, False, True, 0)
-        box_h.pack_start(uninstallbutton, False, True, 0)
+        box_h.pack_end(uninstallbutton, False, True, 0)
+        box_h.pack_end(action_button, False, True, 0)
+        box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 6)
+
         box_h.set_margin_start(5)
         box_h.set_margin_end(5)
         box_h.set_margin_top(5)
@@ -2470,7 +2492,7 @@ class MainWindow(object):
         app_name.props.halign = Gtk.Align.START
         app_name.set_line_wrap(False)
         app_name.set_justify(Gtk.Justification.LEFT)
-        app_name.set_max_width_chars(33)
+        app_name.set_max_width_chars(23 if self.display_width >= 1920 else 21)
         app_name.set_ellipsize(Pango.EllipsizeMode.END)
         app_name.props.halign = Gtk.Align.START
 
@@ -2482,9 +2504,7 @@ class MainWindow(object):
 
         action_button = Gtk.Button.new()
         action_button.connect("clicked", self.app_widget_action_clicked)
-        action_button.props.halign = Gtk.Align.END
         action_button.props.valign = Gtk.Align.CENTER
-        action_button.set_hexpand(True)
         action_button.set_size_request(77, -1)
 
         action_button_label = Gtk.Label.new()
@@ -2523,7 +2543,6 @@ class MainWindow(object):
         uninstallbutton = Gtk.Button.new()
         uninstallbutton.name = 0
         uninstallbutton.props.valign = Gtk.Align.CENTER
-        uninstallbutton.props.halign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
         uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
         uninstallbutton.set_label("")
@@ -2537,19 +2556,36 @@ class MainWindow(object):
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(33)
+        summary_label.set_max_width_chars(23 if self.display_width >= 1920 else 21)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
 
         box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
         box_app.props.valign = Gtk.Align.CENTER
         box_app.pack_start(app_name, False, True, 0)
         box_app.pack_start(summary_label, False, True, 0)
+        # box_app.set_hexpand(True)
+
+        du_static = Gtk.Label.new()
+        du_static.set_line_wrap(False)
+        du_static.set_markup("")
+
+        du_size = Gtk.Label.new()
+        du_size.set_line_wrap(False)
+        du_size.set_markup("")
+
+        box_du = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        box_du.props.valign = Gtk.Align.CENTER
+        box_du.pack_start(du_static, False, True, 0)
+        box_du.pack_start(du_size, False, True, 0)
+        box_du.set_size_request(77, -1)
 
         box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
         box_h.pack_start(app_icon, False, True, 0)
         box_h.pack_start(box_app, False, True, 0)
-        box_h.pack_start(action_button, False, True, 0)
-        box_h.pack_start(uninstallbutton, False, True, 0)
+        box_h.pack_end(uninstallbutton, False, True, 0)
+        box_h.pack_end(action_button, False, True, 0)
+        box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 6)
+
         box_h.set_margin_start(5)
         box_h.set_margin_end(5)
         box_h.set_margin_top(5)
@@ -4072,8 +4108,7 @@ class MainWindow(object):
             self.dSizeTitle.set_text(_("Download Size"))
             self.dSizeGrid.set_tooltip_text(None)
 
-    def set_myapps(self):
-
+    def set_myapps(self, du=False):
         def clear_flowbox():
             if self.ui_installedapps_flowbox:
                 self.ui_installedapps_flowbox.foreach(lambda row: self.ui_installedapps_flowbox.remove(row))
@@ -4082,17 +4117,17 @@ class MainWindow(object):
         GLib.idle_add(clear_flowbox)
 
         def run_worker():
-            myapps = self.myapps_worker()
-            GLib.idle_add(self.on_myapps_worker_done, myapps)
+            myapps = self.myapps_worker(du=du)
+            GLib.idle_add(self.on_myapps_worker_done, myapps, du)
 
         threading.Thread(target=run_worker, daemon=True).start()
 
-    def myapps_worker(self):
-        return self.Package.get_installed_apps()
+    def myapps_worker(self, du=False):
+        return self.Package.get_installed_apps(du=du)
 
-    def on_myapps_worker_done(self, myapps):
+    def on_myapps_worker_done(self, myapps, du=False):
         for pkg in myapps:
-            self.add_to_myapps_ui(pkg)
+            self.add_to_myapps_ui(pkg, du=du)
         GLib.idle_add(self.ui_installedapps_flowbox.show_all)
         GLib.idle_add(self.controlArgs)
         self.Logger.info("on_myapps_worker_done")
@@ -5319,6 +5354,12 @@ class MainWindow(object):
             ))
             GLib.idle_add(self.set_upgradables)
 
+    def on_ui_myapps_combobox_changed(self, combo_box):
+        if combo_box.get_active() == 0:  # sort by name
+            GLib.idle_add(self.set_myapps)
+        elif combo_box.get_active() == 1:  # sort by download
+            GLib.idle_add(self.set_myapps, True)
+
     def on_MostFlowBox_child_activated(self, flow_box, child):
 
         self.mostappname = child.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[
@@ -5964,9 +6005,9 @@ class MainWindow(object):
                     index = next((index for (index, app) in enumerate(self.queue) if app["name"] == button.name), None)
                     self.queue.pop(index)
 
-    def add_to_myapps_ui(self, app):
+    def add_to_myapps_ui(self, app, du=False):
 
-        listbox = self.create_myapp_widget(app)
+        listbox = self.create_myapp_widget(app, du=du)
         GLib.idle_add(self.ui_installedapps_flowbox.insert, listbox, -1)
 
     def remove_from_myapps(self, button):
