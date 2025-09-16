@@ -460,6 +460,10 @@ class MainWindow(object):
         # self.PardusAppsIconView.set_pixbuf_column(0)
         # self.PardusAppsIconView.set_text_column(3)
 
+        self.ui_myapps_combobox = self.GtkBuilder.get_object("ui_myapps_combobox")
+        self.ui_myapps_du_progress_box = self.GtkBuilder.get_object("ui_myapps_du_progress_box")
+        self.ui_myapps_du_spinner = self.GtkBuilder.get_object("ui_myapps_du_spinner")
+
         self.ui_right_stack = self.GtkBuilder.get_object("ui_right_stack")
 
         self.ui_currentcat_label = self.GtkBuilder.get_object("ui_currentcat_label")
@@ -808,6 +812,8 @@ class MainWindow(object):
         except:
             pass
 
+        self.myapps_du_cancel_event = None
+
         self.status_server_apps = False
         self.status_server_icons = False
         self.status_server_images = False
@@ -931,6 +937,7 @@ class MainWindow(object):
 
     def hide_some_widgets(self):
         self.dActionCancelButton.set_visible(False)
+        self.ui_myapps_du_progress_box.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -4114,23 +4121,48 @@ class MainWindow(object):
                 self.ui_installedapps_flowbox.foreach(lambda row: self.ui_installedapps_flowbox.remove(row))
             return False
 
+        GLib.idle_add(self.ui_myapps_combobox.set_sensitive, False)
         GLib.idle_add(clear_flowbox)
+        if du:
+            GLib.idle_add(self.ui_myapps_du_progress_box.set_visible, True)
+            GLib.idle_add(self.ui_myapps_du_spinner.start)
+            self.myapps_du_cancel_event = threading.Event()
 
         def run_worker():
-            myapps = self.myapps_worker(du=du)
-            GLib.idle_add(self.on_myapps_worker_done, myapps, du)
+            myapps = self.myapps_worker(du=du, cancel_event=self.myapps_du_cancel_event)
+
+            if myapps is not None:
+                GLib.idle_add(self.on_myapps_worker_done, myapps, du)
+            else:
+                GLib.idle_add(self.on_myapps_worker_cancelled)
 
         threading.Thread(target=run_worker, daemon=True).start()
 
-    def myapps_worker(self, du=False):
-        return self.Package.get_installed_apps(du=du)
+    def myapps_worker(self, du=False, cancel_event=None):
+        return self.Package.get_installed_apps(du=du, cancel_event=cancel_event)
 
     def on_myapps_worker_done(self, myapps, du=False):
         for pkg in myapps:
             self.add_to_myapps_ui(pkg, du=du)
+        GLib.idle_add(self.ui_myapps_du_progress_box.set_visible, False)
+        GLib.idle_add(self.ui_myapps_du_spinner.stop)
+        GLib.idle_add(self.ui_myapps_combobox.set_sensitive, True)
         GLib.idle_add(self.ui_installedapps_flowbox.show_all)
         GLib.idle_add(self.controlArgs)
         self.Logger.info("on_myapps_worker_done")
+
+    def on_myapps_worker_cancelled(self):
+        GLib.idle_add(self.ui_myapps_du_spinner.stop)
+        GLib.idle_add(self.ui_myapps_du_progress_box.set_visible, False)
+        GLib.idle_add(self.ui_myapps_combobox.set_sensitive, True)
+        self.Logger.info("on_myapps_worker_cancelled")
+        self.myapps_du_cancel_event = None
+        self.Logger.info("on_myapps_worker_cancelled: setting apps as default")
+        GLib.idle_add(self.ui_myapps_combobox.set_active, 0)
+
+    def on_myapps_du_cancel_button_clicked(self, button):
+        if self.myapps_du_cancel_event:
+            self.myapps_du_cancel_event.set()
 
     def myappsdetail_worker_thread(self, app, popup=False):
         myappdetails = self.myappsdetail_worker(app)
