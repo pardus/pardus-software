@@ -812,6 +812,10 @@ class MainWindow(object):
         except:
             pass
 
+        self.home_trend_count = 8
+        self.home_mostdown_count = 8
+        self.home_recent_count = 4
+
         self.myapps_du_cancel_event = None
 
         self.status_server_apps = False
@@ -2761,7 +2765,7 @@ class MainWindow(object):
         GLib.idle_add(lambda: self.ui_trend_flowbox.foreach(lambda child: self.ui_trend_flowbox.remove(child)))
 
         counter = 0
-        for app in self.Server.trendapplist:
+        for app in self.Server.trendapplist[:self.home_trend_count]:
             counter += 1
             listbox = self.create_app_widget(app["name"], None, counter)
             GLib.idle_add(self.ui_trend_flowbox.insert, listbox, -1)
@@ -2772,8 +2776,7 @@ class MainWindow(object):
         self.Logger.info("in set_mostdown_apps")
         GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
 
-        counter = 0
-        for app in self.Server.mostdownapplist:
+        for app in self.Server.mostdownapplist[:self.home_mostdown_count]:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
 
@@ -2783,7 +2786,7 @@ class MainWindow(object):
         self.Logger.info("in set_recent_apps")
         GLib.idle_add(lambda: self.ui_recent_flowbox.foreach(lambda child: self.ui_recent_flowbox.remove(child)))
 
-        for app in self.Server.lastaddedapplist:
+        for app in self.Server.lastaddedapplist[:self.home_recent_count]:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_recent_flowbox.insert, listbox, -1)
 
