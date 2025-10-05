@@ -483,6 +483,7 @@ class MainWindow(object):
         self.ui_editor_side_flowbox = self.GtkBuilder.get_object("ui_editor_side_flowbox")
 
         self.ui_trendapps_flowbox = self.GtkBuilder.get_object("ui_trendapps_flowbox")
+        self.ui_mostdownapps_flowbox = self.GtkBuilder.get_object("ui_mostdownapps_flowbox")
 
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
@@ -2789,6 +2790,14 @@ class MainWindow(object):
             GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
 
         GLib.idle_add(self.ui_mostdown_flowbox.show_all)
+
+        GLib.idle_add(lambda: self.ui_mostdownapps_flowbox.foreach(lambda child: self.ui_mostdownapps_flowbox.remove(child)))
+
+        for app in self.Server.mostdownapplist:
+            listbox = self.create_app_widget(app["name"], None)
+            GLib.idle_add(self.ui_mostdownapps_flowbox.insert, listbox, -1)
+
+        GLib.idle_add(self.ui_mostdownapps_flowbox.show_all)
 
     def set_recent_apps(self):
         self.Logger.info("in set_recent_apps")
@@ -6701,6 +6710,9 @@ class MainWindow(object):
 
     def on_ui_trend_seeall_eventbox_button_release_event(self, widget, event):
         self.ui_right_stack.set_visible_child_name("trendapps")
+
+    def on_ui_mostdown_seeall_eventbox_button_release_event(self, widget, event):
+        self.ui_right_stack.set_visible_child_name("mostdownapps")
 
     def on_ui_suggest_send_button_clicked(self, button):
         self.sug_appname = self.ui_suggest_app_entry.get_text()
