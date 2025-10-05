@@ -482,6 +482,8 @@ class MainWindow(object):
         self.ui_editor_others_flowbox = self.GtkBuilder.get_object("ui_editor_others_flowbox")
         self.ui_editor_side_flowbox = self.GtkBuilder.get_object("ui_editor_side_flowbox")
 
+        self.ui_trendapps_flowbox = self.GtkBuilder.get_object("ui_trendapps_flowbox")
+
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
 
@@ -2763,14 +2765,20 @@ class MainWindow(object):
     def set_trend_apps(self):
         self.Logger.info("in set_trend_apps")
         GLib.idle_add(lambda: self.ui_trend_flowbox.foreach(lambda child: self.ui_trend_flowbox.remove(child)))
-
         counter = 0
         for app in self.Server.trendapplist[:self.home_trend_count]:
             counter += 1
             listbox = self.create_app_widget(app["name"], None, counter)
             GLib.idle_add(self.ui_trend_flowbox.insert, listbox, -1)
-
         GLib.idle_add(self.ui_trend_flowbox.show_all)
+
+        GLib.idle_add(lambda: self.ui_trendapps_flowbox.foreach(lambda child: self.ui_trendapps_flowbox.remove(child)))
+        counter = 0
+        for app in self.Server.trendapplist:
+            counter += 1
+            listbox = self.create_app_widget(app["name"], None, counter)
+            GLib.idle_add(self.ui_trendapps_flowbox.insert, listbox, -1)
+        GLib.idle_add(self.ui_trendapps_flowbox.show_all)
 
     def set_mostdown_apps(self):
         self.Logger.info("in set_mostdown_apps")
@@ -6690,6 +6698,9 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("suggestapp")
         self.ui_suggest_stack.set_visible_child_name("suggest")
         self.ui_suggest_send_button.set_sensitive(True)
+
+    def on_ui_trend_seeall_eventbox_button_release_event(self, widget, event):
+        self.ui_right_stack.set_visible_child_name("trendapps")
 
     def on_ui_suggest_send_button_clicked(self, button):
         self.sug_appname = self.ui_suggest_app_entry.get_text()
