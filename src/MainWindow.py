@@ -484,6 +484,7 @@ class MainWindow(object):
 
         self.ui_trendapps_flowbox = self.GtkBuilder.get_object("ui_trendapps_flowbox")
         self.ui_mostdownapps_flowbox = self.GtkBuilder.get_object("ui_mostdownapps_flowbox")
+        self.ui_recentapps_flowbox = self.GtkBuilder.get_object("ui_recentapps_flowbox")
 
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
@@ -2784,30 +2785,30 @@ class MainWindow(object):
     def set_mostdown_apps(self):
         self.Logger.info("in set_mostdown_apps")
         GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
-
         for app in self.Server.mostdownapplist[:self.home_mostdown_count]:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
-
         GLib.idle_add(self.ui_mostdown_flowbox.show_all)
 
         GLib.idle_add(lambda: self.ui_mostdownapps_flowbox.foreach(lambda child: self.ui_mostdownapps_flowbox.remove(child)))
-
         for app in self.Server.mostdownapplist:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_mostdownapps_flowbox.insert, listbox, -1)
-
         GLib.idle_add(self.ui_mostdownapps_flowbox.show_all)
 
     def set_recent_apps(self):
         self.Logger.info("in set_recent_apps")
         GLib.idle_add(lambda: self.ui_recent_flowbox.foreach(lambda child: self.ui_recent_flowbox.remove(child)))
-
         for app in self.Server.lastaddedapplist[:self.home_recent_count]:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_recent_flowbox.insert, listbox, -1)
-
         GLib.idle_add(self.ui_recent_flowbox.show_all)
+
+        GLib.idle_add(lambda: self.ui_recentapps_flowbox.foreach(lambda child: self.ui_recentapps_flowbox.remove(child)))
+        for app in self.Server.lastaddedapplist:
+            listbox = self.create_app_widget(app["name"], None)
+            GLib.idle_add(self.ui_recentapps_flowbox.insert, listbox, -1)
+        GLib.idle_add(self.ui_recentapps_flowbox.show_all)
 
     def on_app_listbox_row_activated(self, listbox, row):
         print(row.name)
@@ -6713,6 +6714,9 @@ class MainWindow(object):
 
     def on_ui_mostdown_seeall_eventbox_button_release_event(self, widget, event):
         self.ui_right_stack.set_visible_child_name("mostdownapps")
+
+    def on_ui_recent_seeall_eventbox_button_release_event(self, widget, event):
+        self.ui_right_stack.set_visible_child_name("recentapps")
 
     def on_ui_suggest_send_button_clicked(self, button):
         self.sug_appname = self.ui_suggest_app_entry.get_text()
