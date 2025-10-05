@@ -645,7 +645,7 @@ class MainWindow(object):
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
         self.MainWindow.set_title(_("Pardus Software Center"))
-        self.controlDisplay()
+        self.control_display()
         self.mainstack.set_visible_child_name("splash")
 
         # self.HeaderBarMenuButton.set_sensitive(False)
@@ -914,7 +914,7 @@ class MainWindow(object):
     #     width, height = widget.get_size()
     #     print("Size: {} x {}".format(width, height))
 
-    def controlDisplay(self):
+    def control_display(self):
         self.display_width = 1920
         width = 1071
         height = 750
@@ -922,12 +922,28 @@ class MainWindow(object):
         w = 1920
         h = 1080
         try:
-            display = Gdk.Display.get_default()
-            monitor = display.get_primary_monitor()
+            def get_active_monitor():
+                display = Gdk.Display.get_default()
+                monitor = display.get_primary_monitor()
+                if monitor:
+                    self.Logger.info("monitor from get_primary_monitor")
+                    return monitor
+                device_manager = display.get_device_manager()
+                pointer = device_manager.get_client_pointer()
+                if pointer:
+                    screen, x, y = pointer.get_position()
+                    monitor_num = screen.get_monitor_at_point(x, y)
+                    if monitor_num >= 0:
+                        self.Logger.info("monitor from pointer position")
+                        return display.get_monitor(monitor_num)
+                self.Logger.info("monitor from get_monitor(0)")
+                return display.get_monitor(0)
+
+            monitor = get_active_monitor()
             geometry = monitor.get_geometry()
             w = geometry.width
             h = geometry.height
-            s = Gdk.Monitor.get_scale_factor(monitor)
+            s = monitor.get_scale_factor()
 
             self.display_width = w
 
@@ -938,7 +954,7 @@ class MainWindow(object):
             self.MainWindow.resize(width, height)
 
         except Exception as e:
-            self.Logger.warning("Error in controlDisplay: {}")
+            self.Logger.warning("Error in controlDisplay")
             self.Logger.exception("{}".format(e))
 
         self.Logger.info("window w:{} h:{} | monitor w:{} h:{} s:{}".format(width, height, w, h, s))
