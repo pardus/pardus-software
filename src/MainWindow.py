@@ -343,7 +343,6 @@ class MainWindow(object):
         # self.updates_button = Gtk.Button.new()
         # self.updates_button.set_label(_("Updates"))
         # self.updates_button.connect("clicked", self.on_updates_button_clicked)
-        self.queue_button = self.GtkBuilder.get_object("queue_button")
         # self.header_buttonbox = self.GtkBuilder.get_object("header_buttonbox")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
@@ -509,6 +508,8 @@ class MainWindow(object):
 
         self.ui_headermenu_popover = self.GtkBuilder.get_object("ui_headermenu_popover")
         self.ui_headermenu_button = self.GtkBuilder.get_object("ui_headermenu_button")
+
+        self.ui_header_queue_button = self.GtkBuilder.get_object("ui_header_queue_button")
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
         self.aboutdialog.set_program_name(_("Pardus Software Center"))
@@ -801,6 +802,9 @@ class MainWindow(object):
         self.GnomeCommentListBoxTR = self.GtkBuilder.get_object("GnomeCommentListBoxTR")
         self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
+        self.ui_queue_flowbox = self.GtkBuilder.get_object("ui_queue_flowbox")
+        self.ui_queue_stack = self.GtkBuilder.get_object("ui_queue_stack")
+
         self.ui_leftcats_box = self.GtkBuilder.get_object("ui_leftcats_box")
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
         self.ui_leftupdates_listbox = self.GtkBuilder.get_object("ui_leftupdates_listbox")
@@ -962,6 +966,7 @@ class MainWindow(object):
     def hide_some_widgets(self):
         self.dActionCancelButton.set_visible(False)
         self.ui_myapps_du_progress_box.set_visible(False)
+        self.ui_header_queue_button.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -1980,6 +1985,27 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.set_app_count_label()
 
+    def on_queue_cancel_button_clicked(self, button):
+        for fbc in self.ui_queue_flowbox.get_children():
+            lb = fbc.get_child()
+            if lb.get_children():
+                lbr = lb.get_children()[0]
+                if lbr.name == button.name:
+                    children = self.ui_queue_flowbox.get_children()
+                    index = children.index(fbc)
+                    if index != 0:
+                        self.ui_queue_flowbox.remove(fbc)
+                        q_index = next((i for i, app in enumerate(self.queue)
+                                        if app["name"] == button.name), None)
+                        if q_index is not None:
+                            self.queue.pop(q_index)
+                    else:
+                        self.Logger.info("Cancelling {} {}".format(self.actionedappname, self.pid))
+                        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                                   "kill", "{}".format(self.pid)]
+                        self.start_kill_process(command)
+                    break
+
     def create_base_app_widget(self, app, details):
         app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
         app_icon.set_pixel_size(32)
@@ -2154,9 +2180,13 @@ class MainWindow(object):
             packages = [p for p in command.split() if self.Package.controlPackageCache(p)]
             command = " ".join(packages) if packages else app_name
 
-        self.bottomstack.set_visible_child_name("queue")
-        self.bottomrevealer.set_reveal_child(True)
-        self.queuestack.set_visible_child_name("inprogress")
+        # self.bottomstack.set_visible_child_name("queue")
+        # self.bottomrevealer.set_reveal_child(True)
+
+        self.ui_header_queue_button.set_visible(True)
+
+        self.ui_queue_stack.set_visible_child_name("inprogress")
+
         self.queue.append({"name": app_name, "command": command})
         self.add_to_queue_ui(app_name)
         if not self.inprogress:
@@ -2173,45 +2203,9 @@ class MainWindow(object):
             return False
 
     def add_to_queue_ui(self, app_name):
-
-        appicon = Gtk.Image.new_from_icon_name(app_name, Gtk.IconSize.DND)
-        appicon.set_pixel_size(32)
-        label = Gtk.Label.new()
-        label.set_text(self.getPrettyName(app_name, split=False))
-        actlabel = Gtk.Label.new()
-
-        isinstalled = self.Package.isinstalled(app_name)
-        if isinstalled:
-            actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Will be removed")))
-        else:
-            actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Will be installed")))
-
-        button = Gtk.Button.new()
-        button.name = app_name
-        button.connect("clicked", self.remove_from_queue_clicked)
-        button.props.valign = Gtk.Align.CENTER
-        button.props.halign = Gtk.Align.CENTER
-        button.props.always_show_image = True
-        button.set_image(Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.BUTTON))
-        if len(self.queue) == 1:
-            button.set_sensitive(False)
-            button.set_tooltip_text(_("You cannot cancel because the application is in progress."))
-            if isinstalled:
-                actlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
-            else:
-                actlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
-        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
-        box.set_margin_top(5)
-        box.set_margin_bottom(5)
-        box.set_margin_start(5)
-        box.set_margin_end(5)
-        box.pack_start(appicon, False, True, 0)
-        box.pack_start(label, False, True, 0)
-        box.pack_end(button, False, True, 13)
-        box.pack_end(actlabel, False, True, 13)
-        box.name = app_name
-        self.QueueListBox.add(box)
-        self.QueueListBox.show_all()
+        listbox = self.create_queue_widget(app_name)
+        GLib.idle_add(self.ui_queue_flowbox.insert, listbox, -1)
+        GLib.idle_add(self.ui_queue_flowbox.show_all)
 
     def action_package(self, app_name, command):
         self.inprogress = True
@@ -2637,6 +2631,118 @@ class MainWindow(object):
         listbox_row = Gtk.ListBoxRow()
         GLib.idle_add(listbox_row.add, box)
         listbox_row.name = {app: details} if details else app
+        GLib.idle_add(listbox.add, listbox_row)
+
+        GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
+
+        return listbox
+
+    def create_queue_widget(self, app):
+
+        app_name = Gtk.Label.new()
+        app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(self.getPrettyName(app), -1)))
+        app_name.props.halign = Gtk.Align.START
+        app_name.set_line_wrap(False)
+        app_name.set_justify(Gtk.Justification.LEFT)
+        app_name.set_max_width_chars(23 if self.display_width >= 1920 else 21)
+        app_name.set_ellipsize(Pango.EllipsizeMode.END)
+        app_name.props.halign = Gtk.Align.START
+
+        try:
+            if os.path.isfile(app):
+                px = GdkPixbuf.Pixbuf.new_from_file_at_size(app, 32, 32)
+                app_icon = Gtk.Image.new()
+                app_icon.set_from_pixbuf(px)
+            else:
+                app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
+        except Exception as e:
+            app_icon = Gtk.Image.new_from_icon_name("image-missing-symbolic", Gtk.IconSize.DND)
+            print("Exception on create_queue_widget: {}, app: {}".format(e, app))
+        app_icon.set_pixel_size(32)
+        app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
+        app_icon.props.halign = Gtk.Align.CENTER
+        app_icon.props.valign = Gtk.Align.CENTER
+
+        cancel_button = Gtk.Button.new()
+        cancel_button.connect("clicked", self.on_queue_cancel_button_clicked)
+        cancel_button.props.valign = Gtk.Align.CENTER
+        cancel_button.set_size_request(77, -1)
+        cancel_button_label = Gtk.Label.new()
+        cancel_button_label.set_line_wrap(False)
+        cancel_button_label.set_justify(Gtk.Justification.LEFT)
+        cancel_button_label.set_max_width_chars(6)
+        cancel_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+        cancel_button.add(cancel_button_label)
+        cancel_button_label.set_markup("<small>{}</small>".format(_("Cancel")))
+        cancel_button.name = app
+
+        summary_label = Gtk.Label.new()
+        summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
+            self.get_description_from_app_name(app), -1)[:20].replace("\n", "").replace("\r", "")))
+        summary_label.props.valign = Gtk.Align.START
+        summary_label.props.halign = Gtk.Align.START
+        summary_label.set_line_wrap(False)
+        summary_label.set_max_width_chars(23 if self.display_width >= 1920 else 21)
+        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+
+        box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        box_app.props.valign = Gtk.Align.CENTER
+        box_app.pack_start(app_name, False, True, 0)
+        box_app.pack_start(summary_label, False, True, 0)
+        # box_app.set_hexpand(True)
+
+        version_title = Gtk.Label.new()
+        version_title.set_line_wrap(False)
+        version_title.set_markup("<b>{}</b>".format(_("Version")))
+
+        version_label =Gtk.Label.new()
+        version_label.set_line_wrap(False)
+        version_label.set_max_width_chars(21 if self.display_width >= 1920 else 13)
+        version_label.set_ellipsize(Pango.EllipsizeMode.END)
+        version_label.set_markup("<span weight='light' size='small'>{}</span>".format(self.Package.candidate_version(app)))
+
+        box_version = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
+        box_version.props.halign = Gtk.Align.START
+        box_version.pack_start(version_title, False, True, 0)
+        box_version.pack_start(version_label, False, True, 0)
+        box_version.set_size_request(77, -1)
+
+        progress_bar = Gtk.ProgressBar.new()
+        progress_bar.set_show_text(True)
+        progress_bar.set_ellipsize(Pango.EllipsizeMode.END)
+        progress_bar.props.valign = Gtk.Align.CENTER
+        if self.Package.isinstalled(app):
+            progress_bar.set_text("{}".format(_("Will be removed")))
+        else:
+            progress_bar.set_text("{}".format(_("Will be installed")))
+
+        box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+        box_h.pack_start(app_icon, False, True, 0)
+        box_h.pack_start(box_app, False, True, 0)
+        box_h.pack_start(box_version, False, True, 40 if self.display_width >= 1920 else 6)
+        box_h.pack_end(cancel_button, False, True, 0)
+        box_h.pack_end(progress_bar, False, True, 40 if self.display_width >= 1920 else 6)
+
+        box_h.set_margin_start(5)
+        box_h.set_margin_end(5)
+        box_h.set_margin_top(5)
+        box_h.set_margin_bottom(5)
+
+        bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+        bottom_separator.props.valign = Gtk.Align.END
+        bottom_separator.set_vexpand(True)
+        GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
+
+        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
+        box.pack_start(box_h, False, True, 0)
+        box.pack_end(bottom_separator, True, True, 0)
+
+        listbox = Gtk.ListBox.new()
+        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        # listbox.connect("row-activated", self.on_app_listbox_row_activated)
+        listbox_row = Gtk.ListBoxRow()
+        GLib.idle_add(listbox_row.add, box)
+        listbox_row.name = app
         GLib.idle_add(listbox.add, listbox_row)
 
         GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
@@ -6011,15 +6117,8 @@ class MainWindow(object):
                 self.homestack.set_visible_child_name("noserver")
                 self.topsearchbutton.set_sensitive(False)
 
-    def on_queue_button_clicked(self, button):
-        if self.homestack.get_visible_child_name() == "queue":
-            self.Logger.info("already queue page")
-            return
-        # self.menubackbutton.set_sensitive(True)
-        # self.prefback = self.homestack.get_visible_child_name()
-        # self.prefback_queue = self.prefback
-        self.homestack.set_visible_child_name("queue")
-        # self.set_stack_n_search(4)
+    def on_ui_header_queue_button_clicked(self, button):
+        self.ui_right_stack.set_visible_child_name("queue")
 
     def addtoQueue(self, appname, myappicon=False):
 
@@ -6512,7 +6611,6 @@ class MainWindow(object):
         self.switchAPTU.set_state(self.UserSettings.config_aptup)
         self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
             _("Server Address"), self.Server.serverurl))
-        self.queue_button.get_style_context().remove_class("suggested-action")
         self.prefcachebutton.set_sensitive(True)
         self.prefcachebutton.set_label(_("Clear"))
         self.preflabel_settext("")
@@ -6573,7 +6671,6 @@ class MainWindow(object):
         self.store_button.get_style_context().remove_class("suggested-action")
         self.repo_button.get_style_context().remove_class("suggested-action")
         self.myapps_button.get_style_context().remove_class("suggested-action")
-        self.queue_button.get_style_context().remove_class("suggested-action")
 
         if self.Server.connection:
             GLib.idle_add(self.setStatistics)
@@ -7377,18 +7474,17 @@ class MainWindow(object):
 
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
-            self.progresstextlabel.set_text(
-                "{} | {} : {} %".format(self.inprogress_app_name, _("Downloading"), percent))
-            self.dActionCancelButton.set_visible(True)
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_fraction(int(percent) / 100)
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Downloading"), percent))
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].set_sensitive(True)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_fraction(int(percent) / 100)
             if self.isinstalled:
-                self.progresstextlabel.set_text(
-                    "{} | {} : {} %".format(self.inprogress_app_name, _("Removing"), percent))
+                self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Removing"), percent))
             else:
-                self.progresstextlabel.set_text(
-                    "{} | {} : {} %".format(self.inprogress_app_name, _("Installing"), percent))
-            self.dActionCancelButton.set_visible(False)
+                self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Installing"), percent))
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].set_sensitive(False)
         elif "E:" in line and ".deb" in line:
             self.Logger.warning("connection error")
             self.error = True
@@ -7403,22 +7499,24 @@ class MainWindow(object):
             self.dpkglockerror = True
             self.dpkglockerror_message += line
         elif "pardus-software-i386-start" in line:
-            self.progresstextlabel.set_text(
-                "{} | {}".format(self.inprogress_app_name, _("i386 activating")))
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{}".format(_("i386 activating")))
         return True
 
     def on_action_process_exit(self, pid, status):
         # self.dActionCancelButton.set_visible(False)
-        self.bottomerrordetails_button.set_visible(False)
+        # self.bottomerrordetails_button.set_visible(False)
+
+        self.ui_header_queue_button.set_visible(False)
 
         if not self.error:
             if status == 0:
+                self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_fraction(1)
                 if self.isinstalled:
-                    self.progresstextlabel.set_text(self.inprogress_app_name + _(" | Removed: 100%"))
+                    self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text(_("Removed: 100%"))
                 else:
-                    self.progresstextlabel.set_text(self.inprogress_app_name + _(" | Installed: 100%"))
+                    self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text(_("Installed: 100%"))
             else:
-                self.progresstextlabel.set_text(self.inprogress_app_name + _(" | Not Completed"))
+                self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text(_("Not Completed"))
         else:
             self.errormessage = _("<b><span color='red'>Connection Error!</span></b>")
             if self.dpkglockerror:
@@ -7458,23 +7556,20 @@ class MainWindow(object):
 
         if len(self.queue) > 0:
             self.queue.pop(0)
-            self.QueueListBox.remove(self.QueueListBox.get_row_at_index(0))
+            self.ui_queue_flowbox.remove(self.ui_queue_flowbox.get_children()[0])
         if len(self.queue) > 0:
             self.action_package(self.queue[0]["name"], self.queue[0]["command"])
-            # Update QueueListBox's first element too
-            queuecancelbutton = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[3]
-            queuecancelbutton.set_sensitive(False)
-            queuecancelbutton.set_tooltip_text(_("You cannot cancel because the application is in progress."))
-            queueactlabel = self.QueueListBox.get_row_at_index(0).get_children()[0].get_children()[2]
+            progressbar = self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[
+                0].get_children()[0].get_children()[3]
             if self.Package.isinstalled(self.inprogress_app_name):
-                queueactlabel.set_markup("<span color='#e01b24'>{}</span>".format(_("Removing")))
+                progressbar.set_text("{}".format(_("Removing")))
             else:
-                queueactlabel.set_markup("<span color='#3584e4'>{}</span>".format(_("Installing")))
+                progressbar.set_text("{}".format(_("Installing")))
         else:
             self.bottomrevealer.set_reveal_child(False)
             if not self.error:
                 self.progresstextlabel.set_text("")
-                self.queuestack.set_visible_child_name("completed")
+                self.ui_queue_stack.set_visible_child_name("completed")
 
         if self.error:
             self.bottomrevealer.set_reveal_child(True)
