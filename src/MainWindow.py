@@ -7553,6 +7553,9 @@ class MainWindow(object):
         self.Logger.info("Exit Code: {}".format(status))
 
         self.inprogress = False
+        self.inprogress_app_name = ""
+        self.inprogress_command = ""
+        self.inprogress_desktop = ""
 
         if len(self.queue) > 0:
             self.queue.pop(0)
