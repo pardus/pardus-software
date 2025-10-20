@@ -478,8 +478,6 @@ class MainWindow(object):
         self.ui_mostdown_flowbox = self.GtkBuilder.get_object("ui_mostdown_flowbox")
         self.ui_recent_flowbox = self.GtkBuilder.get_object("ui_recent_flowbox")
         self.ui_editor_flowbox = self.GtkBuilder.get_object("ui_editor_flowbox")
-        self.ui_editor_others_flowbox = self.GtkBuilder.get_object("ui_editor_others_flowbox")
-        self.ui_editor_side_flowbox = self.GtkBuilder.get_object("ui_editor_side_flowbox")
 
         self.ui_trendapps_flowbox = self.GtkBuilder.get_object("ui_trendapps_flowbox")
         self.ui_mostdownapps_flowbox = self.GtkBuilder.get_object("ui_mostdownapps_flowbox")
@@ -2235,54 +2233,112 @@ class MainWindow(object):
 
     def update_app_widget_label(self, app_name):
 
+        def to_spinner(action_button):
+            action_button.remove(action_button.get_children()[0])
+            action_button.set_sensitive(False)
+            spinner = Gtk.Spinner()
+            action_button.add(spinner)
+            spinner.start()
+            spinner.show_all()
+
+        def to_normal(action_button):
+            action_button.remove(action_button.get_children()[0])
+            action_button_label = Gtk.Label.new()
+            action_button_label.set_line_wrap(False)
+            action_button_label.set_justify(Gtk.Justification.LEFT)
+            action_button_label.set_max_width_chars(6)
+            action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+            action_button.add(action_button_label)
+            is_installed = self.Package.isinstalled(app_name)
+            is_upgradable = self.Package.is_upgradable(app_name)
+            is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
+            if is_installed is not None:
+                if is_installed:
+                    if is_upgradable:
+                        self.set_button_class(action_button, 3)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                        action_button.name = 1
+                    else:
+                        if is_openable:
+                            self.set_button_class(action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            action_button.name = 2
+                        else:
+                            self.set_button_class(action_button, 1)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                            action_button.name = 0
+                else:
+                    self.set_button_class(action_button, 0)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                    action_button.name = 1
+            else:
+                self.set_button_class(action_button, 2)
+                action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+            action_button_label.show_all()
+
         for fbc in self.ui_pardusapps_flowbox:
             if next(iter(fbc.get_children()[0].get_children()[0].name)) == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
                 if self.inprogress_app_name != app_name:
-                    action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
-                    action_button.remove(action_button.get_children()[0])
-                    action_button.set_sensitive(False)
-                    spinner = Gtk.Spinner()
-                    action_button.add(spinner)
-                    spinner.start()
-                    spinner.show_all()
+                    to_spinner(action_button)
                 else:
-                    action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
-                    action_button.remove(action_button.get_children()[0])
+                    to_normal(action_button)
 
-                    action_button_label = Gtk.Label.new()
-                    action_button_label.set_line_wrap(False)
-                    action_button_label.set_justify(Gtk.Justification.LEFT)
-                    action_button_label.set_max_width_chars(6)
-                    action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
-                    action_button.add(action_button_label)
+        for fbc in self.ui_trend_flowbox:
+            if fbc.get_children()[0].get_children()[0].name == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3]
+                if self.inprogress_app_name != app_name:
+                    to_spinner(action_button)
+                else:
+                    to_normal(action_button)
 
-                    is_installed = self.Package.isinstalled(app_name)
-                    is_upgradable = self.Package.is_upgradable(app_name)
-                    is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
-                    if is_installed is not None:
-                        if is_installed:
-                            if is_upgradable:
-                                self.set_button_class(action_button, 3)
-                                action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                                action_button.name = 1
-                            else:
-                                if is_openable:
-                                    self.set_button_class(action_button, 4)
-                                    action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                                    action_button.name = 2
-                                else:
-                                    self.set_button_class(action_button, 1)
-                                    action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
-                                    action_button.name = 0
-                        else:
-                            self.set_button_class(action_button, 0)
-                            action_button_label.set_markup("<small>{}</small>".format(_("Install")))
-                            action_button.name = 1
-                    else:
-                        self.set_button_class(action_button, 2)
-                        action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+        for fbc in self.ui_mostdown_flowbox:
+            if fbc.get_children()[0].get_children()[0].name == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
+                if self.inprogress_app_name != app_name:
+                    to_spinner(action_button)
+                else:
+                    to_normal(action_button)
 
-                    action_button_label.show_all()
+        for fbc in self.ui_recent_flowbox:
+            if fbc.get_children()[0].get_children()[0].name == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
+                if self.inprogress_app_name != app_name:
+                    to_spinner(action_button)
+                else:
+                    to_normal(action_button)
+
+        for fbc in self.ui_trendapps_flowbox:
+            if fbc.get_children()[0].get_children()[0].name == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3]
+                if self.inprogress_app_name != app_name:
+                    to_spinner(action_button)
+                else:
+                    to_normal(action_button)
+
+        for fbc in self.ui_mostdownapps_flowbox:
+            if fbc.get_children()[0].get_children()[0].name == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
+                if self.inprogress_app_name != app_name:
+                    to_spinner(action_button)
+                else:
+                    to_normal(action_button)
+
+        for fbc in self.ui_recentapps_flowbox:
+            if fbc.get_children()[0].get_children()[0].name == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
+                if self.inprogress_app_name != app_name:
+                    to_spinner(action_button)
+                else:
+                    to_normal(action_button)
+
+        for fbc in self.ui_editor_flowbox:
+            if fbc.get_children()[0].get_children()[0].name == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[1].get_children()[2]
+                if self.inprogress_app_name != app_name:
+                    to_spinner(action_button)
+                else:
+                    to_normal(action_button)
 
     def create_app_widget(self, app, details=None, number=0):
 
@@ -2806,6 +2862,7 @@ class MainWindow(object):
             app_icon.props.valign = Gtk.Align.CENTER
 
             action_button = Gtk.Button.new()
+            action_button.connect("clicked", self.app_widget_action_clicked)
             action_button.props.halign = Gtk.Align.END
             action_button.props.valign = Gtk.Align.CENTER
             action_button.set_hexpand(True)
@@ -2826,16 +2883,20 @@ class MainWindow(object):
                     if is_upgradable:
                         self.set_button_class(action_button, 3)
                         action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                        action_button.name = 1
                     else:
                         if is_openable:
                             self.set_button_class(action_button, 4)
                             action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            action_button.name = 2
                         else:
                             self.set_button_class(action_button, 1)
                             action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                            action_button.name = 0
                 else:
                     self.set_button_class(action_button, 0)
                     action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                    action_button.name = 1
             else:
                 self.set_button_class(action_button, 2)
                 action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
