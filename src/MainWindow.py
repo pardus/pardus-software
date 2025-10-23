@@ -557,13 +557,6 @@ class MainWindow(object):
         self.control_display()
         self.mainstack.set_visible_child_name("splash")
 
-        # self.HeaderBarMenuButton.set_sensitive(False)
-        # self.menubackbutton.set_sensitive(False)
-        # self.store_button.set_sensitive(False)
-        # self.repo_button.set_sensitive(False)
-        # self.myapps_button.set_sensitive(False)
-        # self.topsearchbutton.set_sensitive(False)
-
         self.fromexternal = False
         self.externalactioned = False
         self.isinstalled = None
@@ -1977,12 +1970,12 @@ class MainWindow(object):
         self.inprogress_command = command
         self.inprogress_desktop = self.desktop_file
 
-        isinstalled = self.Package.isinstalled(app_name)
+        self.isinstalled = self.Package.isinstalled(app_name)
 
-        if isinstalled is True:
+        if self.isinstalled is True:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
                        self.inprogress_command]
-        elif isinstalled is False:
+        elif self.isinstalled is False:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.inprogress_command]
             packagelist = self.inprogress_command.split(" ")
@@ -5953,8 +5946,9 @@ class MainWindow(object):
         self.appname = self.myapp_toremove
         self.command = self.myapp_toremove
         self.desktop_file = self.myapp_toremove_desktop
-        self.bottomstack.set_visible_child_name("queue")
-        self.bottomrevealer.set_reveal_child(True)
+
+        self.ui_header_queue_button.set_visible(True)
+        self.ui_queue_stack.set_visible_child_name("inprogress")
 
         self.ui_myapp_pop_uninstall_button.set_sensitive(False)
 
@@ -7237,7 +7231,7 @@ class MainWindow(object):
                 if self.isinstalled:
                     self.notify()
 
-        # self.control_myapps(self.actionedappname, self.actionedappdesktop, status, self.error, cachestatus)
+        self.control_myapps(self.inprogress_app_name, self.inprogress_desktop, status, self.error, cachestatus)
         # self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
 
         # ui_appname = self.getActiveAppOnUI()
@@ -7431,58 +7425,44 @@ class MainWindow(object):
 
     def control_myapps(self, actionedappname, actionedappdesktop, status, error, cachestatus):
         self.Logger.info("in control_myapps")
-        # if self.homestack.get_visible_child_name() == "myapps":
         if status == 0 and not error and cachestatus:
             if self.isinstalled:
                 self.Logger.info("{} removing from myapps".format(actionedappdesktop))
-                if "/" in actionedappdesktop:
-                    for row in self.MyAppsListBox:
-                        if row.get_children()[0].name == actionedappdesktop:
-                            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                                self.Logger.info("in pop_myapp popdown")
-                                self.MyAppsDetailsPopover.set_relative_to(self.MyAppsListBox)
-                                self.MyAppsDetailsPopover.popdown()
-                            self.MyAppsListBox.remove(row)
-                else:
-                    for row in self.MyAppsListBox:
-                        try:
-                            rowapp = os.path.basename(row.get_children()[0].name)
-                            if rowapp == actionedappdesktop:
-                                if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                                    self.Logger.info("in pop_myapp popdown")
-                                    self.MyAppsDetailsPopover.set_relative_to(self.MyAppsListBox)
-                                    self.MyAppsDetailsPopover.popdown()
-
-                                self.MyAppsListBox.remove(row)
-                        except Exception as e:
-                            self.Logger.warning("Error in control_myapps")
-                            self.Logger.exception("{}".format(e))
-                            pass
+                desktop_id = actionedappdesktop.rsplit('/', 1)[-1]
+                for fbc in self.ui_installedapps_flowbox:
+                    if fbc.get_children()[0].get_children()[0].name["id"] == desktop_id:
+                        if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                            self.Logger.info("in pop_myapp popdown")
+                            self.MyAppsDetailsPopover.set_relative_to(self.ui_installedapps_flowbox)
+                            self.MyAppsDetailsPopover.popdown()
+                        self.ui_installedapps_flowbox.remove(fbc)
             else:
-                self.Logger.info("{} adding to myapps".format(actionedappdesktop))
-                valid, dic = self.Package.parse_desktopfile(os.path.basename(actionedappdesktop))
-                if valid:
-                    self.addtoMyApps(dic)
-                    GLib.idle_add(self.MyAppsListBox.show_all)
-                    self.MyAppsListBox.set_sort_func(self.myapps_sort_func)
+                # self.Logger.info("{} adding to myapps".format(actionedappdesktop))
+                # valid, dic = self.Package.parse_desktopfile(os.path.basename(actionedappdesktop))
+                # if valid:
+                #     self.addtoMyApps(dic)
+                #     GLib.idle_add(self.MyAppsListBox.show_all)
+                #     self.MyAppsListBox.set_sort_func(self.myapps_sort_func)
+                pass
 
-            if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                self.Logger.info("in myappsstack details actionedappname status=0")
-                self.ma_action_buttonbox.set_sensitive(False)
-
-            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                self.Logger.info("in pop_myapp details status=0")
-                self.ui_myapp_pop_uninstall_button.set_sensitive(False)
-                self.MyAppsDetailsPopover.popdown()
+            # if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+            #     self.Logger.info("in myappsstack details actionedappname status=0")
+            #     self.ma_action_buttonbox.set_sensitive(False)
+            #
+            # if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+            #     self.Logger.info("in pop_myapp details status=0")
+            #     self.ui_myapp_pop_uninstall_button.set_sensitive(False)
+            #     self.MyAppsDetailsPopover.popdown()
 
         else:
-            if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                self.Logger.info("in myappsstack details actionedappname status!=0")
-                self.ma_action_buttonbox.set_sensitive(True)
-
-            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                self.Logger.info("in pop_myapp details status!=0")
-                self.ui_myapp_pop_uninstall_button.set_sensitive(True)
+            # if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+            #     self.Logger.info("in myappsstack details actionedappname status!=0")
+            #     self.ma_action_buttonbox.set_sensitive(True)
+            #
+            # if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+            #     self.Logger.info("in pop_myapp details status!=0")
+            #     self.ui_myapp_pop_uninstall_button.set_sensitive(True)
+            pass
 
     def notify(self, message_summary="", message_body=""):
         try:
