@@ -5674,9 +5674,9 @@ class MainWindow(object):
                 search in myapp_name["keywords"].lower() or search in myapp_name["executable"].lower():
             return True
 
-    def myapps_sort_func(self, row1, row2):
-        return locale.strxfrm(row1.get_children()[0].get_children()[3].name["name"]) > locale.strxfrm(
-            row2.get_children()[0].get_children()[3].name["name"])
+    def installedapps_sort_func(self, row1, row2):
+        return locale.strxfrm(row1.get_children()[0].get_children()[0].name["name"]) > locale.strxfrm(
+            row2.get_children()[0].get_children()[0].name["name"])
 
     def on_MyAppsListBox_row_activated(self, list_box, row):
         self.ui_myapp_pop_toremove_box.set_visible(False)
@@ -6520,7 +6520,7 @@ class MainWindow(object):
                 if valid:
                     self.add_to_myapps_ui(dic)
                     GLib.idle_add(self.ui_installedapps_flowbox.show_all)
-                    # self.MyAppsListBox.set_sort_func(self.myapps_sort_func)
+                    self.ui_installedapps_flowbox.set_sort_func(self.installedapps_sort_func)
             if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
                 self.Logger.info("in pop_myapp details status=0")
                 self.ui_myapp_pop_uninstall_button.set_sensitive(False)
