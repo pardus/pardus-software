@@ -1924,17 +1924,16 @@ class MainWindow(object):
             packages = [p for p in command.split() if self.Package.controlPackageCache(p)]
             command = " ".join(packages) if packages else app_name
 
-        # self.bottomstack.set_visible_child_name("queue")
-        # self.bottomrevealer.set_reveal_child(True)
+        desktop_id = details.get("desktop", "")
 
         self.ui_header_queue_button.set_visible(True)
 
         self.ui_queue_stack.set_visible_child_name("inprogress")
 
-        self.queue.append({"name": app_name, "command": command})
+        self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id})
         self.add_to_queue_ui(app_name)
         if not self.inprogress:
-            self.action_package(app_name, command)
+            self.action_package(app_name, command, desktop_id)
             self.Logger.info("action {}".format(app_name))
 
     def launch_desktop_file(self, desktop):
@@ -1951,13 +1950,13 @@ class MainWindow(object):
         GLib.idle_add(self.ui_queue_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_queue_flowbox.show_all)
 
-    def action_package(self, app_name, command):
+    def action_package(self, app_name, command, desktop_id=""):
         self.inprogress = True
         self.topspinner.start()
 
         self.inprogress_app_name = app_name
         self.inprogress_command = command
-        self.inprogress_desktop = self.desktop_file
+        self.inprogress_desktop = desktop_id
 
         self.isinstalled = self.Package.isinstalled(app_name)
 
@@ -5660,10 +5659,10 @@ class MainWindow(object):
 
         self.ui_myapp_pop_uninstall_button.set_sensitive(False)
 
-        self.queue.append({"name": self.appname, "command": self.command})
+        self.queue.append({"name": self.appname, "command": self.command, "desktop_id": self.desktop_file})
         self.add_to_queue_ui(self.appname)
         if not self.inprogress:
-            self.action_package(self.appname, self.command)
+            self.action_package(self.appname, self.command, self.desktop_file)
             self.inprogress = True
             self.Logger.info("action {}".format(self.appname))
 
@@ -6334,7 +6333,7 @@ class MainWindow(object):
             self.queue.pop(0)
             self.ui_queue_flowbox.remove(self.ui_queue_flowbox.get_children()[0])
         if len(self.queue) > 0:
-            self.action_package(self.queue[0]["name"], self.queue[0]["command"])
+            self.action_package(self.queue[0]["name"], self.queue[0]["command"], self.queue[0]["desktop_id"])
             progressbar = self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[
                 0].get_children()[0].get_children()[3]
             if self.Package.isinstalled(self.inprogress_app_name):
@@ -6516,32 +6515,20 @@ class MainWindow(object):
                             self.MyAppsDetailsPopover.popdown()
                         self.ui_installedapps_flowbox.remove(fbc)
             else:
-                # self.Logger.info("{} adding to myapps".format(actionedappdesktop))
-                # valid, dic = self.Package.parse_desktopfile(os.path.basename(actionedappdesktop))
-                # if valid:
-                #     self.addtoMyApps(dic)
-                #     GLib.idle_add(self.MyAppsListBox.show_all)
-                #     self.MyAppsListBox.set_sort_func(self.myapps_sort_func)
-                pass
-
-            # if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-            #     self.Logger.info("in myappsstack details actionedappname status=0")
-            #     self.ma_action_buttonbox.set_sensitive(False)
-            #
-            # if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-            #     self.Logger.info("in pop_myapp details status=0")
-            #     self.ui_myapp_pop_uninstall_button.set_sensitive(False)
-            #     self.MyAppsDetailsPopover.popdown()
-
+                self.Logger.info("{} adding to myapps".format(actionedappdesktop))
+                valid, dic = self.Package.parse_desktopfile(os.path.basename(actionedappdesktop))
+                if valid:
+                    self.add_to_myapps_ui(dic)
+                    GLib.idle_add(self.ui_installedapps_flowbox.show_all)
+                    # self.MyAppsListBox.set_sort_func(self.myapps_sort_func)
+            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                self.Logger.info("in pop_myapp details status=0")
+                self.ui_myapp_pop_uninstall_button.set_sensitive(False)
+                self.MyAppsDetailsPopover.popdown()
         else:
-            # if self.myappsstack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-            #     self.Logger.info("in myappsstack details actionedappname status!=0")
-            #     self.ma_action_buttonbox.set_sensitive(True)
-            #
-            # if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-            #     self.Logger.info("in pop_myapp details status!=0")
-            #     self.ui_myapp_pop_uninstall_button.set_sensitive(True)
-            pass
+            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                self.Logger.info("in pop_myapp details status!=0")
+                self.ui_myapp_pop_uninstall_button.set_sensitive(True)
 
     def notify(self, message_summary="", message_body=""):
         try:
