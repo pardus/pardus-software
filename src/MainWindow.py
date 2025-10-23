@@ -130,9 +130,6 @@ class MainWindow(object):
         self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
         self.LastAddedFlowBox = self.GtkBuilder.get_object("LastAddedFlowBox")
 
-        self.MyAppsListBox = self.GtkBuilder.get_object("MyAppsListBox")
-        self.MyAppsListBox.set_filter_func(self.myapps_filter_func)
-
         self.hometotaldc = self.GtkBuilder.get_object("hometotaldc")
         self.hometotalrc = self.GtkBuilder.get_object("hometotalrc")
         self.statstotaldc = self.GtkBuilder.get_object("statstotaldc")
@@ -336,93 +333,14 @@ class MainWindow(object):
         self.rapp_dsize_label = self.GtkBuilder.get_object("rapp_dsize_label")
         self.rapp_isize_label = self.GtkBuilder.get_object("rapp_isize_label")
 
-        # self.store_button = self.GtkBuilder.get_object("store_button")
-        # self.store_button.get_style_context().add_class("suggested-action")
-        # self.repo_button = self.GtkBuilder.get_object("repo_button")
-        # self.myapps_button = self.GtkBuilder.get_object("myapps_button")
-        # self.updates_button = Gtk.Button.new()
-        # self.updates_button.set_label(_("Updates"))
-        # self.updates_button.connect("clicked", self.on_updates_button_clicked)
-        # self.header_buttonbox = self.GtkBuilder.get_object("header_buttonbox")
-
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
         self.splashbarstatus = True
 
-        self.upgrade_stack = self.GtkBuilder.get_object("upgrade_stack")
-        self.upgrade_stack_spinnner = self.GtkBuilder.get_object("upgrade_stack_spinnner")
-        self.upgradables_listbox = self.GtkBuilder.get_object("upgradables_listbox")
-        self.upgrade_vte_sw = self.GtkBuilder.get_object("upgrade_vte_sw")
-        self.upgrade_buttonbox = self.GtkBuilder.get_object("upgrade_buttonbox")
-        self.upgrade_buttonbox.set_homogeneous(False)
-        self.upgrade_options_popover = self.GtkBuilder.get_object("upgrade_options_popover")
-        self.upgrade_options_defaults_button = self.GtkBuilder.get_object("upgrade_options_defaults_button")
-        self.upgrade_new_conf_radiobutton = self.GtkBuilder.get_object("upgrade_new_conf_radiobutton")
-        self.upgrade_old_conf_radiobutton = self.GtkBuilder.get_object("upgrade_old_conf_radiobutton")
-        self.upgrade_ask_conf_radiobutton = self.GtkBuilder.get_object("upgrade_ask_conf_radiobutton")
-        self.upgrade_withyq_radiobutton = self.GtkBuilder.get_object("upgrade_withyq_radiobutton")
-        self.upgrade_withoutyq_radiobutton = self.GtkBuilder.get_object("upgrade_withoutyq_radiobutton")
-        self.upgrade_info_back_button = self.GtkBuilder.get_object("upgrade_info_back_button")
-        self.upgrade_info_ok_button = self.GtkBuilder.get_object("upgrade_info_ok_button")
-        self.upgrade_info_dpkgfix_button = self.GtkBuilder.get_object("upgrade_info_dpkgfix_button")
-        self.upgrade_info_box = self.GtkBuilder.get_object("upgrade_info_box")
-        self.upgrade_info_label = self.GtkBuilder.get_object("upgrade_info_label")
-        self.upgrade_dsize_label = self.GtkBuilder.get_object("upgrade_dsize_label")
-        self.upgrade_isize_label = self.GtkBuilder.get_object("upgrade_isize_label")
-        self.upgrade_ucount_label = self.GtkBuilder.get_object("upgrade_ucount_label")
-        self.upgrade_ncount_label = self.GtkBuilder.get_object("upgrade_ncount_label")
-        self.upgrade_rcount_label = self.GtkBuilder.get_object("upgrade_rcount_label")
-        self.upgrade_kcount_label = self.GtkBuilder.get_object("upgrade_kcount_label")
-        self.upgrade_dsize_box = self.GtkBuilder.get_object("upgrade_dsize_box")
-        self.upgrade_isize_box = self.GtkBuilder.get_object("upgrade_isize_box")
-        self.upgrade_ucount_box = self.GtkBuilder.get_object("upgrade_ucount_box")
-        self.upgrade_ncount_box = self.GtkBuilder.get_object("upgrade_ncount_box")
-        self.upgrade_rcount_box = self.GtkBuilder.get_object("upgrade_rcount_box")
-        self.upgrade_kcount_box = self.GtkBuilder.get_object("upgrade_kcount_box")
-
         self.tryfixButton = self.GtkBuilder.get_object("tryfixButton")
         self.tryfixSpinner = self.GtkBuilder.get_object("tryfixSpinner")
         self.headerAptUpdateSpinner = self.GtkBuilder.get_object("headerAptUpdateSpinner")
-
-        self.ui_myapps_app = self.GtkBuilder.get_object("ui_myapps_app")
-        self.ui_myapps_package = self.GtkBuilder.get_object("ui_myapps_package")
-        self.ui_myapps_icon = self.GtkBuilder.get_object("ui_myapps_icon")
-        self.ui_myapps_description = self.GtkBuilder.get_object("ui_myapps_description")
-        self.ui_myapps_uninstall_button = self.GtkBuilder.get_object("ui_myapps_uninstall_button")
-        self.ui_myapps_accept_disclaimer = self.GtkBuilder.get_object("ui_myapps_accept_disclaimer")
-        self.ui_myapps_spinner = self.GtkBuilder.get_object("ui_myapps_spinner")
-        self.ui_myapps_disclaimer_label = self.GtkBuilder.get_object("ui_myapps_disclaimer_label")
-        self.ui_myapps_notfoundname_box = self.GtkBuilder.get_object("ui_myapps_notfoundname_box")
-        self.ui_myapps_notfoundname_image = self.GtkBuilder.get_object("ui_myapps_notfoundname_image")
-        self.ui_myapps_notfoundname_name = self.GtkBuilder.get_object("ui_myapps_notfoundname_name")
-        self.ui_myapp_toremove_label = self.GtkBuilder.get_object("ui_myapp_toremove_label")
-        self.ui_myapp_toinstall_label = self.GtkBuilder.get_object("ui_myapp_toinstall_label")
-        self.ui_myapp_broken_label = self.GtkBuilder.get_object("ui_myapp_broken_label")
-        self.ui_myapp_fsize_label = self.GtkBuilder.get_object("ui_myapp_fsize_label")
-        self.ui_myapp_dsize_label = self.GtkBuilder.get_object("ui_myapp_dsize_label")
-        self.ui_myapp_isize_label = self.GtkBuilder.get_object("ui_myapp_isize_label")
-        self.ui_myapp_toremove_box = self.GtkBuilder.get_object("ui_myapp_toremove_box")
-        self.ui_myapp_toinstall_box = self.GtkBuilder.get_object("ui_myapp_toinstall_box")
-        self.ui_myapp_broken_box = self.GtkBuilder.get_object("ui_myapp_broken_box")
-        self.ui_myapp_fsize_box = self.GtkBuilder.get_object("ui_myapp_fsize_box")
-        self.ui_myapp_dsize_box = self.GtkBuilder.get_object("ui_myapp_dsize_box")
-        self.ui_myapp_isize_box = self.GtkBuilder.get_object("ui_myapp_isize_box")
-        self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
-        self.MyAppsDetailsPopover.set_relative_to(self.MyAppsListBox)
-        self.myapps_apps_sw = self.GtkBuilder.get_object("myapps_apps_sw")
-        self.ma_maintainername = self.GtkBuilder.get_object("ma_maintainername")
-        self.ma_maintainermail = self.GtkBuilder.get_object("ma_maintainermail")
-        self.ma_homepage = self.GtkBuilder.get_object("ma_homepage")
-        self.ma_version = self.GtkBuilder.get_object("ma_version")
-        self.ma_origin = self.GtkBuilder.get_object("ma_origin")
-        self.ma_size = self.GtkBuilder.get_object("ma_size")
-        # self.ma_section = self.GtkBuilder.get_object("ma_section")
-        # self.ma_architecture = self.GtkBuilder.get_object("ma_architecture")
-        self.ma_action_buttonbox = self.GtkBuilder.get_object("ma_action_buttonbox")
-        self.ma_action_button = self.GtkBuilder.get_object("ma_action_button")
-        self.ma_action_info_button = self.GtkBuilder.get_object("ma_action_info_button")
-        self.ma_action_buttonbox.set_homogeneous(False)
 
         # myapps remove popup
         self.ui_myapp_pop_stack = self.GtkBuilder.get_object("ui_myapp_pop_stack")
@@ -453,12 +371,6 @@ class MainWindow(object):
         self.ui_myapp_pop_dsize_box = self.GtkBuilder.get_object("ui_myapp_pop_dsize_box")
         self.ui_myapp_pop_isize_box = self.GtkBuilder.get_object("ui_myapp_pop_isize_box")
 
-        self.ui_myapp_to_store_button = self.GtkBuilder.get_object("ui_myapp_to_store_button")
-
-        # self.PardusAppsIconView = self.GtkBuilder.get_object("PardusAppsIconView")
-        # self.PardusAppsIconView.set_pixbuf_column(0)
-        # self.PardusAppsIconView.set_text_column(3)
-
         self.ui_myapps_combobox = self.GtkBuilder.get_object("ui_myapps_combobox")
         self.ui_myapps_du_progress_box = self.GtkBuilder.get_object("ui_myapps_du_progress_box")
         self.ui_myapps_du_spinner = self.GtkBuilder.get_object("ui_myapps_du_spinner")
@@ -486,10 +398,6 @@ class MainWindow(object):
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
 
-        self.ui_other_actions_popover = self.GtkBuilder.get_object("ui_other_actions_popover")
-        self.ui_other_actions_open_button = self.GtkBuilder.get_object("ui_other_actions_open_button")
-        self.ui_other_actions_uninstall_button = self.GtkBuilder.get_object("ui_other_actions_uninstall_button")
-
         self.ui_ad_name = self.GtkBuilder.get_object("ui_ad_name")
         self.ui_ad_icon = self.GtkBuilder.get_object("ui_ad_icon")
         self.ui_ad_avgrate_label = self.GtkBuilder.get_object("ui_ad_avgrate_label")
@@ -497,6 +405,8 @@ class MainWindow(object):
         self.ui_ad_size_label = self.GtkBuilder.get_object("ui_ad_size_label")
         self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
         self.ui_ad_actionbutton_label = self.GtkBuilder.get_object("ui_ad_actionbutton_label")
+
+        self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
 
@@ -780,17 +690,6 @@ class MainWindow(object):
         self.vteterm.connect_object("event", self.vte_event, menu)
         vtebox = self.GtkBuilder.get_object("VteBox")
         vtebox.add(self.vteterm)
-
-        # upgrade vte box
-        self.upgrade_vteterm = Vte.Terminal()
-        self.upgrade_vteterm.set_scrollback_lines(-1)
-        upgrade_vte_menu = Gtk.Menu()
-        upgrade_vte_menu_items = Gtk.MenuItem(label=_("Copy selected text"))
-        upgrade_vte_menu.append(upgrade_vte_menu_items)
-        upgrade_vte_menu_items.connect("activate", self.upgrade_vte_menu_action, self.upgrade_vteterm)
-        upgrade_vte_menu_items.show()
-        self.upgrade_vteterm.connect_object("event", self.upgrade_vte_event, upgrade_vte_menu)
-        self.upgrade_vte_sw.add(self.upgrade_vteterm)
 
         self.dpkgconfigure_vteterm = None
         self.interrupt_vte_box = self.GtkBuilder.get_object("interrupt_vte_box")
@@ -2004,141 +1903,6 @@ class MainWindow(object):
                         self.start_kill_process(command)
                     break
 
-    def create_base_app_widget(self, app, details):
-        app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
-        app_icon.set_pixel_size(32)
-        app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
-        app_icon.props.halign = Gtk.Align.CENTER
-        app_icon.props.valign = Gtk.Align.CENTER
-
-        prettyname = details["prettyname"][self.locale]
-        if prettyname == "" or prettyname is None:
-            prettyname = details["prettyname"]["en"]
-
-        app_name = Gtk.Label.new()
-        app_name.set_markup("<b>{}</b>".format(prettyname))
-        app_name.set_line_wrap(False)
-        app_name.set_justify(Gtk.Justification.LEFT)
-        app_name.set_max_width_chars(16)
-        app_name.set_ellipsize(Pango.EllipsizeMode.END)
-        app_name.props.halign = Gtk.Align.START
-
-        action_buttonbox = Gtk.ButtonBox.new(Gtk.Orientation.HORIZONTAL)
-        action_buttonbox.set_layout(Gtk.ButtonBoxStyle.EXPAND)
-        action_buttonbox.set_homogeneous(False)
-        action_buttonbox.props.halign = Gtk.Align.END
-        action_buttonbox.props.valign = Gtk.Align.START
-        action_buttonbox.set_hexpand(True)
-
-        action_button = Gtk.Button.new()
-        action_button.get_style_context().add_class("pardus-software-mostapp-action-button")
-        action_button_label = Gtk.Label.new()
-        action_button.add(action_button_label)
-
-        action_buttonbox.add(action_button)
-
-        is_installed = self.Package.isinstalled(app)
-        is_upgradable = self.Package.is_upgradable(app)
-        is_openable = details["desktop"] != ""
-        if is_installed is not None:
-            if is_installed:
-                others_button = Gtk.Button.new()
-                others_button.get_style_context().add_class("pardus-software-mostapp-action-button")
-                pan_down_image = Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON)
-                pan_down_image.set_pixel_size(12)
-                others_button.add(pan_down_image)
-                others_button.name = {"name": app, "upgradable": is_upgradable, "openable": is_openable}
-                others_button.connect("clicked", self.on_other_actions_button_clicked)
-                if is_upgradable:
-                    self.set_button_class(action_button, 3)
-                    self.set_button_class(others_button, 3)
-                    action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                else:
-                    self.set_button_class(action_button, 1)
-                    self.set_button_class(others_button, 1)
-                    action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
-                if is_upgradable or is_openable:
-                    action_buttonbox.add(others_button)
-            else:
-                self.set_button_class(action_button, 0)
-                action_button_label.set_markup("<small>{}</small>".format(_("Install")))
-        else:
-            self.set_button_class(action_button, 2)
-            action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
-
-        box_app = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
-        box_app.pack_start(app_name, False, True, 0)
-        box_app.pack_start(action_buttonbox, False, True, 0)
-
-        rate_icon = Gtk.Image.new_from_icon_name("starred-symbolic", Gtk.IconSize.BUTTON)
-        rate_icon.set_pixel_size(10)
-        rate_icon.set_opacity(0.7)
-        rate_icon.props.valign = Gtk.Align.CENTER
-
-        rate_label = Gtk.Label.new()
-        rate_label.set_markup("<span weight='light' size='small'>{:.1f}</span>".format(float(details["rate_average"])))
-
-        separator = Gtk.Separator.new(Gtk.Orientation.VERTICAL)
-
-        category_label = Gtk.Label.new()
-        category_label.set_markup("<span weight='light' size='small'>{}</span>".format(
-            details["category"][0].get(self.locale, _("Unknown")).title()))
-        category_label.props.valign = Gtk.Align.START
-        category_label.props.halign = Gtk.Align.START
-
-        box_stats = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 4)
-        box_stats.pack_start(rate_label, False, True, 0)
-        box_stats.pack_start(rate_icon, False, True, 0)
-        box_stats.pack_start(separator, False, True, 0)
-        box_stats.pack_start(category_label, False, True, 0)
-        box_stats.props.valign = Gtk.Align.START
-        box_stats.props.halign = Gtk.Align.START
-
-        summary_label = Gtk.Label.new()
-        summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
-            details["description"].get(self.locale, _("Unknown")).title(), -1)[:50].replace("\n", "").replace("\r",
-                                                                                                              "")))
-        summary_label.props.valign = Gtk.Align.START
-        summary_label.props.halign = Gtk.Align.START
-        summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(18)
-        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
-
-        box_right = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
-        box_right.props.valign = Gtk.Align.CENTER
-        box_right.pack_start(box_app, False, True, 0)
-        box_right.pack_start(summary_label, False, True, 0)
-        box_right.pack_start(box_stats, False, True, 0)
-
-        box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
-        # box_h.pack_start(number_label, False, True, 0)
-        box_h.pack_start(app_icon, False, True, 0)
-        box_h.pack_start(box_right, False, True, 0)
-        box_h.set_margin_start(5)
-        box_h.set_margin_end(5)
-        box_h.set_margin_top(5)
-        box_h.set_margin_bottom(5)
-
-        bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
-        bottom_separator.props.valign = Gtk.Align.END
-        bottom_separator.set_vexpand(True)
-        GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
-
-        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
-        box.pack_start(box_h, False, True, 0)
-        box.pack_end(bottom_separator, True, True, 0)
-
-        listbox = Gtk.ListBox.new()
-        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        listbox.connect("row-activated", self.on_app_listbox_row_activated)
-        listbox_row = Gtk.ListBoxRow()
-        GLib.idle_add(listbox_row.add, box)
-        listbox_row.name = {app: details}
-        GLib.idle_add(listbox.add, listbox_row)
-        GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
-
-        return listbox
-
     def app_widget_action_clicked(self, button):
 
         app = button.get_parent().get_parent().get_parent().name
@@ -3040,12 +2804,6 @@ class MainWindow(object):
             self.set_button_class(self.ui_ad_action_button, 2)
             self.ui_ad_actionbutton_label.set_markup("{}".format(_("Not Found")))
 
-    def on_other_actions_button_clicked(self, button):
-        self.ui_other_actions_popover.set_relative_to(button)
-        self.ui_other_actions_popover.popup()
-        self.ui_other_actions_open_button.set_visible(button.name["openable"])
-        self.ui_other_actions_uninstall_button.set_visible(button.name["upgradable"])
-
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
         if self.Server.connection:
@@ -3526,23 +3284,11 @@ class MainWindow(object):
             self.tryfixstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.tryfixstack.set_transition_duration(200)
 
-            self.statstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-            self.statstack.set_transition_duration(250)
-
-            self.statmainstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-            self.statmainstack.set_transition_duration(250)
-
             self.ui_suggest_stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.ui_suggest_stack.set_transition_duration(200)
 
             self.prefstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.prefstack.set_transition_duration(200)
-
-            self.myappsstack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-            self.myappsstack.set_transition_duration(200)
-
-            self.myappsdetailsstack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-            self.myappsdetailsstack.set_transition_duration(200)
 
             self.ImagePopoverStack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
             self.ImagePopoverStack.set_transition_duration(200)
@@ -4440,15 +4186,6 @@ class MainWindow(object):
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
-        self.ui_myapp_to_store_button.set_visible(False)
-        self.ui_myapp_to_store_button.name = ""
-        self.ui_myapps_spinner.stop()
-        self.ui_myapp_toremove_box.set_visible(False)
-        self.ui_myapp_toinstall_box.set_visible(False)
-        self.ui_myapp_broken_box.set_visible(False)
-        self.ui_myapp_fsize_box.set_visible(False)
-        self.ui_myapp_dsize_box.set_visible(False)
-        self.ui_myapp_isize_box.set_visible(False)
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
@@ -4457,39 +4194,12 @@ class MainWindow(object):
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
             self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
-            self.ma_action_buttonbox.set_sensitive(True)
-            self.ui_myapps_app.set_markup(
-                "<span size='x-large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
-            self.ui_myapps_package.set_markup("<i>{}</i>".format(package))
-            self.ui_myapps_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=128))
-            self.ui_myapps_description.set_markup("{}".format(description))
-
-            name = self.fullapplist.get(package)
-            if name:
-                self.ui_myapp_to_store_button.set_visible(True)
-                self.ui_myapp_to_store_button.name = package
-            else:
-                # command = any(package in e["command"][self.locale] for e in self.fullapplist if e["command"])
-                # if command:
-                #     appname = None
-                #     for app in self.fullapplist:
-                #         if app["command"]:
-                #             if package in app["command"][self.locale]:
-                #                 appname = app["name"]
-                #                 break
-                #     if appname:
-                #         self.ui_myapp_to_store_button.set_visible(True)
-                #         self.ui_myapp_to_store_button.name = appname
-                # TODO FIXME
-                pass
 
             if details["to_delete"] and details["to_delete"] is not None:
                 self.ui_myapp_pop_toremove_label.set_markup(
                     "{}".format(", ".join(details["to_delete"])))
                 self.ui_myapp_pop_toremove_box.set_visible(True)
-                self.ui_myapp_toremove_label.set_markup(
-                    "{}".format(", ".join(details["to_delete"])))
-                self.ui_myapp_toremove_box.set_visible(True)
+
                 self.myapp_toremove_list = details["to_delete"]
                 self.myapp_toremove = package
                 self.myapp_toremove_desktop = desktop
@@ -4498,43 +4208,26 @@ class MainWindow(object):
                 self.ui_myapp_pop_toinstall_label.set_markup(
                     "{}".format(", ".join(details["to_install"])))
                 self.ui_myapp_pop_toinstall_box.set_visible(True)
-                self.ui_myapp_toinstall_label.set_markup(
-                    "{}".format(", ".join(details["to_install"])))
-                self.ui_myapp_toinstall_box.set_visible(True)
 
             if details["broken"] and details["broken"] is not None:
                 self.ui_myapp_pop_broken_label.set_markup(
                     "{}".format(", ".join(details["broken"])))
                 self.ui_myapp_pop_broken_box.set_visible(True)
-                self.ui_myapp_broken_label.set_markup(
-                    "{}".format(", ".join(details["broken"])))
-                self.ui_myapp_broken_box.set_visible(True)
 
             if details["freed_size"] and details["freed_size"] is not None and details["freed_size"] > 0:
                 self.ui_myapp_pop_fsize_label.set_markup(
                     "{}".format(self.Package.beauty_size(details["freed_size"])))
                 self.ui_myapp_pop_fsize_box.set_visible(True)
-                self.ui_myapp_fsize_label.set_markup(
-                    "{}".format(self.Package.beauty_size(details["freed_size"])))
-                self.ui_myapp_fsize_box.set_visible(True)
-                self.ma_size.set_markup(
-                    "{}".format(self.Package.beauty_size(details["freed_size"])))
 
             if details["download_size"] and details["download_size"] is not None and details["download_size"] > 0:
                 self.ui_myapp_pop_dsize_label.set_markup(
                     "{}".format(self.Package.beauty_size(details["download_size"])))
                 self.ui_myapp_pop_dsize_box.set_visible(True)
-                self.ui_myapp_dsize_label.set_markup(
-                    "{}".format(self.Package.beauty_size(details["download_size"])))
-                self.ui_myapp_dsize_box.set_visible(True)
 
             if details["install_size"] and details["install_size"] is not None and details["install_size"] > 0:
                 self.ui_myapp_pop_isize_label.set_markup(
                     "{}".format(self.Package.beauty_size(details["install_size"])))
                 self.ui_myapp_pop_isize_box.set_visible(True)
-                self.ui_myapp_isize_label.set_markup(
-                    "{}".format(self.Package.beauty_size(details["install_size"])))
-                self.ui_myapp_isize_box.set_visible(True)
 
             isinstalled = self.Package.isinstalled(package)
 
@@ -4545,51 +4238,6 @@ class MainWindow(object):
                     version = self.Package.candidate_version(package)
             else:
                 version = ""
-
-            maintainer_name, maintainer_mail, homepage, arch = self.Package.get_records(package)
-            origins = self.Package.origins(package)
-            section = self.Package.get_section(package)
-
-            if maintainer_name != "":
-                self.ma_maintainername.set_markup("<i>{}</i>".format(maintainer_name))
-            else:
-                self.ma_maintainername.set_text("-")
-
-            if maintainer_mail != "":
-                self.ma_maintainermail.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
-                    GLib.markup_escape_text(maintainer_mail, -1),
-                    GLib.markup_escape_text(maintainer_mail, -1),
-                    "E-Mail"))
-            else:
-                self.ma_maintainermail.set_text("-")
-
-            if homepage != "":
-                self.ma_homepage.set_markup("<a title='{}' href='{}'>{}</a>".format(
-                    GLib.markup_escape_text(homepage, -1),
-                    GLib.markup_escape_text(homepage, -1),
-                    "Website"))
-            else:
-                self.ma_homepage.set_text("-")
-
-            # if section != "":
-            #     self.ma_section.set_text(section)
-            # else:
-            #     self.ma_section.set_text("-")
-
-            # if arch != "":
-            #     self.ma_architecture.set_text(arch)
-            # else:
-            #     self.ma_architecture.set_text("-")
-
-            if version is not None and version != "":
-                self.ma_version.set_text(version)
-            else:
-                self.ma_version.set_text("-")
-
-            if origins is not None and origins != "":
-                self.ma_origin.set_markup("{} {}".format(origins.origin, origins.component))
-            else:
-                self.ma_origin.set_text("-")
 
             self.ui_myapp_pop_stack.set_visible_child_name("details")
             self.ui_myapp_pop_uninstall_button.grab_focus()
@@ -4603,9 +4251,6 @@ class MainWindow(object):
             self.ui_myapp_pop_stack.set_visible_child_name("notfound")
             self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
-            self.ui_myapps_notfoundname_box.set_visible(True)
-            self.ui_myapps_notfoundname_image.set_from_pixbuf(self.getMyAppIcon(icon, size=96))
-            self.ui_myapps_notfoundname_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
             if not popup:
                 self.myappsstack.set_visible_child_name("notfound")
 
@@ -6097,10 +5742,6 @@ class MainWindow(object):
         self.upgrade_new_conf_radiobutton.set_active(True)
         self.upgrade_withyq_radiobutton.set_active(True)
 
-    def on_upgrade_options_button_clicked(self, button):
-        self.upgrade_options_popover.popup()
-        self.upgrade_options_defaults_button.set_visible(
-            not self.upgrade_new_conf_radiobutton.get_active() or not self.upgrade_withyq_radiobutton.get_active())
 
     def on_upgrade_button_clicked(self, button):
         self.upgrade_vteterm.reset(True, True)
@@ -6314,15 +5955,13 @@ class MainWindow(object):
         self.desktop_file = self.myapp_toremove_desktop
         self.bottomstack.set_visible_child_name("queue")
         self.bottomrevealer.set_reveal_child(True)
-        self.queuestack.set_visible_child_name("inprogress")
 
-        self.ma_action_buttonbox.set_sensitive(False)
         self.ui_myapp_pop_uninstall_button.set_sensitive(False)
 
         self.queue.append({"name": self.appname, "command": self.command})
-        self.addtoQueue(self.appname, myappicon=True)
+        self.add_to_queue_ui(self.appname)
         if not self.inprogress:
-            self.actionPackage(self.appname, self.command)
+            self.action_package(self.appname, self.command)
             self.inprogress = True
             self.Logger.info("action {}".format(self.appname))
 
@@ -7859,8 +7498,8 @@ class MainWindow(object):
                     notification = Notify.Notification.new(
                         self.getPrettyName(self.inprogress_app_name, False) + _(" Installed"))
                 # notification.set_app_icon(self.inprogress_app_name)
-                notification.set_icon_from_pixbuf(Gtk.IconTheme.get_default().load_icon(self.inprogress_app_name, 64,
-                                                                        Gtk.IconLookupFlags(16)))
+                # notification.set_icon_from_pixbuf(Gtk.IconTheme.get_default().load_icon(self.inprogress_app_name, 64,
+                #                                                         Gtk.IconLookupFlags(16)))
             else:
                 Notify.init(message_summary)
                 notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
