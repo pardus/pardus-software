@@ -1918,7 +1918,7 @@
       <object class="GtkStack" id="mainstack">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="transition-type">slide-left-right</property>
+        <property name="transition-type">crossfade</property>
         <child>
           <object class="GtkBox" id="SplashBox">
             <property name="visible">True</property>
@@ -2328,7 +2328,7 @@
                     <property name="can-focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="transition-type">slide-up-down</property>
+                    <property name="transition-type">crossfade</property>
                     <child>
                       <object class="GtkBox" id="ui_pardus_home_box">
                         <property name="visible">True</property>
@@ -8744,7 +8744,7 @@ This application served from Pardus non-free package repositories, so that the O
                       </object>
                       <packing>
                         <property name="name">suggestapp</property>
-                        <property name="title">suggestapp</property>
+                        <property name="title" translatable="yes">suggestapp</property>
                         <property name="position">5</property>
                       </packing>
                     </child>
