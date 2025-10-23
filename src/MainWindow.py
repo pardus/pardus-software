@@ -421,7 +421,6 @@ class MainWindow(object):
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
         self.switchSAA = self.GtkBuilder.get_object("switchSAA")
-        self.switchSERA = self.GtkBuilder.get_object("switchSERA")
         self.switchSGC = self.GtkBuilder.get_object("switchSGC")
         self.switchUDT = self.GtkBuilder.get_object("switchUDT")
         self.switchAPTU = self.GtkBuilder.get_object("switchAPTU")
@@ -5779,10 +5778,8 @@ class MainWindow(object):
         self.prefstack.set_visible_child_name("main")
         self.homestack.set_visible_child_name("preferences")
         self.UserSettings.readConfig()
-        self.switchUSI.set_state(self.UserSettings.config_usi)
         self.switchEA.set_state(self.UserSettings.config_ea)
         self.switchSAA.set_state(self.UserSettings.config_saa)
-        self.switchSERA.set_state(self.UserSettings.config_sera)
         self.switchSGC.set_state(self.UserSettings.config_sgc)
         self.switchUDT.set_state(self.UserSettings.config_udt)
         self.switchAPTU.set_state(self.UserSettings.config_aptup)
@@ -5793,8 +5790,6 @@ class MainWindow(object):
         self.preflabel_settext("")
 
         self.control_groups()
-
-        self.setSelectIcons()
 
         self.set_cache_size()
 
@@ -5819,19 +5814,6 @@ class MainWindow(object):
             self.passwordlessbutton.set_sensitive(True)
         else:
             self.passwordlessbutton.set_visible(False)
-
-    def setSelectIcons(self):
-        if self.UserSettings.config_usi:
-            self.selecticonsBox.set_visible(True)
-            self.setServerIconCombo.remove_all()
-            iconnames = self.Server.iconnames.split(",")
-            self.setServerIconCombo.append("default", _("Default"))
-            for icon in iconnames:
-                self.setServerIconCombo.append(icon, icon.capitalize())
-            user_config_icon = self.UserSettings.config_icon
-            self.setServerIconCombo.set_active_id(user_config_icon)
-        else:
-            self.selecticonsBox.set_visible(False)
 
     def on_menu_about_clicked(self, button):
         self.ui_headermenu_popover.popdown()
