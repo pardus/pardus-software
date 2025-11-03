@@ -419,6 +419,12 @@ class MainWindow(object):
             about_headerbar.show_all()
             self.aboutdialog.set_titlebar(about_headerbar)
 
+        self.ui_settings_dark_switch = self.GtkBuilder.get_object("ui_settings_dark_switch")
+        self.ui_settings_animations_switch = self.GtkBuilder.get_object("ui_settings_animations_switch")
+        self.ui_settings_gcomments_switch = self.GtkBuilder.get_object("ui_settings_gcomments_switch")
+        self.ui_settings_update_switch = self.GtkBuilder.get_object("ui_settings_update_switch")
+        self.ui_settings_available_switch = self.GtkBuilder.get_object("ui_settings_available_switch")
+
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
         self.switchSAA = self.GtkBuilder.get_object("switchSAA")
@@ -885,7 +891,7 @@ class MainWindow(object):
 
     def controlAvailableApps(self):
         if self.Server.connection:
-            self.setAvailableApps(available=self.UserSettings.config_saa, showextapps=self.UserSettings.config_sera)
+            self.setAvailableApps(available=self.UserSettings.config_saa)
 
     def controlArgs(self):
         if "details" in self.Application.args.keys():
@@ -5782,6 +5788,12 @@ class MainWindow(object):
         self.ui_leftinstalled_listbox.unselect_all()
         self.ui_leftupdates_listbox.unselect_all()
 
+        self.ui_settings_animations_switch.set_state(self.UserSettings.config_ea)
+        self.ui_settings_available_switch.set_state(self.UserSettings.config_saa)
+        self.ui_settings_gcomments_switch.set_state(self.UserSettings.config_sgc)
+        self.ui_settings_dark_switch.set_state(self.UserSettings.config_udt)
+        self.ui_settings_update_switch.set_state(self.UserSettings.config_aptup)
+
         # if self.homestack.get_visible_child_name() == "preferences":
         #     self.Logger.info("already preferences page")
         # else:
@@ -6014,6 +6026,66 @@ class MainWindow(object):
                                           self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
             self.usersettings()
 
+
+    def on_ui_settings_dark_switch_state_set(self, switch, state):
+        user_config_dark = self.UserSettings.config_udt
+        if state != user_config_dark:
+            self.Logger.info("Updating dark theme state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
+                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
+            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = state
+            self.usersettings()
+
+    def on_ui_settings_animations_switch_state_set(self, switch, state):
+        user_config_animations = self.UserSettings.config_ea
+        if state != user_config_animations:
+            self.Logger.info("Updating animations state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
+                                          self.UserSettings.config_sera, self.UserSettings.config_icon,
+                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
+            self.usersettings()
+            self.setAnimations()
+
+    def on_ui_settings_gcomments_switch_state_set(self, switch, state):
+        user_config_gcomments = self.UserSettings.config_sgc
+        if state != user_config_gcomments:
+            self.Logger.info("Updating gnome comments state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
+                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
+            self.usersettings()
+
+    def on_ui_settings_update_switch_state_set(self, switch, state):
+        user_config_update = self.UserSettings.config_aptup
+        if state != user_config_update:
+            self.Logger.info("Updating auto apt update state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
+                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
+                                          self.UserSettings.config_udt, state,
+                                          self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
+            self.usersettings()
+
+    def on_ui_settings_available_switch_state_set(self, switch, state):
+        user_config_available = self.UserSettings.config_saa
+        if state != user_config_available:
+            self.Logger.info("Updating show available apps state")
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
+                                          self.UserSettings.config_sera, self.UserSettings.config_icon,
+                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
+            self.usersettings()
+            self.setAvailableApps(available=state)
+            GLib.idle_add(self.set_applications)
+
     def clearBoxes(self):
         self.EditorListStore.clear()
         self.PardusAppListStore.clear()
@@ -6026,7 +6098,7 @@ class MainWindow(object):
         for row in self.LastAddedFlowBox:
             self.LastAddedFlowBox.remove(row)
 
-    def setAvailableApps(self, available, showextapps):
+    def setAvailableApps(self, available, showextapps=False):
         self.applist = {
             app: details
             for app, details in self.fullapplist.items()

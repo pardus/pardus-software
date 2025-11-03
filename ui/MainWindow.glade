@@ -4121,9 +4121,10 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkSwitch">
+                                                  <object class="GtkSwitch" id="ui_settings_dark_switch">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <signal name="state-set" handler="on_ui_settings_dark_switch_state_set" swapped="no"/>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
@@ -4171,9 +4172,10 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkSwitch">
+                                                  <object class="GtkSwitch" id="ui_settings_animations_switch">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <signal name="state-set" handler="on_ui_settings_animations_switch_state_set" swapped="no"/>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
@@ -4221,9 +4223,10 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkSwitch">
+                                                  <object class="GtkSwitch" id="ui_settings_gcomments_switch">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <signal name="state-set" handler="on_ui_settings_gcomments_switch_state_set" swapped="no"/>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
@@ -4284,9 +4287,10 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkSwitch">
+                                                  <object class="GtkSwitch" id="ui_settings_update_switch">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <signal name="state-set" handler="on_ui_settings_update_switch_state_set" swapped="no"/>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
@@ -4334,9 +4338,10 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkSwitch">
+                                                  <object class="GtkSwitch" id="ui_settings_available_switch">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
+                                                    <signal name="state-set" handler="on_ui_settings_available_switch_state_set" swapped="no"/>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
