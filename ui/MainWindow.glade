@@ -2801,75 +2801,152 @@
                                     <property name="can-focus">False</property>
                                     <property name="orientation">vertical</property>
                                     <child>
-                                      <object class="GtkBox">
+                                      <object class="GtkScrolledWindow" id="ui_pardusapps_scrolledwindow">
                                         <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="margin-start">8</property>
-                                        <property name="margin-end">17</property>
-                                        <property name="spacing">21</property>
+                                        <property name="can-focus">True</property>
                                         <child>
-                                          <object class="GtkLabel" id="ui_currentcat_label">
+                                          <object class="GtkViewport">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="label">Category</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkComboBoxText" id="ui_sortby_combo">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="active">0</property>
-                                            <property name="active-id">0</property>
-                                            <items>
-                                              <item id="0" translatable="yes">Sort by Name</item>
-                                              <item id="1" translatable="yes">Sort by Download</item>
-                                              <item id="2" translatable="yes">Sort by Popularity</item>
-                                              <item id="3" translatable="yes">Sort by Last Added</item>
-                                            </items>
-                                            <signal name="changed" handler="on_sortPardusAppsCombo_changed" swapped="no"/>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="pack-type">end</property>
-                                            <property name="position">4</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkStack" id="ui_pardusapps_stack">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="transition-type">slide-up-down</property>
-                                        <child>
-                                          <object class="GtkScrolledWindow" id="ui_pardusapps_scrolledwindow">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
+                                            <property name="shadow-type">none</property>
                                             <child>
-                                              <object class="GtkViewport">
+                                              <object class="GtkBox">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="shadow-type">none</property>
+                                                <property name="margin-start">21</property>
+                                                <property name="margin-end">21</property>
+                                                <property name="margin-top">21</property>
+                                                <property name="margin-bottom">21</property>
+                                                <property name="orientation">vertical</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-start">2</property>
+                                                    <property name="margin-end">18</property>
+                                                    <property name="margin-bottom">21</property>
+                                                    <property name="spacing">21</property>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="spacing">16</property>
+                                                        <child>
+                                                          <object class="GtkImage" id="ui_currentcat_image">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">image-missing-symbolic</property>
+                                                            <property name="icon_size">6</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel" id="ui_currentcat_label">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label">&lt;span size='x-large'&gt;&lt;b&gt;Category&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkEventBox" id="ui_suggestapp_eventbox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <child>
+                                                          <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">+ Suggest an App</property>
+                                                            <attributes>
+                                                            <attribute name="underline" value="True"/>
+                                                            <attribute name="foreground" value="#21207b7aeaea"/>
+                                                            </attributes>
+                                                          </object>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="pack-type">end</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-start">8</property>
+                                                    <property name="margin-end">8</property>
+                                                    <property name="spacing">21</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;All Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="use-markup">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkComboBoxText" id="ui_sortby_combo">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="active">0</property>
+                                                        <property name="active-id">0</property>
+                                                        <items>
+                                                          <item id="0" translatable="yes">Sort by Name</item>
+                                                          <item id="1" translatable="yes">Sort by Download</item>
+                                                          <item id="2" translatable="yes">Sort by Popularity</item>
+                                                          <item id="3" translatable="yes">Sort by Last Added</item>
+                                                        </items>
+                                                        <signal name="changed" handler="on_sortPardusAppsCombo_changed" swapped="no"/>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="pack-type">end</property>
+                                                        <property name="position">4</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
                                                 <child>
                                                   <object class="GtkFlowBox" id="ui_pardusapps_flowbox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
-                                                    <property name="margin-start">5</property>
-                                                    <property name="margin-end">13</property>
-                                                    <property name="margin-top">5</property>
-                                                    <property name="margin-bottom">5</property>
                                                     <property name="homogeneous">True</property>
                                                     <property name="column-spacing">12</property>
                                                     <property name="min-children-per-line">2</property>
@@ -2878,19 +2955,21 @@
                                                       <class name="pardus-software-flowbox"/>
                                                     </style>
                                                   </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">2</property>
+                                                  </packing>
                                                 </child>
                                               </object>
                                             </child>
                                           </object>
-                                          <packing>
-                                            <property name="name">normal</property>
-                                          </packing>
                                         </child>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
                                         <property name="fill">True</property>
-                                        <property name="position">3</property>
+                                        <property name="position">2</property>
                                       </packing>
                                     </child>
                                   </object>
@@ -3979,9 +4058,6 @@
                         <property name="name">pardushome</property>
                         <property name="title" translatable="yes">Pardus</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                     <child>
                       <object class="GtkBox" id="PardusAppDetailBox">
@@ -7574,7 +7650,7 @@ This application served from Pardus non-free package repositories, so that the O
                       <packing>
                         <property name="name">pardusappsdetail</property>
                         <property name="title">page4</property>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -7619,7 +7695,7 @@ This application served from Pardus non-free package repositories, so that the O
                       </object>
                       <packing>
                         <property name="name">noserver</property>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
@@ -8265,11 +8341,8 @@ This application served from Pardus non-free package repositories, so that the O
                       <packing>
                         <property name="name">preferences</property>
                         <property name="title">page1</property>
-                        <property name="position">4</property>
+                        <property name="position">3</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                     <child>
                       <object class="GtkBox" id="FixAptBox">
@@ -8621,17 +8694,8 @@ Use with caution. Are you sure you want to continue?</property>
                       </object>
                       <packing>
                         <property name="name">fixapt</property>
-                        <property name="position">6</property>
+                        <property name="position">4</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                   </object>
                   <packing>

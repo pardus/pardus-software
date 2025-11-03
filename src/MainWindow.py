@@ -367,6 +367,7 @@ class MainWindow(object):
         self.ui_right_stack = self.GtkBuilder.get_object("ui_right_stack")
 
         self.ui_currentcat_label = self.GtkBuilder.get_object("ui_currentcat_label")
+        self.ui_currentcat_image = self.GtkBuilder.get_object("ui_currentcat_image")
 
         self.ui_top_searchentry = self.GtkBuilder.get_object("ui_top_searchentry")
         self.ui_top_searchentry.props.primary_icon_activatable = True
@@ -1766,7 +1767,10 @@ class MainWindow(object):
             print("in category")
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.ui_right_stack.set_visible_child_name("apps")
-            self.ui_currentcat_label.set_markup("<b>{}</b>".format(self.current_category.title()))
+            self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.current_category.title()))
+            icon = next((cat["icon"] for cat in self.categories if cat["name"] == self.current_category), "image-missing-symbolic")
+            self.ui_currentcat_image.set_from_icon_name(icon, Gtk.IconSize.DIALOG)
+            self.ui_currentcat_image.set_pixel_size(55)
 
     def on_ui_leftupdates_listbox_row_activated(self, listbox, row):
         self.ui_leftcats_listbox.unselect_all()
@@ -5698,7 +5702,9 @@ class MainWindow(object):
         self.homestack.set_visible_child_name("pardushome")
         self.ui_right_stack.set_visible_child_name("apps")
 
-        self.ui_currentcat_label.set_markup("<b>{}</b>".format(self.categories[0]["name"].title()))
+        self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.categories[0]["name"].title()))
+        self.ui_currentcat_image.set_from_icon_name(self.categories[0]["icon"], Gtk.IconSize.DIALOG)
+        self.ui_currentcat_image.set_pixel_size(55)
         self.isPardusSearching = True
         self.ui_pardusapps_flowbox.invalidate_filter()
 
