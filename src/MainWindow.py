@@ -5775,29 +5775,36 @@ class MainWindow(object):
         #                 return True
 
     def on_menu_settings_clicked(self, button):
-        if self.homestack.get_visible_child_name() == "preferences":
-            self.Logger.info("already preferences page")
-        else:
-            self.prefback = self.homestack.get_visible_child_name()
-            self.prefback_preferences = self.prefback
+        self.ui_right_stack.set_visible_child_name("settings")
         self.ui_headermenu_popover.popdown()
-        self.prefstack.set_visible_child_name("main")
-        self.homestack.set_visible_child_name("preferences")
-        self.UserSettings.readConfig()
-        self.switchEA.set_state(self.UserSettings.config_ea)
-        self.switchSAA.set_state(self.UserSettings.config_saa)
-        self.switchSGC.set_state(self.UserSettings.config_sgc)
-        self.switchUDT.set_state(self.UserSettings.config_udt)
-        self.switchAPTU.set_state(self.UserSettings.config_aptup)
-        self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
-            _("Server Address"), self.Server.serverurl))
-        self.prefcachebutton.set_sensitive(True)
-        self.prefcachebutton.set_label(_("Clear"))
-        self.preflabel_settext("")
 
-        self.control_groups()
+        self.ui_leftcats_listbox.unselect_all()
+        self.ui_leftinstalled_listbox.unselect_all()
+        self.ui_leftupdates_listbox.unselect_all()
 
-        self.set_cache_size()
+        # if self.homestack.get_visible_child_name() == "preferences":
+        #     self.Logger.info("already preferences page")
+        # else:
+        #     self.prefback = self.homestack.get_visible_child_name()
+        #     self.prefback_preferences = self.prefback
+        # self.ui_headermenu_popover.popdown()
+        # self.prefstack.set_visible_child_name("main")
+        # self.homestack.set_visible_child_name("preferences")
+        # self.UserSettings.readConfig()
+        # self.switchEA.set_state(self.UserSettings.config_ea)
+        # self.switchSAA.set_state(self.UserSettings.config_saa)
+        # self.switchSGC.set_state(self.UserSettings.config_sgc)
+        # self.switchUDT.set_state(self.UserSettings.config_udt)
+        # self.switchAPTU.set_state(self.UserSettings.config_aptup)
+        # self.prefServerLabel.set_markup("<small><span weight='light'>{} : {}</span></small>".format(
+        #     _("Server Address"), self.Server.serverurl))
+        # self.prefcachebutton.set_sensitive(True)
+        # self.prefcachebutton.set_label(_("Clear"))
+        # self.preflabel_settext("")
+        #
+        # self.control_groups()
+        #
+        # self.set_cache_size()
 
     def set_cache_size(self):
         cache_size = self.Utils.get_path_size(self.Server.cachedir)
