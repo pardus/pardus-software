@@ -3896,22 +3896,115 @@
                                                 <property name="can-focus">False</property>
                                                 <property name="shadow-type">none</property>
                                                 <child>
-                                                  <object class="GtkFlowBox" id="ui_queue_flowbox">
+                                                  <object class="GtkBox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="valign">start</property>
-                                                    <property name="margin-start">5</property>
-                                                    <property name="margin-end">13</property>
-                                                    <property name="margin-top">5</property>
-                                                    <property name="margin-bottom">5</property>
-                                                    <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">34</property>
-                                                    <property name="min-children-per-line">1</property>
-                                                    <property name="max-children-per-line">2</property>
-                                                    <property name="selection-mode">none</property>
-                                                    <style>
-                                                      <class name="pardus-software-flowbox"/>
-                                                    </style>
+                                                    <property name="margin-start">21</property>
+                                                    <property name="margin-end">21</property>
+                                                    <property name="margin-top">21</property>
+                                                    <property name="margin-bottom">21</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="margin-start">2</property>
+                                                        <property name="margin-end">18</property>
+                                                        <property name="margin-bottom">21</property>
+                                                        <property name="spacing">21</property>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="spacing">16</property>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_currentcat_image1">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">folder-download-symbolic</property>
+                                                            <property name="icon_size">6</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_currentcat_label1">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label">&lt;span size='x-large'&gt;&lt;b&gt;Downloading Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="margin-start">8</property>
+                                                        <property name="margin-end">8</property>
+                                                        <property name="margin-bottom">4</property>
+                                                        <property name="spacing">21</property>
+                                                        <child>
+                                                          <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label">&lt;span size='large'&gt;&lt;b&gt;Queue&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkFlowBox" id="ui_queue_flowbox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="valign">start</property>
+                                                        <property name="homogeneous">True</property>
+                                                        <property name="column-spacing">34</property>
+                                                        <property name="min-children-per-line">1</property>
+                                                        <property name="max-children-per-line">2</property>
+                                                        <property name="selection-mode">none</property>
+                                                        <style>
+                                                          <class name="pardus-software-flowbox"/>
+                                                        </style>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
                                                   </object>
                                                 </child>
                                               </object>
