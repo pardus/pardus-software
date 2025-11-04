@@ -2460,10 +2460,10 @@ class MainWindow(object):
         version_label.set_markup("<span weight='light' size='small'>{}</span>".format(self.Package.candidate_version(app)))
 
         box_version = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
-        box_version.props.halign = Gtk.Align.START
+        box_version.props.halign = Gtk.Align.END
         box_version.pack_start(version_title, False, True, 0)
         box_version.pack_start(version_label, False, True, 0)
-        box_version.set_size_request(77, -1)
+        box_version.set_size_request(120, -1)
 
         progress_bar = Gtk.ProgressBar.new()
         progress_bar.set_show_text(True)
@@ -2477,9 +2477,9 @@ class MainWindow(object):
         box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
         box_h.pack_start(app_icon, False, True, 0)
         box_h.pack_start(box_app, False, True, 0)
-        box_h.pack_start(box_version, False, True, 40 if self.display_width >= 1920 else 6)
         box_h.pack_end(cancel_button, False, True, 0)
         box_h.pack_end(progress_bar, False, True, 40 if self.display_width >= 1920 else 6)
+        box_h.pack_end(box_version, False, True, 40 if self.display_width >= 1920 else 6)
 
         box_h.set_margin_start(5)
         box_h.set_margin_end(5)
