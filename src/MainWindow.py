@@ -3822,6 +3822,8 @@ class MainWindow(object):
         GLib.idle_add(self.ui_myapps_combobox.set_sensitive, True)
         GLib.idle_add(self.ui_installedapps_flowbox.show_all)
         GLib.idle_add(self.controlArgs)
+        if du:
+            self.ui_installedapps_flowbox.set_sort_func(None)
         self.Logger.info("on_myapps_worker_done")
 
     def on_myapps_worker_cancelled(self):
