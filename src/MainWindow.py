@@ -425,36 +425,13 @@ class MainWindow(object):
         self.ui_settings_update_switch = self.GtkBuilder.get_object("ui_settings_update_switch")
         self.ui_settings_available_switch = self.GtkBuilder.get_object("ui_settings_available_switch")
 
+        self.ui_settings_update_label = self.GtkBuilder.get_object("ui_settings_update_label")
+
         self.ui_settings_cache_button = self.GtkBuilder.get_object("ui_settings_cache_button")
         self.ui_settings_cache_info_label = self.GtkBuilder.get_object("ui_settings_cache_info_label")
         self.ui_settings_cache_size_label = self.GtkBuilder.get_object("ui_settings_cache_size_label")
         self.ui_settings_password_button = self.GtkBuilder.get_object("ui_settings_password_button")
         self.ui_settings_password_info_label = self.GtkBuilder.get_object("ui_settings_password_info_label")
-
-        self.switchUSI = self.GtkBuilder.get_object("switchUSI")
-        self.switchEA = self.GtkBuilder.get_object("switchEA")
-        self.switchSAA = self.GtkBuilder.get_object("switchSAA")
-        self.switchSGC = self.GtkBuilder.get_object("switchSGC")
-        self.switchUDT = self.GtkBuilder.get_object("switchUDT")
-        self.switchAPTU = self.GtkBuilder.get_object("switchAPTU")
-        self.preflabel = self.GtkBuilder.get_object("preflabel")
-        self.prefServerLabel = self.GtkBuilder.get_object("prefServerLabel")
-        self.prefcachebutton = self.GtkBuilder.get_object("prefcachebutton")
-        self.prefcorrectbutton = self.GtkBuilder.get_object("prefcorrectbutton")
-        self.ui_cache_size = self.GtkBuilder.get_object("ui_cache_size")
-        self.PopoverPrefTip = self.GtkBuilder.get_object("PopoverPrefTip")
-        self.prefTipLabel = self.GtkBuilder.get_object("prefTipLabel")
-        self.tip_usi = self.GtkBuilder.get_object("tip_usi")
-        self.tip_ea = self.GtkBuilder.get_object("tip_ea")
-        self.tip_soaa = self.GtkBuilder.get_object("tip_soaa")
-        self.tip_sera = self.GtkBuilder.get_object("tip_sera")
-        self.tip_icons = self.GtkBuilder.get_object("tip_icons")
-        self.tip_sgc = self.GtkBuilder.get_object("tip_sgc")
-        self.tip_udt = self.GtkBuilder.get_object("tip_udt")
-        self.tip_aptu = self.GtkBuilder.get_object("tip_aptu")
-        self.setServerIconCombo = self.GtkBuilder.get_object("setServerIconCombo")
-        self.selecticonsBox = self.GtkBuilder.get_object("selecticonsBox")
-        self.passwordlessbutton = self.GtkBuilder.get_object("passwordlessbutton")
 
         self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
 
@@ -5805,6 +5782,8 @@ class MainWindow(object):
         self.control_groups()
         self.set_cache_size()
 
+        self.set_settings_tooltips()
+
     def set_cache_size(self):
         cache_size = self.Utils.get_path_size(self.Server.cachedir)
         self.Logger.info("{} : {} bytes".format(self.Server.cachedir, cache_size))
@@ -5828,6 +5807,27 @@ class MainWindow(object):
             self.ui_settings_password_button.set_sensitive(True)
         else:
             self.ui_settings_password_button.set_visible(False)
+
+    def set_settings_tooltips(self):
+        if self.UserSettings.config_forceaptuptime != 0:
+            self.ui_settings_update_label.set_tooltip_text(
+                "{} {} {}\n{}: {}\n\n{} ( {} )".format(
+                    _("Allows the package manager cache to be updated again on the next application start if"),
+                    self.displayTime(self.Server.aptuptime),
+                    _("have passed since the last successful update."),
+                    _("Last successful update time is"),
+                    datetime.fromtimestamp(self.UserSettings.config_lastaptup),
+                    _("The value in your configuration file is used as the wait time."),
+                    self.displayTime(self.UserSettings.config_forceaptuptime)
+                ))
+        else:
+            self.ui_settings_update_label.set_tooltip_text("{} {} {}\n{}: {}".format(
+                _("Allows the package manager cache to be updated again on the next application start if"),
+                self.displayTime(self.Server.aptuptime),
+                _("have passed since the last successful update."),
+                _("Last successful update time is"),
+                datetime.fromtimestamp(self.UserSettings.config_lastaptup)
+            ))
 
     def on_menu_about_clicked(self, button):
         self.ui_headermenu_popover.popdown()
@@ -5853,61 +5853,6 @@ class MainWindow(object):
     def on_ui_recent_seeall_eventbox_button_release_event(self, widget, event):
         self.ui_right_stack.set_visible_child_name("recentapps")
 
-    def on_pref_tip_clicked(self, button):
-        self.prefTipLabel.set_max_width_chars(-1)
-
-        if button.get_name() == "tip_ea":
-            self.PopoverPrefTip.set_relative_to(self.tip_ea)
-            self.prefTipLabel.set_text(_("Transition animations in the application."))
-            self.PopoverPrefTip.popup()
-        elif button.get_name() == "tip_soaa":
-            self.PopoverPrefTip.set_relative_to(self.tip_soaa)
-            self.prefTipLabel.set_text("{} {} {}\n{}\n{}".format(
-                _("Show only available applications in"), self.UserSettings.usercodename, _("repository."),
-                _("If you turn this option off, all apps will be shown, but"),
-                _("'Not Found' will be displayed for apps not available in the repository.")))
-            self.PopoverPrefTip.popup()
-        elif button.get_name() == "tip_sgc":
-            self.PopoverPrefTip.set_relative_to(self.tip_sgc)
-            self.prefTipLabel.set_markup("{}\n{}".format(
-                _("Show gnome comments in app comments."),
-                _("GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME ODRS</a>.")
-            ))
-            self.PopoverPrefTip.popup()
-        elif button.get_name() == "tip_udt":
-            self.PopoverPrefTip.set_relative_to(self.tip_udt)
-            self.prefTipLabel.set_markup("{}\n{}".format(
-                _("Whether the application prefers to use a dark theme."),
-                _("If a GTK+ theme includes a dark variant, it will be used instead of the configured theme.")
-            ))
-            self.PopoverPrefTip.popup()
-        elif button.get_name() == "tip_aptu":
-            if self.UserSettings.config_forceaptuptime != 0:
-                force = "{} ( {} )".format(_("The value in your configuration file is used as the wait time."),
-                                           self.displayTime(self.UserSettings.config_forceaptuptime))
-            else:
-                force = False
-            self.PopoverPrefTip.set_relative_to(self.tip_aptu)
-            self.prefTipLabel.set_max_width_chars(60)
-            if force is False:
-                self.prefTipLabel.set_markup("{} {} {}\n<u>{}:</u> <b>{}</b>".format(
-                    _("Allows the package manager cache to be updated again on the next application start if"),
-                    self.displayTime(self.Server.aptuptime),
-                    _("have passed since the last successful update."),
-                    _("Last successful update time is"),
-                    datetime.fromtimestamp(self.UserSettings.config_lastaptup)
-                ))
-            else:
-                self.prefTipLabel.set_markup("{} {} {}\n<u>{}:</u> <b>{}</b>\n\n<span color='red'>{}</span>".format(
-                    _("Allows the package manager cache to be updated again on the next application start if"),
-                    self.displayTime(self.Server.aptuptime),
-                    _("have passed since the last successful update."),
-                    _("Last successful update time is"),
-                    datetime.fromtimestamp(self.UserSettings.config_lastaptup),
-                    force
-                ))
-            self.PopoverPrefTip.popup()
-
     def displayTime(self, seconds, granularity=5):
         result = []
         intervals = (
@@ -5925,96 +5870,6 @@ class MainWindow(object):
                     name = name.rstrip('s')
                 result.append("{} {}".format(value, name))
         return ', '.join(result[:granularity])
-
-    def on_switchEA_state_set(self, switch, state):
-        user_config_ea = self.UserSettings.config_ea
-        if state != user_config_ea:
-            self.Logger.info("Updating user animation state")
-            try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
-                                              self.UserSettings.config_sera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
-                self.usersettings()
-                self.setAnimations()
-            except Exception as e:
-                self.preflabel_settext("{}".format(e))
-
-    def on_switchSAA_state_set(self, switch, state):
-        user_config_saa = self.UserSettings.config_saa
-        if state != user_config_saa:
-            self.Logger.info("Updating show available apps state")
-            try:
-                self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
-                                              self.UserSettings.config_sera, self.UserSettings.config_icon,
-                                              self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                              self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                              self.UserSettings.config_forceaptuptime)
-                self.usersettings()
-                self.setAvailableApps(available=state, showextapps=self.UserSettings.config_sera)
-            except Exception as e:
-                self.preflabel_settext("{}".format(e))
-
-            GLib.idle_add(self.clearBoxes)
-            self.set_applications()
-            self.setPardusCategories()
-            self.setEditorApps()
-            self.setMostApps()
-
-    def on_setServerIconCombo_changed(self, combo_box):
-        user_config_icon = self.UserSettings.config_icon
-        active = combo_box.get_active_id()
-        if active != user_config_icon and active is not None:
-            self.Logger.info("changing icons to {}".format(combo_box.get_active_id()))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera, active,
-                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
-            self.usersettings()
-            GLib.idle_add(self.clearBoxes)
-            self.set_applications()
-            self.setPardusCategories()
-            self.setEditorApps()
-            self.setMostApps()
-
-    def on_switchSGC_state_set(self, switch, state):
-        user_config_sgc = self.UserSettings.config_sgc
-        if state != user_config_sgc:
-            self.Logger.info("Updating show gnome apps state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
-                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
-            self.usersettings()
-
-    def on_switchUDT_state_set(self, switch, state):
-        user_config_udt = self.UserSettings.config_udt
-        if state != user_config_udt:
-            self.Logger.info("Updating use dark theme state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
-
-            Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = state
-
-            self.usersettings()
-
-    def on_switchAPTU_state_set(self, switch, state):
-        user_config_aptup = self.UserSettings.config_aptup
-        if state != user_config_aptup:
-            self.Logger.info("Updating auto apt update state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
-                                          self.UserSettings.config_udt, state,
-                                          self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
-            self.usersettings()
-
 
     def on_ui_settings_dark_switch_state_set(self, switch, state):
         user_config_dark = self.UserSettings.config_udt
@@ -6135,47 +5990,7 @@ class MainWindow(object):
                     newlist.append(cat)
             self.catlist = newlist
 
-    def on_prefcachebutton_clicked(self, button):
-        state, message = self.Server.delete_cache()
-        if state:
-            self.prefcachebutton.set_sensitive(False)
-            self.prefcachebutton.set_label(_("Cleared"))
-            self.preflabel_settext(_("Cache files cleared, please close and reopen the application"))
-        else:
-            self.prefcachebutton.set_sensitive(True)
-            self.prefcachebutton.set_label(_("Error"))
-            self.preflabel_settext("{}".format(message))
-        self.set_cache_size()
 
-    def on_prefcorrectbutton_clicked(self, button):
-        self.prefstack.set_visible_child_name("confirm")
-
-    def on_prefconfirm_cancelbutton_clicked(self, button):
-        self.prefstack.set_visible_child_name("main")
-
-    def on_prefconfirm_acceptbutton_clicked(self, button):
-        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
-                   "correctsourceslist"]
-
-        # self.headerAptUpdateSpinner.set_visible(True)
-        # self.headerAptUpdateSpinner.start()
-        self.prefcorrectbutton.set_sensitive(False)
-
-        self.startSysProcess(command)
-        self.prefstack.set_visible_child_name("main")
-        self.correctsourcesclicked = True
-
-    def on_passwordlessbutton_clicked(self, button):
-        self.passwordlessbutton.set_sensitive(False)
-        self.preflabel_settext("")
-        self.grouperrormessage = ""
-        if "pardus-software" in self.usergroups:
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "del",
-                       self.UserSettings.username]
-        else:
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
-                       self.UserSettings.username]
-        self.startGroupProcess(command)
 
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
