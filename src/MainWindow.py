@@ -1869,6 +1869,11 @@ class MainWindow(object):
                             break
             return
 
+        if button.name == 9:
+            print("{} opening details page".format(app_name))
+            self.set_app_details_page(app)
+            return
+
         print("app_name: {}".format(app_name))
         print("details: {}".format(details))
 
@@ -1966,9 +1971,12 @@ class MainWindow(object):
                             action_button_label.set_markup("<small>{}</small>".format(_("Open")))
                             action_button.name = 2
                         else:
-                            self.set_button_class(action_button, 1)
-                            action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
-                            action_button.name = 0
+                            # self.set_button_class(action_button, 1)
+                            # action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
+                            # action_button.name = 0
+                            self.set_button_class(action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            action_button.name = 9
                 else:
                     self.set_button_class(action_button, 0)
                     action_button_label.set_markup("<small>{}</small>".format(_("Install")))
@@ -2089,9 +2097,9 @@ class MainWindow(object):
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
                         action_button.name = 2
                     else:
-                        self.set_button_class(action_button, 1)
-                        action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
-                        action_button.name = 0
+                        self.set_button_class(action_button, 4)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                        action_button.name = 9
             else:
                 self.set_button_class(action_button, 0)
                 action_button_label.set_markup("<small>{}</small>".format(_("Install")))
@@ -2312,9 +2320,9 @@ class MainWindow(object):
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
                         action_button.name = 2
                     else:
-                        self.set_button_class(action_button, 1)
-                        action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
-                        action_button.name = 0
+                        self.set_button_class(action_button, 4)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                        action_button.name = 9
             else:
                 self.set_button_class(action_button, 0)
                 action_button_label.set_markup("<small>{}</small>".format(_("Install")))
@@ -2592,9 +2600,9 @@ class MainWindow(object):
                             action_button_label.set_markup("<small>{}</small>".format(_("Open")))
                             action_button.name = 2
                         else:
-                            self.set_button_class(action_button, 1)
-                            action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
-                            action_button.name = 0
+                            self.set_button_class(action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            action_button.name = 9
                 else:
                     self.set_button_class(action_button, 0)
                     action_button_label.set_markup("<small>{}</small>".format(_("Install")))
