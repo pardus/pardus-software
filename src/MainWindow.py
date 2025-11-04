@@ -458,12 +458,6 @@ class MainWindow(object):
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
-        # self.NavCategoryImage = self.GtkBuilder.get_object("NavCategoryImage")
-        # self.NavCategoryLabel = self.GtkBuilder.get_object("NavCategoryLabel")
-
-        self.menu_suggestapp = self.GtkBuilder.get_object("menu_suggestapp")
-        self.menu_statistics = self.GtkBuilder.get_object("menu_statistics")
-
         self.ui_suggest_app_entry = self.GtkBuilder.get_object("ui_suggest_app_entry")
         self.ui_suggest_web_entry = self.GtkBuilder.get_object("ui_suggest_web_entry")
         self.ui_suggest_send_button = self.GtkBuilder.get_object("ui_suggest_send_button")
@@ -477,23 +471,6 @@ class MainWindow(object):
         self.GnomeTRCommentScroll = self.GtkBuilder.get_object("GnomeTRCommentScroll")
         self.GnomeENCommentScroll = self.GtkBuilder.get_object("GnomeENCommentScroll")
 
-        self.statstack = self.GtkBuilder.get_object("statstack")
-        self.statmainstack = self.GtkBuilder.get_object("statmainstack")
-        self.stat_spinner = self.GtkBuilder.get_object("stat_spinner")
-        self.stat_ilabel = self.GtkBuilder.get_object("stat_ilabel")
-        self.stats1ViewPort = self.GtkBuilder.get_object("stats1ViewPort")
-        self.stats2ViewPort = self.GtkBuilder.get_object("stats2ViewPort")
-        self.stats3ViewPort = self.GtkBuilder.get_object("stats3ViewPort")
-        self.matplot_error = _("matplotlib is not found")
-
-        # self.PardusCurrentCategory = -1
-        # if self.locale == "tr":
-        #     self.PardusCurrentCategoryString = "tümü"
-        #     self.RepoCurrentCategory = "tümü"
-        # else:
-        #     self.PardusCurrentCategoryString = "all"
-        #     self.RepoCurrentCategory = "all"
-
         if self.locale == "tr":
             self.current_category = "tümü"
         else:
@@ -503,14 +480,8 @@ class MainWindow(object):
         self.PardusCurrentCategoryExternal = False
         self.PardusCurrentCategorySubCategories = []
 
-        self.useDynamicListStore = False
         self.repoappname = ""
         self.repoappclicked = False
-
-        self.store_button_clicked = False
-
-        # self.PardusCategoryFilter = self.GtkBuilder.get_object("PardusCategoryFilter")
-        # self.PardusCategoryFilter.set_visible_func(self.PardusCategoryFilterFunction)
 
         self.dImage1 = self.GtkBuilder.get_object("dImage1")
         self.dImage2 = self.GtkBuilder.get_object("dImage2")
@@ -547,11 +518,8 @@ class MainWindow(object):
         self.inprogress_desktop = ""
 
         self.actionedappname = ""
-        self.actionedenablingappname = ""
         self.actionedappdesktop = ""
-        self.actionedenablingappdesktop = ""
         self.actionedappcommand = ""
-        self.actionedenablingappcommand = ""
 
         self.queue = []
         self.inprogress = False
@@ -567,9 +535,6 @@ class MainWindow(object):
         self.mda_clicked = False
         self.mra_clicked = False
         self.la_clicked = False
-
-        self.statisticsSetted = False
-        self.matplot_install_clicked = False
 
         self.repoappsinit = False
 
@@ -5198,22 +5163,6 @@ class MainWindow(object):
             self.dAptUpdateInfoLabel.set_markup(
                 "<span color='red'>{}</span>".format(_("Package manager is busy, try again later.")))
 
-    def on_activate_yes_button_clicked(self, button):
-
-        if len(self.queue) == 0:
-            self.activating_spinner.start()
-            self.activatestack.set_visible_child_name("activating")
-            self.externalactioned = True
-            self.actionEnablePackage(self.appname)
-        else:
-            self.activate_info_label.set_visible(True)
-            self.activate_info_label.set_markup("<b><span color='red'>{}</span></b>".format(
-                _("Please try again after the processes in the queue are completed.")))
-
-    def on_activate_no_button_clicked(self, button):
-        self.externalactioned = False
-        self.activatestack.set_visible_child_name("main")
-
     def on_ractioninfo_clicked(self, button):
 
         self.rapp_packagename_box.set_visible(False)
@@ -5834,16 +5783,6 @@ class MainWindow(object):
         self.aboutdialog.run()
         self.aboutdialog.hide()
 
-    def on_menu_suggestapp_clicked(self, button):
-        if self.homestack.get_visible_child_name() == "suggestapp":
-            self.Logger.info("already suggestapp page")
-            self.ui_headermenu_popover.popdown()
-            return
-        self.ui_headermenu_popover.popdown()
-        self.homestack.set_visible_child_name("suggestapp")
-        self.ui_suggest_stack.set_visible_child_name("suggest")
-        self.ui_suggest_send_button.set_sensitive(True)
-
     def on_ui_trend_seeall_eventbox_button_release_event(self, widget, event):
         self.ui_right_stack.set_visible_child_name("trendapps")
 
@@ -6045,15 +5984,6 @@ class MainWindow(object):
 
         self.pid = self.startProcess(command)
         self.Logger.info("started pid : {}".format(self.pid))
-
-    def actionEnablePackage(self, appname):
-        self.actionedenablingappname = appname
-        self.actionedenablingappdesktop = self.desktop_file
-        self.actionedenablingappcommand = self.command
-        self.dActionButton.set_label(_(" Activating"))
-        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py", "externalrepo",
-                   self.external["repokey"], self.external["reposlist"], self.external["reponame"]]
-        self.expid = self.startSysProcess(command)
 
     def on_bottominterrupt_fix_button_clicked(self, button):
         self.bottominterrupt_fix_button.set_sensitive(False)
