@@ -4430,7 +4430,7 @@
                                                   <object class="GtkLabel">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="label" translatable="yes">Clear Cache Files (0 MB)</property>
+                                                    <property name="label" translatable="yes">Clear Cache Files</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -4442,17 +4442,32 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkButton">
-                                                    <property name="label" translatable="yes">button</property>
+                                                  <object class="GtkButton" id="ui_settings_cache_button">
+                                                    <property name="label" translatable="yes">Clear</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
+                                                    <signal name="clicked" handler="on_ui_settings_cache_button_clicked" swapped="no"/>
+                                                    <style>
+                                                      <class name="suggested-action"/>
+                                                    </style>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
                                                     <property name="fill">True</property>
                                                     <property name="pack-type">end</property>
                                                     <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="ui_settings_cache_size_label">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">2</property>
                                                   </packing>
                                                 </child>
                                               </object>
@@ -4471,6 +4486,20 @@
                                                 <property name="expand">False</property>
                                                 <property name="fill">True</property>
                                                 <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="ui_settings_cache_info_label">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="halign">start</property>
+                                                <property name="justify">center</property>
+                                                <property name="wrap">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">2</property>
                                               </packing>
                                             </child>
                                           </object>
@@ -4507,11 +4536,12 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkButton">
+                                                  <object class="GtkButton" id="ui_settings_password_button">
                                                     <property name="label" translatable="yes">button</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
+                                                    <signal name="clicked" handler="on_ui_settings_password_button_clicked" swapped="no"/>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
@@ -4536,6 +4566,20 @@
                                                 <property name="expand">False</property>
                                                 <property name="fill">True</property>
                                                 <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="ui_settings_password_info_label">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="halign">start</property>
+                                                <property name="justify">center</property>
+                                                <property name="wrap">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">2</property>
                                               </packing>
                                             </child>
                                           </object>

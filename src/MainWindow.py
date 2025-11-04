@@ -425,6 +425,12 @@ class MainWindow(object):
         self.ui_settings_update_switch = self.GtkBuilder.get_object("ui_settings_update_switch")
         self.ui_settings_available_switch = self.GtkBuilder.get_object("ui_settings_available_switch")
 
+        self.ui_settings_cache_button = self.GtkBuilder.get_object("ui_settings_cache_button")
+        self.ui_settings_cache_info_label = self.GtkBuilder.get_object("ui_settings_cache_info_label")
+        self.ui_settings_cache_size_label = self.GtkBuilder.get_object("ui_settings_cache_size_label")
+        self.ui_settings_password_button = self.GtkBuilder.get_object("ui_settings_password_button")
+        self.ui_settings_password_info_label = self.GtkBuilder.get_object("ui_settings_password_info_label")
+
         self.switchUSI = self.GtkBuilder.get_object("switchUSI")
         self.switchEA = self.GtkBuilder.get_object("switchEA")
         self.switchSAA = self.GtkBuilder.get_object("switchSAA")
@@ -5794,6 +5800,9 @@ class MainWindow(object):
         self.ui_settings_dark_switch.set_state(self.UserSettings.config_udt)
         self.ui_settings_update_switch.set_state(self.UserSettings.config_aptup)
 
+        self.control_groups()
+        self.set_cache_size()
+
         # if self.homestack.get_visible_child_name() == "preferences":
         #     self.Logger.info("already preferences page")
         # else:
@@ -5821,7 +5830,7 @@ class MainWindow(object):
     def set_cache_size(self):
         cache_size = self.Utils.get_path_size(self.Server.cachedir)
         self.Logger.info("{} : {} bytes".format(self.Server.cachedir, cache_size))
-        self.ui_cache_size.set_text("({})".format(self.Package.beauty_size(cache_size)))
+        self.ui_settings_cache_size_label.set_markup("<b>({})</b>".format(self.Package.beauty_size(cache_size)))
 
     def control_groups(self):
         try:
@@ -5831,14 +5840,16 @@ class MainWindow(object):
             self.usergroups = []
 
         if self.usergroups:
-            self.passwordlessbutton.set_visible(True)
+            self.ui_settings_password_button.set_visible(True)
             if "pardus-software" in self.usergroups:
-                self.passwordlessbutton.set_label(_("Deactivate"))
+                self.ui_settings_password_button.set_label(_("Deactivate"))
+                self.set_button_class(self.ui_settings_password_button, 1)
             else:
-                self.passwordlessbutton.set_label(_("Activate"))
-            self.passwordlessbutton.set_sensitive(True)
+                self.ui_settings_password_button.set_label(_("Activate"))
+                self.set_button_class(self.ui_settings_password_button, 0)
+            self.ui_settings_password_button.set_sensitive(True)
         else:
-            self.passwordlessbutton.set_visible(False)
+            self.ui_settings_password_button.set_visible(False)
 
     def on_menu_about_clicked(self, button):
         self.ui_headermenu_popover.popdown()
@@ -6086,6 +6097,30 @@ class MainWindow(object):
             self.setAvailableApps(available=state)
             GLib.idle_add(self.set_applications)
 
+    def on_ui_settings_cache_button_clicked(self, button):
+        state, message = self.Server.delete_cache()
+        if state:
+            self.ui_settings_cache_button.set_sensitive(False)
+            self.ui_settings_cache_button.set_label(_("Cleared"))
+            self.ui_settings_cache_info_label.set_markup(_("Cache files cleared, please close and reopen the application"))
+        else:
+            self.ui_settings_cache_button.set_sensitive(True)
+            self.ui_settings_cache_button.set_label(_("Error"))
+            self.ui_settings_cache_info_label.set_markup("{}".format(message))
+        self.set_cache_size()
+
+    def on_ui_settings_password_button_clicked(self, button):
+        self.ui_settings_password_button.set_sensitive(False)
+        self.ui_settings_password_info_label.set_text("")
+        self.grouperrormessage = ""
+        if "pardus-software" in self.usergroups:
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "del",
+                       self.UserSettings.username]
+        else:
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
+                       self.UserSettings.username]
+        self.startGroupProcess(command)
+
     def clearBoxes(self):
         self.EditorListStore.clear()
         self.PardusAppListStore.clear()
@@ -6151,9 +6186,6 @@ class MainWindow(object):
         self.startSysProcess(command)
         self.prefstack.set_visible_child_name("main")
         self.correctsourcesclicked = True
-
-    def preflabel_settext(self, text):
-        self.preflabel.set_markup(text)
 
     def on_passwordlessbutton_clicked(self, button):
         self.passwordlessbutton.set_sensitive(False)
@@ -6796,11 +6828,11 @@ class MainWindow(object):
     def onGroupProcessExit(self, pid, status):
         self.Logger.info("onGroupProcessExit - status: {}".format(status))
         self.control_groups()
-        if status == 32256:  # operation cancelled | Request dismissed
-            self.preflabel_settext("")
-        else:
-            self.preflabel_settext(
+        if status != 0:
+            self.ui_settings_password_info_label.set_markup(
                 "<small><span color='red' weight='light'>{}</span></small>".format(self.grouperrormessage))
+        else:
+            self.ui_settings_password_info_label.set_text("")
 
     def on_tryfixButton_clicked(self, button):
         self.tryfixstack.set_visible_child_name("info")
