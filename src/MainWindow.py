@@ -394,6 +394,8 @@ class MainWindow(object):
         self.ui_ad_download_label = self.GtkBuilder.get_object("ui_ad_download_label")
         self.ui_ad_size_label = self.GtkBuilder.get_object("ui_ad_size_label")
         self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
+        self.ui_ad_disclaimer_button = self.GtkBuilder.get_object("ui_ad_disclaimer_button")
+        self.ui_ad_remove_button = self.GtkBuilder.get_object("ui_ad_remove_button")
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -2742,6 +2744,9 @@ class MainWindow(object):
 
         self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
 
+        self.ui_ad_remove_button.set_visible(False)
+        self.ui_ad_disclaimer_button.set_visible(False)
+
         self.ui_right_stack.set_visible_child_name("appdetails")
 
         pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
@@ -2762,7 +2767,9 @@ class MainWindow(object):
         is_upgradable = self.Package.is_upgradable(app_name)
         is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
         if is_installed is not None:
+            self.ui_ad_disclaimer_button.set_visible(self.Package.is_nonfree(app_name))
             if is_installed:
+                self.ui_ad_remove_button.set_visible(True)
                 if is_upgradable:
                     self.set_button_class(self.ui_ad_action_button, 3)
                     action_button_label.set_markup("<small>{}</small>".format(_("Update")))

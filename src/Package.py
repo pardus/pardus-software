@@ -495,6 +495,22 @@ class Package(object):
                 component = None
         return component
 
+    def is_nonfree(self, packagename):
+        package = self.cache[packagename]
+        try:
+            component = package.candidate.origins[0].component
+        except:
+            try:
+                component = package.versions[0].origins[0].component
+            except:
+                return False
+        try:
+            print(component)
+            if component == "non-free":
+                return True
+        except:
+            return False
+
     def residual(self):
         residual = []
         try:
