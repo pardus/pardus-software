@@ -3325,10 +3325,10 @@
                                                     <property name="receives-default">True</property>
                                                     <property name="valign">center</property>
                                                     <child>
-                                                      <object class="GtkLabel" id="ui_ad_actionbutton_label">
+                                                      <object class="GtkLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">Install</property>
+                                                        <property name="label">action</property>
                                                       </object>
                                                     </child>
                                                   </object>

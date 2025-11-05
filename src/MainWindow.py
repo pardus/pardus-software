@@ -394,7 +394,6 @@ class MainWindow(object):
         self.ui_ad_download_label = self.GtkBuilder.get_object("ui_ad_download_label")
         self.ui_ad_size_label = self.GtkBuilder.get_object("ui_ad_size_label")
         self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
-        self.ui_ad_actionbutton_label = self.GtkBuilder.get_object("ui_ad_actionbutton_label")
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -2742,17 +2741,40 @@ class MainWindow(object):
         self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
         self.ui_ad_icon.set_pixel_size(68)
 
+        self.ui_ad_action_button.remove(self.ui_ad_action_button.get_children()[0])
         is_installed = self.Package.isinstalled(app_name)
+        is_upgradable = self.Package.is_upgradable(app_name)
+        is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
         if is_installed is not None:
+            action_button_label = Gtk.Label.new()
+            action_button_label.set_line_wrap(False)
+            action_button_label.set_justify(Gtk.Justification.LEFT)
+            action_button_label.set_max_width_chars(6)
+            action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+            self.ui_ad_action_button.add(action_button_label)
             if is_installed:
-                self.set_button_class(self.ui_ad_action_button, 1)
-                self.ui_ad_actionbutton_label.set_markup("{}".format(_("Uninstall")))
+                if is_upgradable:
+                    self.set_button_class(self.ui_ad_action_button, 3)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                    self.ui_ad_action_button.name = 1
+                else:
+                    if is_openable:
+                        self.set_button_class(self.ui_ad_action_button, 4)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                        self.ui_ad_action_button.name = 2
+                    else:
+                        self.set_button_class(self.ui_ad_action_button, 4)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                        self.ui_ad_action_button.name = 9
             else:
                 self.set_button_class(self.ui_ad_action_button, 0)
-                self.ui_ad_actionbutton_label.set_markup("{}".format(_("Install")))
+                action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                self.ui_ad_action_button.name = 1
         else:
             self.set_button_class(self.ui_ad_action_button, 2)
-            self.ui_ad_actionbutton_label.set_markup("{}".format(_("Not Found")))
+            not_found_image = Gtk.Image.new_from_icon_name("action-unavailable-symbolic", Gtk.IconSize.BUTTON)
+            self.ui_ad_action_button.add(not_found_image)
+        self.ui_ad_action_button.show_all()
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
