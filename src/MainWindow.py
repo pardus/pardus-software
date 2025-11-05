@@ -1955,11 +1955,11 @@ class MainWindow(object):
             action_button_label.set_justify(Gtk.Justification.LEFT)
             action_button_label.set_max_width_chars(6)
             action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
-            action_button.add(action_button_label)
             is_installed = self.Package.isinstalled(app_name)
             is_upgradable = self.Package.is_upgradable(app_name)
             is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
             if is_installed is not None:
+                action_button.add(action_button_label)
                 if is_installed:
                     if is_upgradable:
                         self.set_button_class(action_button, 3)
@@ -1983,8 +1983,9 @@ class MainWindow(object):
                     action_button.name = 1
             else:
                 self.set_button_class(action_button, 2)
-                action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
-            action_button_label.show_all()
+                not_found_image = Gtk.Image.new_from_icon_name("action-unavailable-symbolic", Gtk.IconSize.BUTTON)
+                action_button.add(not_found_image)
+            action_button.show_all()
 
         for fbc in self.ui_pardusapps_flowbox:
             if next(iter(fbc.get_children()[0].get_children()[0].name)) == app_name:
@@ -2080,12 +2081,12 @@ class MainWindow(object):
         action_button_label.set_justify(Gtk.Justification.LEFT)
         action_button_label.set_max_width_chars(6)
         action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
-        action_button.add(action_button_label)
 
         is_installed = self.Package.isinstalled(app)
         is_upgradable = self.Package.is_upgradable(app)
         is_openable = self.get_desktop_filename_from_app_name(app) != ""
         if is_installed is not None:
+            action_button.add(action_button_label)
             if is_installed:
                 if is_upgradable:
                     self.set_button_class(action_button, 3)
@@ -2106,7 +2107,8 @@ class MainWindow(object):
                 action_button.name = 1
         else:
             self.set_button_class(action_button, 2)
-            action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+            not_found_image = Gtk.Image.new_from_icon_name("action-unavailable-symbolic", Gtk.IconSize.BUTTON)
+            action_button.add(not_found_image)
 
         summary_label = Gtk.Label.new()
         summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
@@ -2303,12 +2305,12 @@ class MainWindow(object):
         action_button_label.set_justify(Gtk.Justification.LEFT)
         action_button_label.set_max_width_chars(6)
         action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
-        action_button.add(action_button_label)
 
         is_installed = self.Package.isinstalled(app)
         is_upgradable = self.Package.is_upgradable(app)
         is_openable = self.get_desktop_filename_from_app_name(app) != ""
         if is_installed is not None:
+            action_button.add(action_button_label)
             if is_installed:
                 if is_upgradable:
                     self.set_button_class(action_button, 3)
@@ -2329,7 +2331,8 @@ class MainWindow(object):
                 action_button.name = 1
         else:
             self.set_button_class(action_button, 2)
-            action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+            not_found_image = Gtk.Image.new_from_icon_name("action-unavailable-symbolic", Gtk.IconSize.BUTTON)
+            action_button.add(not_found_image)
 
         uninstallbutton = Gtk.Button.new()
         uninstallbutton.name = 0
@@ -2583,12 +2586,12 @@ class MainWindow(object):
             action_button_label.set_justify(Gtk.Justification.LEFT)
             action_button_label.set_max_width_chars(6)
             action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
-            action_button.add(action_button_label)
 
             is_installed = self.Package.isinstalled(editor_app_name)
             is_upgradable = self.Package.is_upgradable(editor_app_name)
             is_openable = self.get_desktop_filename_from_app_name(editor_app_name) != ""
             if is_installed is not None:
+                action_button.add(action_button_label)
                 if is_installed:
                     if is_upgradable:
                         self.set_button_class(action_button, 3)
@@ -2609,7 +2612,8 @@ class MainWindow(object):
                     action_button.name = 1
             else:
                 self.set_button_class(action_button, 2)
-                action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+                not_found_image = Gtk.Image.new_from_icon_name("action-unavailable-symbolic", Gtk.IconSize.BUTTON)
+                action_button.add(not_found_image)
 
             summary_label = Gtk.Label.new()
             summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(editor_app_short_desc))
