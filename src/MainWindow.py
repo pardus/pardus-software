@@ -508,6 +508,7 @@ class MainWindow(object):
         self.fromexternal = False
         self.externalactioned = False
         self.isinstalled = None
+        self.isupgrade = False
         self.correctsourcesclicked = False
 
         self.dpkgconfiguring = False
@@ -1858,7 +1859,7 @@ class MainWindow(object):
             self.Logger.warning("{} details not found on app_widget_action_clicked.".format(app_name))
             return
 
-        if button.name == 2:
+        if button.name == 3:
             print("{} opening".format(app_name))
             if not self.launch_desktop_file(details["desktop"]):
                 if details["desktopextras"] != "":
@@ -1891,11 +1892,12 @@ class MainWindow(object):
 
         self.ui_queue_stack.set_visible_child_name("inprogress")
 
-        self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id})
-        self.add_to_queue_ui(app_name)
+        self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id, "upgrade": button.name == 2})
+        self.add_to_queue_ui(app_name, button.name == 2)
         if not self.inprogress:
-            self.action_package(app_name, command, desktop_id)
-            self.Logger.info("action {}".format(app_name))
+            self.action_package(app_name, command, desktop_id, button.name == 2)
+            self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
+                app_name, command, desktop_id, button.name == 2))
 
     def launch_desktop_file(self, desktop):
         try:
@@ -1906,12 +1908,12 @@ class MainWindow(object):
             self.Logger.exception("{}".format(e))
             return False
 
-    def add_to_queue_ui(self, app_name):
-        listbox = self.create_queue_widget(app_name)
+    def add_to_queue_ui(self, app_name, upgrade=False):
+        listbox = self.create_queue_widget(app_name, upgrade)
         GLib.idle_add(self.ui_queue_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_queue_flowbox.show_all)
 
-    def action_package(self, app_name, command, desktop_id=""):
+    def action_package(self, app_name, command, desktop_id="", upgrade=False):
         self.inprogress = True
         self.topspinner.start()
 
@@ -1920,10 +1922,15 @@ class MainWindow(object):
         self.inprogress_desktop = desktop_id
 
         self.isinstalled = self.Package.isinstalled(app_name)
+        self.isupgrade = self.Package.is_upgradable(app_name) and upgrade
 
         if self.isinstalled is True:
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
-                       self.inprogress_command]
+            if self.isupgrade:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "upgrade",
+                           self.inprogress_command]
+            else:
+                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
+                           self.inprogress_command]
         elif self.isinstalled is False:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
                        self.inprogress_command]
@@ -1963,12 +1970,12 @@ class MainWindow(object):
                     if is_upgradable:
                         self.set_button_class(action_button, 3)
                         action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                        action_button.name = 1
+                        action_button.name = 2
                     else:
                         if is_openable:
                             self.set_button_class(action_button, 4)
                             action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                            action_button.name = 2
+                            action_button.name = 3
                         else:
                             # self.set_button_class(action_button, 1)
                             # action_button_label.set_markup("<small>{}</small>".format(_("Uninstall")))
@@ -2090,12 +2097,12 @@ class MainWindow(object):
                 if is_upgradable:
                     self.set_button_class(action_button, 3)
                     action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                    action_button.name = 1
+                    action_button.name = 2
                 else:
                     if is_openable:
                         self.set_button_class(action_button, 4)
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                        action_button.name = 2
+                        action_button.name = 3
                     else:
                         self.set_button_class(action_button, 4)
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
@@ -2314,12 +2321,12 @@ class MainWindow(object):
                 if is_upgradable:
                     self.set_button_class(action_button, 3)
                     action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                    action_button.name = 1
+                    action_button.name = 2
                 else:
                     if is_openable:
                         self.set_button_class(action_button, 4)
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                        action_button.name = 2
+                        action_button.name = 3
                     else:
                         self.set_button_class(action_button, 4)
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
@@ -2405,7 +2412,7 @@ class MainWindow(object):
 
         return listbox
 
-    def create_queue_widget(self, app):
+    def create_queue_widget(self, app, upgrade=False):
 
         app_name = Gtk.Label.new()
         app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(self.getPrettyName(app), -1)))
@@ -2480,7 +2487,10 @@ class MainWindow(object):
         progress_bar.set_ellipsize(Pango.EllipsizeMode.END)
         progress_bar.props.valign = Gtk.Align.CENTER
         if self.Package.isinstalled(app):
-            progress_bar.set_text("{}".format(_("Will be removed")))
+            if self.Package.is_upgradable(app) and upgrade:
+                progress_bar.set_text("{}".format(_("Will be upgraded")))
+            else:
+                progress_bar.set_text("{}".format(_("Will be removed")))
         else:
             progress_bar.set_text("{}".format(_("Will be installed")))
 
@@ -2595,12 +2605,12 @@ class MainWindow(object):
                     if is_upgradable:
                         self.set_button_class(action_button, 3)
                         action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                        action_button.name = 1
+                        action_button.name = 2
                     else:
                         if is_openable:
                             self.set_button_class(action_button, 4)
                             action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                            action_button.name = 2
+                            action_button.name = 3
                         else:
                             self.set_button_class(action_button, 4)
                             action_button_label.set_markup("<small>{}</small>".format(_("Open")))
@@ -2756,12 +2766,12 @@ class MainWindow(object):
                 if is_upgradable:
                     self.set_button_class(self.ui_ad_action_button, 3)
                     action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                    self.ui_ad_action_button.name = 1
+                    self.ui_ad_action_button.name = 2
                 else:
                     if is_openable:
                         self.set_button_class(self.ui_ad_action_button, 4)
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                        self.ui_ad_action_button.name = 2
+                        self.ui_ad_action_button.name = 3
                     else:
                         self.set_button_class(self.ui_ad_action_button, 4)
                         action_button_label.set_markup("<small>{}</small>".format(_("Open")))
@@ -5641,12 +5651,14 @@ class MainWindow(object):
 
         self.ui_myapp_pop_uninstall_button.set_sensitive(False)
 
-        self.queue.append({"name": self.appname, "command": self.command, "desktop_id": self.desktop_file})
+        self.queue.append({"name": self.appname, "command": self.command, "desktop_id": self.desktop_file,
+                           "upgrade": False})
         self.add_to_queue_ui(self.appname)
         if not self.inprogress:
             self.action_package(self.appname, self.command, self.desktop_file)
             self.inprogress = True
-            self.Logger.info("action {}".format(self.appname))
+            self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
+                self.appname, self.command, self.desktop_file, False))
 
     def myapps_filter_func(self, row):
         # app info defined in uninstall button so getting this widget
@@ -6116,7 +6128,10 @@ class MainWindow(object):
             percent = line.split(":")[2].split(".")[0]
             self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_fraction(int(percent) / 100)
             if self.isinstalled:
-                self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Removing"), percent))
+                if self.isupgrade:
+                    self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Upgrading"), percent))
+                else:
+                    self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Removing"), percent))
             else:
                 self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Installing"), percent))
             self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].set_sensitive(False)
@@ -6196,11 +6211,18 @@ class MainWindow(object):
             self.queue.pop(0)
             self.ui_queue_flowbox.remove(self.ui_queue_flowbox.get_children()[0])
         if len(self.queue) > 0:
-            self.action_package(self.queue[0]["name"], self.queue[0]["command"], self.queue[0]["desktop_id"])
+            self.action_package(self.queue[0]["name"], self.queue[0]["command"], self.queue[0]["desktop_id"],
+                                self.queue[0]["upgrade"])
+            self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
+                self.queue[0]["name"], self.queue[0]["command"], self.queue[0]["desktop_id"],
+                self.queue[0]["upgrade"]))
             progressbar = self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[
                 0].get_children()[0].get_children()[3]
             if self.Package.isinstalled(self.inprogress_app_name):
-                progressbar.set_text("{}".format(_("Removing")))
+                if self.Package.is_upgradable(self.inprogress_app_name) and self.queue[0]["upgrade"]:
+                    progressbar.set_text("{}".format(_("Upgrading")))
+                else:
+                    progressbar.set_text("{}".format(_("Removing")))
             else:
                 progressbar.set_text("{}".format(_("Installing")))
         else:

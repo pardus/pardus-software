@@ -31,13 +31,18 @@ def main():
         subprocess.call(["apt", "install", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
-    def reinstall(debianpackage):
-        subprocess.call(["apt", "install", "--reinstall", debianpackage, "-yq", "-o", "APT::Status-Fd=2"],
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
-
     def remove(packages):
         packagelist = packages.split(" ")
         subprocess.call(["apt", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
+    def upgrade(packages):
+        packagelist = packages.split(" ")
+        subprocess.call(["apt", "install", "--upgrade", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
+                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
+    def reinstall(debianpackage):
+        subprocess.call(["apt", "install", "--reinstall", debianpackage, "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def downgrade(packagename):
@@ -109,6 +114,8 @@ def main():
                 reinstall(sys.argv[2])
             elif sys.argv[1] == "downgrade":
                 downgrade(sys.argv[2])
+            elif sys.argv[1] == "upgrade":
+                upgrade(sys.argv[2])
             elif sys.argv[1] == "update":
                 update()
             elif sys.argv[1] == "removeresidual":
