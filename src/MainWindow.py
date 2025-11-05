@@ -3298,11 +3298,15 @@ class MainWindow(object):
         if state == 1:
             if button.get_style_context().has_class("suggested-action"):
                 button.get_style_context().remove_class("suggested-action")
+            if button.get_style_context().has_class("openup-action"):
+                button.get_style_context().remove_class("openup-action")
             button.get_style_context().add_class("destructive-action")
             button.set_sensitive(True)
         elif state == 0:
             if button.get_style_context().has_class("destructive-action"):
                 button.get_style_context().remove_class("destructive-action")
+            if button.get_style_context().has_class("openup-action"):
+                button.get_style_context().remove_class("openup-action")
             button.get_style_context().add_class("suggested-action")
             button.set_sensitive(True)
         elif state == 2:
@@ -3310,6 +3314,8 @@ class MainWindow(object):
                 button.get_style_context().remove_class("suggested-action")
             if button.get_style_context().has_class("destructive-action"):
                 button.get_style_context().remove_class("destructive-action")
+            if button.get_style_context().has_class("openup-action"):
+                button.get_style_context().remove_class("openup-action")
             button.set_sensitive(False)
         elif state == 3:
             if button.get_style_context().has_class("suggested-action"):
