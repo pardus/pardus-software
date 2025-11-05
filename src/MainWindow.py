@@ -396,6 +396,23 @@ class MainWindow(object):
         self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
         self.ui_ad_disclaimer_button = self.GtkBuilder.get_object("ui_ad_disclaimer_button")
         self.ui_ad_remove_button = self.GtkBuilder.get_object("ui_ad_remove_button")
+        self.ui_ad_image_box = self.GtkBuilder.get_object("ui_ad_image_box")
+
+        self.ui_ad_image_scrolledwindow = self.GtkBuilder.get_object("ui_ad_image_scrolledwindow")
+        self.ui_ad_image_scrolledwindow.add_events(
+            Gdk.EventMask.BUTTON_PRESS_MASK |
+            Gdk.EventMask.BUTTON_RELEASE_MASK |
+            Gdk.EventMask.POINTER_MOTION_MASK
+        )
+        self.ui_ad_image_scrolledwindow.connect("button-press-event", self.on_ui_ad_image_button_press)
+        self.ui_ad_image_scrolledwindow.connect("motion-notify-event", self.on_ui_ad_image_mouse_drag)
+        self.ui_ad_image_scrolledwindow.connect("button-release-event", self.on_ui_ad_image_button_release)
+        self.ui_ad_image_dragging = False
+        self.ui_ad_image_last_x = 0
+        self.ui_ad_image_total_drag = 0
+        self.ui_ad_image_drag_threshold = 8
+        self.ui_ad_image_drag_touch_threshold = 2
+        self.ui_ad_image_is_touch = False
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -2742,6 +2759,9 @@ class MainWindow(object):
         print("app_name: {}".format(app_name))
         print("details: {}".format(details))
 
+        for image in details["screenshots"]:
+            self.AppImage.fetch(self.Server.serverurl + image)
+
         self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
 
         self.ui_ad_remove_button.set_visible(False)
@@ -4678,23 +4698,32 @@ class MainWindow(object):
         else:
             self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
-    def Pixbuf(self, status, pixbuf, i):
-        self.appimage1stack.set_visible_child_name("loaded")
-        self.appimage2stack.set_visible_child_name("loaded")
-        if status and i:
-            i = i.split("#")[1]
-            if i == "1":
-                self.pixbuf1 = pixbuf
-                self.resizeAppImage()
-            if i == "2":
-                self.pixbuf2 = pixbuf
-                self.resizeAppImage()
-        else:
-            self.dImage1.set_from_pixbuf(self.missing_pixbuf)
-            self.dImage2.set_from_pixbuf(self.missing_pixbuf)
+    def Pixbuf(self, status, pixbuf=None, uri=None):
+        print("status: {}, pixbuf: {}, uri: {}".format(status, pixbuf, uri))
+        original_width = pixbuf.get_width()
+        original_height = pixbuf.get_height()
+        fixed_height = 200
+        image = Gtk.Image.new_from_pixbuf(pixbuf.scale_simple(
+            int(original_width * fixed_height / original_height), 200, GdkPixbuf.InterpType.BILINEAR))
+        GLib.idle_add(self.ui_ad_image_box.add, image)
+        GLib.idle_add(self.ui_ad_image_box.show_all)
 
-            self.pop1Image.set_from_pixbuf(self.missing_pixbuf)
-            self.pop2Image.set_from_pixbuf(self.missing_pixbuf)
+        # self.appimage1stack.set_visible_child_name("loaded")
+        # self.appimage2stack.set_visible_child_name("loaded")
+        # if status and i:
+        #     i = i.split("#")[1]
+        #     if i == "1":
+        #         self.pixbuf1 = pixbuf
+        #         self.resizeAppImage()
+        #     if i == "2":
+        #         self.pixbuf2 = pixbuf
+        #         self.resizeAppImage()
+        # else:
+        #     self.dImage1.set_from_pixbuf(self.missing_pixbuf)
+        #     self.dImage2.set_from_pixbuf(self.missing_pixbuf)
+        #
+        #     self.pop1Image.set_from_pixbuf(self.missing_pixbuf)
+        #     self.pop2Image.set_from_pixbuf(self.missing_pixbuf)
 
     def on_PardusAppImageBox_size_allocate(self, widget, allocated):
 
@@ -5952,6 +5981,52 @@ class MainWindow(object):
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
                        self.UserSettings.username]
         self.startGroupProcess(command)
+
+    def on_ui_ad_image_button_press(self, widget, event):
+        # Detect input device type (mouse/touchpad vs touchscreen)
+        source = event.get_source_device().get_source()
+        self.ui_ad_image_is_touch = (source == Gdk.InputSource.TOUCHSCREEN)
+
+        # Only treat Mouse/Touchpad left button as valid drag start
+        if not self.ui_ad_image_is_touch and event.button != 1:
+            return
+
+        # Start drag
+        self.ui_ad_image_dragging = True
+        self.ui_ad_image_last_x = event.x
+        self.ui_ad_image_total_drag = 0
+
+    def on_ui_ad_image_mouse_drag(self, widget, event):
+        if self.ui_ad_image_dragging:
+            # Get scrollbar adjustment
+            adj = self.ui_ad_image_scrolledwindow.get_hadjustment()
+            # Calculate move difference
+            dx = self.ui_ad_image_last_x - event.x
+
+            # Scroll horizontally
+            adj.set_value(adj.get_value() + dx)
+
+            # Update total drag distance
+            self.ui_ad_image_total_drag += abs(dx)
+            self.ui_ad_image_last_x = event.x
+
+    def on_ui_ad_image_button_release(self, widget, event):
+        # if drag wasn't started, ignore
+        if not self.ui_ad_image_dragging:
+            return
+
+        # stop dragging now
+        self.ui_ad_image_dragging = False
+
+        # touchscreen
+        if self.ui_ad_image_is_touch:
+            if self.ui_ad_image_total_drag < self.ui_ad_image_drag_touch_threshold:
+                print("Fullscreen Image (Touchscreen)")
+            return
+
+        # mouse or touchpad
+        if event.button == 1 and self.ui_ad_image_total_drag < self.ui_ad_image_drag_threshold:
+            print("Fullscreen Image (Mouse or Touchpad)")
 
     def clearBoxes(self):
         self.EditorListStore.clear()
