@@ -2759,6 +2759,8 @@ class MainWindow(object):
         print("app_name: {}".format(app_name))
         print("details: {}".format(details))
 
+        GLib.idle_add(lambda: self.ui_ad_image_box.foreach(lambda child: self.ui_ad_image_box.remove(child)))
+
         for image in details["screenshots"]:
             self.AppImage.fetch(self.Server.serverurl + image)
 
@@ -4704,7 +4706,7 @@ class MainWindow(object):
         original_height = pixbuf.get_height()
         fixed_height = 200
         image = Gtk.Image.new_from_pixbuf(pixbuf.scale_simple(
-            int(original_width * fixed_height / original_height), 200, GdkPixbuf.InterpType.BILINEAR))
+            int(original_width * fixed_height / original_height), fixed_height, GdkPixbuf.InterpType.BILINEAR))
         GLib.idle_add(self.ui_ad_image_box.add, image)
         GLib.idle_add(self.ui_ad_image_box.show_all)
 
