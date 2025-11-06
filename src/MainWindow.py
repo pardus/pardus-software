@@ -414,6 +414,8 @@ class MainWindow(object):
         self.ui_ad_image_drag_touch_threshold = 2
         self.ui_ad_image_is_touch = False
 
+        self.ui_ad_description_label = self.GtkBuilder.get_object("ui_ad_description_label")
+
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
@@ -2813,6 +2815,8 @@ class MainWindow(object):
             self.set_button_class(self.ui_ad_action_button, 2)
             action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
         self.ui_ad_action_button.show_all()
+
+        self.ui_ad_description_label.set_text(details["description"][self.locale])
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
