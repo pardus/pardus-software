@@ -138,26 +138,42 @@ class Package(object):
         return sum.summary if hasattr(sum, "summary") else "Summary is not found"
 
     def candidate_version(self, packagename):
-        package = self.cache[packagename]
         try:
-            version = package.candidate.version
-        except:
-            try:
-                version = package.versions[0].version
-            except:
-                version = ""
-        return version
+            package = self.cache[packagename]
+        except Exception as e:
+            self.Logger.exception(f"candidate_version: lookup failed for {packagename}: {e}")
+            return None
+
+        candidate = getattr(package, "candidate", None)
+        if candidate and getattr(candidate, "version", None):
+            return candidate.version
+
+        try:
+            versions = getattr(package, "versions", [])
+            if not versions:
+                return None
+            highest = versions[0]
+            for v in versions[1:]:
+                if apt_pkg.version_compare(v.version, highest.version) > 0:
+                    highest = v
+            return highest.version
+        except Exception as e:
+            self.Logger.exception(f"candidate_version: failed to determine highest version for {packagename}: {e}")
+            return None
 
     def installed_version(self, packagename):
         try:
             package = self.cache[packagename]
-        except:
+        except Exception as e:
+            self.Logger.exception(f"installed_version: lookup failed for {packagename}: {e}")
             return None
-        try:
-            version = package.installed.version
-        except:
-            version = ""
-        return version
+
+        installed = getattr(package, "installed", None)
+        if installed and getattr(installed, "version", None):
+            return installed.version
+
+        version = self.candidate_version(packagename)
+        return version if version else None
 
     def size(self, packagename):
         package = self.cache[packagename]
