@@ -2092,6 +2092,17 @@ class MainWindow(object):
                 else:
                     to_normal(action_button)
 
+        for fbc in self.ui_upgradableapps_flowbox:
+            if next(iter(fbc.get_children()[0].get_children()[0].name)) == app_name:
+                action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3]
+                remove_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4]
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
+                    to_spinner(action_button)
+                    remove_button.set_sensitive(False)
+                else:
+                    to_normal(action_button)
+                    remove_button.set_sensitive(True)
+
         if self.ui_right_stack.get_visible_child_name() == "appdetails":
             if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                 to_spinner(self.ui_ad_action_button)
