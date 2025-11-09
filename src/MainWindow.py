@@ -1859,6 +1859,9 @@ class MainWindow(object):
                                         if app["name"] == button.name), None)
                         if q_index is not None:
                             self.queue.pop(q_index)
+                            # update widget actions
+                            self.Logger.info(f"{button.name} removed from queue, updating widget actions")
+                            self.update_app_widget_label(app_name=button.name, from_queue_cancelled=True)
                     else:
                         self.Logger.info("Cancelling {} {}".format(self.actionedappname, self.pid))
                         command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
@@ -1976,8 +1979,8 @@ class MainWindow(object):
         self.pid = self.action_process(command)
         self.Logger.info("started pid : {}".format(self.pid))
 
-    def update_app_widget_label(self, app_name):
-
+    def update_app_widget_label(self, app_name, from_queue_cancelled=False):
+        self.Logger.info("inprogress_app_name: {}, app_name: {}".format(self.inprogress_app_name, app_name))
         def to_spinner(action_button):
             action_button.remove(action_button.get_children()[0])
             action_button.set_sensitive(False)
@@ -2028,7 +2031,7 @@ class MainWindow(object):
         for fbc in self.ui_pardusapps_flowbox:
             if next(iter(fbc.get_children()[0].get_children()[0].name)) == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
@@ -2036,7 +2039,7 @@ class MainWindow(object):
         for fbc in self.ui_trend_flowbox:
             if fbc.get_children()[0].get_children()[0].name == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
@@ -2044,7 +2047,7 @@ class MainWindow(object):
         for fbc in self.ui_mostdown_flowbox:
             if fbc.get_children()[0].get_children()[0].name == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
@@ -2052,7 +2055,7 @@ class MainWindow(object):
         for fbc in self.ui_recent_flowbox:
             if fbc.get_children()[0].get_children()[0].name == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
@@ -2060,7 +2063,7 @@ class MainWindow(object):
         for fbc in self.ui_trendapps_flowbox:
             if fbc.get_children()[0].get_children()[0].name == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
@@ -2068,7 +2071,7 @@ class MainWindow(object):
         for fbc in self.ui_mostdownapps_flowbox:
             if fbc.get_children()[0].get_children()[0].name == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
@@ -2076,7 +2079,7 @@ class MainWindow(object):
         for fbc in self.ui_recentapps_flowbox:
             if fbc.get_children()[0].get_children()[0].name == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[2]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
@@ -2084,13 +2087,13 @@ class MainWindow(object):
         for fbc in self.ui_editor_flowbox:
             if fbc.get_children()[0].get_children()[0].name == app_name:
                 action_button = fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[1].get_children()[2]
-                if self.inprogress_app_name != app_name:
+                if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
 
         if self.ui_right_stack.get_visible_child_name() == "appdetails":
-            if self.inprogress_app_name != app_name:
+            if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                 to_spinner(self.ui_ad_action_button)
                 self.ui_ad_remove_button.set_sensitive(False)
             else:
