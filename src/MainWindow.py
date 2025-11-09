@@ -391,9 +391,9 @@ class MainWindow(object):
 
         self.ui_ad_name = self.GtkBuilder.get_object("ui_ad_name")
         self.ui_ad_icon = self.GtkBuilder.get_object("ui_ad_icon")
-        self.ui_ad_avgrate_label = self.GtkBuilder.get_object("ui_ad_avgrate_label")
-        self.ui_ad_download_label = self.GtkBuilder.get_object("ui_ad_download_label")
-        self.ui_ad_size_label = self.GtkBuilder.get_object("ui_ad_size_label")
+        self.ui_ad_top_avgrate_label = self.GtkBuilder.get_object("ui_ad_top_avgrate_label")
+        self.ui_ad_top_download_label = self.GtkBuilder.get_object("ui_ad_top_download_label")
+        self.ui_ad_top_size_label = self.GtkBuilder.get_object("ui_ad_top_size_label")
         self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
         self.ui_ad_disclaimer_button = self.GtkBuilder.get_object("ui_ad_disclaimer_button")
         self.ui_ad_remove_button = self.GtkBuilder.get_object("ui_ad_remove_button")
@@ -416,6 +416,18 @@ class MainWindow(object):
         self.ui_ad_image_is_touch = False
 
         self.ui_ad_description_label = self.GtkBuilder.get_object("ui_ad_description_label")
+        self.ui_ad_version_label = self.GtkBuilder.get_object("ui_ad_version_label")
+        self.ui_ad_sizetitle_label = self.GtkBuilder.get_object("ui_ad_sizetitle_label")
+        self.ui_ad_size_label = self.GtkBuilder.get_object("ui_ad_size_label")
+        self.ui_ad_required_sizetitle_label = self.GtkBuilder.get_object("ui_ad_required_sizetitle_label")
+        self.ui_ad_required_size_label = self.GtkBuilder.get_object("ui_ad_required_size_label")
+        self.ui_ad_type_label = self.GtkBuilder.get_object("ui_ad_type_label")
+        self.ui_ad_category_label = self.GtkBuilder.get_object("ui_ad_category_label")
+        self.ui_ad_license_label = self.GtkBuilder.get_object("ui_ad_license_label")
+        self.ui_ad_component_label = self.GtkBuilder.get_object("ui_ad_component_label")
+        self.ui_ad_maintainer_name_label = self.GtkBuilder.get_object("ui_ad_maintainer_name_label")
+        self.ui_ad_maintainer_web_label = self.GtkBuilder.get_object("ui_ad_maintainer_web_label")
+        self.ui_ad_maintainer_mail_label = self.GtkBuilder.get_object("ui_ad_maintainer_mail_label")
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -2829,6 +2841,7 @@ class MainWindow(object):
         is_upgradable = self.Package.is_upgradable(app_name)
         is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
         if is_installed is not None:
+            threading.Thread(target=self.app_detail_requireds_thread, args=(app_name,), daemon=True).start()
             self.ui_ad_disclaimer_button.set_visible(self.Package.is_nonfree(app_name))
             if is_installed:
                 self.ui_ad_remove_button.set_visible(True)
@@ -2871,6 +2884,87 @@ class MainWindow(object):
                 self.ui_ad_remove_button.set_sensitive(False)
 
         self.ui_ad_description_label.set_text(details["description"][self.locale])
+        self.ui_ad_version_label.set_text(self.Package.installed_version(app_name))
+
+    def app_detail_requireds_thread(self, app):
+        app_detail_requireds = self.app_detail_requireds_worker(app)
+        GLib.idle_add(self.app_detail_requireds_worker_done, app_detail_requireds)
+
+    def app_detail_requireds_worker(self, app=None):
+        return self.Package.required_changes(app)
+
+    def app_detail_requireds_worker_done(self, adr):
+        print(adr)
+
+        is_installed = self.Package.isinstalled(self.ui_app_name)
+        if is_installed is not None:
+            if is_installed:
+                GLib.idle_add(self.ui_ad_sizetitle_label.set_text, _("Installed Size"))
+                GLib.idle_add(self.ui_ad_size_label.set_text, "{}".format(self.Package.beauty_size(adr["freed_size"])))
+                GLib.idle_add(self.ui_ad_required_sizetitle_label.set_text, "")
+                GLib.idle_add(self.ui_ad_required_size_label.set_text, "")
+            else:
+                GLib.idle_add(self.ui_ad_sizetitle_label.set_text, _("Download Size"))
+                GLib.idle_add(self.ui_ad_required_sizetitle_label.set_text, _("Required Disk Space"))
+                GLib.idle_add(self.ui_ad_size_label.set_text, "{}".format(self.Package.beauty_size(adr["download_size"])))
+                GLib.idle_add(self.ui_ad_required_size_label.set_text, "{}".format(self.Package.beauty_size(adr["install_size"])))
+
+        return False
+
+        # self.dapp_packagename_label.set_markup("<b>{}</b>".format(self.appname))
+        #
+        # if self.ret["to_delete"] and self.ret["to_delete"] is not None:
+        #     self.dapp_toremove_label.set_markup("{}".format(", ".join(self.ret["to_delete"])))
+        #     self.dapp_toremove_box.set_visible(True)
+        # else:
+        #     self.dapp_toremove_box.set_visible(False)
+        #
+        # if self.ret["to_install"] and self.ret["to_install"] is not None:
+        #     self.dapp_toinstall_label.set_markup("{}".format(", ".join(self.ret["to_install"])))
+        #     self.dapp_toinstall_box.set_visible(True)
+        # else:
+        #     self.dapp_toinstall_box.set_visible(False)
+        #
+        # if self.ret["broken"] and self.ret["broken"] is not None:
+        #     self.dapp_broken_label.set_markup("{}".format(", ".join(self.ret["broken"])))
+        #     self.dapp_broken_box.set_visible(True)
+        # else:
+        #     self.dapp_broken_box.set_visible(False)
+        #
+        # if self.ret["freed_size"] and self.ret["freed_size"] is not None and self.ret["freed_size"] > 0:
+        #     self.dapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
+        #     self.dapp_fsize_box.set_visible(True)
+        # else:
+        #     self.dapp_fsize_box.set_visible(False)
+        #
+        # if self.ret["download_size"] and self.ret["download_size"] is not None and self.ret["download_size"] > 0:
+        #     self.dapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["download_size"])))
+        #     self.dapp_dsize_box.set_visible(True)
+        # else:
+        #     self.dapp_dsize_box.set_visible(False)
+        #
+        # if self.ret["install_size"] and self.ret["install_size"] is not None and self.ret["install_size"] > 0:
+        #     self.dapp_isize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["install_size"])))
+        #     self.dapp_isize_box.set_visible(True)
+        # else:
+        #     self.dapp_isize_box.set_visible(False)
+        #
+        # isinstalled = self.Package.isinstalled(self.appname)
+        #
+        # if isinstalled is not None:
+        #     if isinstalled:
+        #         self.dSizeTitle.set_text(_("Installed Size"))
+        #         self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
+        #         self.dSizeGrid.set_tooltip_text(None)
+        #     else:
+        #         self.dSizeTitle.set_text(_("Download Size"))
+        #         self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
+        #         self.dSizeGrid.set_tooltip_text("{}: {}".format(
+        #             _("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
+        # else:
+        #     self.dSize.set_markup(_("None"))
+        #     self.dSizeTitle.set_text(_("Download Size"))
+        #     self.dSizeGrid.set_tooltip_text(None)
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)

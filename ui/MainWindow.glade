@@ -3440,7 +3440,7 @@
                                                             <property name="halign">center</property>
                                                             <property name="spacing">4</property>
                                                             <child>
-                                                            <object class="GtkLabel" id="ui_ad_avgrate_label">
+                                                            <object class="GtkLabel" id="ui_ad_top_avgrate_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label">4.6</property>
@@ -3520,7 +3520,7 @@
                                                             <property name="halign">center</property>
                                                             <property name="spacing">4</property>
                                                             <child>
-                                                            <object class="GtkLabel" id="ui_ad_download_label">
+                                                            <object class="GtkLabel" id="ui_ad_top_download_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label">20K+</property>
@@ -3585,7 +3585,7 @@
                                                             <property name="halign">center</property>
                                                             <property name="spacing">4</property>
                                                             <child>
-                                                            <object class="GtkLabel" id="ui_ad_size_label">
+                                                            <object class="GtkLabel" id="ui_ad_top_size_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label">365 MB</property>
@@ -3776,7 +3776,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_version_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -3809,7 +3809,7 @@
                                                         <property name="spacing">7</property>
                                                         <property name="homogeneous">True</property>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_sizetitle_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -3822,7 +3822,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_size_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -3855,7 +3855,7 @@
                                                         <property name="spacing">7</property>
                                                         <property name="homogeneous">True</property>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_required_sizetitle_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -3868,7 +3868,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_required_size_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -3914,7 +3914,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_type_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -3983,7 +3983,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_category_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -4029,7 +4029,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_license_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -4075,7 +4075,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_component_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -4121,7 +4121,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_maintainer_name_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
@@ -4184,7 +4184,7 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkLabel">
+                                                      <object class="GtkLabel" id="ui_ad_maintainer_web_label">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="halign">start</property>
@@ -4230,7 +4230,7 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkLabel">
+                                                      <object class="GtkLabel" id="ui_ad_maintainer_mail_label">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="halign">start</property>
