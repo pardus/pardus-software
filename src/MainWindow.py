@@ -16,6 +16,7 @@ import threading
 import time
 import json
 import math
+import cairo
 from pathlib import Path
 from hashlib import md5
 from datetime import datetime
@@ -4742,13 +4743,61 @@ class MainWindow(object):
         else:
             self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
+    def round_corners(self, pixbuf, radius):
+        # Get the width and height of the original Pixbuf
+        width = pixbuf.get_width()
+        height = pixbuf.get_height()
+
+        # Create a new ARGB surface with the same dimensions
+        # This surface will hold the rounded version of the image
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        ctx = cairo.Context(surface)
+
+        # Draw a rounded rectangle path
+        # Top-left corner
+        ctx.arc(radius, radius, radius, 3.1415, 3.1415 * 1.5)
+        # Top-right corner
+        ctx.arc(width - radius, radius, radius, 3.1415 * 1.5, 0)
+        # Bottom-right corner
+        ctx.arc(width - radius, height - radius, radius, 0, 3.1415 * 0.5)
+        # Bottom-left corner
+        ctx.arc(radius, height - radius, radius, 3.1415 * 0.5, 3.1415)
+        ctx.close_path()  # Close the path to complete the rounded rectangle
+
+        # Apply the path as a clipping mask
+        # Everything drawn after this will be clipped to this rounded shape
+        ctx.clip()
+
+        # Draw the original Pixbuf onto the Cairo surface
+        # The clip will ensure corners are rounded
+        Gdk.cairo_set_source_pixbuf(ctx, pixbuf, 0, 0)
+        ctx.paint()
+
+        # Extract the surface data as raw bytes
+        data = surface.get_data()
+
+        # Create a new Pixbuf from the surface data
+        # This Pixbuf now contains the rounded-corner version of the original image
+        new_pixbuf = GdkPixbuf.Pixbuf.new_from_data(
+            bytes(data),  # Convert surface data to bytes
+            GdkPixbuf.Colorspace.RGB,  # RGB color space
+            True,  # Has alpha channel
+            8,  # Bits per sample
+            width,  # Width of the Pixbuf
+            height,  # Height of the Pixbuf
+            surface.get_stride()  # Row stride (bytes per row)
+        )
+
+        # Return the new rounded Pixbuf
+        return new_pixbuf
+
     def Pixbuf(self, status, pixbuf=None, uri=None):
         print("status: {}, pixbuf: {}, uri: {}".format(status, pixbuf, uri))
         original_width = pixbuf.get_width()
         original_height = pixbuf.get_height()
         fixed_height = 200
-        image = Gtk.Image.new_from_pixbuf(pixbuf.scale_simple(
-            int(original_width * fixed_height / original_height), fixed_height, GdkPixbuf.InterpType.BILINEAR))
+        image = Gtk.Image.new_from_pixbuf(self.round_corners((pixbuf.scale_simple(
+            int(original_width * fixed_height / original_height), fixed_height, GdkPixbuf.InterpType.BILINEAR)), 7))
         GLib.idle_add(self.ui_ad_image_box.add, image)
         GLib.idle_add(self.ui_ad_image_box.show_all)
 
