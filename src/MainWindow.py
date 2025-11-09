@@ -534,6 +534,8 @@ class MainWindow(object):
 
         self.dpkgconfiguring = False
 
+        self.ui_app_name = ""
+
         self.inprogress_app_name = ""
         self.inprogress_command = ""
         self.inprogress_desktop = ""
@@ -1920,6 +1922,10 @@ class MainWindow(object):
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
                 app_name, command, desktop_id, button.name == 2))
 
+    def on_ui_ad_action_button_clicked(self, button):
+        button.get_parent().get_parent().get_parent().name = self.ui_app_name
+        self.app_widget_action_clicked(button)
+
     def launch_desktop_file(self, desktop):
         try:
             subprocess.check_call(["gtk-launch", desktop])
@@ -2077,6 +2083,12 @@ class MainWindow(object):
                     to_spinner(action_button)
                 else:
                     to_normal(action_button)
+
+        if self.ui_right_stack.get_visible_child_name() == "appdetails":
+            if self.inprogress_app_name != app_name:
+                to_spinner(self.ui_ad_action_button)
+            else:
+                to_normal(self.ui_ad_action_button)
 
     def create_app_widget(self, app, details=None, number=0):
 
@@ -2745,6 +2757,8 @@ class MainWindow(object):
 
     def set_app_details_page(self, app):
 
+        self.ui_app_name = ""
+
         if isinstance(app, dict):
             app_name, details = next(iter(app.items()))
         elif isinstance(app, str):
@@ -2760,6 +2774,8 @@ class MainWindow(object):
 
         print("app_name: {}".format(app_name))
         print("details: {}".format(details))
+
+        self.ui_app_name = app_name
 
         GLib.idle_add(lambda: self.ui_ad_image_box.foreach(lambda child: self.ui_ad_image_box.remove(child)))
 
@@ -2815,6 +2831,17 @@ class MainWindow(object):
             self.set_button_class(self.ui_ad_action_button, 2)
             action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
         self.ui_ad_action_button.show_all()
+
+        app_in_queue = next((q for q in self.queue if q["name"] == app_name), None)
+        if app_in_queue:
+            if is_installed:
+                if is_upgradable and app_in_queue["upgrade"]:
+                    self.ui_ad_action_button.set_label(_("Upgrading"))
+                else:
+                    self.ui_ad_action_button.set_label(_("Removing"))
+            else:
+                self.ui_ad_action_button.set_label(_("Installing"))
+            self.ui_ad_action_button.set_sensitive(False)
 
         self.ui_ad_description_label.set_text(details["description"][self.locale])
 
