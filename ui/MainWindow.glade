@@ -3375,6 +3375,7 @@
                                                         <property name="halign">center</property>
                                                         <property name="valign">center</property>
                                                         <property name="relief">none</property>
+                                                        <signal name="clicked" handler="on_ui_ad_remove_button_clicked" swapped="no"/>
                                                         <child>
                                                           <object class="GtkImage">
                                                             <property name="visible">True</property>

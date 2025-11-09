@@ -1926,6 +1926,10 @@ class MainWindow(object):
         button.get_parent().get_parent().get_parent().name = self.ui_app_name
         self.app_widget_action_clicked(button)
 
+    def on_ui_ad_remove_button_clicked(self, button):
+        button.get_parent().get_parent().get_parent().name = self.ui_app_name
+        self.app_widget_action_clicked(button)
+
     def launch_desktop_file(self, desktop):
         try:
             subprocess.check_call(["gtk-launch", desktop])
@@ -2087,8 +2091,11 @@ class MainWindow(object):
         if self.ui_right_stack.get_visible_child_name() == "appdetails":
             if self.inprogress_app_name != app_name:
                 to_spinner(self.ui_ad_action_button)
+                self.ui_ad_remove_button.set_sensitive(False)
             else:
                 to_normal(self.ui_ad_action_button)
+                self.ui_ad_remove_button.set_sensitive(True)
+                self.ui_ad_remove_button.set_visible(self.Package.isinstalled(app_name))
 
     def create_app_widget(self, app, details=None, number=0):
 
@@ -2832,6 +2839,8 @@ class MainWindow(object):
             action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
         self.ui_ad_action_button.show_all()
 
+        self.ui_ad_remove_button.name = 0
+
         app_in_queue = next((q for q in self.queue if q["name"] == app_name), None)
         if app_in_queue:
             if is_installed:
@@ -2842,6 +2851,8 @@ class MainWindow(object):
             else:
                 self.ui_ad_action_button.set_label(_("Installing"))
             self.ui_ad_action_button.set_sensitive(False)
+            if self.ui_ad_remove_button.get_visible():
+                self.ui_ad_remove_button.set_sensitive(False)
 
         self.ui_ad_description_label.set_text(details["description"][self.locale])
 
