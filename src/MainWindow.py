@@ -5786,23 +5786,19 @@ class MainWindow(object):
         self.ui_myapp_pop_stack.set_visible_child_name("details")
 
     def ui_myapps_uninstall(self):
-        self.appname = self.myapp_toremove
-        self.command = self.myapp_toremove
-        self.desktop_file = self.myapp_toremove_desktop
-
         self.ui_header_queue_button.set_visible(True)
         self.ui_queue_stack.set_visible_child_name("inprogress")
 
         self.ui_myapp_pop_uninstall_button.set_sensitive(False)
 
-        self.queue.append({"name": self.appname, "command": self.command, "desktop_id": self.desktop_file,
-                           "upgrade": False})
-        self.add_to_queue_ui(self.appname)
+        self.queue.append({"name": self.myapp_toremove, "command": self.myapp_toremove,
+                           "desktop_id": self.myapp_toremove_desktop, "upgrade": False})
+        self.add_to_queue_ui(self.myapp_toremove)
         if not self.inprogress:
-            self.action_package(self.appname, self.command, self.desktop_file)
+            self.action_package(self.myapp_toremove, self.myapp_toremove, self.myapp_toremove_desktop)
             self.inprogress = True
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
-                self.appname, self.command, self.desktop_file, False))
+                self.myapp_toremove, self.myapp_toremove, self.myapp_toremove_desktop, False))
 
     def myapps_filter_func(self, row):
         # app info defined in uninstall button so getting this widget
