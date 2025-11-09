@@ -311,8 +311,15 @@ class Package(object):
         else:
             parts = list(packagenames)
 
-        ret = {"download_size": None, "freed_size": None, "install_size": None,
-               "to_install": [], "to_delete": [], "broken": [], "package_broken": None}
+        ret = {
+            "download_size": None,
+            "freed_size": None,
+            "install_size": None,
+            "to_install": [],
+            "to_delete": [],
+            "broken": [],
+            "package_broken": None
+        }
 
         inst_recommends = True
         cleaned = []
@@ -331,7 +338,6 @@ class Package(object):
             ret["package_broken"] = True
             return ret
 
-        package_broken = None
         for packagename in cleaned:
             try:
                 package = self.cache[packagename]
@@ -343,7 +349,7 @@ class Package(object):
 
             try:
                 if package.is_installed:
-                    package.mark_delete(True, True)   # parameters like your original code
+                    package.mark_delete(True, True)
                 else:
                     if inst_recommends:
                         package.mark_install(True, True)
@@ -362,7 +368,7 @@ class Package(object):
             return ret
 
         if changes:
-            package_broken = False
+            ret["package_broken"] = False
             for package in changes:
                 if package.marked_install:
                     if package.name not in ret["to_install"]:
@@ -371,7 +377,7 @@ class Package(object):
                     if package.name not in ret["to_delete"]:
                         ret["to_delete"].append(package.name)
         else:
-            package_broken = True
+            ret["package_broken"] = True
 
         try:
             download_size = getattr(self.cache, "required_download", None)
@@ -395,8 +401,6 @@ class Package(object):
         ret["download_size"] = download_size
         ret["freed_size"] = freed_size
         ret["install_size"] = install_size
-        ret["broken"] = ret["broken"]
-        ret["package_broken"] = package_broken
 
         self.Logger.info("freed_size {}".format(ret["freed_size"]))
         self.Logger.info("download_size {}".format(ret["download_size"]))
