@@ -2818,6 +2818,7 @@ class MainWindow(object):
             self.ui_ad_disclaimer_button.set_visible(self.Package.is_nonfree(app_name))
             if is_installed:
                 self.ui_ad_remove_button.set_visible(True)
+                self.ui_ad_remove_button.set_sensitive(True)
                 if is_upgradable:
                     self.set_button_class(self.ui_ad_action_button, 3)
                     action_button_label.set_markup("<small>{}</small>".format(_("Update")))
