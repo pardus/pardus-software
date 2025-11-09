@@ -305,68 +305,97 @@ class Package(object):
     def required_changes(self, packagenames, sleep=True):
         if sleep:
             time.sleep(0.25)
-        self.cache.clear()
-        to_install = []
-        to_delete = []
-        broken = []
+
+        if isinstance(packagenames, str):
+            parts = [p for p in packagenames.split(" ") if p != ""]
+        else:
+            parts = list(packagenames)
+
+        ret = {"download_size": None, "freed_size": None, "install_size": None,
+               "to_install": [], "to_delete": [], "broken": [], "package_broken": None}
+
         inst_recommends = True
+        cleaned = []
+        for p in parts:
+            if p == "--no-install-recommends":
+                inst_recommends = False
+            elif p == "--no-install-suggests":
+                pass
+            else:
+                cleaned.append(p)
+
+        try:
+            self.cache.clear()
+        except Exception as e:
+            self.Logger.exception("cache.clear() failed: {}".format(e))
+            ret["package_broken"] = True
+            return ret
+
         package_broken = None
-        packagenames = packagenames.split(" ")
-        ret = {"download_size": None, "freed_size": None, "install_size": None, "to_install": None, "to_delete": None,
-               "broken": None, "package_broken": None}
-
-        if "--no-install-recommends" in packagenames:
-            inst_recommends = False
-            packagenames.remove("--no-install-recommends")
-        if "--no-install-suggests" in packagenames:
-            # inst_recommends = False
-            packagenames.remove("--no-install-suggests")
-
-        for packagename in packagenames:
+        for packagename in cleaned:
             try:
                 package = self.cache[packagename]
             except Exception as e:
-                self.Logger.exception("{}".format(e))
-                return ret
+                self.Logger.exception("Package lookup failed: {}".format(e))
+                if packagename not in ret["broken"]:
+                    ret["broken"].append(packagename)
+                continue
+
             try:
                 if package.is_installed:
-                    package.mark_delete(True, True)
+                    package.mark_delete(True, True)   # parameters like your original code
                 else:
                     if inst_recommends:
                         package.mark_install(True, True)
                     else:
                         package.mark_install(True, False)
-            except:
-                if packagename not in broken:
-                    broken.append(packagename)
-            changes = self.cache.get_changes()
-            if changes:
-                package_broken = False
-                for package in changes:
-                    if package.marked_install:
-                        if package.name not in to_install:
-                            to_install.append(package.name)
-                    elif package.marked_delete:
-                        if package.name not in to_delete:
-                            to_delete.append(package.name)
-            else:
-                package_broken = True
+            except Exception as e:
+                self.Logger.exception("Mark install/delete failed for {}: {}".format(packagename, e))
+                if packagename not in ret["broken"]:
+                    ret["broken"].append(packagename)
 
-        download_size = self.cache.required_download
-        space = self.cache.required_space
-        if space < 0:
-            freed_size = space * -1
-            install_size = 0
+        try:
+            changes = self.cache.get_changes()
+        except Exception as e:
+            self.Logger.exception("cache.get_changes() failed: {}".format(e))
+            ret["package_broken"] = True
+            return ret
+
+        if changes:
+            package_broken = False
+            for package in changes:
+                if package.marked_install:
+                    if package.name not in ret["to_install"]:
+                        ret["to_install"].append(package.name)
+                elif package.marked_delete:
+                    if package.name not in ret["to_delete"]:
+                        ret["to_delete"].append(package.name)
         else:
-            freed_size = 0
-            install_size = space
+            package_broken = True
+
+        try:
+            download_size = getattr(self.cache, "required_download", None)
+            space = getattr(self.cache, "required_space", None)
+        except Exception as e:
+            self.Logger.exception("Error reading cache sizes: {}".format(e))
+            download_size = None
+            space = None
+
+        if space is None:
+            freed_size = None
+            install_size = None
+        else:
+            if space < 0:
+                freed_size = -space
+                install_size = 0
+            else:
+                freed_size = 0
+                install_size = space
 
         ret["download_size"] = download_size
         ret["freed_size"] = freed_size
         ret["install_size"] = install_size
-        ret["to_install"] = to_install
-        ret["to_delete"] = to_delete
-        ret["broken"] = broken
+        ret["broken"] = ret["broken"]
         ret["package_broken"] = package_broken
 
         self.Logger.info("freed_size {}".format(ret["freed_size"]))
