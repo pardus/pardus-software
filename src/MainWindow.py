@@ -2887,6 +2887,11 @@ class MainWindow(object):
         else:
             self.set_button_class(self.ui_ad_action_button, 2)
             action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+            self.ui_ad_sizetitle_label.set_text(_("Download Size"))
+            self.ui_ad_required_sizetitle_label.set_text(_("Required Disk Space"))
+            self.ui_ad_size_label.set_text("{}".format(_("None")))
+            self.ui_ad_required_size_label.set_text("{}".format(_("None")))
+            self.ui_ad_top_size_label.set_text("{}".format(_("None")))
         self.ui_ad_action_button.show_all()
 
         self.ui_ad_remove_button.name = 0
@@ -2933,7 +2938,7 @@ class MainWindow(object):
         else:
             self.ui_ad_disclaimer_button.set_visible(False)
             type_label = _("Open Source")
-        self.ui_ad_component_label.set_markup(f"{origin} {component}")
+        self.ui_ad_component_label.set_markup(f"{origin} {component}" if origin_info else _("None"))
         self.ui_ad_type_label.set_markup(type_label)
 
         self.ui_ad_license_label.set_text(details.get("license") or "")
