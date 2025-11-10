@@ -2935,6 +2935,8 @@ class MainWindow(object):
         self.ui_ad_component_label.set_markup(f"{origin} {component}")
         self.ui_ad_type_label.set_markup(type_label)
 
+        self.ui_ad_license_label.set_text(details.get("license") or "")
+
     def app_detail_requireds_thread(self, app):
         app_detail_requireds = self.app_detail_requireds_worker(app)
         GLib.idle_add(self.app_detail_requireds_worker_done, app_detail_requireds)
