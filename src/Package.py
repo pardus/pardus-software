@@ -554,15 +554,28 @@ class Package(object):
             return False, None
 
     def origins(self, packagename):
-        package = self.cache[packagename]
         try:
-            component = package.candidate.origins[0]
-        except:
+            package = self.cache[packagename]
+        except Exception as e:
+            self.Logger.exception(f"origins: lookup failed for {packagename}: {e}")
+            return None
+
+        version = getattr(package, "candidate", None)
+        if not version:
             try:
-                component = package.versions[0].origins[0]
-            except:
-                component = None
-        return component
+                versions = getattr(package, "versions", [])
+                if not versions:
+                    return None
+                version = versions[0]
+            except Exception as e:
+                self.Logger.exception(f"origins: version lookup failed for {packagename}: {e}")
+                return None
+
+        origins = getattr(version, "origins", [])
+        if not origins:
+            return None
+
+        return origins[0]
 
     def is_nonfree(self, packagename):
         package = self.cache[packagename]
