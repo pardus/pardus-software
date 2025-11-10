@@ -429,6 +429,27 @@ class MainWindow(object):
         self.ui_ad_maintainer_web_label = self.GtkBuilder.get_object("ui_ad_maintainer_web_label")
         self.ui_ad_maintainer_mail_label = self.GtkBuilder.get_object("ui_ad_maintainer_mail_label")
 
+        self.ui_ad_install_list_box = self.GtkBuilder.get_object("ui_ad_install_list_box")
+        self.ui_ad_install_list_eventbox = self.GtkBuilder.get_object("ui_ad_install_list_eventbox")
+        self.ui_ad_install_list_image = self.GtkBuilder.get_object("ui_ad_install_list_image")
+        self.ui_ad_install_list_revealer = self.GtkBuilder.get_object("ui_ad_install_list_revealer")
+        self.ui_ad_install_list_label = self.GtkBuilder.get_object("ui_ad_install_list_label")
+        self.ui_ad_install_list_count_label = self.GtkBuilder.get_object("ui_ad_install_list_count_label")
+
+        self.ui_ad_remove_list_box = self.GtkBuilder.get_object("ui_ad_remove_list_box")
+        self.ui_ad_remove_list_eventbox = self.GtkBuilder.get_object("ui_ad_remove_list_eventbox")
+        self.ui_ad_remove_list_image = self.GtkBuilder.get_object("ui_ad_remove_list_image")
+        self.ui_ad_remove_list_revealer = self.GtkBuilder.get_object("ui_ad_remove_list_revealer")
+        self.ui_ad_remove_list_label = self.GtkBuilder.get_object("ui_ad_remove_list_label")
+        self.ui_ad_remove_list_count_label = self.GtkBuilder.get_object("ui_ad_remove_list_count_label")
+
+        self.ui_ad_broken_list_box = self.GtkBuilder.get_object("ui_ad_broken_list_box")
+        self.ui_ad_broken_list_eventbox = self.GtkBuilder.get_object("ui_ad_broken_list_eventbox")
+        self.ui_ad_broken_list_image = self.GtkBuilder.get_object("ui_ad_broken_list_image")
+        self.ui_ad_broken_list_revealer = self.GtkBuilder.get_object("ui_ad_broken_list_revealer")
+        self.ui_ad_broken_list_label = self.GtkBuilder.get_object("ui_ad_broken_list_label")
+        self.ui_ad_broken_list_count_label = self.GtkBuilder.get_object("ui_ad_broken_list_count_label")
+
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
@@ -2941,6 +2962,24 @@ class MainWindow(object):
                 GLib.idle_add(self.ui_ad_required_size_label.set_text, "{}".format(
                     self.Package.beauty_size(adr["install_size"])))
 
+        if adr["to_delete"]:
+            self.ui_ad_remove_list_label.set_markup("{}".format(", ".join(adr["to_delete"])))
+            self.ui_ad_remove_list_box.set_visible(True)
+        else:
+            self.ui_ad_remove_list_box.set_visible(False)
+
+        if adr["to_install"]:
+            self.ui_ad_install_list_label.set_markup("{}".format(", ".join(adr["to_install"])))
+            self.ui_ad_install_list_box.set_visible(True)
+        else:
+            self.ui_ad_install_list_box.set_visible(False)
+
+        if adr["broken"]:
+            self.ui_ad_broken_list_label.set_markup("{}".format(", ".join(adr["broken"])))
+            self.ui_ad_broken_list_box.set_visible(True)
+        else:
+            self.ui_ad_broken_list_box.set_visible(False)
+
         return False
 
         # self.dapp_packagename_label.set_markup("<b>{}</b>".format(self.appname))
@@ -2997,6 +3036,27 @@ class MainWindow(object):
         #     self.dSize.set_markup(_("None"))
         #     self.dSizeTitle.set_text(_("Download Size"))
         #     self.dSizeGrid.set_tooltip_text(None)
+
+    def on_ui_ad_install_list_eventbox_button_press_event(self, widget, event):
+
+        state = not self.ui_ad_install_list_revealer.get_reveal_child()
+        self.ui_ad_install_list_revealer.set_reveal_child(state)
+        icon = "go-up-symbolic" if state else "go-down-symbolic"
+        self.ui_ad_install_list_image.set_from_icon_name(icon, Gtk.IconSize.BUTTON)
+
+    def on_ui_ad_remove_list_eventbox_button_press_event(self, widget, event):
+
+        state = not self.ui_ad_remove_list_revealer.get_reveal_child()
+        self.ui_ad_remove_list_revealer.set_reveal_child(state)
+        icon = "go-up-symbolic" if state else "go-down-symbolic"
+        self.ui_ad_remove_list_image.set_from_icon_name(icon, Gtk.IconSize.BUTTON)
+
+    def on_ui_ad_broken_list_eventbox_button_press_event(self, widget, event):
+
+        state = not self.ui_ad_broken_list_revealer.get_reveal_child()
+        self.ui_ad_broken_list_revealer.set_reveal_child(state)
+        icon = "go-up-symbolic" if state else "go-down-symbolic"
+        self.ui_ad_broken_list_image.set_from_icon_name(icon, Gtk.IconSize.BUTTON)
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
