@@ -23,6 +23,10 @@ list row {
     margin: 0px;
 }*/
 
+.pardus-software-frame > border{
+    border-radius: 8px;
+}
+
 
 .pardus-software-listbox{
     background-color:alpha(@unfocused_borders, 0.3);
