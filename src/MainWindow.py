@@ -394,6 +394,7 @@ class MainWindow(object):
         self.ui_ad_top_avgrate_label = self.GtkBuilder.get_object("ui_ad_top_avgrate_label")
         self.ui_ad_top_download_label = self.GtkBuilder.get_object("ui_ad_top_download_label")
         self.ui_ad_top_size_label = self.GtkBuilder.get_object("ui_ad_top_size_label")
+        self.ui_ad_top_depends_count_label = self.GtkBuilder.get_object("ui_ad_top_depends_count_label")
         self.ui_ad_action_button = self.GtkBuilder.get_object("ui_ad_action_button")
         self.ui_ad_disclaimer_button = self.GtkBuilder.get_object("ui_ad_disclaimer_button")
         self.ui_ad_remove_button = self.GtkBuilder.get_object("ui_ad_remove_button")
@@ -2956,6 +2957,8 @@ class MainWindow(object):
                     self.Package.beauty_size(self.Package.get_size(self.ui_app_name))))
                 GLib.idle_add(self.ui_ad_required_size_label.set_text, "{}".format(
                     self.Package.beauty_size(adr["freed_size"])))
+                GLib.idle_add(self.ui_ad_top_size_label.set_text, "{}".format(
+                    self.Package.beauty_size(adr["freed_size"])))
             else:
                 GLib.idle_add(self.ui_ad_sizetitle_label.set_text, _("Download Size"))
                 GLib.idle_add(self.ui_ad_required_sizetitle_label.set_text, _("Required Disk Space"))
@@ -2963,11 +2966,14 @@ class MainWindow(object):
                     self.Package.beauty_size(adr["download_size"])))
                 GLib.idle_add(self.ui_ad_required_size_label.set_text, "{}".format(
                     self.Package.beauty_size(adr["install_size"])))
+                GLib.idle_add(self.ui_ad_top_size_label.set_text, "{}".format(
+                    self.Package.beauty_size(adr["install_size"])))
 
         if adr["to_delete"]:
             self.ui_ad_remove_list_label.set_text("{}".format(", ".join(adr["to_delete"])))
             self.ui_ad_remove_list_count_label.set_text("({})".format(len(adr["to_delete"])))
             self.ui_ad_remove_list_box.set_visible(True)
+            self.ui_ad_top_depends_count_label.set_text("{}".format(len(adr["to_delete"])))
         else:
             self.ui_ad_remove_list_box.set_visible(False)
 
@@ -2975,6 +2981,7 @@ class MainWindow(object):
             self.ui_ad_install_list_label.set_text("{}".format(", ".join(adr["to_install"])))
             self.ui_ad_install_list_count_label.set_text("({})".format(len(adr["to_install"])))
             self.ui_ad_install_list_box.set_visible(True)
+            self.ui_ad_top_depends_count_label.set_text("{}".format(len(adr["to_install"])))
         else:
             self.ui_ad_install_list_box.set_visible(False)
 
@@ -4601,6 +4608,14 @@ class MainWindow(object):
         print("app_details_from_server, status: {}".format(status))
         print("app_details_from_server, appname: {}".format(appname))
         print("{}".format(response))
+
+        if status:
+            GLib.idle_add(self.ui_ad_top_avgrate_label.set_text,
+                "{:.1f}".format(float(response["details"]["rate"]["average"])))
+
+            GLib.idle_add(self.ui_ad_top_download_label.set_text,
+                "{}".format(response["details"]["download"]["count"]))
+
         # if status and appname == self.getActiveAppOnUI():
         #     self.dtDownload.set_markup(
         #         "{} {}".format(response["details"]["download"]["count"], _("Download")))
