@@ -2963,19 +2963,19 @@ class MainWindow(object):
                     self.Package.beauty_size(adr["install_size"])))
 
         if adr["to_delete"]:
-            self.ui_ad_remove_list_label.set_markup("{}".format(", ".join(adr["to_delete"])))
+            self.ui_ad_remove_list_label.set_text("{}".format(", ".join(adr["to_delete"])))
             self.ui_ad_remove_list_box.set_visible(True)
         else:
             self.ui_ad_remove_list_box.set_visible(False)
 
         if adr["to_install"]:
-            self.ui_ad_install_list_label.set_markup("{}".format(", ".join(adr["to_install"])))
+            self.ui_ad_install_list_label.set_text("{}".format(", ".join(adr["to_install"])))
             self.ui_ad_install_list_box.set_visible(True)
         else:
             self.ui_ad_install_list_box.set_visible(False)
 
         if adr["broken"]:
-            self.ui_ad_broken_list_label.set_markup("{}".format(", ".join(adr["broken"])))
+            self.ui_ad_broken_list_label.set_text("{}".format(", ".join(adr["broken"])))
             self.ui_ad_broken_list_box.set_visible(True)
         else:
             self.ui_ad_broken_list_box.set_visible(False)
