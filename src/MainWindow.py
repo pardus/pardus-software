@@ -2842,7 +2842,6 @@ class MainWindow(object):
         is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
         if is_installed is not None:
             threading.Thread(target=self.app_detail_requireds_thread, args=(app_name,), daemon=True).start()
-            self.ui_ad_disclaimer_button.set_visible(self.Package.is_nonfree(app_name))
             if is_installed:
                 self.ui_ad_remove_button.set_visible(True)
                 self.ui_ad_remove_button.set_sensitive(True)
@@ -2885,6 +2884,35 @@ class MainWindow(object):
 
         self.ui_ad_description_label.set_text(details["description"][self.locale])
         self.ui_ad_version_label.set_text(self.Package.installed_version(app_name))
+
+        maintainer_info = (details.get("maintainer") or [{}])[0]
+        m_name = maintainer_info.get("name", "")
+        m_mail = maintainer_info.get("mail", "")
+        m_web = maintainer_info.get("website", "")
+        self.ui_ad_maintainer_name_label.set_markup(m_name)
+        self.ui_ad_maintainer_mail_label.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
+                GLib.markup_escape_text(m_mail, -1),
+                GLib.markup_escape_text(m_mail, -1),
+                GLib.markup_escape_text(m_mail, -1)))
+
+        self.ui_ad_maintainer_web_label.set_markup("<a title='{}' href='{}'>{}</a>".format(
+                GLib.markup_escape_text(m_web, -1),
+                GLib.markup_escape_text(m_web, -1),
+                GLib.markup_escape_text(m_web, -1)))
+
+        self.ui_ad_category_label.set_text(((details.get("category") or [{}])[0].get(self.locale, "") or "").title())
+
+        origin_info = self.Package.origins(app_name)
+        component = getattr(origin_info, "component", "")
+        origin = getattr(origin_info, "origin", "")
+        if component == "non-free" or (details.get("component") or {}).get("name", "") == "non-free":
+            self.ui_ad_disclaimer_button.set_visible(True)
+            type_label = _("Non-Free")
+        else:
+            self.ui_ad_disclaimer_button.set_visible(False)
+            type_label = _("Open Source")
+        self.ui_ad_component_label.set_markup(f"{origin} {component}")
+        self.ui_ad_type_label.set_markup(type_label)
 
     def app_detail_requireds_thread(self, app):
         app_detail_requireds = self.app_detail_requireds_worker(app)
