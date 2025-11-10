@@ -3826,7 +3826,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">356 MB</property>
+                                                            <property name="label">100 MB</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
                                                             <property name="ellipsize">end</property>
@@ -3872,7 +3872,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">720 MB</property>
+                                                            <property name="label">200 MB</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
                                                             <property name="ellipsize">end</property>
@@ -3918,7 +3918,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">Non-Free</property>
+                                                            <property name="label">Open Source</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
                                                             <property name="ellipsize">end</property>
@@ -3987,7 +3987,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">Browsers</property>
+                                                            <property name="label">Pardus</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
                                                             <property name="ellipsize">end</property>
@@ -4033,7 +4033,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">Proprietary Freeware</property>
+                                                            <property name="label">GPL-3.0</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
                                                             <property name="ellipsize">end</property>
@@ -4079,7 +4079,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">Pardus non-free</property>
+                                                            <property name="label">Pardus Main</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
                                                             <property name="ellipsize">end</property>
@@ -4125,7 +4125,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">Google Linux Development Team</property>
+                                                            <property name="label">Pardus Developers</property>
                                                             <property name="ellipsize">end</property>
                                                             <property name="single-line-mode">True</property>
                                                             <attributes>
@@ -4188,7 +4188,7 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="halign">start</property>
-                                                        <property name="label">https://www.google.com/chrome</property>
+                                                        <property name="label">https://www.pardus.org.tr</property>
                                                         <property name="wrap">True</property>
                                                         <property name="wrap-mode">word-char</property>
                                                         <property name="ellipsize">end</property>
@@ -4234,7 +4234,7 @@
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="halign">start</property>
-                                                        <property name="label">chromium-dev@chromium.org</property>
+                                                        <property name="label">dev@pardus.org.tr</property>
                                                         <property name="wrap">True</property>
                                                         <property name="wrap-mode">word-char</property>
                                                         <property name="ellipsize">end</property>
@@ -4340,7 +4340,7 @@
                                                             <object class="GtkLabel" id="ui_ad_install_list_count_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">(3)</property>
+                                                            <property name="label">(3)</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -4461,7 +4461,7 @@
                                                             <object class="GtkLabel" id="ui_ad_remove_list_count_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">(3)</property>
+                                                            <property name="label">(3)</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -4582,7 +4582,7 @@
                                                             <object class="GtkLabel" id="ui_ad_broken_list_count_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">(3)</property>
+                                                            <property name="label">(3)</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
