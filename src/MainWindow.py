@@ -2905,7 +2905,7 @@ class MainWindow(object):
                 self.ui_ad_remove_button.set_sensitive(False)
 
         self.ui_ad_description_label.set_text(details["description"][self.locale])
-        self.ui_ad_version_label.set_text(self.Package.installed_version(app_name))
+        self.ui_ad_version_label.set_text("{}".format(self.Package.installed_version(app_name)))
 
         maintainer_info = (details.get("maintainer") or [{}])[0]
         m_name = maintainer_info.get("name", "")
