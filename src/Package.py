@@ -206,39 +206,42 @@ class Package(object):
     def get_records(self, packagename):
         try:
             package = self.cache[packagename]
-        except:
-            return "", "", "", ""
-        try:
-            maintainer = package.candidate.record["Maintainer"]
-        except:
-            try:
-                maintainer = package.versions[0].record["Maintainer"]
-            except:
-                maintainer = ""
-        try:
-            homepage = package.candidate.record["Homepage"]
-        except:
-            try:
-                homepage = package.versions[0].record["Homepage"]
-            except:
-                homepage = ""
-        try:
-            arch = package.candidate.record["Architecture"]
-        except:
-            try:
-                arch = package.versions[0].record["Architecture"]
-            except:
-                arch = ""
-        try:
-            maintainer_name = maintainer.split(" <")[0]
-        except:
-            maintainer_name = ""
-        try:
-            maintainer_mail = maintainer.split(" <")[1].replace(">", "")
-        except:
-            maintainer_mail = ""
+        except Exception as e:
+            self.Logger.exception(f"get_records: lookup failed for {packagename}: {e}")
+            return "", "", ""
 
-        return maintainer_name, maintainer_mail, homepage, arch
+        version = getattr(package, "candidate", None)
+        if not version:
+            try:
+                versions = getattr(package, "versions", [])
+                if not versions:
+                    return "", "", ""
+                highest = versions[0]
+                for v in versions[1:]:
+                    if apt_pkg.version_compare(v.version, highest.version) > 0:
+                        highest = v
+                version = highest
+            except Exception as e:
+                self.Logger.exception(f"get_records: failed to determine version for {packagename}: {e}")
+                return "", "", ""
+
+        record = getattr(version, "record", {}) or {}
+
+        maintainer = record.get("Maintainer", "")
+        homepage = record.get("Homepage", "")
+
+        maintainer_name = ""
+        maintainer_mail = ""
+
+        try:
+            match = re.match(r"^(.*?)(?:\s*<([^>]+)>)?$", maintainer)
+            if match:
+                maintainer_name = (match.group(1) or "").strip()
+                maintainer_mail = (match.group(2) or "").strip()
+        except Exception as e:
+            self.Logger.exception(f"get_records: maintainer parse error for {packagename}: {e}")
+
+        return maintainer_name, maintainer_mail, homepage
 
     def get_uri(self, packagename):
         package = self.cache[packagename]
