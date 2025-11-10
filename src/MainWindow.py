@@ -2894,20 +2894,24 @@ class MainWindow(object):
         return self.Package.required_changes(app)
 
     def app_detail_requireds_worker_done(self, adr):
-        print(adr)
+        self.Logger.info("app_detail_requireds_worker_done: {}".format(adr))
 
         is_installed = self.Package.isinstalled(self.ui_app_name)
         if is_installed is not None:
             if is_installed:
-                GLib.idle_add(self.ui_ad_sizetitle_label.set_text, _("Installed Size"))
-                GLib.idle_add(self.ui_ad_size_label.set_text, "{}".format(self.Package.beauty_size(adr["freed_size"])))
-                GLib.idle_add(self.ui_ad_required_sizetitle_label.set_text, "")
-                GLib.idle_add(self.ui_ad_required_size_label.set_text, "")
+                GLib.idle_add(self.ui_ad_sizetitle_label.set_text, _("Package Size"))
+                GLib.idle_add(self.ui_ad_required_sizetitle_label.set_text, _("Installed Size"))
+                GLib.idle_add(self.ui_ad_size_label.set_text, "{}".format(
+                    self.Package.beauty_size(self.Package.get_size(self.ui_app_name))))
+                GLib.idle_add(self.ui_ad_required_size_label.set_text, "{}".format(
+                    self.Package.beauty_size(adr["freed_size"])))
             else:
                 GLib.idle_add(self.ui_ad_sizetitle_label.set_text, _("Download Size"))
                 GLib.idle_add(self.ui_ad_required_sizetitle_label.set_text, _("Required Disk Space"))
-                GLib.idle_add(self.ui_ad_size_label.set_text, "{}".format(self.Package.beauty_size(adr["download_size"])))
-                GLib.idle_add(self.ui_ad_required_size_label.set_text, "{}".format(self.Package.beauty_size(adr["install_size"])))
+                GLib.idle_add(self.ui_ad_size_label.set_text, "{}".format(
+                    self.Package.beauty_size(adr["download_size"])))
+                GLib.idle_add(self.ui_ad_required_size_label.set_text, "{}".format(
+                    self.Package.beauty_size(adr["install_size"])))
 
         return False
 

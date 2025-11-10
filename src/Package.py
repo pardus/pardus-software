@@ -186,6 +186,23 @@ class Package(object):
                 size = ""
         return self.beauty_size(size)
 
+    def get_size(self, packagename):
+        try:
+            package = self.cache[packagename]
+        except Exception as e:
+            self.Logger.exception(f"get_size: lookup failed for {packagename}: {e}")
+            return None
+
+        installed = getattr(package, "installed", None)
+        if installed and getattr(installed, "size", None):
+            return installed.size
+
+        candidate = getattr(package, "candidate", None)
+        if candidate and getattr(candidate, "size", None):
+            return candidate.size
+
+        return None
+
     def get_records(self, packagename):
         try:
             package = self.cache[packagename]
