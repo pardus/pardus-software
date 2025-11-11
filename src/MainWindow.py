@@ -451,6 +451,15 @@ class MainWindow(object):
         self.ui_ad_broken_list_label = self.GtkBuilder.get_object("ui_ad_broken_list_label")
         self.ui_ad_broken_list_count_label = self.GtkBuilder.get_object("ui_ad_broken_list_count_label")
 
+        self.ui_ad_bottom_avgrate_label = self.GtkBuilder.get_object("ui_ad_bottom_avgrate_label")
+        self.ui_ad_bottom_rate_count_label = self.GtkBuilder.get_object("ui_ad_bottom_rate_count_label")
+
+        self.ui_ad_rating_star1_image = self.GtkBuilder.get_object("ui_ad_rating_star1_image")
+        self.ui_ad_rating_star2_image = self.GtkBuilder.get_object("ui_ad_rating_star2_image")
+        self.ui_ad_rating_star3_image = self.GtkBuilder.get_object("ui_ad_rating_star3_image")
+        self.ui_ad_rating_star4_image = self.GtkBuilder.get_object("ui_ad_rating_star4_image")
+        self.ui_ad_rating_star5_image = self.GtkBuilder.get_object("ui_ad_rating_star5_image")
+
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
@@ -2811,6 +2820,53 @@ class MainWindow(object):
         GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
         self.set_app_details_page(row.name)
 
+    def set_rating_stars(self, average):
+        sub_point = int("{:.1f}".format(average).split(".")[1])
+        avg = int(average)
+
+        def get_star_subname(fraction):
+            if fraction >= 5:
+                return "ps-rating-star-half"
+            else:
+                return "ps-rating-star-empty"
+
+        if avg == 0:
+            self.ui_ad_rating_star1_image.set_from_icon_name(get_star_subname(sub_point), Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star2_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star3_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star4_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star5_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+        elif avg == 1:
+            self.ui_ad_rating_star1_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star2_image.set_from_icon_name(get_star_subname(sub_point), Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star3_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star4_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star5_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+        elif avg == 2:
+            self.ui_ad_rating_star1_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star2_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star3_image.set_from_icon_name(get_star_subname(sub_point), Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star4_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star5_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+        elif avg == 3:
+            self.ui_ad_rating_star1_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star2_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star3_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star4_image.set_from_icon_name(get_star_subname(sub_point), Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star5_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+        elif avg == 4:
+            self.ui_ad_rating_star1_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star2_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star3_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star4_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star5_image.set_from_icon_name(get_star_subname(sub_point), Gtk.IconSize.LARGE_TOOLBAR)
+        elif avg == 5:
+            self.ui_ad_rating_star1_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star2_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star3_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star4_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_ad_rating_star5_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
+
     def clear_app_details(self):
 
         self.ui_ad_top_avgrate_label.set_text("")
@@ -2833,6 +2889,8 @@ class MainWindow(object):
         self.ui_ad_remove_list_box.set_visible(False)
         self.ui_ad_install_list_box.set_visible(False)
         self.ui_ad_broken_list_box.set_visible(False)
+
+        self.set_rating_stars(0)
 
     def set_app_details_page(self, app):
 
@@ -4642,6 +4700,14 @@ class MainWindow(object):
 
             GLib.idle_add(self.ui_ad_top_download_label.set_text,
                 "{}".format(response["details"]["download"]["count"]))
+
+            GLib.idle_add(self.ui_ad_bottom_avgrate_label.set_markup,
+                "<span font='54'><b>{:.1f}</b></span>".format(float(response["details"]["rate"]["average"])))
+
+            GLib.idle_add(self.set_rating_stars, response["details"]["rate"]["average"])
+
+            GLib.idle_add(self.ui_ad_bottom_rate_count_label.set_text,
+                "{} Ratings".format(response["details"]["rate"]["count"]))
 
         # if status and appname == self.getActiveAppOnUI():
         #     self.dtDownload.set_markup(

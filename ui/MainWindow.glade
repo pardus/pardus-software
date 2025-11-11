@@ -3473,7 +3473,6 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="valign">center</property>
-                                                            <property name="pixel-size">10</property>
                                                             <property name="icon-name">starred-symbolic</property>
                                                             </object>
                                                             <packing>
@@ -4797,7 +4796,222 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <placeholder/>
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="orientation">vertical</property>
+                                                <property name="spacing">12</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">start</property>
+                                                        <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;Ratings&lt;/b&gt;&lt;/big&gt;</property>
+                                                        <property name="use-markup">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton">
+                                                        <property name="label" translatable="yes">Write Comment</property>
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">True</property>
+                                                        <property name="receives-default">True</property>
+                                                        <style>
+                                                          <class name="openup-action"/>
+                                                        </style>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="pack-type">end</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">center</property>
+                                                        <property name="orientation">vertical</property>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_ad_bottom_avgrate_label">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">&lt;span font='54'&gt;&lt;b&gt;3.8&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="opacity">0.75</property>
+                                                            <property name="valign">end</property>
+                                                            <property name="margin-bottom">10</property>
+                                                            <property name="label" translatable="yes">&lt;span font='18'&gt;/5&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="margin-top">8</property>
+                                                            <property name="margin-bottom">12</property>
+                                                            <property name="spacing">3</property>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_ad_rating_star1_image">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">starred-symbolic</property>
+                                                            <property name="icon_size">3</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_ad_rating_star2_image">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">starred-symbolic</property>
+                                                            <property name="icon_size">3</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_ad_rating_star3_image">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">starred-symbolic</property>
+                                                            <property name="icon_size">3</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_ad_rating_star4_image">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">starred-symbolic</property>
+                                                            <property name="icon_size">3</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_ad_rating_star5_image">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">starred-symbolic</property>
+                                                            <property name="icon_size">3</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">4</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel" id="ui_ad_bottom_rate_count_label">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="opacity">0.75</property>
+                                                            <property name="label" translatable="yes">123 Ratings</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <placeholder/>
+                                                    </child>
+                                                    <child>
+                                                      <placeholder/>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">8</property>
+                                              </packing>
                                             </child>
                                           </object>
                                         </child>
