@@ -477,6 +477,7 @@ class MainWindow(object):
         self.ui_ad_show_gnome_info_popover = self.GtkBuilder.get_object("ui_ad_show_gnome_info_popover")
 
         self.ui_ad_comments_flowbox = self.GtkBuilder.get_object("ui_ad_comments_flowbox")
+        self.ui_ad_comments_flowbox.set_filter_func(self.ad_comments_filter_function)
         self.ui_ad_more_comment_button = self.GtkBuilder.get_object("ui_ad_more_comment_button")
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
@@ -4993,6 +4994,14 @@ class MainWindow(object):
                     GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
             GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
 
+    def ad_comments_filter_function(self, row):
+        name = row.get_children()[0].get_children()[0].name
+        if name == "pardus":
+            return True
+        elif name == "gnome":
+            return self.UserSettings.config_sgc
+        return False
+
     def gComment(self, status, response, appname="", lang=""):
         if status:
             self.setGnomeComments(response, appname, lang)
@@ -6603,6 +6612,8 @@ class MainWindow(object):
                                           self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                           self.UserSettings.config_forceaptuptime)
             self.usersettings()
+
+            self.ui_ad_comments_flowbox.invalidate_filter()
 
     def on_ui_ad_image_button_press(self, widget, event):
         # Detect input device type (mouse/touchpad vs touchscreen)
