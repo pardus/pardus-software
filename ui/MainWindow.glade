@@ -3711,9 +3711,6 @@
                                                         </child>
                                                       </object>
                                                     </child>
-                                                    <child>
-                                                      <placeholder/>
-                                                    </child>
                                                     <style>
                                                       <class name="pardus-software-frame"/>
                                                     </style>

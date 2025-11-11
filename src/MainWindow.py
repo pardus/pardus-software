@@ -2811,6 +2811,29 @@ class MainWindow(object):
         GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
         self.set_app_details_page(row.name)
 
+    def clear_app_details(self):
+
+        self.ui_ad_top_avgrate_label.set_text("")
+        self.ui_ad_top_size_label.set_text("")
+        self.ui_ad_top_depends_count_label.set_text("")
+        self.ui_ad_version_label.set_text("")
+        self.ui_ad_size_label.set_text("")
+        self.ui_ad_required_size_label.set_text("")
+        self.ui_ad_type_label.set_text("")
+        self.ui_ad_category_label.set_text("")
+        self.ui_ad_license_label.set_text("")
+        self.ui_ad_component_label.set_text("")
+        self.ui_ad_maintainer_name_label.set_text("")
+        self.ui_ad_maintainer_web_label.set_text("")
+        self.ui_ad_maintainer_mail_label.set_text("")
+
+        self.ui_ad_remove_button.set_visible(False)
+        self.ui_ad_disclaimer_button.set_visible(False)
+
+        self.ui_ad_remove_list_box.set_visible(False)
+        self.ui_ad_install_list_box.set_visible(False)
+        self.ui_ad_broken_list_box.set_visible(False)
+
     def set_app_details_page(self, app):
 
         self.ui_app_name = ""
@@ -2833,21 +2856,20 @@ class MainWindow(object):
 
         self.ui_app_name = app_name
 
-        GLib.idle_add(lambda: self.ui_ad_image_box.foreach(lambda child: self.ui_ad_image_box.remove(child)))
+        self.clear_app_details()
+
+        self.ui_right_stack.set_visible_child_name("appdetails")
+
+        for row in self.ui_ad_image_box:
+            self.ui_ad_image_box.remove(row)
 
         for image in details["screenshots"]:
             self.AppImage.fetch(self.Server.serverurl + image)
 
         self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
 
-        self.ui_ad_remove_button.set_visible(False)
-        self.ui_ad_disclaimer_button.set_visible(False)
-
-        self.ui_right_stack.set_visible_child_name("appdetails")
-
-        pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
-
-        self.ui_ad_name.set_markup("<b>{}</b>".format(pretty_name))
+        self.ui_ad_name.set_markup("<b>{}</b>".format(
+            details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))))
 
         self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
         self.ui_ad_icon.set_pixel_size(68)
