@@ -20,27 +20,26 @@ class GnomeComment(object):
         self.session = Soup.Session(user_agent="application/json")
         self.Logger = Logger(__name__)
 
-    def get(self, method, uri, dic, appname, lang):
+    def get_comments(self, uri, dic, appname):
         # self.Logger.info("{} : {} {}".format(method, uri, dic))
-        message = Soup.Message.new(method, uri)
+        message = Soup.Message.new("POST", uri)
 
-        if method == "POST":
-            message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
+        message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
 
         message.request_headers.append('Content-type', 'application/json')
-        self.session.send_async(message, None, self.on_finished, message, appname, lang)
+        self.session.send_async(message, None, self.on_finished, message, appname)
 
-    def on_finished(self, session, result, message, appname, lang):
+    def on_finished(self, session, result, message, appname):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
             self.Logger.warning("GnomeComment stream Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
-            self.gComment(False, None)  # Send to MainWindow
+            self.gnome_comments_from_server(False)  # Send to MainWindow
             return False
 
         status_code = message.status_code
-        self.Logger.info("gnome comments server status code : {}, lang : {}".format(status_code, lang))
+        self.Logger.info("gnome comments server status code : {}".format(status_code))
 
         if input_stream:
             data_input_stream = Gio.DataInputStream.new(input_stream)
@@ -54,9 +53,9 @@ class GnomeComment(object):
                     lines.append(line)
             content = "".join(lines)
             if status_code == 200:
-                self.gComment(True, json.loads(content), appname, lang)
+                self.gnome_comments_from_server(True, json.loads(content), appname)
             else:
-                self.gComment(False, None)
+                self.gnome_comments_from_server(False)
         input_stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
 
     def _close_stream(self, session, result, data):
