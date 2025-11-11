@@ -39,7 +39,6 @@ from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gdk, Vte, Pango
 
 from Package import Package
 from Server import Server
-from GnomeRatingServer import GnomeRatingServer
 # from CellRendererButton import CellRendererButton
 
 from AppImage import AppImage
@@ -1302,7 +1301,6 @@ class MainWindow(object):
         # GLib.idle_add(self.setEditorApps)
         # GLib.idle_add(self.setMostApps)
         # GLib.idle_add(self.setRepoApps)
-        GLib.idle_add(self.gnomeRatings)
         GLib.idle_add(self.controlPSUpdate)
         GLib.idle_add(self.aptUpdate)
         GLib.idle_add(self.set_myapps)
@@ -1475,21 +1473,6 @@ class MainWindow(object):
     #         self.AppDetail.control(self.Server.serverurl + "/api/v2/test")
     #         self.AppRequest.control(self.Server.serverurl + "/api/v2/test")
     #         self.PardusComment.control(self.Server.serverurl + "/api/v2/test")
-
-    def gnomeRatings(self):
-        self.Logger.info("Getting ratings from gnome odrs")
-
-        self.GnomeRatingServer = GnomeRatingServer()
-        self.GnomeRatingServer.gRatingServer = self.gRatingServer
-        self.GnomeRatingServer.get()
-
-    def gRatingServer(self, status, response):
-        if status:
-            self.Logger.info("gnomeratings successful")
-            self.gnomeratings = response
-        else:
-            self.gnomeratings = []
-            self.Logger.info("gnomeratings not successful")
 
     def set_slider(self):
 
