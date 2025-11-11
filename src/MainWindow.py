@@ -389,6 +389,8 @@ class MainWindow(object):
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
 
+        self.ui_appdetails_scrolledwindow = self.GtkBuilder.get_object("ui_appdetails_scrolledwindow")
+
         self.ui_ad_name = self.GtkBuilder.get_object("ui_ad_name")
         self.ui_ad_icon = self.GtkBuilder.get_object("ui_ad_icon")
         self.ui_ad_top_avgrate_label = self.GtkBuilder.get_object("ui_ad_top_avgrate_label")
@@ -2950,6 +2952,9 @@ class MainWindow(object):
         self.ui_app_name = app_name
 
         self.clear_app_details()
+
+        # set scroll position to top (reset)
+        self.ui_appdetails_scrolledwindow.set_vadjustment(Gtk.Adjustment())
 
         self.ui_right_stack.set_visible_child_name("appdetails")
 
