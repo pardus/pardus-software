@@ -4838,6 +4838,8 @@ class MainWindow(object):
     def pardus_comments_from_server(self, status, response=None, appname=None):
         if status and response and "comments" in response and appname == self.ui_app_name:
 
+            GLib.idle_add(lambda: self.ui_ad_comments_flowbox.foreach(lambda child: self.ui_ad_comments_flowbox.remove(child)))
+
             response_comment_len = len(response["comments"])
             GLib.idle_add(self.ui_ad_more_comment_button.set_visible, response_comment_len == self.comment_limit)
             GLib.idle_add(self.ui_ad_more_comment_button.set_sensitive, response_comment_len == self.comment_limit)
@@ -4929,6 +4931,13 @@ class MainWindow(object):
         GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
 
         return listbox
+
+    def on_ui_ad_more_comment_button_clicked(self, button):
+        self.ui_ad_more_comment_button.set_sensitive(False)
+        self.comment_limit = self.comment_limit + 10
+        self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
+                                        {"mac": self.mac, "app": self.ui_app_name, "limit": self.comment_limit},
+                                        self.ui_app_name)
 
     def gComment(self, status, response, appname="", lang=""):
         if status:
