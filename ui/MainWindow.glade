@@ -4847,11 +4847,13 @@
                                                   <object class="GtkBox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
+                                                    <property name="spacing">32</property>
                                                     <child>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="halign">center</property>
+                                                        <property name="valign">center</property>
                                                         <property name="orientation">vertical</property>
                                                         <child>
                                                           <object class="GtkBox">
@@ -4994,10 +4996,362 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <placeholder/>
-                                                    </child>
-                                                    <child>
-                                                      <placeholder/>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="orientation">vertical</property>
+                                                        <property name="spacing">16</property>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">&lt;big&gt;&lt;b&gt;5&lt;/b&gt;&lt;/big&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="margin-start">4</property>
+                                                            <property name="margin-end">12</property>
+                                                            <property name="icon-name">ps-rating-star-full</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkProgressBar" id="ui_rating_prg5_progressbar">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <style>
+                                                            <class name="rating-progressbar"/>
+                                                            </style>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_rating_count5_label">
+                                                            <property name="width-request">50</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">320</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">&lt;big&gt;&lt;b&gt;4&lt;/b&gt;&lt;/big&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="margin-start">4</property>
+                                                            <property name="margin-end">12</property>
+                                                            <property name="icon-name">ps-rating-star-full</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkProgressBar" id="ui_rating_prg4_progressbar">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <style>
+                                                            <class name="rating-progressbar"/>
+                                                            </style>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_rating_count4_label">
+                                                            <property name="width-request">50</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">140</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">&lt;big&gt;&lt;b&gt;3&lt;/b&gt;&lt;/big&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="margin-start">4</property>
+                                                            <property name="margin-end">12</property>
+                                                            <property name="icon-name">ps-rating-star-full</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkProgressBar" id="ui_rating_prg3_progressbar">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <style>
+                                                            <class name="rating-progressbar"/>
+                                                            </style>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_rating_count3_label">
+                                                            <property name="width-request">50</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">30</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">&lt;big&gt;&lt;b&gt;2&lt;/b&gt;&lt;/big&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="margin-start">4</property>
+                                                            <property name="margin-end">12</property>
+                                                            <property name="icon-name">ps-rating-star-full</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkProgressBar" id="ui_rating_prg2_progressbar">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <style>
+                                                            <class name="rating-progressbar"/>
+                                                            </style>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_rating_count2_label">
+                                                            <property name="width-request">50</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">9</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <child>
+                                                            <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">&lt;big&gt;&lt;b&gt;1&lt;/b&gt;&lt;/big&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="margin-start">4</property>
+                                                            <property name="margin-end">12</property>
+                                                            <property name="icon-name">ps-rating-star-full</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkProgressBar" id="ui_rating_prg1_progressbar">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <style>
+                                                            <class name="rating-progressbar"/>
+                                                            </style>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_rating_count1_label">
+                                                            <property name="width-request">50</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="label">0</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">True</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">4</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
                                                     </child>
                                                   </object>
                                                   <packing>

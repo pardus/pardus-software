@@ -460,6 +460,18 @@ class MainWindow(object):
         self.ui_ad_rating_star4_image = self.GtkBuilder.get_object("ui_ad_rating_star4_image")
         self.ui_ad_rating_star5_image = self.GtkBuilder.get_object("ui_ad_rating_star5_image")
 
+        self.ui_rating_prg1_progressbar = self.GtkBuilder.get_object("ui_rating_prg1_progressbar")
+        self.ui_rating_prg2_progressbar = self.GtkBuilder.get_object("ui_rating_prg2_progressbar")
+        self.ui_rating_prg3_progressbar = self.GtkBuilder.get_object("ui_rating_prg3_progressbar")
+        self.ui_rating_prg4_progressbar = self.GtkBuilder.get_object("ui_rating_prg4_progressbar")
+        self.ui_rating_prg5_progressbar = self.GtkBuilder.get_object("ui_rating_prg5_progressbar")
+
+        self.ui_rating_count1_label = self.GtkBuilder.get_object("ui_rating_count1_label")
+        self.ui_rating_count2_label = self.GtkBuilder.get_object("ui_rating_count2_label")
+        self.ui_rating_count3_label = self.GtkBuilder.get_object("ui_rating_count3_label")
+        self.ui_rating_count4_label = self.GtkBuilder.get_object("ui_rating_count4_label")
+        self.ui_rating_count5_label = self.GtkBuilder.get_object("ui_rating_count5_label")
+
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
@@ -2867,6 +2879,25 @@ class MainWindow(object):
             self.ui_ad_rating_star4_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
             self.ui_ad_rating_star5_image.set_from_icon_name("ps-rating-star-full", Gtk.IconSize.LARGE_TOOLBAR)
 
+    def set_rating_progressbar(self, total_count, count_1, count_2, count_3, count_4, count_5):
+        self.ui_rating_count1_label.set_text("{}".format(count_1))
+        self.ui_rating_count2_label.set_text("{}".format(count_2))
+        self.ui_rating_count3_label.set_text("{}".format(count_3))
+        self.ui_rating_count4_label.set_text("{}".format(count_4))
+        self.ui_rating_count5_label.set_text("{}".format(count_5))
+        if total_count != 0:
+            self.ui_rating_prg1_progressbar.set_fraction(count_1 / total_count)
+            self.ui_rating_prg2_progressbar.set_fraction(count_2 / total_count)
+            self.ui_rating_prg3_progressbar.set_fraction(count_3 / total_count)
+            self.ui_rating_prg4_progressbar.set_fraction(count_4 / total_count)
+            self.ui_rating_prg5_progressbar.set_fraction(count_5 / total_count)
+        else:
+            self.ui_rating_prg1_progressbar.set_fraction(0)
+            self.ui_rating_prg2_progressbar.set_fraction(0)
+            self.ui_rating_prg3_progressbar.set_fraction(0)
+            self.ui_rating_prg4_progressbar.set_fraction(0)
+            self.ui_rating_prg5_progressbar.set_fraction(0)
+
     def clear_app_details(self):
 
         self.ui_ad_top_avgrate_label.set_text("")
@@ -4708,6 +4739,12 @@ class MainWindow(object):
 
             GLib.idle_add(self.ui_ad_bottom_rate_count_label.set_text,
                 "{} Ratings".format(response["details"]["rate"]["count"]))
+
+            GLib.idle_add(self.set_rating_progressbar, response["details"]["rate"]["count"],
+                          response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
+                          response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
+                          response["details"]["rate"]["rates"]["5"])
+
 
         # if status and appname == self.getActiveAppOnUI():
         #     self.dtDownload.set_markup(
