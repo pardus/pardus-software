@@ -769,7 +769,7 @@ class MainWindow(object):
         self.AppRequest.Request = self.Request
 
         self.GnomeComment = GnomeComment()
-        self.GnomeComment.gComment = self.gComment
+        self.GnomeComment.gnome_comments_from_server = self.gnome_comments_from_server
 
         self.PardusComment = PardusComment()
         self.PardusComment.pardus_comments_from_server = self.pardus_comments_from_server
@@ -2926,6 +2926,8 @@ class MainWindow(object):
         for row in self.ui_ad_comments_flowbox:
             self.ui_ad_comments_flowbox.remove(row)
 
+        self.ui_ad_more_comment_button.name = "pardus"
+
     def set_app_details_page(self, app):
 
         self.ui_app_name = ""
@@ -2963,6 +2965,7 @@ class MainWindow(object):
         self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
 
         self.comment_limit = 10
+        self.gnome_comment_limit = 10
         self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
                                         {"mac": self.mac, "app": app_name, "limit": self.comment_limit}, app_name)
 
@@ -3449,6 +3452,13 @@ class MainWindow(object):
         desktop = ""
         if details and "desktop" in details and details["desktop"]:
             desktop = details["desktop"]
+        return desktop
+
+    def get_gnome_desktop_filename_from_app_name(self, name):
+        details = self.fullapplist.get(name)
+        desktop = ""
+        if details and "gnomename" in details and details["gnomename"]:
+            desktop = details["gnomename"]
         return desktop
 
     def getSystemCatIcon(self, cat, size=48):
@@ -4819,9 +4829,17 @@ class MainWindow(object):
         #     self.setPardusComments(None)
 
     def pardus_comments_from_server(self, status, response=None, appname=None):
+        self.Logger.info("pardus_comments_from_server: {} {} {}".format(status, appname, response))
         if status and response and "comments" in response and appname == self.ui_app_name:
+            self.ui_ad_more_comment_button.name = "pardus"
+            # GLib.idle_add(lambda: self.ui_ad_comments_flowbox.foreach(lambda child: self.ui_ad_comments_flowbox.remove(child)))
 
-            GLib.idle_add(lambda: self.ui_ad_comments_flowbox.foreach(lambda child: self.ui_ad_comments_flowbox.remove(child)))
+            def remove_pardus_rows():
+                for child in self.ui_ad_comments_flowbox.get_children():
+                    inner = child.get_child().get_children()[0]
+                    if inner and inner.name == "pardus":
+                        self.ui_ad_comments_flowbox.remove(child)
+            GLib.idle_add(remove_pardus_rows)
 
             response_comment_len = len(response["comments"])
             GLib.idle_add(self.ui_ad_more_comment_button.set_visible, response_comment_len == self.comment_limit)
@@ -4832,31 +4850,54 @@ class MainWindow(object):
                 GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
             GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
 
-    def create_comment_widget(self, comment):
-        if comment["distro"] is None or comment["distro"] == "":
-            comment["distro"] = _("unknown")
+            if response_comment_len != self.comment_limit:
+                self.ui_ad_more_comment_button.name = "gnome"
+                gdic = {"user_hash": "0000000000000000000000000000000000000000",
+                        "app_id": self.get_gnome_desktop_filename_from_app_name(self.ui_app_name),
+                        "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
+                self.GnomeComment.get_comments(self.Server.gnomecommentserver, gdic, self.ui_app_name)
 
-        if comment["appversion"] is None or comment["appversion"] == "":
-            comment["appversion"] = _("unknown")
+    def create_comment_widget(self, comment, gnome=False):
+        if not gnome:
+            if comment["distro"] is None or comment["distro"] == "":
+                comment["distro"] = _("unknown")
+
+            if comment["appversion"] is None or comment["appversion"] == "":
+                comment["appversion"] = _("unknown")
+
+            distro = comment["distro"]
+            app_version = comment["appversion"]
+            author = comment["author"]
+            date = comment["date"]
+            value = comment["value"]
+            comment = comment["comment"]
+
+        else:
+            distro = comment["distro"]
+            app_version = comment["version"]
+            author = comment["user_display"]
+            date = comment["date_created"]
+            value = comment["rating"] / 20
+            comment = "{}\n{}".format(comment["summary"], comment["description"])
 
         label_author = Gtk.Label.new()
-        label_author.set_markup("<b>{}</b>".format(comment["author"]))
+        label_author.set_markup("<b>{}</b>".format(author))
         label_author.set_selectable(True)
 
         label_date = Gtk.Label.new()
-        label_date.set_markup("{}".format(comment["date"]))
+        label_date.set_markup("{}".format(date))
         label_date.set_selectable(True)
 
         star_image_1 = Gtk.Image.new_from_icon_name(
-            "ps-rating-star-full" if comment["value"] >= 1 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+            "ps-rating-star-full" if value >= 1 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
         star_image_2 = Gtk.Image.new_from_icon_name(
-            "ps-rating-star-full" if comment["value"] >= 2 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+            "ps-rating-star-full" if value >= 2 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
         star_image_3 = Gtk.Image.new_from_icon_name(
-            "ps-rating-star-full" if comment["value"] >= 3 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+            "ps-rating-star-full" if value >= 3 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
         star_image_4 = Gtk.Image.new_from_icon_name(
-            "ps-rating-star-full" if comment["value"] >= 4 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+            "ps-rating-star-full" if value >= 4 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
         star_image_5 = Gtk.Image.new_from_icon_name(
-            "ps-rating-star-full" if comment["value"] >= 5 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+            "ps-rating-star-full" if value >= 5 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
 
         box_star = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
         box_star.pack_start(star_image_1, False, True, 0)
@@ -4872,7 +4913,7 @@ class MainWindow(object):
         box_top.pack_end(label_date, False, True, 0)
 
         label_comment = Gtk.Label.new()
-        label_comment.set_text("{}".format(comment["comment"]))
+        label_comment.set_text("{}".format(comment))
         label_comment.set_selectable(True)
         label_comment.set_line_wrap(True)
         label_comment.set_line_wrap_mode(0)
@@ -4880,11 +4921,11 @@ class MainWindow(object):
         label_comment.set_xalign = 0.0
 
         label_distro = Gtk.Label.new()
-        label_distro.set_markup("{}".format(comment["distro"]))
+        label_distro.set_markup("{}".format(distro))
         label_distro.set_selectable(True)
 
         label_appversion = Gtk.Label.new()
-        label_appversion.set_markup("{}: {}".format(_("App"),comment["appversion"]))
+        label_appversion.set_markup("{}: {}".format(_("App"), app_version))
         label_appversion.set_selectable(True)
 
         box_bottom = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 8)
@@ -4908,6 +4949,7 @@ class MainWindow(object):
         listbox = Gtk.ListBox.new()
         listbox.set_selection_mode(Gtk.SelectionMode.NONE)
         listbox_row = Gtk.ListBoxRow()
+        listbox_row.name = "pardus" if not gnome else "gnome"
         GLib.idle_add(listbox_row.add, box)
         GLib.idle_add(listbox.add, listbox_row)
 
@@ -4917,10 +4959,39 @@ class MainWindow(object):
 
     def on_ui_ad_more_comment_button_clicked(self, button):
         self.ui_ad_more_comment_button.set_sensitive(False)
-        self.comment_limit = self.comment_limit + 10
-        self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
-                                        {"mac": self.mac, "app": self.ui_app_name, "limit": self.comment_limit},
-                                        self.ui_app_name)
+        if button.name == "pardus":
+            self.comment_limit = self.comment_limit + 10
+            self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
+                                            {"mac": self.mac, "app": self.ui_app_name, "limit": self.comment_limit},
+                                            self.ui_app_name)
+        elif button.name == "gnome":
+            self.gnome_comment_limit = self.gnome_comment_limit + 10
+            gdic = {"user_hash": "0000000000000000000000000000000000000000",
+                    "app_id": self.get_gnome_desktop_filename_from_app_name(self.ui_app_name),
+                    "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
+            self.GnomeComment.get_comments(self.Server.gnomecommentserver, gdic, self.ui_app_name)
+
+    def gnome_comments_from_server(self, status, response=None, appname=None):
+        self.Logger.info("gnome_comments_from_server: {} {} {}".format(status, appname, response))
+        if status and response and appname == self.ui_app_name:
+            def remove_gnome_rows():
+                for child in self.ui_ad_comments_flowbox.get_children():
+                    inner = child.get_child().get_children()[0]
+                    if inner and inner.name == "gnome":
+                        self.ui_ad_comments_flowbox.remove(child)
+            GLib.idle_add(remove_gnome_rows)
+
+            response_comment_len = len(response)
+            GLib.idle_add(self.ui_ad_more_comment_button.set_visible, response_comment_len == self.gnome_comment_limit)
+            GLib.idle_add(self.ui_ad_more_comment_button.set_sensitive, response_comment_len == self.gnome_comment_limit)
+
+            required_keys = ["rating", "user_display", "date_created", "summary", "description", "distro", "version"]
+
+            for comment in response:
+                if all(key in comment for key in required_keys):
+                    listbox = self.create_comment_widget(comment, True)
+                    GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
+            GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
 
     def gComment(self, status, response, appname="", lang=""):
         if status:
