@@ -2922,6 +2922,7 @@ class MainWindow(object):
         self.ui_ad_broken_list_box.set_visible(False)
 
         self.set_rating_stars(0)
+        self.set_rating_progressbar(0, 0, 0, 0, 0, 0)
 
     def set_app_details_page(self, app):
 
