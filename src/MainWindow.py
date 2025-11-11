@@ -4636,7 +4636,7 @@ class MainWindow(object):
         print("app_details_from_server, appname: {}".format(appname))
         print("{}".format(response))
 
-        if status:
+        if status and appname == self.ui_app_name:
             GLib.idle_add(self.ui_ad_top_avgrate_label.set_text,
                 "{:.1f}".format(float(response["details"]["rate"]["average"])))
 
