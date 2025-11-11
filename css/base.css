@@ -23,6 +23,10 @@ list row {
     margin: 0px;
 }*/
 
+.rating-progressbar progress {
+    background-color: #FFB400;
+}
+
 .pardus-software-frame > border{
     border-radius: 8px;
 }
