@@ -474,6 +474,9 @@ class MainWindow(object):
         self.ui_rating_count4_label = self.GtkBuilder.get_object("ui_rating_count4_label")
         self.ui_rating_count5_label = self.GtkBuilder.get_object("ui_rating_count5_label")
 
+        self.ui_ad_show_gnome_checkbutton = self.GtkBuilder.get_object("ui_ad_show_gnome_checkbutton")
+        self.ui_ad_show_gnome_info_popover = self.GtkBuilder.get_object("ui_ad_show_gnome_info_popover")
+
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
@@ -2956,6 +2959,8 @@ class MainWindow(object):
         # set scroll position to top (reset)
         self.ui_appdetails_scrolledwindow.set_vadjustment(Gtk.Adjustment())
 
+        self.ui_ad_show_gnome_checkbutton.set_active(self.UserSettings.config_sgc)
+
         self.ui_right_stack.set_visible_child_name("appdetails")
 
         for row in self.ui_ad_image_box:
@@ -3194,6 +3199,9 @@ class MainWindow(object):
         self.ui_ad_broken_list_revealer.set_reveal_child(state)
         icon = "go-up-symbolic" if state else "go-down-symbolic"
         self.ui_ad_broken_list_image.set_from_icon_name(icon, Gtk.IconSize.BUTTON)
+
+    def on_ui_ad_show_gnome_info_button_clicked(self, button):
+        self.ui_ad_show_gnome_info_popover.popup()
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
@@ -6413,6 +6421,18 @@ class MainWindow(object):
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
                        self.UserSettings.username]
         self.startGroupProcess(command)
+
+    def on_ui_ad_show_gnome_checkbutton_toggled(self, toggle_button):
+        user_config_gcomments = self.UserSettings.config_sgc
+        state = toggle_button.get_active()
+        if state != user_config_gcomments:
+            self.Logger.info("Updating gnome comments state as {}".format(state))
+            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
+                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
+                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt,
+                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
+                                          self.UserSettings.config_forceaptuptime)
+            self.usersettings()
 
     def on_ui_ad_image_button_press(self, widget, event):
         # Detect input device type (mouse/touchpad vs touchscreen)
