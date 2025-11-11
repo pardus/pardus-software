@@ -4992,12 +4992,10 @@ class MainWindow(object):
             self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
     def round_corners(self, pixbuf, radius):
-        # Get the width and height of the original Pixbuf
         width = pixbuf.get_width()
         height = pixbuf.get_height()
 
-        # Create a new ARGB surface with the same dimensions
-        # This surface will hold the rounded version of the image
+        # Create an ARGB surface (with alpha channel)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         ctx = cairo.Context(surface)
 
@@ -5010,33 +5008,18 @@ class MainWindow(object):
         ctx.arc(width - radius, height - radius, radius, 0, 3.1415 * 0.5)
         # Bottom-left corner
         ctx.arc(radius, height - radius, radius, 3.1415 * 0.5, 3.1415)
-        ctx.close_path()  # Close the path to complete the rounded rectangle
+        ctx.close_path()
 
-        # Apply the path as a clipping mask
-        # Everything drawn after this will be clipped to this rounded shape
+        # Clip drawing area to the rounded rectangle
         ctx.clip()
 
-        # Draw the original Pixbuf onto the Cairo surface
-        # The clip will ensure corners are rounded
+        # Paint the original Pixbuf inside the clipping region
         Gdk.cairo_set_source_pixbuf(ctx, pixbuf, 0, 0)
         ctx.paint()
 
-        # Extract the surface data as raw bytes
-        data = surface.get_data()
+        # Convert the Cairo surface back to a Pixbuf without color changes
+        new_pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, width, height)
 
-        # Create a new Pixbuf from the surface data
-        # This Pixbuf now contains the rounded-corner version of the original image
-        new_pixbuf = GdkPixbuf.Pixbuf.new_from_data(
-            bytes(data),  # Convert surface data to bytes
-            GdkPixbuf.Colorspace.RGB,  # RGB color space
-            True,  # Has alpha channel
-            8,  # Bits per sample
-            width,  # Width of the Pixbuf
-            height,  # Height of the Pixbuf
-            surface.get_stride()  # Row stride (bytes per row)
-        )
-
-        # Return the new rounded Pixbuf
         return new_pixbuf
 
     def Pixbuf(self, status, pixbuf=None, uri=None):
