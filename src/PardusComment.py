@@ -20,13 +20,9 @@ class PardusComment(object):
         self.session = Soup.Session(user_agent="application/json")
         self.Logger = Logger(__name__)
 
-    def get(self, method, uri, dic, appname):
-        # self.Logger.info("{} : {} {}".format(method, uri, dic))
-        message = Soup.Message.new(method, uri)
-
-        if method == "POST":
-            message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
-
+    def get_comments(self, uri, dic, appname):
+        message = Soup.Message.new("POST", uri)
+        message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
         message.request_headers.append('Content-type', 'application/json')
         self.session.send_async(message, None, self.on_finished, message, appname)
 
@@ -35,7 +31,7 @@ class PardusComment(object):
             input_stream = session.send_finish(result)
         except GLib.Error as error:
             self.Logger.warning("PardusComment stream Error: {}, {}".format(error.domain, error.message))
-            self.pComment(False, None)  # Send to MainWindow
+            self.pardus_comments_from_server(False)  # Send to MainWindow
             return False
 
         status_code = message.status_code
@@ -53,9 +49,9 @@ class PardusComment(object):
                     lines.append(line)
             content = "".join(lines)
             if status_code == 200:
-                self.pComment(True, json.loads(content), appname)
+                self.pardus_comments_from_server(True, json.loads(content), appname)  # Send to MainWindow
             else:
-                self.pComment(False, None)
+                self.pardus_comments_from_server(False)  # Send to MainWindow
         input_stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
 
     def _close_stream(self, session, result, data):

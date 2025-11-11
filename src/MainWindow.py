@@ -477,6 +477,9 @@ class MainWindow(object):
         self.ui_ad_show_gnome_checkbutton = self.GtkBuilder.get_object("ui_ad_show_gnome_checkbutton")
         self.ui_ad_show_gnome_info_popover = self.GtkBuilder.get_object("ui_ad_show_gnome_info_popover")
 
+        self.ui_ad_comments_flowbox = self.GtkBuilder.get_object("ui_ad_comments_flowbox")
+        self.ui_ad_more_comment_button = self.GtkBuilder.get_object("ui_ad_more_comment_button")
+
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
@@ -770,7 +773,7 @@ class MainWindow(object):
         self.GnomeComment.gComment = self.gComment
 
         self.PardusComment = PardusComment()
-        self.PardusComment.pComment = self.pComment
+        self.PardusComment.pardus_comments_from_server = self.pardus_comments_from_server
 
         self.utils()
         self.usersettings()
@@ -2926,11 +2929,19 @@ class MainWindow(object):
         self.ui_ad_install_list_box.set_visible(False)
         self.ui_ad_broken_list_box.set_visible(False)
 
+        self.ui_ad_more_comment_button.set_visible(False)
+
         self.ui_ad_bottom_avgrate_label.set_text("")
         self.ui_ad_bottom_rate_count_label.set_text("")
 
         self.set_rating_stars(0)
         self.set_rating_progressbar(0, 0, 0, 0, 0, 0)
+
+        for row in self.ui_ad_image_box:
+            self.ui_ad_image_box.remove(row)
+
+        for row in self.ui_ad_comments_flowbox:
+            self.ui_ad_comments_flowbox.remove(row)
 
     def set_app_details_page(self, app):
 
@@ -2963,13 +2974,14 @@ class MainWindow(object):
 
         self.ui_right_stack.set_visible_child_name("appdetails")
 
-        for row in self.ui_ad_image_box:
-            self.ui_ad_image_box.remove(row)
-
         for image in details["screenshots"]:
             self.AppImage.fetch(self.Server.serverurl + image)
 
         self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
+
+        self.comment_limit = 10
+        self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
+                                        {"mac": self.mac, "app": app_name, "limit": self.comment_limit}, app_name)
 
         self.ui_ad_name.set_markup("<b>{}</b>".format(
             details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))))
@@ -4822,6 +4834,101 @@ class MainWindow(object):
         #     self.setAppStar(0)
         #     self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
         #     self.setPardusComments(None)
+
+    def pardus_comments_from_server(self, status, response=None, appname=None):
+        if status and response and "comments" in response and appname == self.ui_app_name:
+
+            response_comment_len = len(response["comments"])
+            GLib.idle_add(self.ui_ad_more_comment_button.set_visible, response_comment_len == self.comment_limit)
+            GLib.idle_add(self.ui_ad_more_comment_button.set_sensitive, response_comment_len == self.comment_limit)
+
+            for comment in response["comments"]:
+                listbox = self.create_comment_widget(comment)
+                GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
+            GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
+
+    def create_comment_widget(self, comment):
+        if comment["distro"] is None or comment["distro"] == "":
+            comment["distro"] = _("unknown")
+
+        if comment["appversion"] is None or comment["appversion"] == "":
+            comment["appversion"] = _("unknown")
+
+        label_author = Gtk.Label.new()
+        label_author.set_markup("<b>{}</b>".format(comment["author"]))
+        label_author.set_selectable(True)
+
+        label_date = Gtk.Label.new()
+        label_date.set_markup("{}".format(comment["date"]))
+        label_date.set_selectable(True)
+
+        star_image_1 = Gtk.Image.new_from_icon_name(
+            "ps-rating-star-full" if comment["value"] >= 1 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+        star_image_2 = Gtk.Image.new_from_icon_name(
+            "ps-rating-star-full" if comment["value"] >= 2 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+        star_image_3 = Gtk.Image.new_from_icon_name(
+            "ps-rating-star-full" if comment["value"] >= 3 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+        star_image_4 = Gtk.Image.new_from_icon_name(
+            "ps-rating-star-full" if comment["value"] >= 4 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+        star_image_5 = Gtk.Image.new_from_icon_name(
+            "ps-rating-star-full" if comment["value"] >= 5 else "ps-rating-star-empty", Gtk.IconSize.BUTTON)
+
+        box_star = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 3)
+        box_star.pack_start(star_image_1, False, True, 0)
+        box_star.pack_start(star_image_2, False, True, 0)
+        box_star.pack_start(star_image_3, False, True, 0)
+        box_star.pack_start(star_image_4, False, True, 0)
+        box_star.pack_start(star_image_5, False, True, 0)
+
+        box_top = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 8)
+        box_top.pack_start(box_star, False, True, 0)
+        box_top.pack_start(Gtk.Separator.new(Gtk.Orientation.VERTICAL), False, True, 0)
+        box_top.pack_start(label_author, False, True, 0)
+        box_top.pack_end(label_date, False, True, 0)
+
+        label_comment = Gtk.Label.new()
+        label_comment.set_text("{}".format(comment["comment"]))
+        label_comment.set_selectable(True)
+        label_comment.set_line_wrap(True)
+        label_comment.set_line_wrap_mode(0)
+        label_comment.props.halign = Gtk.Align.START
+        label_comment.set_xalign = 0.0
+
+        label_distro = Gtk.Label.new()
+        label_distro.set_markup("{}".format(comment["distro"]))
+        label_distro.set_selectable(True)
+
+        label_appversion = Gtk.Label.new()
+        label_appversion.set_markup("{}: {}".format(_("App"),comment["appversion"]))
+        label_appversion.set_selectable(True)
+
+        box_bottom = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 8)
+        box_bottom.pack_start(label_distro, False, True, 0)
+        box_bottom.pack_start(label_appversion, False, True, 0)
+
+        bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+        bottom_separator.props.valign = Gtk.Align.END
+        bottom_separator.set_vexpand(True)
+        GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
+
+        box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 20)
+        box.pack_start(box_top, False, True, 0)
+        box.pack_start(label_comment, False, True, 0)
+        box.pack_start(box_bottom, False, True, 0)
+        box.pack_end(bottom_separator, False, True, 0)
+        box.set_margin_start(8)
+        box.set_margin_end(8)
+        box.set_margin_top(8)
+
+        listbox = Gtk.ListBox.new()
+        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        listbox_row = Gtk.ListBoxRow()
+        GLib.idle_add(listbox_row.add, box)
+        GLib.idle_add(listbox.add, listbox_row)
+
+        GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
+
+        return listbox
 
     def gComment(self, status, response, appname="", lang=""):
         if status:
