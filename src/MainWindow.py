@@ -4858,6 +4858,50 @@ class MainWindow(object):
                         "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
                 self.GnomeComment.get_comments(self.Server.gnomecommentserver, gdic, self.ui_app_name)
 
+    def gnome_comments_from_server(self, status, response=None, appname=None):
+        self.Logger.info("gnome_comments_from_server: {} {} {}".format(status, appname, response))
+        if status and response and appname == self.ui_app_name:
+            def remove_gnome_rows():
+                for child in self.ui_ad_comments_flowbox.get_children():
+                    inner = child.get_child().get_children()[0]
+                    if inner and inner.name == "gnome":
+                        self.ui_ad_comments_flowbox.remove(child)
+            GLib.idle_add(remove_gnome_rows)
+
+            response_comment_len = len(response)
+            GLib.idle_add(self.ui_ad_more_comment_button.set_visible, response_comment_len == self.gnome_comment_limit)
+            GLib.idle_add(self.ui_ad_more_comment_button.set_sensitive, response_comment_len == self.gnome_comment_limit)
+
+            required_keys = ["rating", "user_display", "date_created", "summary", "description", "distro", "version"]
+
+            for comment in response:
+                if all(key in comment for key in required_keys):
+                    listbox = self.create_comment_widget(comment, True)
+                    GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
+            GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
+
+    def on_ui_ad_more_comment_button_clicked(self, button):
+        self.ui_ad_more_comment_button.set_sensitive(False)
+        if button.name == "pardus":
+            self.comment_limit = self.comment_limit + 10
+            self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
+                                            {"mac": self.mac, "app": self.ui_app_name, "limit": self.comment_limit},
+                                            self.ui_app_name)
+        elif button.name == "gnome":
+            self.gnome_comment_limit = self.gnome_comment_limit + 10
+            gdic = {"user_hash": "0000000000000000000000000000000000000000",
+                    "app_id": self.get_gnome_desktop_filename_from_app_name(self.ui_app_name),
+                    "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
+            self.GnomeComment.get_comments(self.Server.gnomecommentserver, gdic, self.ui_app_name)
+
+    def ad_comments_filter_function(self, row):
+        name = row.get_children()[0].get_children()[0].name
+        if name == "pardus":
+            return True
+        elif name == "gnome":
+            return self.UserSettings.config_sgc
+        return False
+
     def create_comment_widget(self, comment, gnome=False):
         if not gnome:
             if comment["distro"] is None or comment["distro"] == "":
@@ -4958,277 +5002,12 @@ class MainWindow(object):
 
         return listbox
 
-    def on_ui_ad_more_comment_button_clicked(self, button):
-        self.ui_ad_more_comment_button.set_sensitive(False)
-        if button.name == "pardus":
-            self.comment_limit = self.comment_limit + 10
-            self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
-                                            {"mac": self.mac, "app": self.ui_app_name, "limit": self.comment_limit},
-                                            self.ui_app_name)
-        elif button.name == "gnome":
-            self.gnome_comment_limit = self.gnome_comment_limit + 10
-            gdic = {"user_hash": "0000000000000000000000000000000000000000",
-                    "app_id": self.get_gnome_desktop_filename_from_app_name(self.ui_app_name),
-                    "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
-            self.GnomeComment.get_comments(self.Server.gnomecommentserver, gdic, self.ui_app_name)
-
-    def gnome_comments_from_server(self, status, response=None, appname=None):
-        self.Logger.info("gnome_comments_from_server: {} {} {}".format(status, appname, response))
-        if status and response and appname == self.ui_app_name:
-            def remove_gnome_rows():
-                for child in self.ui_ad_comments_flowbox.get_children():
-                    inner = child.get_child().get_children()[0]
-                    if inner and inner.name == "gnome":
-                        self.ui_ad_comments_flowbox.remove(child)
-            GLib.idle_add(remove_gnome_rows)
-
-            response_comment_len = len(response)
-            GLib.idle_add(self.ui_ad_more_comment_button.set_visible, response_comment_len == self.gnome_comment_limit)
-            GLib.idle_add(self.ui_ad_more_comment_button.set_sensitive, response_comment_len == self.gnome_comment_limit)
-
-            required_keys = ["rating", "user_display", "date_created", "summary", "description", "distro", "version"]
-
-            for comment in response:
-                if all(key in comment for key in required_keys):
-                    listbox = self.create_comment_widget(comment, True)
-                    GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
-            GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
-
-    def ad_comments_filter_function(self, row):
-        name = row.get_children()[0].get_children()[0].name
-        if name == "pardus":
-            return True
-        elif name == "gnome":
-            return self.UserSettings.config_sgc
-        return False
-
-    def gComment(self, status, response, appname="", lang=""):
-        if status:
-            self.setGnomeComments(response, appname, lang)
-        else:
-            self.setGnomeComments(comments=None, lang=lang)
-
-    def pComment(self, status, response, appname=""):
-        if status:
-            self.setPardusComments(response["comments"], appname)
-        else:
-            self.setPardusComments(comments=None)
-
-    def get_star_subpoint(self, fraction):
-        if fraction >= 8:
-            return self.staron_08
-        elif fraction >= 5:
-            return self.staron_05
-        elif fraction >= 3:
-            return self.staron_03
-        else:
-            return self.staroff
-
-    def setAppStar(self, average):
-        point = int("{:.1f}".format(average).split(".")[1])
-        average = int(average)
-        if average == 0:
-            self.dtStar1.set_from_pixbuf(self.get_star_subpoint(point))
-            self.dtStar2.set_from_pixbuf(self.staroff)
-            self.dtStar3.set_from_pixbuf(self.staroff)
-            self.dtStar4.set_from_pixbuf(self.staroff)
-            self.dtStar5.set_from_pixbuf(self.staroff)
-        elif average == 1:
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.get_star_subpoint(point))
-            self.dtStar3.set_from_pixbuf(self.staroff)
-            self.dtStar4.set_from_pixbuf(self.staroff)
-            self.dtStar5.set_from_pixbuf(self.staroff)
-        elif average == 2:
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.get_star_subpoint(point))
-            self.dtStar4.set_from_pixbuf(self.staroff)
-            self.dtStar5.set_from_pixbuf(self.staroff)
-        elif average == 3:
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.get_star_subpoint(point))
-            self.dtStar5.set_from_pixbuf(self.staroff)
-        elif average == 4:
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.staron)
-            self.dtStar5.set_from_pixbuf(self.get_star_subpoint(point))
-        elif average == 5:
-            self.dtStar1.set_from_pixbuf(self.staron)
-            self.dtStar2.set_from_pixbuf(self.staron)
-            self.dtStar3.set_from_pixbuf(self.staron)
-            self.dtStar4.set_from_pixbuf(self.staron)
-            self.dtStar5.set_from_pixbuf(self.staron)
-        else:
-            self.Logger.info("star error")
-
-    def setPardusRatings(self, tr, r, r1, r2, r3, r4, r5):
-        self.dPardusRating.set_markup("<span size='xx-large'><b>{:.1f}</b></span>".format(float(r)))
-        self.dPardusBarLabel1.set_markup("{}".format(r1))
-        self.dPardusBarLabel2.set_markup("{}".format(r2))
-        self.dPardusBarLabel3.set_markup("{}".format(r3))
-        self.dPardusBarLabel4.set_markup("{}".format(r4))
-        self.dPardusBarLabel5.set_markup("{}".format(r5))
-
-        if tr != 0:
-            self.dPardusBar1.set_fraction(r1 / tr)
-            self.dPardusBar2.set_fraction(r2 / tr)
-            self.dPardusBar3.set_fraction(r3 / tr)
-            self.dPardusBar4.set_fraction(r4 / tr)
-            self.dPardusBar5.set_fraction(r5 / tr)
-        else:
-            self.dPardusBar1.set_fraction(0)
-            self.dPardusBar2.set_fraction(0)
-            self.dPardusBar3.set_fraction(0)
-            self.dPardusBar4.set_fraction(0)
-            self.dPardusBar5.set_fraction(0)
-
-    def setGnomeRatings(self, gr):
-        if gr != "":
-
-            average = (gr["star1"] * 1 + gr["star2"] * 2 + gr["star3"] * 3 + gr["star4"] * 4 + gr["star5"] * 5) / gr[
-                "total"]
-
-            self.dGnomeRating.set_markup("<span size='xx-large'><b>{:.1f}</b></span>".format(float(average)))
-            self.dGnomeBarLabel1.set_markup("{}".format(gr["star1"]))
-            self.dGnomeBarLabel2.set_markup("{}".format(gr["star2"]))
-            self.dGnomeBarLabel3.set_markup("{}".format(gr["star3"]))
-            self.dGnomeBarLabel4.set_markup("{}".format(gr["star4"]))
-            self.dGnomeBarLabel5.set_markup("{}".format(gr["star5"]))
-
-            if gr["total"] != 0:
-                self.dGnomeBar1.set_fraction(gr["star1"] / gr["total"])
-                self.dGnomeBar2.set_fraction(gr["star2"] / gr["total"])
-                self.dGnomeBar3.set_fraction(gr["star3"] / gr["total"])
-                self.dGnomeBar4.set_fraction(gr["star4"] / gr["total"])
-                self.dGnomeBar5.set_fraction(gr["star5"] / gr["total"])
-            else:
-                self.dGnomeBar1.set_fraction(0)
-                self.dGnomeBar2.set_fraction(0)
-                self.dGnomeBar3.set_fraction(0)
-                self.dGnomeBar4.set_fraction(0)
-                self.dGnomeBar5.set_fraction(0)
-        else:
-            self.dGnomeRating.set_markup("<span size='xx-large'><b>{}</b></span>".format(0.0))
-            self.dGnomeBarLabel1.set_markup("{}".format(0))
-            self.dGnomeBarLabel2.set_markup("{}".format(0))
-            self.dGnomeBarLabel3.set_markup("{}".format(0))
-            self.dGnomeBarLabel4.set_markup("{}".format(0))
-            self.dGnomeBarLabel5.set_markup("{}".format(0))
-            self.dGnomeBar1.set_fraction(0)
-            self.dGnomeBar2.set_fraction(0)
-            self.dGnomeBar3.set_fraction(0)
-            self.dGnomeBar4.set_fraction(0)
-            self.dGnomeBar5.set_fraction(0)
-
     def isCommentClean(self, content):
         if self.Server.connection and self.Server.badwords and content:
             for badword in self.Server.badwords:
                 if re.search(r'\b' + badword["word"] + r'\b', content):
                     return False
         return True
-
-    def setGnomeComments(self, comments, appname="", lang=""):
-
-        if lang == "tr":
-            for row in self.GnomeCommentListBoxTR:
-                self.GnomeCommentListBoxTR.remove(row)
-        elif lang == "en":
-            for row in self.GnomeCommentListBoxEN:
-                self.GnomeCommentListBoxEN.remove(row)
-        elif lang == "all":
-            for row in self.GnomeCommentListBoxTR:
-                self.GnomeCommentListBoxTR.remove(row)
-            for row in self.GnomeCommentListBoxEN:
-                self.GnomeCommentListBoxEN.remove(row)
-
-        if comments and appname == self.getActiveAppOnUI():
-            if lang == "tr":
-                if len(comments) == self.gc_limit_tr:
-                    self.gcMoreButtonTR.set_visible(True)
-                    self.gcMoreButtonTR.set_sensitive(True)
-                else:
-                    self.gcMoreButtonTR.set_visible(False)
-            elif lang == "en":
-                if len(comments) == self.gc_limit_en:
-                    self.gcMoreButtonEN.set_visible(True)
-                    self.gcMoreButtonEN.set_sensitive(True)
-                else:
-                    self.gcMoreButtonEN.set_visible(False)
-            for comment in comments:
-                if "rating" and "user_display" and "date_created" and "summary" and "description" and "distro" and "version" in comment:
-                    if self.isCommentClean(comment["summary"]) and self.isCommentClean(
-                            comment["description"]) and self.isCommentClean(comment["user_display"]):
-                        self.setGnomeCommentStar(comment["rating"] / 20)
-
-                        label_author = Gtk.Label.new()
-                        label_author.set_markup("<b>{}</b>".format(comment["user_display"]))
-                        label_author.set_selectable(True)
-
-                        label_date = Gtk.Label.new()
-                        label_date.set_markup("{}".format(datetime.fromtimestamp(comment["date_created"])))
-                        label_date.set_selectable(True)
-
-                        label_distro = Gtk.Label.new()
-                        label_distro.set_markup("<small>{}: {}</small>".format(_("Distro"), comment["distro"]))
-                        label_distro.set_selectable(True)
-                        label_distro.props.halign = Gtk.Align.START
-
-                        label_appversion = Gtk.Label.new()
-                        label_appversion.set_markup(
-                            "<small>{}: {}</small>".format(_("App Version"), comment["version"]))
-                        label_appversion.set_selectable(True)
-                        label_appversion.props.halign = Gtk.Align.START
-
-                        hbox_top = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
-                        hbox_top.set_margin_top(8)
-                        hbox_top.pack_start(self.gcs1, False, False, 0)
-                        hbox_top.pack_start(self.gcs2, False, False, 0)
-                        hbox_top.pack_start(self.gcs3, False, False, 0)
-                        hbox_top.pack_start(self.gcs4, False, False, 0)
-                        hbox_top.pack_start(self.gcs5, False, False, 0)
-                        hbox_top.pack_start(label_author, False, False, 8)
-                        hbox_top.pack_end(label_date, False, False, 0)
-
-                        label_comment = Gtk.Label.new()
-                        label_comment.set_text("{}\n{}".format(comment["summary"], comment["description"]))
-                        label_comment.set_selectable(True)
-                        label_comment.set_line_wrap(True)
-                        label_comment.set_line_wrap_mode(2)  # WORD_CHAR
-                        label_comment.props.halign = Gtk.Align.START
-
-                        sep = Gtk.VSeparator.new()
-                        sep.set_margin_top(8)
-
-                        main_vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 8)
-                        main_vbox.pack_start(hbox_top, False, False, 0)
-                        main_vbox.pack_start(label_distro, False, False, 0)
-                        main_vbox.pack_start(label_appversion, False, False, 0)
-                        main_vbox.pack_start(label_comment, False, False, 0)
-                        main_vbox.pack_start(sep, False, False, 0)
-
-                        row = Gtk.ListBoxRow()
-                        row.add(main_vbox)
-
-                        if lang == "tr":
-                            self.GnomeCommentListBoxTR.add(row)
-                        elif lang == "en":
-                            self.GnomeCommentListBoxEN.add(row)
-                    else:
-                        try:
-                            self.Logger.info("Comment is not clean, app_id: {}, review_id : {}".format(
-                                comment["app_id"], comment["review_id"]))
-                        except Exception as e:
-                            self.Logger.exception("{}".format(e))
-
-        if lang == "tr":
-            self.GnomeCommentListBoxTR.show_all()
-        elif lang == "en":
-            self.GnomeCommentListBoxEN.show_all()
 
     def eventStarSet(self, widget):
         if widget == "star1":
