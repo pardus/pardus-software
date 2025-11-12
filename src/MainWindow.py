@@ -480,6 +480,8 @@ class MainWindow(object):
         self.ui_ad_comments_flowbox.set_filter_func(self.ad_comments_filter_function)
         self.ui_ad_more_comment_button = self.GtkBuilder.get_object("ui_ad_more_comment_button")
 
+        self.ui_comment_dialog = self.GtkBuilder.get_object("ui_comment_dialog")
+
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
         self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
@@ -6439,6 +6441,13 @@ class MainWindow(object):
         # mouse or touchpad
         if event.button == 1 and self.ui_ad_image_total_drag < self.ui_ad_image_drag_threshold:
             print("Fullscreen Image (Mouse or Touchpad)")
+
+    def on_ui_write_comment_button_clicked(self, button):
+        self.ui_comment_dialog.run()
+        self.ui_comment_dialog.hide()
+
+    def on_ui_comment_close_button_clicked(self, button):
+        self.ui_comment_dialog.hide()
 
     def clearBoxes(self):
         self.EditorListStore.clear()
