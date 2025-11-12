@@ -481,6 +481,13 @@ class MainWindow(object):
         self.ui_ad_more_comment_button = self.GtkBuilder.get_object("ui_ad_more_comment_button")
 
         self.ui_comment_dialog = self.GtkBuilder.get_object("ui_comment_dialog")
+        self.ui_comment_icon_image = self.GtkBuilder.get_object("ui_comment_icon_image")
+        self.ui_comment_appname_label = self.GtkBuilder.get_object("ui_comment_appname_label")
+        self.ui_comment_version_label = self.GtkBuilder.get_object("ui_comment_version_label")
+        self.ui_comment_fullname_entry = self.GtkBuilder.get_object("ui_comment_fullname_entry")
+        self.ui_comment_content_textview = self.GtkBuilder.get_object("ui_comment_content_textview")
+        self.ui_comment_send_button = self.GtkBuilder.get_object("ui_comment_send_button")
+        self.ui_comment_error_label = self.GtkBuilder.get_object("ui_comment_error_label")
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -6443,6 +6450,21 @@ class MainWindow(object):
             print("Fullscreen Image (Mouse or Touchpad)")
 
     def on_ui_write_comment_button_clicked(self, button):
+        app_name = self.ui_app_name
+        details = self.fullapplist.get(app_name, {})
+
+        self.ui_comment_error_label.set_visible(False)
+
+        self.ui_comment_appname_label.set_markup("<b>{}</b>".format(
+            details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))))
+
+        self.ui_comment_icon_image.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
+        self.ui_comment_icon_image.set_pixel_size(48)
+
+        self.ui_comment_version_label.set_text("{}".format(self.Package.installed_version(app_name)))
+
+        self.ui_comment_fullname_entry.set_text("{}".format(self.UserSettings.user_real_name))
+
         self.ui_comment_dialog.run()
         self.ui_comment_dialog.hide()
 

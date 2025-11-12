@@ -11650,7 +11650,7 @@ so that the OS has nothing to do with the health of the application.</property>
               </packing>
             </child>
             <child>
-              <object class="GtkEntry">
+              <object class="GtkEntry" id="ui_comment_fullname_entry">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="placeholder-text" translatable="yes">Full Name</property>
@@ -11662,7 +11662,7 @@ so that the OS has nothing to do with the health of the application.</property>
               </packing>
             </child>
             <child>
-              <object class="GtkTextView">
+              <object class="GtkTextView" id="ui_comment_content_textview">
                 <property name="height-request">140</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
@@ -11682,7 +11682,7 @@ so that the OS has nothing to do with the health of the application.</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="ui_comment_send_button">
                 <property name="label" translatable="yes">Submit Review</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
@@ -11698,6 +11698,22 @@ so that the OS has nothing to do with the health of the application.</property>
               </packing>
             </child>
             <child>
+              <object class="GtkLabel" id="ui_comment_error_label">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="label">error_label</property>
+                <attributes>
+                  <attribute name="foreground" value="#9c9c0d0c0302"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">7</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -11705,7 +11721,7 @@ so that the OS has nothing to do with the health of the application.</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">7</property>
+                <property name="position">8</property>
               </packing>
             </child>
             <child>
@@ -11718,7 +11734,7 @@ so that the OS has nothing to do with the health of the application.</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">8</property>
+                <property name="position">9</property>
               </packing>
             </child>
           </object>
