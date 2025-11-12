@@ -23,6 +23,11 @@ list row {
     margin: 0px;
 }*/
 
+.pardus-software-comment-textview text{
+    background-color: alpha(@unfocused_borders, 0.45);;
+    border-radius: 8px;
+}
+
 .rating-progressbar progress {
     background-color: #FFB400;
 }
