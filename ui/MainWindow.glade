@@ -11907,6 +11907,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
                                         <property name="receives-default">True</property>
+                                        <signal name="clicked" handler="on_ui_comment_own_edit_button_clicked" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="name">edit</property>
@@ -11986,8 +11987,12 @@ so that the OS has nothing to do with the health of the application.</property>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="opacity">0.5</property>
                             <property name="label" translatable="yes">Comments are public and include both your account and device information. Anyone can see the name associated with your account and the type of device you are using. Developers can also view your device details (such as language, model, and OS version) and may use this information to respond to you. Past edits are visible to other users and the app developer unless you delete your comment.</property>
                             <property name="wrap">True</property>
+                            <attributes>
+                              <attribute name="weight" value="light"/>
+                            </attributes>
                           </object>
                           <packing>
                             <property name="name">disclaimer</property>
