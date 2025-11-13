@@ -11578,11 +11578,19 @@ so that the OS has nothing to do with the health of the application.</property>
                 <property name="margin-bottom">9</property>
                 <property name="spacing">3</property>
                 <child>
-                  <object class="GtkImage" id="ui_comment_star1_image">
+                  <object class="GtkEventBox">
+                    <property name="name">1</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">ps-rating-star-empty</property>
-                    <property name="icon_size">3</property>
+                    <signal name="button-press-event" handler="on_ui_comment_star_button_press_event" swapped="no"/>
+                    <child>
+                      <object class="GtkImage" id="ui_comment_star1_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">ps-rating-star-empty</property>
+                        <property name="icon_size">3</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -11591,11 +11599,19 @@ so that the OS has nothing to do with the health of the application.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkImage" id="ui_comment_star2_image">
+                  <object class="GtkEventBox">
+                    <property name="name">2</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">ps-rating-star-empty</property>
-                    <property name="icon_size">3</property>
+                    <signal name="button-press-event" handler="on_ui_comment_star_button_press_event" swapped="no"/>
+                    <child>
+                      <object class="GtkImage" id="ui_comment_star2_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">ps-rating-star-empty</property>
+                        <property name="icon_size">3</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -11604,11 +11620,19 @@ so that the OS has nothing to do with the health of the application.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkImage" id="ui_comment_star3_image">
+                  <object class="GtkEventBox">
+                    <property name="name">3</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">ps-rating-star-empty</property>
-                    <property name="icon_size">3</property>
+                    <signal name="button-press-event" handler="on_ui_comment_star_button_press_event" swapped="no"/>
+                    <child>
+                      <object class="GtkImage" id="ui_comment_star3_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">ps-rating-star-empty</property>
+                        <property name="icon_size">3</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -11617,11 +11641,19 @@ so that the OS has nothing to do with the health of the application.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkImage" id="ui_comment_star4_image">
+                  <object class="GtkEventBox">
+                    <property name="name">4</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">ps-rating-star-empty</property>
-                    <property name="icon_size">3</property>
+                    <signal name="button-press-event" handler="on_ui_comment_star_button_press_event" swapped="no"/>
+                    <child>
+                      <object class="GtkImage" id="ui_comment_star4_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">ps-rating-star-empty</property>
+                        <property name="icon_size">3</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -11630,11 +11662,19 @@ so that the OS has nothing to do with the health of the application.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkImage" id="ui_comment_star5_image">
+                  <object class="GtkEventBox">
+                    <property name="name">5</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">ps-rating-star-empty</property>
-                    <property name="icon_size">3</property>
+                    <signal name="button-press-event" handler="on_ui_comment_star_button_press_event" swapped="no"/>
+                    <child>
+                      <object class="GtkImage" id="ui_comment_star5_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">ps-rating-star-empty</property>
+                        <property name="icon_size">3</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>

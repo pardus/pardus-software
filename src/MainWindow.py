@@ -488,6 +488,11 @@ class MainWindow(object):
         self.ui_comment_content_textview = self.GtkBuilder.get_object("ui_comment_content_textview")
         self.ui_comment_send_button = self.GtkBuilder.get_object("ui_comment_send_button")
         self.ui_comment_error_label = self.GtkBuilder.get_object("ui_comment_error_label")
+        self.ui_comment_star1_image = self.GtkBuilder.get_object("ui_comment_star1_image")
+        self.ui_comment_star2_image = self.GtkBuilder.get_object("ui_comment_star2_image")
+        self.ui_comment_star3_image = self.GtkBuilder.get_object("ui_comment_star3_image")
+        self.ui_comment_star4_image = self.GtkBuilder.get_object("ui_comment_star4_image")
+        self.ui_comment_star5_image = self.GtkBuilder.get_object("ui_comment_star5_image")
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -2898,6 +2903,18 @@ class MainWindow(object):
             self.ui_rating_prg3_progressbar.set_fraction(0)
             self.ui_rating_prg4_progressbar.set_fraction(0)
             self.ui_rating_prg5_progressbar.set_fraction(0)
+
+    def set_comment_stars(self, point):
+        self.ui_comment_star1_image.set_from_icon_name("ps-rating-star-full" if point >= 1 else "ps-rating-star-empty",
+                                                       Gtk.IconSize.LARGE_TOOLBAR)
+        self.ui_comment_star2_image.set_from_icon_name("ps-rating-star-full" if point >= 2 else "ps-rating-star-empty",
+                                                       Gtk.IconSize.LARGE_TOOLBAR)
+        self.ui_comment_star3_image.set_from_icon_name("ps-rating-star-full" if point >= 3 else "ps-rating-star-empty",
+                                                       Gtk.IconSize.LARGE_TOOLBAR)
+        self.ui_comment_star4_image.set_from_icon_name("ps-rating-star-full" if point >= 4 else "ps-rating-star-empty",
+                                                       Gtk.IconSize.LARGE_TOOLBAR)
+        self.ui_comment_star5_image.set_from_icon_name("ps-rating-star-full" if point == 5 else "ps-rating-star-empty",
+                                                       Gtk.IconSize.LARGE_TOOLBAR)
 
     def clear_app_details(self):
 
@@ -6470,6 +6487,10 @@ class MainWindow(object):
 
     def on_ui_comment_close_button_clicked(self, button):
         self.ui_comment_dialog.hide()
+
+    def on_ui_comment_star_button_press_event(self, widget, event):
+        star = int(widget.get_name())
+        self.set_comment_stars(star)
 
     def clearBoxes(self):
         self.EditorListStore.clear()
