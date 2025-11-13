@@ -6491,12 +6491,41 @@ class MainWindow(object):
             self.ui_ad_image_last_x = event.x
 
     def on_ui_ad_image_button_release(self, widget, event):
+        def get_clicked_image(event):
+            # Get horizontal scroll offset
+            adj = self.ui_ad_image_scrolledwindow.get_hadjustment()
+            scroll_x = adj.get_value()
+
+            # Convert event.x to box coordinate system
+            # (ScrolledWindow → Box)
+            x_in_box = scroll_x + event.x
+
+            # Iterate over children of ui_ad_image_box
+            for child in self.ui_ad_image_box.get_children():
+                # Skip non-image widgets
+                if not isinstance(child, Gtk.Image):
+                    continue
+
+                # Get widget allocation (position & size)
+                alloc = child.get_allocation()
+
+                # Check if click is inside this image
+                if x_in_box >= alloc.x and x_in_box <= alloc.x + alloc.width:
+                    return child  # Found the real clicked image
+
+            return None  # Empty area clicked
+
         # if drag wasn't started, ignore
         if not self.ui_ad_image_dragging:
             return
 
         # stop dragging now
         self.ui_ad_image_dragging = False
+
+        # Detect which image was clicked
+        clicked_image = get_clicked_image(event)
+        if clicked_image is None:
+            return  # clicked empty area, do nothing
 
         # touchscreen
         if self.ui_ad_image_is_touch:
