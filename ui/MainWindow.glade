@@ -4196,7 +4196,7 @@
                                                             <object class="GtkImage" id="ui_ad_install_list_image">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="icon-name">go-up-symbolic</property>
+                                                            <property name="icon-name">go-down-symbolic</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -4236,7 +4236,6 @@
                                                           <object class="GtkRevealer" id="ui_ad_install_list_revealer">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="reveal-child">True</property>
                                                             <child>
                                                             <object class="GtkLabel" id="ui_ad_install_list_label">
                                                             <property name="visible">True</property>
@@ -4317,7 +4316,7 @@
                                                             <object class="GtkImage" id="ui_ad_remove_list_image">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="icon-name">go-up-symbolic</property>
+                                                            <property name="icon-name">go-down-symbolic</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -4357,7 +4356,6 @@
                                                           <object class="GtkRevealer" id="ui_ad_remove_list_revealer">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="reveal-child">True</property>
                                                             <child>
                                                             <object class="GtkLabel" id="ui_ad_remove_list_label">
                                                             <property name="visible">True</property>
@@ -4438,7 +4436,7 @@
                                                             <object class="GtkImage" id="ui_ad_broken_list_image">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="icon-name">go-up-symbolic</property>
+                                                            <property name="icon-name">go-down-symbolic</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
@@ -4478,7 +4476,6 @@
                                                           <object class="GtkRevealer" id="ui_ad_broken_list_revealer">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="reveal-child">True</property>
                                                             <child>
                                                             <object class="GtkLabel" id="ui_ad_broken_list_label">
                                                             <property name="visible">True</property>
