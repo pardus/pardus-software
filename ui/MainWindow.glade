@@ -823,11 +823,6 @@
     <property name="can-focus">False</property>
     <property name="icon-name">text-editor-symbolic</property>
   </object>
-  <object class="GtkImage" id="fullscreen_image">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">view-fullscreen-symbolic</property>
-  </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -843,232 +838,10 @@
     <property name="can-focus">False</property>
     <property name="icon-name">emblem-ok-symbolic</property>
   </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-save-symbolic</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">web-browser-symbolic</property>
-  </object>
   <object class="GtkImage" id="nextimage">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">go-next-symbolic</property>
-  </object>
-  <object class="GtkPopover" id="ImagePopover">
-    <property name="can-focus">False</property>
-    <property name="position">bottom</property>
-    <signal name="closed" handler="on_ImagePopover_closed" swapped="no"/>
-    <signal name="key-press-event" handler="on_ImagePopover_key_press_event" swapped="no"/>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">3</property>
-        <property name="margin-end">3</property>
-        <property name="margin-top">3</property>
-        <property name="margin-bottom">7</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">3</property>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="spacing">13</property>
-            <child>
-              <object class="GtkButton" id="imgFullButton">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="image">fullscreen_image</property>
-                <property name="relief">none</property>
-                <signal name="clicked" handler="on_imgFullButton_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="imgLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="halign">center</property>
-                <property name="label" translatable="yes">Image 1</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="imgCloseButton">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="halign">end</property>
-                <property name="hexpand">True</property>
-                <property name="image">image2</property>
-                <property name="relief">none</property>
-                <signal name="clicked" handler="on_imgCloseButton_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="spacing">13</property>
-            <child>
-              <object class="GtkButton" id="imgBackButton">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="halign">start</property>
-                <property name="valign">center</property>
-                <property name="image">image1</property>
-                <property name="relief">none</property>
-                <signal name="clicked" handler="on_imgBackButton_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkStack" id="ImagePopoverStack">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="transition-type">slide-left-right</property>
-                <child>
-                  <object class="GtkImage" id="pop1Image">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="icon-name">image-missing</property>
-                    <property name="icon_size">6</property>
-                  </object>
-                  <packing>
-                    <property name="name">image1</property>
-                    <property name="title">image1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkImage" id="pop2Image">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="icon-name">image-missing</property>
-                    <property name="icon_size">6</property>
-                  </object>
-                  <packing>
-                    <property name="name">image2</property>
-                    <property name="title">image2</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="imgNextButton">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-                <property name="image">nextimage</property>
-                <property name="relief">none</property>
-                <signal name="clicked" handler="on_imgNextButton_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="spacing">13</property>
-            <child>
-              <object class="GtkButton" id="imgWebButton">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Open image on web browser</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="image">image5</property>
-                <property name="relief">none</property>
-                <signal name="clicked" handler="on_imgWebButton_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="imgDownloadButton">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Download image</property>
-                <property name="halign">end</property>
-                <property name="hexpand">True</property>
-                <property name="image">image4</property>
-                <property name="relief">none</property>
-                <signal name="clicked" handler="on_imgDownloadButton_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
   </object>
   <object class="GtkPopover" id="repo_required_changes_popover">
     <property name="can-focus">False</property>
@@ -10365,7 +10138,7 @@ Use with caution. Are you sure you want to continue?</property>
       </object>
     </child>
     <child type="titlebar">
-      <object class="GtkHeaderBar">
+      <object class="GtkHeaderBar" id="ui_main_headerbar">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="spacing">3</property>
@@ -12034,6 +11807,142 @@ so that the OS has nothing to do with the health of the application.</property>
           </object>
           <packing>
             <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="ui_image_resize_image">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">view-fullscreen-symbolic</property>
+  </object>
+  <object class="GtkPopover" id="ui_image_popover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">ui_main_headerbar</property>
+    <property name="position">bottom</property>
+    <signal name="closed" handler="on_ImagePopover_closed" swapped="no"/>
+    <signal name="key-press-event" handler="on_ui_image_popover_key_press_event" swapped="no"/>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">3</property>
+        <property name="margin-end">3</property>
+        <property name="margin-top">3</property>
+        <property name="margin-bottom">7</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">3</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="spacing">13</property>
+            <child>
+              <object class="GtkButton" id="ui_image_fullscreen_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="halign">start</property>
+                <property name="hexpand">True</property>
+                <property name="image">ui_image_resize_image</property>
+                <property name="relief">none</property>
+                <signal name="clicked" handler="on_ui_image_fullscreen_button_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="ui_image_close_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="halign">end</property>
+                <property name="hexpand">True</property>
+                <property name="image">image2</property>
+                <property name="relief">none</property>
+                <signal name="clicked" handler="on_ui_image_close_button_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="spacing">13</property>
+            <child>
+              <object class="GtkButton" id="ui_image_prev_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="halign">start</property>
+                <property name="valign">center</property>
+                <property name="image">image1</property>
+                <property name="relief">none</property>
+                <signal name="clicked" handler="on_ui_image_prev_button_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkStack" id="ui_image_stack">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="transition-duration">250</property>
+                <property name="transition-type">crossfade</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="ui_image_next_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="halign">end</property>
+                <property name="valign">center</property>
+                <property name="image">nextimage</property>
+                <property name="relief">none</property>
+                <signal name="clicked" handler="on_ui_image_next_button_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>

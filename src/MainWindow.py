@@ -506,6 +506,9 @@ class MainWindow(object):
         self.ui_comment_own_edit_button = self.GtkBuilder.get_object("ui_comment_own_edit_button")
         self.ui_comment_own_date_label = self.GtkBuilder.get_object("ui_comment_own_date_label")
 
+        self.ui_image_popover = self.GtkBuilder.get_object("ui_image_popover")
+        self.ui_image_stack = self.GtkBuilder.get_object("ui_image_stack")
+        self.ui_image_resize_image = self.GtkBuilder.get_object("ui_image_resize_image")
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -1124,21 +1127,6 @@ class MainWindow(object):
         self.ImagePopover.popup()
         self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
 
-    def on_imgBackButton_clicked(self, button):
-        if self.ImagePopoverStack.get_visible_child_name() != "image1":
-            self.setPopImage(1)
-        else:
-            self.setPopImage(2)
-
-    def on_imgNextButton_clicked(self, button):
-        if self.ImagePopoverStack.get_visible_child_name() != "image2":
-            self.setPopImage(2)
-        else:
-            self.setPopImage(1)
-
-    def on_imgCloseButton_clicked(self, button):
-        self.ImagePopover.popdown()
-
     def on_imgWebButton_clicked(self, button):
         image = "{}{}".format(self.Server.serverurl, self.screenshots[self.down_image])
         subprocess.Popen(["xdg-open", image])
@@ -1164,44 +1152,6 @@ class MainWindow(object):
             elif self.down_image == 1:
                 self.pixbuf2.savev(file_path, "png", [], [])
         filesave_chooser.destroy()
-
-    def on_imgFullButton_clicked(self, button):
-        self.imgfullscreen_count += 1
-        if self.imgfullscreen_count % 2 == 1:
-            self.imgfullscreen = True
-            self.resizePopImage(True)
-            self.fullscreen_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
-        else:
-            self.imgfullscreen = False
-            self.resizePopImage()
-            self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
-
-    def on_ImagePopover_key_press_event(self, widget, event):
-
-        if event.keyval == Gdk.KEY_Left:
-            if self.ImagePopoverStack.get_visible_child_name() != "image1":
-                self.setPopImage(1)
-            else:
-                self.setPopImage(2)
-            return True
-        elif event.keyval == Gdk.KEY_Right:
-            if self.ImagePopoverStack.get_visible_child_name() != "image2":
-                self.setPopImage(2)
-            else:
-                self.setPopImage(1)
-            return True
-        elif event.keyval == Gdk.KEY_f or event.keyval == Gdk.KEY_F:
-            self.imgfullscreen_count += 1
-            if self.imgfullscreen_count % 2 == 1:
-                self.imgfullscreen = True
-                self.resizePopImage(True)
-                self.fullscreen_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
-                return True
-            else:
-                self.imgfullscreen = False
-                self.resizePopImage()
-                self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
-                return True
 
     def setPopImage(self, image):
         if image == 1:
@@ -3004,6 +2954,12 @@ class MainWindow(object):
 
         self.ui_comment_own = {}
 
+        self.image_stack_names = []
+        self.image_stack_current_index = 0
+        self.image_original_pixbufs = {}
+        for image in self.ui_image_stack:
+            self.ui_image_stack.remove(image)
+
     def set_app_details_page(self, app):
 
         self.ui_app_name = ""
@@ -3283,6 +3239,17 @@ class MainWindow(object):
         self.ui_ad_broken_list_revealer.set_reveal_child(state)
         icon = "go-up-symbolic" if state else "go-down-symbolic"
         self.ui_ad_broken_list_image.set_from_icon_name(icon, Gtk.IconSize.BUTTON)
+
+    def add_to_image_popover(self, pixbuf, uri):
+        name = uri.rsplit("/", 1)[-1].split(".", 1)[0]
+
+        self.image_original_pixbufs[name] = pixbuf.copy()
+
+        image = Gtk.Image.new_from_pixbuf(pixbuf)
+
+        self.image_stack_names.append(name)
+
+        GLib.idle_add(self.ui_image_stack.add_named, image, "{}".format(name))
 
     def setEditorApps(self):
         GLib.idle_add(self.EditorListStore.clear)
@@ -5153,22 +5120,87 @@ class MainWindow(object):
         GLib.idle_add(self.ui_ad_image_box.add, image)
         GLib.idle_add(self.ui_ad_image_box.show_all)
 
-        # self.appimage1stack.set_visible_child_name("loaded")
-        # self.appimage2stack.set_visible_child_name("loaded")
-        # if status and i:
-        #     i = i.split("#")[1]
-        #     if i == "1":
-        #         self.pixbuf1 = pixbuf
-        #         self.resizeAppImage()
-        #     if i == "2":
-        #         self.pixbuf2 = pixbuf
-        #         self.resizeAppImage()
-        # else:
-        #     self.dImage1.set_from_pixbuf(self.missing_pixbuf)
-        #     self.dImage2.set_from_pixbuf(self.missing_pixbuf)
-        #
-        #     self.pop1Image.set_from_pixbuf(self.missing_pixbuf)
-        #     self.pop2Image.set_from_pixbuf(self.missing_pixbuf)
+        self.add_to_image_popover(pixbuf, uri)
+        GLib.idle_add(self.ui_image_stack.show_all)
+
+    def on_ui_image_prev_button_clicked(self, button):
+        if not self.image_stack_names:
+            return
+
+        self.image_stack_current_index -= 1
+        if self.image_stack_current_index < 0:
+            self.image_stack_current_index = len(self.image_stack_names) - 1
+
+        name = self.image_stack_names[self.image_stack_current_index]
+        self.ui_image_stack.set_visible_child_name(name)
+
+    def on_ui_image_next_button_clicked(self, button):
+
+        if not self.image_stack_names:
+            return
+
+        self.image_stack_current_index += 1
+        if self.image_stack_current_index >= len(self.image_stack_names):
+            self.image_stack_current_index = 0
+
+        name = self.image_stack_names[self.image_stack_current_index]
+        self.ui_image_stack.set_visible_child_name(name)
+
+    def on_ui_image_fullscreen_button_clicked(self, button):
+        self.imgfullscreen_count += 1
+        if self.imgfullscreen_count % 2 == 1:
+            self.resize_popover_image(True)
+            self.ui_image_resize_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
+        else:
+            self.resize_popover_image()
+            self.ui_image_resize_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
+
+    def on_ui_image_popover_key_press_event(self, widget, event):
+        if event.keyval == Gdk.KEY_Left:
+            self.on_ui_image_prev_button_clicked(widget)
+            return True
+        elif event.keyval == Gdk.KEY_Right:
+            self.on_ui_image_next_button_clicked(widget)
+            return True
+        elif event.keyval == Gdk.KEY_f or event.keyval == Gdk.KEY_F:
+            self.on_ui_image_fullscreen_button_clicked(widget)
+            return True
+
+    def resize_popover_image(self, fullscreen=False):
+
+        size = self.MainWindow.get_size()
+
+        if not fullscreen:
+            basewidth = size.width - size.width / 3
+            self.ui_image_popover.set_size_request(0, 0)
+            self.ui_image_resize_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
+        else:
+            basewidth = size.width - 125
+            self.ui_image_popover.set_size_request(size.width, size.height)
+            self.ui_image_resize_image.set_from_icon_name("view-restore-symbolic", Gtk.IconSize.BUTTON)
+
+        for name in self.image_stack_names:
+            image = self.ui_image_stack.get_child_by_name(name)
+
+            pixbuf = self.image_original_pixbufs.get(name)
+            if pixbuf is None:
+                continue
+
+            orig_w = pixbuf.get_width()
+            orig_h = pixbuf.get_height()
+
+            hsize = (basewidth * orig_h) / orig_w
+
+            if hsize + 110 > size.height:
+                hsize = size.height - 110
+                basewidth = (hsize * orig_w) / orig_h
+
+            scaled = pixbuf.scale_simple(int(basewidth), int(hsize), GdkPixbuf.InterpType.BILINEAR)
+
+            image.set_from_pixbuf(scaled)
+
+    def on_ui_image_close_button_clicked(self, button):
+        self.ui_image_popover.popdown()
 
     def on_PardusAppImageBox_size_allocate(self, widget, allocated):
 
@@ -6462,12 +6494,18 @@ class MainWindow(object):
         # touchscreen
         if self.ui_ad_image_is_touch:
             if self.ui_ad_image_total_drag < self.ui_ad_image_drag_touch_threshold:
-                print("Fullscreen Image (Touchscreen)")
+                self.Logger.info("Fullscreen Image (Touchscreen)")
+                self.imgfullscreen_count = 0
+                self.resize_popover_image()
+                self.ui_image_popover.popup()
             return
 
         # mouse or touchpad
         if event.button == 1 and self.ui_ad_image_total_drag < self.ui_ad_image_drag_threshold:
-            print("Fullscreen Image (Mouse or Touchpad)")
+            self.Logger.info("Fullscreen Image (Mouse or Touchpad)")
+            self.imgfullscreen_count = 0
+            self.resize_popover_image()
+            self.ui_image_popover.popup()
 
     def on_ui_write_comment_button_clicked(self, button):
         self.ui_comment_dialog.run()
