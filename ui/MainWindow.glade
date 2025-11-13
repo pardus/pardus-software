@@ -3477,7 +3477,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="valign">center</property>
-                                                            <property name="icon-name">starred-symbolic</property>
+                                                            <property name="icon-name">ps-rating-star-full</property>
                                                             </object>
                                                             <packing>
                                                             <property name="expand">False</property>
