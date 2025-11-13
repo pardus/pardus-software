@@ -5119,11 +5119,13 @@ class MainWindow(object):
         )
 
         if status and app_name == self.ui_app_name:
+            name = uri.rsplit("/", 1)[-1].split(".", 1)[0]
             original_width = pixbuf.get_width()
             original_height = pixbuf.get_height()
             fixed_height = 200
             image = Gtk.Image.new_from_pixbuf(self.round_corners((pixbuf.scale_simple(
                 int(original_width * fixed_height / original_height), fixed_height, GdkPixbuf.InterpType.BILINEAR)), 7))
+            image.name = name
             GLib.idle_add(self.ui_ad_image_box.add, image)
             GLib.idle_add(self.ui_ad_image_box.show_all)
 
@@ -6531,6 +6533,10 @@ class MainWindow(object):
         if self.ui_ad_image_is_touch:
             if self.ui_ad_image_total_drag < self.ui_ad_image_drag_touch_threshold:
                 self.Logger.info("Fullscreen Image (Touchscreen)")
+                clicked_image_name = clicked_image.name
+                if clicked_image_name in self.image_stack_names:
+                    self.image_stack_current_index = self.image_stack_names.index(clicked_image_name)
+                self.ui_image_stack.set_visible_child_name(clicked_image_name)
                 self.imgfullscreen_count = 0
                 self.resize_popover_image()
                 self.ui_image_popover.popup()
@@ -6539,6 +6545,10 @@ class MainWindow(object):
         # mouse or touchpad
         if event.button == 1 and self.ui_ad_image_total_drag < self.ui_ad_image_drag_threshold:
             self.Logger.info("Fullscreen Image (Mouse or Touchpad)")
+            clicked_image_name = clicked_image.name
+            if clicked_image_name in self.image_stack_names:
+                self.image_stack_current_index = self.image_stack_names.index(clicked_image_name)
+            self.ui_image_stack.set_visible_child_name(clicked_image_name)
             self.imgfullscreen_count = 0
             self.resize_popover_image()
             self.ui_image_popover.popup()
