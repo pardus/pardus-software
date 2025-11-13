@@ -3277,11 +3277,15 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkLabel" id="ui_ad_subcategory_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
+                                                            <property name="opacity">0.5</property>
                                                             <property name="halign">start</property>
-                                                            <property name="label">Short description</property>
+                                                            <property name="label">Sub Category</property>
+                                                            <attributes>
+                                                            <attribute name="weight" value="light"/>
+                                                            </attributes>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -3297,14 +3301,14 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkLabel">
+                                                      <object class="GtkLabel" id="ui_ad_top_category_label">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="halign">start</property>
-                                                        <property name="label" translatable="yes">Sub Category</property>
-                                                        <attributes>
-                                                          <attribute name="weight" value="light"/>
-                                                        </attributes>
+                                                        <property name="label">Category</property>
+                                                        <style>
+                                                          <class name="pardus-software-accent-label"/>
+                                                        </style>
                                                       </object>
                                                       <packing>
                                                         <property name="expand">False</property>

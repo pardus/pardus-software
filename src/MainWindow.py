@@ -392,6 +392,8 @@ class MainWindow(object):
 
         self.ui_ad_name = self.GtkBuilder.get_object("ui_ad_name")
         self.ui_ad_icon = self.GtkBuilder.get_object("ui_ad_icon")
+        self.ui_ad_subcategory_label = self.GtkBuilder.get_object("ui_ad_subcategory_label")
+        self.ui_ad_top_category_label = self.GtkBuilder.get_object("ui_ad_top_category_label")
         self.ui_ad_top_avgrate_label = self.GtkBuilder.get_object("ui_ad_top_avgrate_label")
         self.ui_ad_top_download_label = self.GtkBuilder.get_object("ui_ad_top_download_label")
         self.ui_ad_top_size_label = self.GtkBuilder.get_object("ui_ad_top_size_label")
@@ -3048,7 +3050,12 @@ class MainWindow(object):
                                         {"mac": self.mac, "app": app_name, "limit": self.comment_limit}, app_name)
 
         app_pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
+        app_category_name = ((details.get("category") or [{}])[0].get(self.locale, "") or "").title()
+        app_subcategory_name = (details.get("subcategory") or [{}])[0].get(self.locale) or (details.get("subcategory") or [{}])[0].get("en") or ""
+
         self.ui_ad_name.set_markup("<b>{}</b>".format(app_pretty_name))
+        self.ui_ad_top_category_label.set_text("{}".format(app_category_name))
+        self.ui_ad_subcategory_label.set_text("{}".format(app_subcategory_name))
 
         self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
         self.ui_ad_icon.set_pixel_size(68)
@@ -3057,7 +3064,6 @@ class MainWindow(object):
         action_button_label = Gtk.Label.new()
         action_button_label.set_line_wrap(False)
         action_button_label.set_justify(Gtk.Justification.LEFT)
-        # action_button_label.set_max_width_chars(6)
         action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
         self.ui_ad_action_button.add(action_button_label)
         is_installed = self.Package.isinstalled(app_name)
@@ -3129,7 +3135,7 @@ class MainWindow(object):
                 GLib.markup_escape_text(m_web, -1),
                 GLib.markup_escape_text(m_web, -1)))
 
-        self.ui_ad_category_label.set_text(((details.get("category") or [{}])[0].get(self.locale, "") or "").title())
+        self.ui_ad_category_label.set_text(app_category_name)
 
         origin_info = self.Package.origins(app_name)
         component = getattr(origin_info, "component", "")
