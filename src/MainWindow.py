@@ -627,6 +627,8 @@ class MainWindow(object):
 
         self.dpkgconfiguring = False
 
+        self.ui_comment_own = {}
+
         self.ui_app_name = ""
 
         self.inprogress_app_name = ""
@@ -2997,6 +2999,12 @@ class MainWindow(object):
         self.ui_ad_more_comment_button.name = "pardus"
 
         self.set_comment_stars(0)
+        self.ui_comment_fullname_entry.set_text("")
+        start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
+        self.ui_comment_content_textview.get_buffer().delete(start, end)
+        self.ui_comment_error_label.set_visible(False)
+
+        self.ui_comment_own = {}
 
     def set_app_details_page(self, app):
 
@@ -3039,8 +3047,8 @@ class MainWindow(object):
         self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
                                         {"mac": self.mac, "app": app_name, "limit": self.comment_limit}, app_name)
 
-        self.ui_ad_name.set_markup("<b>{}</b>".format(
-            details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))))
+        app_pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
+        self.ui_ad_name.set_markup("<b>{}</b>".format(app_pretty_name))
 
         self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
         self.ui_ad_icon.set_pixel_size(68)
@@ -3103,7 +3111,8 @@ class MainWindow(object):
                 self.ui_ad_remove_button.set_sensitive(False)
 
         self.ui_ad_description_label.set_text(details["description"][self.locale])
-        self.ui_ad_version_label.set_text("{}".format(self.Package.installed_version(app_name)))
+        app_version = self.Package.installed_version(app_name)
+        self.ui_ad_version_label.set_text("{}".format(app_version))
 
         maintainer_info = (details.get("maintainer") or [{}])[0]
         m_name = maintainer_info.get("name", "")
@@ -3135,6 +3144,13 @@ class MainWindow(object):
         self.ui_ad_type_label.set_markup(type_label)
 
         self.ui_ad_license_label.set_text(details.get("license") or "")
+
+        self.ui_comment_appname_label.set_markup("<b>{}</b>".format(app_pretty_name))
+        self.ui_comment_icon_image.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
+        self.ui_comment_icon_image.set_pixel_size(48)
+        self.ui_comment_version_label.set_text("{}".format(app_version))
+
+        self.ui_comment_fullname_entry.set_text("{}".format(self.UserSettings.user_real_name))
 
     def app_detail_requireds_thread(self, app):
         app_detail_requireds = self.app_detail_requireds_worker(app)
@@ -4840,6 +4856,7 @@ class MainWindow(object):
             if response["details"]["rate"]["individual"] == 0:
                 self.ui_comment_mid_stack.set_visible_child_name("write")
                 self.ui_comment_bottom_stack.set_visible_child_name("disclaimer")
+                self.ui_comment_own = {}
             else:
                 self.ui_comment_mid_stack.set_visible_child_name("read")
                 self.ui_comment_bottom_stack.set_visible_child_name("info")
@@ -4860,6 +4877,10 @@ class MainWindow(object):
                     self.ui_comment_mid_editable_stack.set_visible_child_name("read")
                     self.ui_comment_info_label.set_text("{}".format(
                         _("You wrote a review about the application before, thank you.")))
+
+                self.ui_comment_own = {"fullname": response["details"]["individual"]["author"],
+                                       "comment": response["details"]["individual"]["comment"],
+                                       "point": response["details"]["rate"]["individual"]}
 
     def pardus_comments_from_server(self, status, response=None, appname=None):
         self.Logger.info("pardus_comments_from_server: {} {} {}".format(status, appname, response))
@@ -6473,21 +6494,6 @@ class MainWindow(object):
             print("Fullscreen Image (Mouse or Touchpad)")
 
     def on_ui_write_comment_button_clicked(self, button):
-        app_name = self.ui_app_name
-        details = self.fullapplist.get(app_name, {})
-
-        self.ui_comment_error_label.set_visible(False)
-
-        self.ui_comment_appname_label.set_markup("<b>{}</b>".format(
-            details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))))
-
-        self.ui_comment_icon_image.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
-        self.ui_comment_icon_image.set_pixel_size(48)
-
-        self.ui_comment_version_label.set_text("{}".format(self.Package.installed_version(app_name)))
-
-        self.ui_comment_fullname_entry.set_text("{}".format(self.UserSettings.user_real_name))
-
         self.ui_comment_dialog.run()
         self.ui_comment_dialog.hide()
 
@@ -6497,6 +6503,19 @@ class MainWindow(object):
     def on_ui_comment_star_button_press_event(self, widget, event):
         star = int(widget.get_name())
         self.set_comment_stars(star)
+
+    def on_ui_comment_own_edit_button_clicked(self, button):
+        self.ui_comment_mid_stack.set_visible_child_name("write")
+        self.ui_comment_bottom_stack.set_visible_child_name("disclaimer")
+        if self.ui_comment_own:
+            self.ui_comment_fullname_entry.set_text(self.ui_comment_own["fullname"])
+            start, end = self.wpcComment.get_buffer().get_bounds()
+            self.ui_comment_content_textview.get_buffer().delete(start, end)
+            self.ui_comment_content_textview.get_buffer().insert(
+                self.ui_comment_content_textview.get_buffer().get_end_iter(),
+                "{}".format(self.ui_comment_own["comment"]))
+            self.set_comment_stars(self.ui_comment_own["point"])
+
 
     def clearBoxes(self):
         self.EditorListStore.clear()
