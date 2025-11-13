@@ -23,6 +23,10 @@ list row {
     margin: 0px;
 }*/
 
+.pardus-software-accent-label{
+    color: @accent_bg_color;
+}
+
 .pardus-software-comment-textview text{
     background-color: alpha(@unfocused_borders, 0.45);;
     border-radius: 8px;
