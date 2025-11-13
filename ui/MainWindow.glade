@@ -11759,6 +11759,22 @@ so that the OS has nothing to do with the health of the application.</property>
                                 <property name="position">3</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkLabel" id="ui_comment_error_label">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label">error_label</property>
+                                <attributes>
+                                  <attribute name="foreground" value="#9c9c0d0c0302"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">4</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
                             <property name="name">write</property>
@@ -11866,7 +11882,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="ui_comment_own_fullname_label">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Full Name</property>
@@ -11886,7 +11902,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                     <property name="can-focus">False</property>
                                     <property name="transition-type">crossfade</property>
                                     <child>
-                                      <object class="GtkButton">
+                                      <object class="GtkButton" id="ui_comment_own_edit_button">
                                         <property name="label" translatable="yes">Edit</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
@@ -11897,7 +11913,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkLabel" id="ui_comment_own_date_label">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="label">X days ago</property>
@@ -11923,7 +11939,7 @@ so that the OS has nothing to do with the health of the application.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="ui_comment_own_content_label">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="halign">start</property>
@@ -11948,22 +11964,6 @@ so that the OS has nothing to do with the health of the application.</property>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="ui_comment_error_label">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="label">error_label</property>
-                        <attributes>
-                          <attribute name="foreground" value="#9c9c0d0c0302"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">5</property>
                       </packing>
                     </child>
                     <child>
