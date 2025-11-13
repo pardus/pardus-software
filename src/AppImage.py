@@ -20,33 +20,33 @@ class AppImage(object):
         self.imgcache = {}
         self.Logger = Logger(__name__)
 
-    def fetch(self, uri):
+    def get_image(self, uri, app_name):
         img_file = Gio.File.new_for_uri(uri)
-        img_file.read_async(GLib.PRIORITY_LOW, None, self._open_stream, uri)
+        img_file.read_async(GLib.PRIORITY_LOW, None, self._open_stream, uri, app_name)
 
-    def _open_stream(self, img_file, result, uri):
+    def _open_stream(self, img_file, result, uri, app_name):
         try:
             stream = img_file.read_finish(result)
         except GLib.Error as error:
             self.Logger.warning("_open_stream Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
-            self.Pixbuf(False)  # Send to MainWindow
+            self.app_image_from_server(False)  # Send to MainWindow
             return False
 
-        GdkPixbuf.Pixbuf.new_from_stream_async(stream, None, self._pixbuf_loaded, uri)
+        GdkPixbuf.Pixbuf.new_from_stream_async(stream, None, self._pixbuf_loaded, uri, app_name)
 
-    def _pixbuf_loaded(self, stream, result, uri):
+    def _pixbuf_loaded(self, stream, result, uri, app_name):
         try:
             pixbuf = GdkPixbuf.Pixbuf.new_from_stream_finish(result)
         except GLib.Error as error:
             self.Logger.warning("_pixbuf_loaded Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
-            self.Pixbuf(False)  # Send to MainWindow
+            self.app_image_from_server(False)  # Send to MainWindow
             return False
 
         stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
 
-        self.Pixbuf(True, pixbuf, uri)  # Send to MainWindow
+        self.app_image_from_server(True, pixbuf, uri, app_name)  # Send to MainWindow
 
         self.imgcache[uri] = pixbuf
 

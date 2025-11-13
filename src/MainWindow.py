@@ -793,7 +793,7 @@ class MainWindow(object):
         self.server_icons_done = False
 
         self.AppImage = AppImage()
-        self.AppImage.Pixbuf = self.Pixbuf
+        self.AppImage.app_image_from_server = self.app_image_from_server
 
         self.AppDetail = AppDetail()
         self.AppDetail.app_details_from_server = self.app_details_from_server
@@ -2990,7 +2990,7 @@ class MainWindow(object):
         self.ui_right_stack.set_visible_child_name("appdetails")
 
         for image in details["screenshots"]:
-            self.AppImage.fetch(self.Server.serverurl + image)
+            self.AppImage.get_image(self.Server.serverurl + image, app_name)
 
         self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
 
@@ -5110,18 +5110,25 @@ class MainWindow(object):
 
         return new_pixbuf
 
-    def Pixbuf(self, status, pixbuf=None, uri=None):
-        print("status: {}, pixbuf: {}, uri: {}".format(status, pixbuf, uri))
-        original_width = pixbuf.get_width()
-        original_height = pixbuf.get_height()
-        fixed_height = 200
-        image = Gtk.Image.new_from_pixbuf(self.round_corners((pixbuf.scale_simple(
-            int(original_width * fixed_height / original_height), fixed_height, GdkPixbuf.InterpType.BILINEAR)), 7))
-        GLib.idle_add(self.ui_ad_image_box.add, image)
-        GLib.idle_add(self.ui_ad_image_box.show_all)
+    def app_image_from_server(self, status, pixbuf=None, uri=None, app_name=""):
+        self.Logger.info(
+            f"app_image_from_server: status: {status}, "
+            f"app_name: {app_name}, "
+            f"ui_app_name: {self.ui_app_name}, "
+            f"pixbuf: {'OK' if pixbuf else pixbuf}, uri: {uri}"
+        )
 
-        self.add_to_image_popover(pixbuf, uri)
-        GLib.idle_add(self.ui_image_stack.show_all)
+        if status and app_name == self.ui_app_name:
+            original_width = pixbuf.get_width()
+            original_height = pixbuf.get_height()
+            fixed_height = 200
+            image = Gtk.Image.new_from_pixbuf(self.round_corners((pixbuf.scale_simple(
+                int(original_width * fixed_height / original_height), fixed_height, GdkPixbuf.InterpType.BILINEAR)), 7))
+            GLib.idle_add(self.ui_ad_image_box.add, image)
+            GLib.idle_add(self.ui_ad_image_box.show_all)
+
+            self.add_to_image_popover(pixbuf, uri)
+            GLib.idle_add(self.ui_image_stack.show_all)
 
     def on_ui_image_prev_button_clicked(self, button):
         if not self.image_stack_names:
