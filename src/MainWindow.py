@@ -481,6 +481,10 @@ class MainWindow(object):
         self.ui_ad_more_comment_button = self.GtkBuilder.get_object("ui_ad_more_comment_button")
 
         self.ui_comment_dialog = self.GtkBuilder.get_object("ui_comment_dialog")
+        self.ui_comment_main_stack = self.GtkBuilder.get_object("ui_comment_main_stack")
+        self.ui_comment_mid_stack = self.GtkBuilder.get_object("ui_comment_mid_stack")
+        self.ui_comment_mid_editable_stack = self.GtkBuilder.get_object("ui_comment_mid_editable_stack")
+        self.ui_comment_bottom_stack = self.GtkBuilder.get_object("ui_comment_bottom_stack")
         self.ui_comment_icon_image = self.GtkBuilder.get_object("ui_comment_icon_image")
         self.ui_comment_appname_label = self.GtkBuilder.get_object("ui_comment_appname_label")
         self.ui_comment_version_label = self.GtkBuilder.get_object("ui_comment_version_label")
@@ -488,11 +492,22 @@ class MainWindow(object):
         self.ui_comment_content_textview = self.GtkBuilder.get_object("ui_comment_content_textview")
         self.ui_comment_send_button = self.GtkBuilder.get_object("ui_comment_send_button")
         self.ui_comment_error_label = self.GtkBuilder.get_object("ui_comment_error_label")
+        self.ui_comment_info_label = self.GtkBuilder.get_object("ui_comment_info_label")
         self.ui_comment_star1_image = self.GtkBuilder.get_object("ui_comment_star1_image")
         self.ui_comment_star2_image = self.GtkBuilder.get_object("ui_comment_star2_image")
         self.ui_comment_star3_image = self.GtkBuilder.get_object("ui_comment_star3_image")
         self.ui_comment_star4_image = self.GtkBuilder.get_object("ui_comment_star4_image")
         self.ui_comment_star5_image = self.GtkBuilder.get_object("ui_comment_star5_image")
+        self.ui_comment_own_star1_image = self.GtkBuilder.get_object("ui_comment_own_star1_image")
+        self.ui_comment_own_star2_image = self.GtkBuilder.get_object("ui_comment_own_star2_image")
+        self.ui_comment_own_star3_image = self.GtkBuilder.get_object("ui_comment_own_star3_image")
+        self.ui_comment_own_star4_image = self.GtkBuilder.get_object("ui_comment_own_star4_image")
+        self.ui_comment_own_star5_image = self.GtkBuilder.get_object("ui_comment_own_star5_image")
+        self.ui_comment_own_fullname_label = self.GtkBuilder.get_object("ui_comment_own_fullname_label")
+        self.ui_comment_own_content_label = self.GtkBuilder.get_object("ui_comment_own_content_label")
+        self.ui_comment_own_edit_button = self.GtkBuilder.get_object("ui_comment_own_edit_button")
+        self.ui_comment_own_date_label = self.GtkBuilder.get_object("ui_comment_own_date_label")
+
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
@@ -2905,16 +2920,42 @@ class MainWindow(object):
             self.ui_rating_prg5_progressbar.set_fraction(0)
 
     def set_comment_stars(self, point):
-        self.ui_comment_star1_image.set_from_icon_name("ps-rating-star-full" if point >= 1 else "ps-rating-star-empty",
-                                                       Gtk.IconSize.LARGE_TOOLBAR)
-        self.ui_comment_star2_image.set_from_icon_name("ps-rating-star-full" if point >= 2 else "ps-rating-star-empty",
-                                                       Gtk.IconSize.LARGE_TOOLBAR)
-        self.ui_comment_star3_image.set_from_icon_name("ps-rating-star-full" if point >= 3 else "ps-rating-star-empty",
-                                                       Gtk.IconSize.LARGE_TOOLBAR)
-        self.ui_comment_star4_image.set_from_icon_name("ps-rating-star-full" if point >= 4 else "ps-rating-star-empty",
-                                                       Gtk.IconSize.LARGE_TOOLBAR)
-        self.ui_comment_star5_image.set_from_icon_name("ps-rating-star-full" if point == 5 else "ps-rating-star-empty",
-                                                       Gtk.IconSize.LARGE_TOOLBAR)
+        if point == 0:
+            self.ui_comment_star1_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star2_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star3_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star4_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star5_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+        else:
+            self.ui_comment_star1_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 1 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star2_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 2 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star3_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 3 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star4_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 4 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_star5_image.set_from_icon_name(
+                "ps-rating-star-full" if point == 5 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+
+    def set_comment_own_stars(self, point):
+        if point == 0:
+            self.ui_comment_own_star1_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star2_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star3_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star4_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star5_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+        else:
+            self.ui_comment_own_star1_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 1 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star2_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 2 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star3_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 3 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star4_image.set_from_icon_name(
+                "ps-rating-star-full" if point >= 4 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
+            self.ui_comment_own_star5_image.set_from_icon_name(
+                "ps-rating-star-full" if point == 5 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
 
     def clear_app_details(self):
 
@@ -2954,6 +2995,8 @@ class MainWindow(object):
             self.ui_ad_comments_flowbox.remove(row)
 
         self.ui_ad_more_comment_button.name = "pardus"
+
+        self.set_comment_stars(0)
 
     def set_app_details_page(self, app):
 
@@ -4794,66 +4837,29 @@ class MainWindow(object):
                           response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
                           response["details"]["rate"]["rates"]["5"])
 
+            if response["details"]["rate"]["individual"] == 0:
+                self.ui_comment_mid_stack.set_visible_child_name("write")
+                self.ui_comment_bottom_stack.set_visible_child_name("disclaimer")
+            else:
+                self.ui_comment_mid_stack.set_visible_child_name("read")
+                self.ui_comment_bottom_stack.set_visible_child_name("info")
 
-        # if status and appname == self.getActiveAppOnUI():
-        #     self.dtDownload.set_markup(
-        #         "{} {}".format(response["details"]["download"]["count"], _("Download")))
-        #
-        #     self.dtTotalRating.set_markup(
-        #         "( {} )".format(response["details"]["rate"]["count"]))
-        #
-        #     self.dtAverageRating.set_markup(
-        #         "<big>{:.1f}</big>".format(float(response["details"]["rate"]["average"])))
-        #
-        #     if response["details"]["rate"]["individual"] == 0:
-        #         self.rate_individual = _("is None")
-        #         self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), _("is None")))
-        #         self.commentstack.set_visible_child_name("sendcomment")
-        #         self.wpcgetnameLabel.set_text("")
-        #         self.wpcgetcommentLabel.set_text("")
-        #     else:
-        #         self.rate_individual = response["details"]["individual"]["rate"]
-        #         self.rate_author = response["details"]["individual"]["author"]
-        #         self.rate_comment = response["details"]["individual"]["comment"]
-        #
-        #         self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), response["details"]["rate"]["individual"]))
-        #         self.commentstack.set_visible_child_name("alreadysent")
-        #         self.wpcgetnameLabel.set_text(str(response["details"]["individual"]["author"]))
-        #         self.wpcgetcommentLabel.set_text(str(response["details"]["individual"]["comment"]))
-        #
-        #         if response["details"]["individual"]["recommentable"]:
-        #             self.addCommentButton.set_visible(True)
-        #             self.addCommentInfoLabel.set_visible(True)
-        #         else:
-        #             self.addCommentButton.set_visible(False)
-        #             self.addCommentInfoLabel.set_visible(False)
-        #
-        #         if self.rate_comment == "" or self.rate_comment is None:
-        #             self.wpcCommentBox.set_visible(False)
-        #             self.addCommentButton.set_label(_("Add Comment"))
-        #         else:
-        #             self.wpcCommentBox.set_visible(True)
-        #             self.addCommentButton.set_label(_("Edit Comment"))
-        #
-        #     self.rate_average = response["details"]["rate"]["average"]
-        #     self.setAppStar(response["details"]["rate"]["average"])
-        #
-        #     self.setPardusRatings(response["details"]["rate"]["count"], response["details"]["rate"]["average"],
-        #                           response["details"]["rate"]["rates"]["1"], response["details"]["rate"]["rates"]["2"],
-        #                           response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
-        #                           response["details"]["rate"]["rates"]["5"])
-        #
-        # else:
-        #     self.rate_average = 0
-        #     self.rate_individual = ""
-        #     self.rate_author = ""
-        #     self.rate_comment = ""
-        #     self.dtDownload.set_markup("")
-        #     self.dtTotalRating.set_markup("")
-        #     self.dtAverageRating.set_markup("")
-        #     self.setAppStar(0)
-        #     self.setPardusRatings(0, 0, 0, 0, 0, 0, 0)
-        #     self.setPardusComments(None)
+                self.ui_comment_own_fullname_label.set_text("{}".format(response["details"]["individual"]["author"]))
+                self.ui_comment_own_content_label.set_text("{}".format(response["details"]["individual"]["comment"]))
+                self.set_comment_own_stars(response["details"]["individual"]["rate"])
+
+                if response["details"]["individual"]["recommentable"]:
+                    self.ui_comment_mid_editable_stack.set_visible_child_name("edit")
+                    if response["details"]["individual"]["comment"]:
+                        self.ui_comment_info_label.set_text("{}".format(
+                            _("Your comment is under review.")))
+                    else:
+                        self.ui_comment_info_label.set_text("{}".format(
+                            _("You can also add a comment if you want.")))
+                else:
+                    self.ui_comment_mid_editable_stack.set_visible_child_name("read")
+                    self.ui_comment_info_label.set_text("{}".format(
+                        _("You wrote a review about the application before, thank you.")))
 
     def pardus_comments_from_server(self, status, response=None, appname=None):
         self.Logger.info("pardus_comments_from_server: {} {} {}".format(status, appname, response))
