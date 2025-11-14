@@ -205,6 +205,8 @@ class MainWindow(object):
         self.ui_ad_remove_button = self.GtkBuilder.get_object("ui_ad_remove_button")
         self.ui_ad_image_box = self.GtkBuilder.get_object("ui_ad_image_box")
 
+        self.ui_disclaimer_popover = self.GtkBuilder.get_object("ui_disclaimer_popover")
+
         self.ui_ad_top_stack = self.GtkBuilder.get_object("ui_ad_top_stack")
         self.ui_ad_action_stack = self.GtkBuilder.get_object("ui_ad_action_stack")
         self.ui_ad_about_box = self.GtkBuilder.get_object("ui_ad_about_box")
@@ -1556,6 +1558,9 @@ class MainWindow(object):
             name = self.ui_myapp_name_dic
         button.get_parent().get_parent().get_parent().name = name
         self.app_widget_action_clicked(button)
+
+    def on_ui_ad_disclaimer_button_clicked(self, button):
+        self.ui_disclaimer_popover.popup()
 
     def launch_desktop_file(self, desktop):
         try:

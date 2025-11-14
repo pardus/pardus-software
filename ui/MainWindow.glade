@@ -1417,25 +1417,6 @@
     <property name="can-focus">False</property>
     <property name="icon-name">view-refresh-symbolic</property>
   </object>
-  <object class="GtkPopover" id="ui_disclaimer_popover">
-    <property name="can-focus">False</property>
-    <property name="position">left</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">12</property>
-        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
-
-This application served from Pardus non-free package repositories,
-so that the OS has nothing to do with the health of the application.</property>
-        <property name="use-markup">True</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkPopover" id="ui_headermenu_popover">
     <property name="can-focus">False</property>
     <property name="position">bottom</property>
@@ -3107,6 +3088,7 @@ so that the OS has nothing to do with the health of the application.</property>
                                                             <property name="halign">center</property>
                                                             <property name="valign">center</property>
                                                             <property name="relief">none</property>
+                                                            <signal name="clicked" handler="on_ui_ad_disclaimer_button_clicked" swapped="no"/>
                                                             <child>
                                                             <object class="GtkImage">
                                                             <property name="visible">True</property>
@@ -7865,6 +7847,53 @@ Use with caution. Are you sure you want to continue?</property>
           </object>
           <packing>
             <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="ui_disclaimer_popover">
+    <property name="can-focus">False</property>
+    <property name="relative-to">ui_ad_disclaimer_button</property>
+    <property name="position">bottom</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Disclaimer</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">This application served from Pardus non-free package repositories, so that the OS has nothing to do with the health of the application.</property>
+            <property name="use-markup">True</property>
+            <property name="wrap">True</property>
+            <property name="max-width-chars">35</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
