@@ -2296,7 +2296,7 @@ class MainWindow(object):
         uninstallbutton.set_label("")
         uninstallbutton.set_tooltip_text(_("Uninstall"))
         uninstallbutton.set_relief(Gtk.ReliefStyle.NONE)
-        uninstallbutton.connect("clicked", self.remove_from_myapps)
+        uninstallbutton.connect("clicked", self.remove_from_myapps_popup)
 
         summary_label = Gtk.Label.new()
         summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(
@@ -2355,7 +2355,7 @@ class MainWindow(object):
 
         listbox = Gtk.ListBox.new()
         listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        # listbox.connect("row-activated", self.on_app_listbox_row_activated)
+        listbox.connect("row-activated", self.on_app_listbox_row_activated)
         listbox_row = Gtk.ListBoxRow()
         GLib.idle_add(listbox_row.add, box)
         listbox_row.name = app
@@ -4361,74 +4361,16 @@ class MainWindow(object):
         if self.myapps_du_cancel_event:
             self.myapps_du_cancel_event.set()
 
-    def myappsdetail_worker_thread(self, app, popup=False):
-        myappdetails = self.myappsdetail_worker(app)
-        GLib.idle_add(self.on_myappsdetail_worker_done, myappdetails, popup)
+    def myappsdetail_popup_worker_thread(self, app, popup=False):
+        myappdetails = self.myappsdetail_popup_worker(app)
+        GLib.idle_add(self.on_myappsdetail_popup_worker_done, myappdetails, popup)
 
-    def myappsdetail_worker(self, app):
-
+    def myappsdetail_popup_worker(self, app):
         valid, myapp_details, myapp_package = self.Package.myapps_remove_details(app["filename"])
         self.Logger.info("{}".format(myapp_details))
         return valid, myapp_details, myapp_package, app["name"], app["icon_name"], app["filename"], app["description"]
 
-    def myapp_popup_details(self, myapp):
-
-        self.ui_myapp_pop_toremove_box.set_visible(False)
-        self.ui_myapp_pop_toinstall_box.set_visible(False)
-        self.ui_myapp_pop_broken_box.set_visible(False)
-        self.ui_myapp_pop_fsize_box.set_visible(False)
-        self.ui_myapp_pop_dsize_box.set_visible(False)
-        self.ui_myapp_pop_isize_box.set_visible(False)
-
-        valid, details, package, name, icon, desktop, description = myapp
-        if valid and details is not None:
-            self.ui_myapp_pop_app.set_markup(
-                "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
-            self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
-            self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
-            self.ui_myapp_pop_uninstall_button.set_sensitive(True)
-
-            if details["to_delete"] and details["to_delete"] is not None:
-                self.ui_myapp_pop_toremove_label.set_markup(
-                    "{}".format(", ".join(details["to_delete"])))
-                self.ui_myapp_pop_toremove_box.set_visible(True)
-
-            if details["to_install"] and details["to_install"] is not None:
-                self.ui_myapp_pop_toinstall_label.set_markup(
-                    "{}".format(", ".join(details["to_install"])))
-                self.ui_myapp_pop_toinstall_box.set_visible(True)
-
-            if details["broken"] and details["broken"] is not None:
-                self.ui_myapp_pop_broken_label.set_markup(
-                    "{}".format(", ".join(details["broken"])))
-                self.ui_myapp_pop_broken_box.set_visible(True)
-
-            if details["freed_size"] and details["freed_size"] is not None and details["freed_size"] > 0:
-                self.ui_myapp_pop_fsize_label.set_markup(
-                    "{}".format(self.Package.beauty_size(details["freed_size"])))
-                self.ui_myapp_pop_fsize_box.set_visible(True)
-
-            if details["download_size"] and details["download_size"] is not None and details["download_size"] > 0:
-                self.ui_myapp_pop_dsize_label.set_markup(
-                    "{}".format(self.Package.beauty_size(details["download_size"])))
-                self.ui_myapp_pop_dsize_box.set_visible(True)
-
-            if details["install_size"] and details["install_size"] is not None and details["install_size"] > 0:
-                self.ui_myapp_pop_isize_label.set_markup(
-                    "{}".format(self.Package.beauty_size(details["install_size"])))
-                self.ui_myapp_pop_isize_box.set_visible(True)
-
-            self.ui_myapp_pop_stack.set_visible_child_name("details")
-            self.ui_myapp_pop_uninstall_button.grab_focus()
-
-
-        else:
-            self.Logger.info("package not found")
-            self.ui_myapp_pop_stack.set_visible_child_name("notfound")
-            self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
-            self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
-
-    def on_myappsdetail_worker_done(self, myapp, popup=False):
+    def on_myappsdetail_popup_worker_done(self, myapp, popup=False):
         self.clicked_myapp = myapp
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
@@ -4476,41 +4418,15 @@ class MainWindow(object):
                     "{}".format(self.Package.beauty_size(details["install_size"])))
                 self.ui_myapp_pop_isize_box.set_visible(True)
 
-            isinstalled = self.Package.isinstalled(package)
-
-            if isinstalled is not None:
-                if isinstalled:
-                    version = self.Package.installed_version(package)
-                else:
-                    version = self.Package.candidate_version(package)
-            else:
-                version = ""
-
             self.ui_myapp_pop_stack.set_visible_child_name("details")
             self.ui_myapp_pop_uninstall_button.grab_focus()
-            if not popup:
-                self.myappsstack.set_visible_child_name("details")
-                self.myappsdetailsstack.set_visible_child_name("details")
-                self.menubackbutton.set_sensitive(True)
 
         else:
-            self.Logger.info("package not found")
+            self.Logger.info("package not found: {}".format(myapp))
             self.ui_myapp_pop_stack.set_visible_child_name("notfound")
             self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
-            if not popup:
-                self.myappsstack.set_visible_child_name("notfound")
 
-    def open_store_page_from_myapps(self, packagename):
-        self.frommyapps = True
-        self.frommostapps = False
-        self.fromqueue = False
-        self.fromeditorapps = False
-        self.myappname = packagename
-        self.on_PardusAppsIconView_selection_changed(packagename)
-
-    def on_ui_myapp_to_store_button_clicked(self, button):
-        self.open_store_page_from_myapps(button.name)
 
     def on_MyAppsDetailsPopover_closed(self, popover):
         self.ui_myapp_pop_spinner.stop()
@@ -6094,8 +6010,8 @@ class MainWindow(object):
         listbox = self.create_myapp_widget(app, du=du)
         GLib.idle_add(self.ui_installedapps_flowbox.insert, listbox, -1)
 
-    def remove_from_myapps(self, button):
-        self.Logger.info("remove_from_myapps {}".format(button.name))
+    def remove_from_myapps_popup(self, button):
+        self.Logger.info("remove_from_myapps_popup {}".format(button.name))
 
         self.ui_myapp_pop_toremove_box.set_visible(False)
         self.ui_myapp_pop_toinstall_box.set_visible(False)
@@ -6110,39 +6026,13 @@ class MainWindow(object):
         self.MyAppsDetailsPopover.set_relative_to(button)
         self.MyAppsDetailsPopover.popup()
 
-        myappsdetailsthread = threading.Thread(target=self.myappsdetail_worker_thread,
+        myappsdetailsthread = threading.Thread(target=self.myappsdetail_popup_worker_thread,
                                                args=(button.name, True,), daemon=True)
         myappsdetailsthread.start()
 
     def open_from_myapps(self, button):
         self.Logger.info("Opening {}".format(button.name))
         self.launch_desktop_file(button.name)
-
-    def on_ui_myapps_cancel_clicked(self, button):
-        self.menubackbutton.set_sensitive(False)
-        self.myappsstack.set_visible_child_name("myapps")
-        if not len(self.MyAppsListBox) > 0:
-            self.Logger.info("MyAppsListBox creating")
-            GLib.idle_add(self.on_myapps_button_clicked, None)
-
-    def on_ui_myapps_cancel_disclaimer_clicked(self, button):
-        self.myappsdetailsstack.set_visible_child_name("details")
-
-    def on_ui_myapps_uninstall_button_clicked(self, button):
-        importants = [i for i in self.important_packages if i in self.myapp_toremove_list]
-        if importants:
-            self.myappsdetailsstack.set_visible_child_name("disclaimer")
-            self.ui_myapps_disclaimer_label.set_markup("<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
-                _("The following important packages will also be removed."),
-                ", ".join(importants),
-                _("Are you sure you accept this?")))
-        else:
-            self.Logger.info("not important package")
-            self.ui_myapps_uninstall()
-
-    def on_ui_myapps_accept_disclaimer_clicked(self, button):
-        self.myappsdetailsstack.set_visible_child_name("details")
-        self.ui_myapps_uninstall()
 
     def on_ui_myapp_pop_uninstall_button_clicked(self, button):
         importants = [i for i in self.important_packages if i in self.myapp_toremove_list]
@@ -6189,21 +6079,6 @@ class MainWindow(object):
     def installedapps_sort_func(self, row1, row2):
         return locale.strxfrm(row1.get_children()[0].get_children()[0].name["name"]) > locale.strxfrm(
             row2.get_children()[0].get_children()[0].name["name"])
-
-    def on_MyAppsListBox_row_activated(self, list_box, row):
-        self.ui_myapp_pop_toremove_box.set_visible(False)
-        self.ui_myapp_pop_toinstall_box.set_visible(False)
-        self.ui_myapp_pop_broken_box.set_visible(False)
-        self.ui_myapp_pop_fsize_box.set_visible(False)
-        self.ui_myapp_pop_dsize_box.set_visible(False)
-        self.ui_myapp_pop_isize_box.set_visible(False)
-
-        self.ui_myapp_pop_spinner.start()
-        self.ui_myapp_pop_stack.set_visible_child_name("spinner")
-
-        desktopfilename = row.get_children()[0].name
-
-        self.open_myapps_detailspage_from_desktopfile(desktopfilename)
 
     def on_ui_top_searchentry_focus_in_event(self, widget, event):
         print("on_ui_top_searchentry_focus_in_event")
