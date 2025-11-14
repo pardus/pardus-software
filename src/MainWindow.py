@@ -2554,6 +2554,7 @@ class MainWindow(object):
         start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
         self.ui_comment_content_textview.get_buffer().delete(start, end)
         self.ui_comment_error_label.set_visible(False)
+        self.ui_comment_send_button.set_sensitive(False)
 
         self.ui_comment_own = {}
 
@@ -3242,6 +3243,7 @@ class MainWindow(object):
             if response["details"]["rate"]["individual"] == 0:
                 self.ui_comment_mid_stack.set_visible_child_name("write")
                 self.ui_comment_bottom_stack.set_visible_child_name("disclaimer")
+                self.ui_comment_send_button.set_sensitive(True)
                 self.ui_comment_own = {}
             else:
                 self.ui_comment_mid_stack.set_visible_child_name("read")
@@ -4146,6 +4148,7 @@ class MainWindow(object):
     def on_ui_comment_own_edit_button_clicked(self, button):
         self.ui_comment_mid_stack.set_visible_child_name("write")
         self.ui_comment_bottom_stack.set_visible_child_name("disclaimer")
+        self.ui_comment_send_button.set_sensitive(True)
         if self.ui_comment_own:
             self.ui_comment_fullname_entry.set_text(self.ui_comment_own["fullname"])
             start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
