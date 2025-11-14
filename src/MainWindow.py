@@ -3710,12 +3710,6 @@ class MainWindow(object):
         elif combo_box.get_active() == 1:  # sort by download
             GLib.idle_add(self.set_myapps, True)
 
-    def on_dActionCancelButton_clicked(self, button):
-        self.Logger.info("Cancelling {} {}".format(self.actionedappname, self.pid))
-        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
-                   "kill", "{}".format(self.pid)]
-        self.start_kill_process(command)
-
     def on_ui_header_queue_button_clicked(self, button):
         self.ui_right_stack.set_visible_child_name("queue")
 
@@ -4185,56 +4179,12 @@ class MainWindow(object):
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
 
-    def on_dLicense_activate_link(self, label, url):
-        self.licensePopover.popup()
-
     def on_retrybutton_clicked(self, button):
         self.connection_error_after = False
         self.mainstack.set_visible_child_name("splash")
         p1 = threading.Thread(target=self.worker)
         p1.daemon = True
         p1.start()
-
-    def actionPackage(self, appname, command):
-
-        self.inprogress = True
-        self.topspinner.start()
-
-        ui_appname = self.getActiveAppOnUI()
-
-        if ui_appname == appname:
-            self.dActionButton.set_sensitive(False)
-            self.dActionButton.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
-            self.dActionInfoButton.set_sensitive(False)
-            self.raction.set_sensitive(False)
-            self.raction.set_image(Gtk.Image.new_from_icon_name("process-working-symbolic", Gtk.IconSize.BUTTON))
-
-        self.actionedappname = appname
-        self.actionedcommand = command
-        self.actionedappdesktop = self.desktop_file
-        self.isinstalled = self.Package.isinstalled(self.actionedappname)
-
-        if self.isinstalled is True:
-            if ui_appname == appname:
-                self.dActionButton.set_label(_(" Removing"))
-                self.raction.set_label(_(" Removing"))
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "remove",
-                       self.actionedcommand]
-        elif self.isinstalled is False:
-            if ui_appname == appname:
-                self.dActionButton.set_label(_(" Installing"))
-                self.raction.set_label(_(" Installing"))
-            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "install",
-                       self.actionedcommand]
-            packagelist = self.actionedcommand.split(" ")
-            if [i for i in self.i386_packages if i in packagelist]:
-                command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
-                           "enablei386andinstall", self.actionedcommand]
-        else:
-            self.Logger.info("actionPackage func error")
-
-        self.pid = self.startProcess(command)
-        self.Logger.info("started pid : {}".format(self.pid))
 
     def on_bottominterrupt_fix_button_clicked(self, button):
         self.bottominterrupt_fix_button.set_sensitive(False)
