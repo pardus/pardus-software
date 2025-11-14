@@ -353,10 +353,6 @@ class MainWindow(object):
         self.ui_settings_password_button = self.GtkBuilder.get_object("ui_settings_password_button")
         self.ui_settings_password_info_label = self.GtkBuilder.get_object("ui_settings_password_info_label")
 
-
-        self.progresstextlabel = self.GtkBuilder.get_object("progresstextlabel")
-        self.topspinner = self.GtkBuilder.get_object("topspinner")
-
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
         self.ui_suggest_app_entry = self.GtkBuilder.get_object("ui_suggest_app_entry")
@@ -1580,7 +1576,6 @@ class MainWindow(object):
 
     def action_package(self, app_name, command, desktop_id="", upgrade=False):
         self.inprogress = True
-        self.topspinner.start()
 
         self.inprogress_app_name = app_name
         self.inprogress_command = command
@@ -4251,9 +4246,6 @@ class MainWindow(object):
         return True
 
     def on_action_process_exit(self, pid, status):
-        # self.dActionCancelButton.set_visible(False)
-        # self.bottomerrordetails_button.set_visible(False)
-
         self.ui_header_queue_button.set_visible(False)
 
         if not self.error:
@@ -4326,7 +4318,6 @@ class MainWindow(object):
         else:
             self.bottomrevealer.set_reveal_child(False)
             if not self.error:
-                self.progresstextlabel.set_text("")
                 self.ui_queue_stack.set_visible_child_name("completed")
 
         if self.error:
