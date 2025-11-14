@@ -6324,9 +6324,6 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
                       <object class="GtkBox" id="NoServerBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -6368,7 +6365,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                       </object>
                       <packing>
                         <property name="name">noserver</property>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -6721,7 +6718,7 @@ Use with caution. Are you sure you want to continue?</property>
                       </object>
                       <packing>
                         <property name="name">fixapt</property>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
@@ -7454,7 +7451,9 @@ Use with caution. Are you sure you want to continue?</property>
                               <object class="GtkEntry" id="ui_comment_fullname_entry">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
+                                <property name="max-length">100</property>
                                 <property name="placeholder-text" translatable="yes">Full Name</property>
+                                <property name="input-hints">GTK_INPUT_HINT_NO_EMOJI | GTK_INPUT_HINT_NONE</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -7472,6 +7471,7 @@ Use with caution. Are you sure you want to continue?</property>
                                 <property name="right-margin">8</property>
                                 <property name="top-margin">8</property>
                                 <property name="bottom-margin">8</property>
+                                <property name="input-hints">GTK_INPUT_HINT_NO_EMOJI | GTK_INPUT_HINT_NONE</property>
                                 <style>
                                   <class name="pardus-software-comment-textview"/>
                                 </style>
@@ -7488,6 +7488,7 @@ Use with caution. Are you sure you want to continue?</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="on_ui_comment_send_button_clicked" swapped="no"/>
                                 <style>
                                   <class name="suggested-action"/>
                                 </style>
