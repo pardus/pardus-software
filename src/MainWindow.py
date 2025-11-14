@@ -7021,6 +7021,8 @@ class MainWindow(object):
         self.Logger.info("in control_myapps")
         if status == 0 and not error and cachestatus:
             if self.isinstalled:
+                if self.isupgrade:
+                    return
                 self.Logger.info("{} removing from myapps".format(actionedappdesktop))
                 desktop_id = actionedappdesktop.rsplit('/', 1)[-1]
                 for fbc in self.ui_installedapps_flowbox:
@@ -7054,14 +7056,18 @@ class MainWindow(object):
             if message_summary == "" and message_body == "":
                 Notify.init(self.inprogress_app_name)
                 if self.isinstalled:
-                    notification = Notify.Notification.new(
-                        self.getPrettyName(self.inprogress_app_name, False) + _(" Removed"))
+                    notification = Notify.Notification.new("{} {}".format(
+                        self.getPrettyName(self.inprogress_app_name),_("Updated") if self.isupgrade else _("Removed")))
                 else:
-                    notification = Notify.Notification.new(
-                        self.getPrettyName(self.inprogress_app_name, False) + _(" Installed"))
-                # notification.set_app_icon(self.inprogress_app_name)
-                # notification.set_icon_from_pixbuf(Gtk.IconTheme.get_default().load_icon(self.inprogress_app_name, 64,
-                #                                                         Gtk.IconLookupFlags(16)))
+                    notification = Notify.Notification.new("{} {}".format(
+                        self.getPrettyName(self.inprogress_app_name), _("Installed")))
+                try:
+                    notification.set_app_icon("pardus-software")
+                except AttributeError:
+                    notification.set_image_from_pixbuf(
+                        Gtk.IconTheme.get_default().load_icon("pardus-software", 64, Gtk.IconLookupFlags(16)))
+                except Exception as e:
+                    self.Logger.exception("{}".format(e))
             else:
                 Notify.init(message_summary)
                 notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
