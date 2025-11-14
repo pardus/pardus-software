@@ -81,45 +81,6 @@ class MainWindow(object):
         self.dpkglockerror_message = ""
         self.error_message = ""
 
-        try:
-            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("image-missing", 96,
-                                                                        Gtk.IconLookupFlags(16))
-        except:
-            self.missing_pixbuf = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", 96,
-                                                                        Gtk.IconLookupFlags(16))
-
-        self.staron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 24, 24)
-        self.staroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 24, 24)
-
-        self.staron_03 = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0-3.svg", 24, 24)
-        self.staron_05 = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0-5.svg", 24, 24)
-        self.staron_08 = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0-8.svg", 24, 24)
-
-        self.staronhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover-full.svg", 24, 24)
-        self.staroffhover = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-hover-empty.svg", 24, 24)
-
-        self.cstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 16, 16)
-        self.cstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 16, 16)
-
-        self.gcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 16, 16)
-        self.gcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 16, 16)
-
-        self.wpcstaron = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-1.svg", 38, 38)
-        self.wpcstaroff = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            os.path.dirname(os.path.abspath(__file__)) + "/../images/rating-0.svg", 38, 38)
-
         self.isPardusSearching = False
 
         self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
@@ -153,14 +114,6 @@ class MainWindow(object):
         self.bottomerrordetails_label = self.GtkBuilder.get_object("bottomerrordetails_label")
         self.bottomerrordetails_button = self.GtkBuilder.get_object("bottomerrordetails_button")
 
-        self.ui_pardusapps_combobox = self.GtkBuilder.get_object("ui_pardusapps_combobox")
-        # self.SubCatCombo = self.GtkBuilder.get_object("SubCatCombo")
-        # self.ui_showapps_buttonbox = self.GtkBuilder.get_object("ui_showapps_buttonbox")
-        # self.ui_showall_button = self.GtkBuilder.get_object("ui_showall_button")
-        # self.ui_showinstalled_button = self.GtkBuilder.get_object("ui_showinstalled_button")
-        # self.ui_shownotinstalled_button = self.GtkBuilder.get_object("ui_shownotinstalled_button")
-        # self.ui_showappcount_label = self.GtkBuilder.get_object("ui_showappcount_label")
-
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
         self.searchstack = self.GtkBuilder.get_object("searchstack")
@@ -170,43 +123,6 @@ class MainWindow(object):
         self.activatestack = self.GtkBuilder.get_object("activatestack")
         # self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
         self.ui_pardusapps_stack = self.GtkBuilder.get_object("ui_pardusapps_stack")
-
-
-        self.wpcstar = 0
-
-        self.raction = self.GtkBuilder.get_object("raction")
-        self.ractioninfo = self.GtkBuilder.get_object("ractioninfo")
-        self.rpackage = self.GtkBuilder.get_object("rpackage_name")
-        self.rtitle = self.GtkBuilder.get_object("rtitle")
-        self.rdetail = self.GtkBuilder.get_object("rdetail")
-        self.r_maintainername = self.GtkBuilder.get_object("r_maintainername")
-        self.r_maintainermail = self.GtkBuilder.get_object("r_maintainermail")
-        self.r_homepage = self.GtkBuilder.get_object("r_homepage")
-        self.r_section = self.GtkBuilder.get_object("r_section")
-        self.r_architecture = self.GtkBuilder.get_object("r_architecture")
-        self.r_version = self.GtkBuilder.get_object("r_version")
-        self.r_origin = self.GtkBuilder.get_object("r_origin")
-        self.rstack = self.GtkBuilder.get_object("rstack")
-
-        self.repo_required_changes_popover = self.GtkBuilder.get_object("repo_required_changes_popover")
-        self.repo_required_stack = self.GtkBuilder.get_object("repo_required_stack")
-        self.repo_required_spinner = self.GtkBuilder.get_object("repo_required_spinner")
-        self.rapp_packagename_box = self.GtkBuilder.get_object("rapp_packagename_box")
-        self.rapp_package_broken_box = self.GtkBuilder.get_object("rapp_package_broken_box")
-        self.rapp_toremove_box = self.GtkBuilder.get_object("rapp_toremove_box")
-        self.rapp_toinstall_box = self.GtkBuilder.get_object("rapp_toinstall_box")
-        self.rapp_broken_box = self.GtkBuilder.get_object("rapp_broken_box")
-        self.rapp_size_box = self.GtkBuilder.get_object("rapp_size_box")
-        self.rapp_fsize_box = self.GtkBuilder.get_object("rapp_fsize_box")
-        self.rapp_dsize_box = self.GtkBuilder.get_object("rapp_dsize_box")
-        self.rapp_isize_box = self.GtkBuilder.get_object("rapp_isize_box")
-        self.rapp_packagename_label = self.GtkBuilder.get_object("rapp_packagename_label")
-        self.rapp_toremove_label = self.GtkBuilder.get_object("rapp_toremove_label")
-        self.rapp_toinstall_label = self.GtkBuilder.get_object("rapp_toinstall_label")
-        self.rapp_broken_label = self.GtkBuilder.get_object("rapp_broken_label")
-        self.rapp_fsize_label = self.GtkBuilder.get_object("rapp_fsize_label")
-        self.rapp_dsize_label = self.GtkBuilder.get_object("rapp_dsize_label")
-        self.rapp_isize_label = self.GtkBuilder.get_object("rapp_isize_label")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
@@ -406,12 +322,6 @@ class MainWindow(object):
 
         self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
 
-        self.RepoAppsTreeView = self.GtkBuilder.get_object("RepoAppsTreeView")
-
-        self.PardusAppListStore = self.GtkBuilder.get_object("PardusAppListStore")
-        self.EditorListStore = self.GtkBuilder.get_object("EditorListStore")
-        self.RepoAppListStore = self.GtkBuilder.get_object("RepoAppListStore")
-
         self.ui_headermenu_popover = self.GtkBuilder.get_object("ui_headermenu_popover")
         self.ui_headermenu_button = self.GtkBuilder.get_object("ui_headermenu_button")
 
@@ -441,25 +351,6 @@ class MainWindow(object):
         self.ui_settings_password_button = self.GtkBuilder.get_object("ui_settings_password_button")
         self.ui_settings_password_info_label = self.GtkBuilder.get_object("ui_settings_password_info_label")
 
-        self.menubackbutton = self.GtkBuilder.get_object("menubackbutton")
-
-        self.updatecontrolbutton = self.GtkBuilder.get_object("updatecontrolbutton")
-        self.updatetextview = self.GtkBuilder.get_object("updatetextview")
-        self.updatespinner = self.GtkBuilder.get_object("updatespinner")
-
-        self.updateerrorlabel = self.GtkBuilder.get_object("updateerrorlabel")
-
-        self.residualtextview = self.GtkBuilder.get_object("residualtextview")
-        self.removabletextview = self.GtkBuilder.get_object("removabletextview")
-        self.upgradabletextview = self.GtkBuilder.get_object("upgradabletextview")
-
-        self.upgradebutton = self.GtkBuilder.get_object("upgradebutton")
-        self.autoremovebutton = self.GtkBuilder.get_object("autoremovebutton")
-        self.residualbutton = self.GtkBuilder.get_object("residualbutton")
-
-        self.upgradablebox = self.GtkBuilder.get_object("upgradablebox")
-        self.removablebox = self.GtkBuilder.get_object("removablebox")
-        self.residualbox = self.GtkBuilder.get_object("residualbox")
 
         self.progresstextlabel = self.GtkBuilder.get_object("progresstextlabel")
         self.topspinner = self.GtkBuilder.get_object("topspinner")
@@ -490,19 +381,6 @@ class MainWindow(object):
 
         self.repoappname = ""
         self.repoappclicked = False
-
-        self.dImage1 = self.GtkBuilder.get_object("dImage1")
-        self.dImage2 = self.GtkBuilder.get_object("dImage2")
-        self.ImagePopover = self.GtkBuilder.get_object("ImagePopover")
-        self.ImagePopoverStack = self.GtkBuilder.get_object("ImagePopoverStack")
-        self.pop1Image = self.GtkBuilder.get_object("pop1Image")
-        self.pop2Image = self.GtkBuilder.get_object("pop2Image")
-        self.pixbuf1 = None
-        self.pixbuf2 = None
-        self.imgLabel = self.GtkBuilder.get_object("imgLabel")
-        self.appimage1stack = self.GtkBuilder.get_object("appimage1stack")
-        self.appimage2stack = self.GtkBuilder.get_object("appimage2stack")
-        self.fullscreen_image = self.GtkBuilder.get_object("fullscreen_image")
 
         self.mac = self.getMac()
 
@@ -540,15 +418,6 @@ class MainWindow(object):
         self.serverappicons = False
         self.servercaticons = False
 
-        self.frommostapps = False
-        self.fromrepoapps = False
-        self.fromdetails = False
-        self.fromqueue = False
-        self.frommyapps = False
-        self.mda_clicked = False
-        self.mra_clicked = False
-        self.la_clicked = False
-
         self.repoappsinit = False
 
         self.isbroken = False
@@ -581,12 +450,6 @@ class MainWindow(object):
                                    "cinnamon", "cinnamon-session", "cinnamon-desktop-data", "eta-desktop"]
 
         self.i386_packages = ["wine"]
-
-        self.prefback = "pardushome"
-        self.prefback_preferences = None
-        self.prefback_statistics = None
-        self.prefback_suggestapp = None
-        self.prefback_queue = None
 
         self.clicked_myapp = ""
 
@@ -1003,99 +866,6 @@ class MainWindow(object):
         self.Logger.info("{} {}".format("config_aptup", self.UserSettings.config_aptup))
         self.Logger.info("{} {}".format("config_lastaptup", self.UserSettings.config_lastaptup))
         self.Logger.info("{} {}".format("config_forceaptuptime", self.UserSettings.config_forceaptuptime))
-
-    def on_dEventBox1_button_press_event(self, widget, event):
-        self.imgfullscreen_count = 0
-        self.setPopImage(1)
-        self.resizePopImage()
-        self.ImagePopover.show_all()
-        self.ImagePopover.popup()
-        self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
-
-    def on_dEventBox2_button_press_event(self, widget, event):
-        self.imgfullscreen_count = 0
-        self.setPopImage(2)
-        self.resizePopImage()
-        self.ImagePopover.show_all()
-        self.ImagePopover.popup()
-        self.fullscreen_image.set_from_icon_name("view-fullscreen-symbolic", Gtk.IconSize.BUTTON)
-
-    def on_imgWebButton_clicked(self, button):
-        image = "{}{}".format(self.Server.serverurl, self.screenshots[self.down_image])
-        subprocess.Popen(["xdg-open", image])
-
-    def on_imgDownloadButton_clicked(self, button):
-        filesave_chooser = Gtk.FileChooserDialog(title=_("Save File"), parent=self.MainWindow,
-                                                 action=Gtk.FileChooserAction.SAVE)
-        filesave_chooser.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
-        filesave_chooser.add_button(_("Save"), Gtk.ResponseType.ACCEPT).get_style_context().add_class(
-            "suggested-action")
-
-        filesave_chooser.set_current_name("{}_{}.png".format(
-            os.path.splitext(os.path.basename(self.screenshots[self.down_image]))[0],
-            datetime.now().strftime("%Y-%m-%d_%H-%M-%S")))
-
-        filesave_chooser.set_do_overwrite_confirmation(True)
-
-        response = filesave_chooser.run()
-        if response == Gtk.ResponseType.ACCEPT:
-            file_path = filesave_chooser.get_filename()
-            if self.down_image == 0:
-                self.pixbuf1.savev(file_path, "png", [], [])
-            elif self.down_image == 1:
-                self.pixbuf2.savev(file_path, "png", [], [])
-        filesave_chooser.destroy()
-
-    def setPopImage(self, image):
-        if image == 1:
-            self.imgLabel.set_text("{} 1".format(_("Image")))
-            self.ImagePopoverStack.set_visible_child_name("image1")
-        elif image == 2:
-            self.imgLabel.set_text("{} 2".format(_("Image")))
-            self.ImagePopoverStack.set_visible_child_name("image2")
-        if type(image) is int:
-            self.down_image = image - 1
-        else:
-            self.down_image = 0
-
-    def on_ImagePopover_closed(self, widget):
-        self.imgfullscreen = False
-
-    def setRepoApps(self):
-        if self.repo_perm == 1:
-
-            if not self.repoappsinit:
-                renderer_toggle = Gtk.CellRendererToggle()
-                renderer_toggle.connect("toggled", self.on_cell_toggled)
-                column_toggle = Gtk.TreeViewColumn(_("Status"), renderer_toggle, active=0)
-                column_toggle.set_resizable(True)
-                column_toggle.set_sort_column_id(0)
-                self.RepoAppsTreeView.append_column(column_toggle)
-
-                renderer = Gtk.CellRendererText()
-                column_name = Gtk.TreeViewColumn(_("Name"), renderer, text=1)
-                column_name.set_resizable(True)
-                column_name.set_sort_column_id(1)
-                self.RepoAppsTreeView.append_column(column_name)
-
-                renderer = Gtk.CellRendererText()
-                column_cat = Gtk.TreeViewColumn(_("Section"), renderer, text=2)
-                column_cat.set_resizable(True)
-                column_cat.set_sort_column_id(2)
-                self.RepoAppsTreeView.append_column(column_cat)
-
-                self.RepoAppsTreeView.set_search_column(1)
-
-                self.RepoAppsTreeView.show_all()
-
-                self.repoappsinit = True
-
-        elif self.repo_perm == 0:
-            self.Logger.info("repo_perm is 0 so repo apps not setting")
-            self.repo_button.set_sensitive(False)
-
-    def on_cell_toggled(self, widget, path):
-        self.Logger.info("cell toggled")
 
     def server(self):
         self.Server = Server()
@@ -3143,263 +2913,11 @@ class MainWindow(object):
             desktop = details["gnomename"]
         return desktop
 
-    def getSystemCatIcon(self, cat, size=48):
-        try:
-            caticon = Gtk.IconTheme.get_default().load_icon("applications-" + cat, size, Gtk.IconLookupFlags(16))
-        except:
-            self.Logger.info("{} {}".format(cat, "category icon not found in system icons"))
-            try:
-                if cat == "education":
-                    caticon = Gtk.IconTheme.get_default().load_icon("applications-science", size,
-                                                                    Gtk.IconLookupFlags(16))
-                elif cat == "all":
-                    caticon = Gtk.IconTheme.get_default().load_icon("applications-other", size, Gtk.IconLookupFlags(16))
-                elif cat == "pardus":
-                    caticon = Gtk.IconTheme.get_default().load_icon("emblem-pardus", size, Gtk.IconLookupFlags(16))
-                else:
-                    try:
-                        caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                        Gtk.IconLookupFlags(16))
-                    except:
-                        caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                        Gtk.IconLookupFlags(16))
-            except:
-                try:
-                    caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
-                except:
-                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
-        return caticon
-
-    def getServerCatIcon(self, cat, size=48):
-        try:
-            if self.UserSettings.config_icon == "default":
-                icons = "categoryicons"
-            else:
-                icons = "categoryicons-" + self.UserSettings.config_icon
-        except Exception as e:
-            icons = "categoryicons"
-            self.Logger.exception("{}".format(e))
-        try:
-            caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                self.Server.cachedir + icons + "/" + cat + ".svg", size, size)
-        except:
-            try:
-                caticon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                    self.Server.cachedir + "categoryicons/" + cat + ".svg", size, size)
-            except:
-                try:
-                    caticon = Gtk.IconTheme.get_default().load_icon("image-missing", size, Gtk.IconLookupFlags(16))
-                except:
-                    caticon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size, Gtk.IconLookupFlags(16))
-        return caticon
-
-    def getSystemAppIcon(self, app, size=64, notify=False, myappicon=False):
-        try:
-            appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
-        except:
-            try:
-                appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
-            except:
-                if notify:
-                    try:
-                        appicon = Gtk.IconTheme.get_default().load_icon("pardus-software", size,
-                                                                        Gtk.IconLookupFlags(16))
-                    except:
-                        try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
-                        except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
-                else:
-                    if myappicon:
-                        appicon = self.getMyAppIcon(app, size)
-                    else:
-                        try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
-                        except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
-        return appicon
-
-    def getServerAppIcon(self, app, size=64, notify=False, myappicon=False):
-        try:
-            if self.UserSettings.config_icon == "default":
-                icons = "appicons"
-            else:
-                icons = "appicons-" + self.UserSettings.config_icon
-        except Exception as e:
-            icons = "appicons"
-            self.Logger.exception("{}".format(e))
-        try:
-            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
-                                                             size)
-        except:
-            try:
-                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg",
-                                                                 size, size)
-            except:
-                if notify:
-                    try:
-                        appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                            self.Server.cachedir + "appicons/pardus-software.svg", size, size)
-                    except:
-                        try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
-                        except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
-                else:
-                    if myappicon:
-                        appicon = self.getMyAppIcon(app, size)
-                    else:
-                        try:
-                            appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                            Gtk.IconLookupFlags(16))
-                        except:
-                            appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                            Gtk.IconLookupFlags(16))
-        return appicon
-
-    def getMyAppIcon(self, app, size=64):
-        try:
-            if self.UserSettings.config_icon == "default":
-                icons = "appicons"
-            else:
-                icons = "appicons-" + self.UserSettings.config_icon
-        except Exception as e:
-            icons = "appicons"
-            self.Logger.exception("{}".format(e))
-        try:
-            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + icons + "/" + app + ".svg", size,
-                                                             size)
-        except:
-            try:
-                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Server.cachedir + "appicons/" + app + ".svg",
-                                                                 size, size)
-            except:
-                try:
-                    appicon = Gtk.IconTheme.get_default().load_icon(app, size, Gtk.IconLookupFlags(16))
-                except:
-                    try:
-                        appicon = self.parduspixbuf.load_icon(app, size, Gtk.IconLookupFlags(16))
-                    except:
-                        try:
-                            appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(app, size, size)
-                        except:
-                            try:
-                                appicon = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                                    self.Server.cachedir + "appicons/pardus-software.svg", size, size)
-                            except:
-                                try:
-                                    appicon = Gtk.IconTheme.get_default().load_icon("image-missing", size,
-                                                                                    Gtk.IconLookupFlags(16))
-                                except:
-                                    appicon = Gtk.IconTheme.get_default().load_icon("gtk-missing-image", size,
-                                                                                    Gtk.IconLookupFlags(16))
-
-        return appicon
-
-    def get_category_number(self, thatcategory):
-        listcat = list(thatcategory.split(","))
-        lenlistcat = len(listcat)
-        lencat = len(self.categories)
-        for i in range(0, lencat):
-            for j in range(0, lenlistcat):
-                if self.categories[i]["name"] == listcat[j]:
-                    return i
-
-    def get_category_name(self, thatnumber):
-        lencat = len(self.categories)
-        for i in range(0, lencat):
-            if thatnumber == i:
-                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                    self.categories[i]["external"], self.categories[i]["subcategories"]
-
-    def get_category_name_from_button(self, name):
-        lencat = len(self.categories)
-        for i in range(0, lencat):
-            if name == self.categories[i]["name"]:
-                return self.categories[i]["name"], self.categories[i]["icon"], self.categories[i]["subcats"], \
-                    self.categories[i]["external"], self.categories[i]["subcategories"]
-
-    def get_repo_category_number(self, thatcategory):
-        repocatnumber = 404
-        for i in self.Package.sections:
-            if thatcategory == i["name"]:
-                repocatnumber = i["number"]
-        return repocatnumber
-
     def onDestroy(self, widget):
         self.MainWindow.destroy()
 
     def setAnimations(self):
         pass
-
-    def set_stack_n_search(self, id):
-        '''
-        id:  1 = pardus, 2 = repo, 3 = myapps, 4 = queue, 5 = updates
-        '''
-        if id == 1:
-            if not self.store_button.get_style_context().has_class("suggested-action"):
-                self.store_button.get_style_context().add_class("suggested-action")
-            self.searchstack.set_visible_child_name("pardus")
-            if self.repo_button.get_style_context().has_class("suggested-action"):
-                self.repo_button.get_style_context().remove_class("suggested-action")
-            if self.myapps_button.get_style_context().has_class("suggested-action"):
-                self.myapps_button.get_style_context().remove_class("suggested-action")
-            if self.queue_button.get_style_context().has_class("suggested-action"):
-                self.queue_button.get_style_context().remove_class("suggested-action")
-            if self.updates_button.get_style_context().has_class("suggested-action"):
-                self.updates_button.get_style_context().remove_class("suggested-action")
-        elif id == 2:
-            if not self.repo_button.get_style_context().has_class("suggested-action"):
-                self.repo_button.get_style_context().add_class("suggested-action")
-            self.searchstack.set_visible_child_name("repo")
-            if self.store_button.get_style_context().has_class("suggested-action"):
-                self.store_button.get_style_context().remove_class("suggested-action")
-            if self.myapps_button.get_style_context().has_class("suggested-action"):
-                self.myapps_button.get_style_context().remove_class("suggested-action")
-            if self.queue_button.get_style_context().has_class("suggested-action"):
-                self.queue_button.get_style_context().remove_class("suggested-action")
-            if self.updates_button.get_style_context().has_class("suggested-action"):
-                self.updates_button.get_style_context().remove_class("suggested-action")
-        elif id == 3:
-            if not self.myapps_button.get_style_context().has_class("suggested-action"):
-                self.myapps_button.get_style_context().add_class("suggested-action")
-            self.searchstack.set_visible_child_name("myapps")
-            if self.store_button.get_style_context().has_class("suggested-action"):
-                self.store_button.get_style_context().remove_class("suggested-action")
-            if self.repo_button.get_style_context().has_class("suggested-action"):
-                self.repo_button.get_style_context().remove_class("suggested-action")
-            if self.queue_button.get_style_context().has_class("suggested-action"):
-                self.queue_button.get_style_context().remove_class("suggested-action")
-            if self.updates_button.get_style_context().has_class("suggested-action"):
-                self.updates_button.get_style_context().remove_class("suggested-action")
-        elif id == 4:
-            if not self.queue_button.get_style_context().has_class("suggested-action"):
-                self.queue_button.get_style_context().add_class("suggested-action")
-            if self.store_button.get_style_context().has_class("suggested-action"):
-                self.store_button.get_style_context().remove_class("suggested-action")
-            if self.repo_button.get_style_context().has_class("suggested-action"):
-                self.repo_button.get_style_context().remove_class("suggested-action")
-            if self.myapps_button.get_style_context().has_class("suggested-action"):
-                self.myapps_button.get_style_context().remove_class("suggested-action")
-            if self.updates_button.get_style_context().has_class("suggested-action"):
-                self.updates_button.get_style_context().remove_class("suggested-action")
-        elif id == 5:
-            if not self.updates_button.get_style_context().has_class("suggested-action"):
-                self.updates_button.get_style_context().add_class("suggested-action")
-            if self.store_button.get_style_context().has_class("suggested-action"):
-                self.store_button.get_style_context().remove_class("suggested-action")
-            if self.repo_button.get_style_context().has_class("suggested-action"):
-                self.repo_button.get_style_context().remove_class("suggested-action")
-            if self.myapps_button.get_style_context().has_class("suggested-action"):
-                self.myapps_button.get_style_context().remove_class("suggested-action")
-            if self.queue_button.get_style_context().has_class("suggested-action"):
-                self.queue_button.get_style_context().remove_class("suggested-action")
 
     def set_button_class(self, button, state):
         '''
@@ -3445,82 +2963,6 @@ class MainWindow(object):
                 button.get_style_context().remove_class("destructive-action")
             button.get_style_context().add_class("openup-action")
             button.set_sensitive(True)
-
-
-    def repo_required_worker_thread(self, package):
-        rc = self.repo_required_worker(package)
-        GLib.idle_add(self.on_required_worker_done, package, rc)
-
-    def size_worker_thread(self, app=None):
-        if app is None:
-            self.size_worker()
-        else:
-            self.size_worker(app)
-        GLib.idle_add(self.on_size_worker_done)
-
-    def size_worker(self, app=None):
-        if app is None:
-            self.ret = self.Package.required_changes(self.command)
-        else:
-            self.ret = self.Package.required_changes(app)
-        self.Logger.info("{}".format(self.ret))
-
-    def on_size_worker_done(self):
-
-        self.dapp_packagename_label.set_markup("<b>{}</b>".format(self.appname))
-
-        if self.ret["to_delete"] and self.ret["to_delete"] is not None:
-            self.dapp_toremove_label.set_markup("{}".format(", ".join(self.ret["to_delete"])))
-            self.dapp_toremove_box.set_visible(True)
-        else:
-            self.dapp_toremove_box.set_visible(False)
-
-        if self.ret["to_install"] and self.ret["to_install"] is not None:
-            self.dapp_toinstall_label.set_markup("{}".format(", ".join(self.ret["to_install"])))
-            self.dapp_toinstall_box.set_visible(True)
-        else:
-            self.dapp_toinstall_box.set_visible(False)
-
-        if self.ret["broken"] and self.ret["broken"] is not None:
-            self.dapp_broken_label.set_markup("{}".format(", ".join(self.ret["broken"])))
-            self.dapp_broken_box.set_visible(True)
-        else:
-            self.dapp_broken_box.set_visible(False)
-
-        if self.ret["freed_size"] and self.ret["freed_size"] is not None and self.ret["freed_size"] > 0:
-            self.dapp_fsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
-            self.dapp_fsize_box.set_visible(True)
-        else:
-            self.dapp_fsize_box.set_visible(False)
-
-        if self.ret["download_size"] and self.ret["download_size"] is not None and self.ret["download_size"] > 0:
-            self.dapp_dsize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["download_size"])))
-            self.dapp_dsize_box.set_visible(True)
-        else:
-            self.dapp_dsize_box.set_visible(False)
-
-        if self.ret["install_size"] and self.ret["install_size"] is not None and self.ret["install_size"] > 0:
-            self.dapp_isize_label.set_markup("{}".format(self.Package.beauty_size(self.ret["install_size"])))
-            self.dapp_isize_box.set_visible(True)
-        else:
-            self.dapp_isize_box.set_visible(False)
-
-        isinstalled = self.Package.isinstalled(self.appname)
-
-        if isinstalled is not None:
-            if isinstalled:
-                self.dSizeTitle.set_text(_("Installed Size"))
-                self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["freed_size"])))
-                self.dSizeGrid.set_tooltip_text(None)
-            else:
-                self.dSizeTitle.set_text(_("Download Size"))
-                self.dSize.set_text("{}".format(self.Package.beauty_size(self.ret["download_size"])))
-                self.dSizeGrid.set_tooltip_text("{}: {}".format(
-                    _("Installed Size"), self.Package.beauty_size(self.ret["install_size"])))
-        else:
-            self.dSize.set_markup(_("None"))
-            self.dSizeTitle.set_text(_("Download Size"))
-            self.dSizeGrid.set_tooltip_text(None)
 
     def set_myapps(self, du=False):
         def clear_flowbox():
@@ -3680,11 +3122,6 @@ class MainWindow(object):
                 self.set_app_details_page(app={package_name: details}, source=2)
         else:
             self.set_app_details_page(app={package_name: details}, source=0)
-
-    def on_par_desc_more_clicked(self, button):
-
-        self.dDescriptionLabel.set_text(self.description)
-        button.set_visible(False)
 
     def Request(self, status, response, appname=""):
         if status:
@@ -3998,50 +3435,6 @@ class MainWindow(object):
                 if re.search(r'\b' + badword["word"] + r'\b', content):
                     return False
         return True
-
-    def eventStarSet(self, widget):
-        if widget == "star1":
-            self.dtStar1.set_from_pixbuf(self.staronhover)
-            self.dtStar2.set_from_pixbuf(self.staroffhover)
-            self.dtStar3.set_from_pixbuf(self.staroffhover)
-            self.dtStar4.set_from_pixbuf(self.staroffhover)
-            self.dtStar5.set_from_pixbuf(self.staroffhover)
-            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 1))
-        elif widget == "star2":
-            self.dtStar1.set_from_pixbuf(self.staronhover)
-            self.dtStar2.set_from_pixbuf(self.staronhover)
-            self.dtStar3.set_from_pixbuf(self.staroffhover)
-            self.dtStar4.set_from_pixbuf(self.staroffhover)
-            self.dtStar5.set_from_pixbuf(self.staroffhover)
-            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 2))
-        elif widget == "star3":
-            self.dtStar1.set_from_pixbuf(self.staronhover)
-            self.dtStar2.set_from_pixbuf(self.staronhover)
-            self.dtStar3.set_from_pixbuf(self.staronhover)
-            self.dtStar4.set_from_pixbuf(self.staroffhover)
-            self.dtStar5.set_from_pixbuf(self.staroffhover)
-            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 3))
-        elif widget == "star4":
-            self.dtStar1.set_from_pixbuf(self.staronhover)
-            self.dtStar2.set_from_pixbuf(self.staronhover)
-            self.dtStar3.set_from_pixbuf(self.staronhover)
-            self.dtStar4.set_from_pixbuf(self.staronhover)
-            self.dtStar5.set_from_pixbuf(self.staroffhover)
-            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 4))
-        elif widget == "star5":
-            self.dtStar1.set_from_pixbuf(self.staronhover)
-            self.dtStar2.set_from_pixbuf(self.staronhover)
-            self.dtStar3.set_from_pixbuf(self.staronhover)
-            self.dtStar4.set_from_pixbuf(self.staronhover)
-            self.dtStar5.set_from_pixbuf(self.staronhover)
-            self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), 5))
-
-    def on_starEvent_enter_notify_event(self, widget, event):
-        self.eventStarSet(widget.get_name())
-
-    def on_starEvent_leave_notify_event(self, widget, event):
-        self.setAppStar(self.rate_average)
-        self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), self.rate_individual))
 
     def on_starEvent_button_press_event(self, widget, event):
         installed = self.Package.isinstalled(self.appname)
@@ -4757,19 +4150,6 @@ class MainWindow(object):
                 "{}".format(self.ui_comment_own["comment"]))
             self.set_comment_stars(self.ui_comment_own["point"])
 
-
-    def clearBoxes(self):
-        self.EditorListStore.clear()
-        self.PardusAppListStore.clear()
-        # for row in self.ui_leftcats_flowbox:
-        #     self.ui_leftcats_flowbox.remove(row)
-        for row in self.MostDownFlowBox:
-            self.MostDownFlowBox.remove(row)
-        for row in self.MostRateFlowBox:
-            self.MostRateFlowBox.remove(row)
-        for row in self.LastAddedFlowBox:
-            self.LastAddedFlowBox.remove(row)
-
     def setAvailableApps(self, available, showextapps=False):
         self.applist = {
             app: details
@@ -4793,8 +4173,6 @@ class MainWindow(object):
                 if cat["external"] is False:
                     newlist.append(cat)
             self.catlist = newlist
-
-
 
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
@@ -5071,132 +4449,6 @@ class MainWindow(object):
         self.dpkgconferror = False
         self.error_message = ""
         self.dpkglockerror_message = ""
-
-    def controlView(self, actionedappname, actionedappdesktop, actionedappcommand):
-        selected_items = self.PardusAppsIconView.get_selected_items()
-        editor_selected_items = self.EditorAppsIconView.get_selected_items()
-
-        if len(selected_items) == 1:
-            treeiter = self.PardusCategoryFilter.get_iter(selected_items[0])
-            appname = self.PardusCategoryFilter.get(treeiter, 1)[0]
-            self.Logger.info("in controlView {}".format(appname))
-            if appname == actionedappname:
-                self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
-
-        if len(editor_selected_items) == 1:
-            treeiter = self.EditorListStore.get_iter(editor_selected_items[0])
-            appname = self.EditorListStore.get(treeiter, 1)[0]
-            self.Logger.info("in controlView {}".format(appname))
-            if appname == actionedappname:
-                self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
-
-        if self.frommostapps:
-            if self.mostappname:
-                if self.mostappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
-            else:
-                if self.detailsappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
-
-        if self.fromqueue:
-            if self.queueappname:
-                if self.queueappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
-
-        if self.frommyapps:
-            if self.myappname:
-                if self.myappname == actionedappname:
-                    self.updateActionButtons(1, actionedappname, actionedappdesktop, actionedappcommand)
-
-        if self.fromrepoapps:
-            if self.repoappname == actionedappname:
-                self.updateActionButtons(2, actionedappname, actionedappdesktop, actionedappcommand)
-
-            # Updating status tick of repo apps
-            try:
-                for row in self.searchstore:
-                    installstatus = self.Package.isinstalled(row[1])
-                    row[0] = installstatus
-            except:
-                pass
-
-    def updateActionButtons(self, repo, actionedappname, actionedappdesktop, actionedappcommand):
-        if repo == 1:  # pardus apps
-            self.fromexternal = False
-            if self.Package.isinstalled(actionedappname) is True:
-
-                self.set_button_class(self.dActionButton, 1)
-                self.set_button_class(self.dActionInfoButton, 1)
-
-                self.dActionButton.set_label(_(" Uninstall"))
-                self.dActionButton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
-
-                if actionedappdesktop != "" and actionedappdesktop is not None:
-                    self.dOpenButton.set_visible(True)
-
-                self.wpcformcontrolLabel.set_visible(False)
-                self.wpcformcontrolLabel.set_markup("")
-
-                sizethread1 = threading.Thread(target=self.size_worker_thread, daemon=True)
-                sizethread1.start()
-
-            elif self.Package.isinstalled(actionedappname) is False:
-
-                self.set_button_class(self.dActionButton, 0)
-                self.set_button_class(self.dActionInfoButton, 0)
-
-                self.dActionButton.set_label(_(" Install"))
-                self.dActionButton.set_image(
-                    Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
-
-                self.dOpenButton.set_visible(False)
-
-                self.wpcformcontrolLabel.set_visible(True)
-                self.wpcformcontrolLabel.set_markup(
-                    "<span color='red'>{}</span>".format(_("You need to install the application")))
-
-                sizethread2 = threading.Thread(target=self.size_worker_thread, daemon=True, args=(actionedappcommand,))
-                sizethread2.start()
-
-            else:
-                if self.external:
-                    if self.external["externalrepo"]:
-                        self.fromexternal = True
-                        self.dActionButton.set_sensitive(True)
-                        self.dActionButton.set_label(_("Enable Repo"))
-                        self.dActionButton.set_image(
-                            Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON))
-                else:
-                    self.dAptUpdateButton.set_visible(True)
-                    if self.aptupdateclicked:
-                        self.dAptUpdateBox.set_visible(True)
-                        self.dAptUpdateInfoLabel.set_visible(True)
-
-                    self.dActionButton.set_label(_(" Not Found"))
-                    self.dActionButton.set_image(
-                        Gtk.Image.new_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.BUTTON))
-                    self.dOpenButton.set_visible(False)
-
-                    self.set_button_class(self.dActionButton, 2)
-                    self.set_button_class(self.dActionInfoButton, 2)
-
-                self.clear_drequired_popup()
-
-                self.dSize.set_markup(_("None"))
-                self.dSizeTitle.set_text(_("Download Size"))
-                self.dSizeGrid.set_tooltip_text(None)
-
-        if repo == 2:  # repo apps
-            if self.Package.isinstalled(actionedappname):
-                self.set_button_class(self.raction, 1)
-                self.set_button_class(self.ractioninfo, 1)
-                self.raction.set_label(_(" Uninstall"))
-                self.raction.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
-            else:
-                self.set_button_class(self.raction, 0)
-                self.set_button_class(self.ractioninfo, 0)
-                self.raction.set_label(_(" Install"))
-                self.raction.set_image(Gtk.Image.new_from_icon_name("document-save-symbolic", Gtk.IconSize.BUTTON))
 
     def control_myapps(self, actionedappname, actionedappdesktop, status, error, cachestatus):
         self.Logger.info("in control_myapps")

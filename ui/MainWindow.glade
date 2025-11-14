@@ -2,25 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkPopover" id="DisclaimerPopover">
-    <property name="can-focus">False</property>
-    <property name="position">left</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">7</property>
-        <property name="margin-end">7</property>
-        <property name="margin-top">7</property>
-        <property name="margin-bottom">7</property>
-        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
-
-This application served from Pardus non-free package repositories,
-so that the OS has nothing to do with the health of the application.</property>
-        <property name="use-markup">True</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkPopover" id="MyAppsDetailsPopover">
     <property name="can-focus">False</property>
     <property name="position">left</property>
@@ -822,21 +803,6 @@ so that the OS has nothing to do with the health of the application.</property>
       </object>
     </child>
   </object>
-  <object class="GtkPopover" id="PopoverPrefTip">
-    <property name="can-focus">False</property>
-    <property name="position">bottom</property>
-    <child>
-      <object class="GtkLabel" id="prefTipLabel">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
-        <property name="wrap">True</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -1450,6 +1416,25 @@ so that the OS has nothing to do with the health of the application.</property>
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">view-refresh-symbolic</property>
+  </object>
+  <object class="GtkPopover" id="ui_disclaimer_popover">
+    <property name="can-focus">False</property>
+    <property name="position">left</property>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="label" translatable="yes">&lt;b&gt;Disclaimer&lt;/b&gt;
+
+This application served from Pardus non-free package repositories,
+so that the OS has nothing to do with the health of the application.</property>
+        <property name="use-markup">True</property>
+      </object>
+    </child>
   </object>
   <object class="GtkPopover" id="ui_headermenu_popover">
     <property name="can-focus">False</property>
@@ -7896,7 +7881,6 @@ Use with caution. Are you sure you want to continue?</property>
     <property name="can-focus">False</property>
     <property name="relative-to">ui_main_headerbar</property>
     <property name="position">bottom</property>
-    <signal name="closed" handler="on_ImagePopover_closed" swapped="no"/>
     <signal name="key-press-event" handler="on_ui_image_popover_key_press_event" swapped="no"/>
     <child>
       <object class="GtkBox">
