@@ -22,12 +22,9 @@ class AppRequest(object):
         self.session = Soup.Session(user_agent="application/json")
         self.Logger = Logger(__name__)
 
-    def send(self, method, uri, dic, appname=""):
-        # self.Logger.info("{} : {} {}".format(method, uri, dic))
-        message = Soup.Message.new(method, uri)
-
-        if method == "POST":
-            message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
+    def send(self, uri, dic, appname=""):
+        message = Soup.Message.new("POST", uri)
+        message.set_request('Content-type:application/json', Soup.MemoryUse.COPY, json.dumps(dic).encode('utf-8'))
 
         message.request_headers.append('Content-type', 'application/json')
         self.session.send_async(message, None, self.on_finished, message, appname)
@@ -38,7 +35,7 @@ class AppRequest(object):
         except GLib.Error as error:
             self.Logger.warning("AppRequest stream Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
-            self.Request(False, None)  # Send to MainWindow
+            self.rating_response_from_server(False)  # Send to MainWindow
             return False
 
         status_code = message.status_code
@@ -47,7 +44,7 @@ class AppRequest(object):
             data_input_stream = Gio.DataInputStream.new(input_stream)
             line, length = data_input_stream.read_line_utf8()
 
-            self.Request(True, json.loads(line), appname)
+            self.rating_response_from_server(True, json.loads(line), appname)
 
         input_stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
 

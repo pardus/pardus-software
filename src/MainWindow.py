@@ -479,6 +479,8 @@ class MainWindow(object):
 
         self.last_width = 0
 
+        self.comment_star_point = 0
+
         settings = Gtk.Settings.get_default()
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
 
@@ -558,7 +560,7 @@ class MainWindow(object):
         self.AppDetail.app_details_from_server = self.app_details_from_server
 
         self.AppRequest = AppRequest()
-        self.AppRequest.Request = self.Request
+        self.AppRequest.rating_response_from_server = self.rating_response_from_server
 
         self.GnomeComment = GnomeComment()
         self.GnomeComment.gnome_comments_from_server = self.gnome_comments_from_server
@@ -2470,6 +2472,7 @@ class MainWindow(object):
             self.ui_rating_prg5_progressbar.set_fraction(0)
 
     def set_comment_stars(self, point):
+        self.comment_star_point = point
         if point == 0:
             self.ui_comment_star1_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
             self.ui_comment_star2_image.set_from_icon_name("ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
@@ -2553,8 +2556,10 @@ class MainWindow(object):
         self.ui_comment_fullname_entry.set_text("")
         start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
         self.ui_comment_content_textview.get_buffer().delete(start, end)
+        self.ui_comment_error_label.set_text("")
         self.ui_comment_error_label.set_visible(False)
         self.ui_comment_send_button.set_sensitive(False)
+        self.ui_comment_main_stack.set_visible_child_name("main")
 
         self.ui_comment_own = {}
 
@@ -3129,91 +3134,47 @@ class MainWindow(object):
         else:
             self.set_app_details_page(app={package_name: details}, source=0)
 
-    def Request(self, status, response, appname=""):
-        if status:
-            if response["response-type"] == 10 and appname == self.getActiveAppOnUI():
-                self.wpcSendButton.set_sensitive(True)
+    def rating_response_from_server(self, status, response=None, appname=None):
+        if status and appname == self.ui_app_name:
+            if response["response-type"] == 10:
+                self.ui_comment_send_button.set_sensitive(True)
                 if response["rating"]["status"]:
-                    self.rate_average = response["rating"]["rate"]["average"]
-                    self.rate_individual = response["rating"]["rate"]["individual"]
-                    self.rate_author = response["rating"]["rate"]["author"]
-                    self.rate_comment = response["rating"]["rate"]["comment"]
+                    self.set_rating_stars(response["rating"]["rate"]["average"])
+                    self.ui_ad_top_avgrate_label.set_text("{:.1f}".format(float(response["rating"]["rate"]["average"])))
+                    self.ui_ad_bottom_avgrate_label.set_markup(
+                        "<span font='54'><b>{:.1f}</b></span>".format(float(response["rating"]["rate"]["average"])))
+                    self.ui_ad_bottom_rate_count_label.set_text("{} Ratings".format(response["rating"]["rate"]["count"]))
 
-                    self.setAppStar(self.rate_average)
-                    self.dtAverageRating.set_markup("<big>{:.1f}</big>".format(float(self.rate_average)))
-                    self.dtUserRating.set_markup("{} {}".format(_("Your Rate"), self.rate_individual))
-                    self.dtTotalRating.set_markup("( {} )".format(response["rating"]["rate"]["count"]))
+                    # TODO
+                    # GLib.idle_add(self.set_rating_progressbar, response["rating"]["rate"]["count"],
+                    #               response["rating"]["rate"]["rates"]["1"], response["rating"]["rate"]["rates"]["2"],
+                    #               response["rating"]["rate"]["rates"]["3"], response["rating"]["rate"]["rates"]["4"],
+                    #               response["rating"]["rate"]["rates"]["5"])
 
-                    if response["rating"]["rate"]["recommentable"]:
-                        self.addCommentButton.set_visible(True)
-                        self.addCommentInfoLabel.set_visible(True)
-                    else:
-                        self.addCommentButton.set_visible(False)
-                        self.addCommentInfoLabel.set_visible(False)
-
-                    if self.rate_comment == "" or self.rate_comment is None:
-                        self.wpcCommentBox.set_visible(False)
-                        self.addCommentButton.set_label(_("Add Comment"))
-                    else:
-                        self.wpcCommentBox.set_visible(True)
-                        self.addCommentButton.set_label(_("Edit Comment"))
-
-                    if response["rating"]["justrate"]:
-
-                        if response["rating"]["rate"]["recommentable"]:
-                            # scroll to add comment
-                            vadj = self.PardusAppDetailScroll.get_vadjustment()
-                            bot = vadj.get_upper()
-                            vadj.set_value(bot)
-                            self.PardusAppDetailScroll.set_vadjustment(vadj)
-
-                            self.setWpcStar(response["rating"]["rate"]["individual"])
-                            self.wpcAuthor.set_text(str(response["rating"]["rate"]["author"]))
-                            start, end = self.wpcComment.get_buffer().get_bounds()
-                            self.wpcComment.get_buffer().delete(start, end)
-                            self.wpcComment.get_buffer().insert(self.wpcComment.get_buffer().get_end_iter(),
-                                                                "{}".format(response["rating"]["rate"]["comment"]))
-
-                            self.CommentsNotebook.set_current_page(2)
-                            self.wpcComment.grab_focus()
-
-                            self.wpcinfoLabel.set_visible(True)
-
-                        else:
-                            self.commentstack.set_visible_child_name("alreadysent")
-                            self.wpcgetnameLabel.set_text(str(response["rating"]["rate"]["author"]))
-                            self.wpcgetcommentLabel.set_text(str(response["rating"]["rate"]["comment"]))
-
-                    else:
-                        self.commentstack.set_visible_child_name("sendresult")
-                        self.wpcresultLabel.set_text(
-                            _("Your comment has been sent successfully. It will be published after approval."))
+                    self.ui_comment_main_stack.set_visible_child_name("done")
                 else:
-                    if response["rating"]["justrate"]:
-                        self.Logger.info("justrate error")
+                    self.ui_comment_error_label.set_visible(True)
+                    if response["rating"]["flood"]:
+                        self.ui_comment_error_label.set_text(_("Please try again soon"))
                     else:
-                        self.wpcformcontrolLabel.set_visible(True)
-                        if response["rating"]["flood"]:
-                            self.wpcformcontrolLabel.set_text(_("Please try again soon"))
-                        else:
-                            self.wpcformcontrolLabel.set_text(_("Error"))
+                        self.ui_comment_error_label.set_text(_("Error"))
 
-            if response["response-type"] == 12:
-                self.SuggestSend.set_sensitive(True)
-                if response["suggestapp"]["status"]:
-                    self.SuggestInfoLabel.set_text("")
-                    self.SuggestStack.set_visible_child_name("success")
-                    self.SuggestScroll.set_vadjustment(Gtk.Adjustment())
-                    self.resetSuggestAppForm()
-                else:
-                    if response["suggestapp"]["flood"]:
-                        self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
-                            _("Please try again soon")))
-                    else:
-                        self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
-                            _("Error")))
+            # if response["response-type"] == 12:
+            #     self.SuggestSend.set_sensitive(True)
+            #     if response["suggestapp"]["status"]:
+            #         self.SuggestInfoLabel.set_text("")
+            #         self.SuggestStack.set_visible_child_name("success")
+            #         self.SuggestScroll.set_vadjustment(Gtk.Adjustment())
+            #         self.resetSuggestAppForm()
+            #     else:
+            #         if response["suggestapp"]["flood"]:
+            #             self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
+            #                 _("Please try again soon")))
+            #         else:
+            #             self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
+            #                 _("Error")))
         else:
-            self.wpcresultLabel.set_text(_("Error"))
+            self.ui_comment_error_label.set_text(_("Error"))
 
     def app_details_from_server(self, status, response=None, appname=None):
         print("app_details_from_server, status: {}".format(status))
@@ -3240,6 +3201,7 @@ class MainWindow(object):
                           response["details"]["rate"]["rates"]["3"], response["details"]["rate"]["rates"]["4"],
                           response["details"]["rate"]["rates"]["5"])
 
+            self.ui_comment_main_stack.set_visible_child_name("main")
             if response["details"]["rate"]["individual"] == 0:
                 self.ui_comment_mid_stack.set_visible_child_name("write")
                 self.ui_comment_bottom_stack.set_visible_child_name("disclaimer")
@@ -3590,43 +3552,6 @@ class MainWindow(object):
 
     def on_ui_image_close_button_clicked(self, button):
         self.ui_image_popover.popdown()
-
-    def on_wpcSendButton_clicked(self, button):
-        self.Logger.info("on_wpcSendButton_clicked")
-
-        author = self.wpcAuthor.get_text().strip()
-        start, end = self.wpcComment.get_buffer().get_bounds()
-        comment = self.wpcComment.get_buffer().get_text(start, end, True).strip()
-        value = self.wpcstar
-        status = True
-        if value == 0 or comment == "" or author == "":
-            self.wpcformcontrolLabel.set_visible(True)
-            self.wpcformcontrolLabel.set_text(_("Cannot be null"))
-        else:
-            installed = self.Package.isinstalled(self.appname)
-            if installed is None:
-                installed = False
-            if installed:
-                version = self.Package.installed_version(self.appname)
-                if version is None:
-                    version = ""
-                dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.appname,
-                       "installed": installed, "appversion": version, "distro": self.user_distro_full,
-                       "justrate": False}
-                try:
-                    self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
-                except Exception as e:
-                    status = False
-                    self.commentstack.set_visible_child_name("sendresult")
-                    self.wpcresultLabel.set_text(str(e))
-                if status:
-                    self.wpcSendButton.set_sensitive(False)
-                else:
-                    self.wpcresultLabel.set_text(_("Error"))
-            else:
-                self.wpcformcontrolLabel.set_visible(True)
-                self.wpcformcontrolLabel.set_markup(
-                    "<span color='red'>{}</span>".format(_("You need to install the application")))
 
     def pardusapps_filter_function(self, row):
         app = row.get_children()[0].get_children()[0].name
@@ -4152,6 +4077,31 @@ class MainWindow(object):
                 "{}".format(self.ui_comment_own["comment"]))
             self.set_comment_stars(self.ui_comment_own["point"])
 
+    def on_ui_comment_send_button_clicked(self, button):
+        author = self.ui_comment_fullname_entry.get_text().strip()
+        start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
+        comment = self.ui_comment_content_textview.get_buffer().get_text(start, end, False).strip()
+        value = self.comment_star_point
+        if value == 0 or comment == "" or author == "":
+            self.ui_comment_error_label.set_visible(True)
+            self.ui_comment_error_label.set_text(_("All fields must be filled."))
+        else:
+            # installed = self.Package.isinstalled(self.ui_app_name)
+            # if installed is None:
+            #     installed = False
+            version = self.Package.installed_version(self.ui_app_name)
+            if version is None:
+                version = ""
+            dic = {"mac": self.mac, "author": author, "comment": comment, "value": value, "app": self.ui_app_name,
+                   "installed": True, "appversion": version, "distro": self.user_distro_full,
+                   "justrate": False}
+            try:
+                self.AppRequest.send(self.Server.serverurl + self.Server.serversendrate, dic, self.ui_app_name)
+                self.ui_comment_send_button.set_sensitive(False)
+            except Exception as e:
+                self.ui_comment_error_label.set_visible(True)
+                self.ui_comment_error_label.set_text(f"{e}")
+
     def setAvailableApps(self, available, showextapps=False):
         self.applist = {
             app: details
@@ -4330,7 +4280,7 @@ class MainWindow(object):
         if status == 0 and not self.error and cachestatus:
             if self.Package.controlPackageCache(self.inprogress_app_name):
                 self.notify()
-                self.sendDownloaded(self.inprogress_app_name)
+                self.send_downloaded_request(self.inprogress_app_name)
             else:
                 if self.isinstalled:
                     self.notify()
@@ -4467,7 +4417,7 @@ class MainWindow(object):
         except Exception as e:
             self.Logger.exception("{}".format(e))
 
-    def sendDownloaded(self, appname):
+    def send_downloaded_request(self, appname):
         try:
             installed = self.Package.isinstalled(appname)
             if installed is None:
@@ -4477,9 +4427,9 @@ class MainWindow(object):
                 version = ""
             dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
                    "distro": self.user_distro_full}
-            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversenddownload, dic)
+            self.AppRequest.send(self.Server.serverurl + self.Server.serversenddownload, dic)
         except Exception as e:
-            self.Logger.warning("sendDownloaded Error")
+            self.Logger.warning("send_downloaded_request Error")
             self.Logger.exception("{}".format(e))
 
     def startSysProcess(self, params):
