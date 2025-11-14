@@ -2743,6 +2743,7 @@ class MainWindow(object):
                     self.ui_ad_icon.set_from_icon_name(details["icon_name"], Gtk.IconSize.DIALOG)
             except Exception as e:
                 self.ui_ad_icon.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
+            self.ui_ad_icon.set_pixel_size(68)
 
         # repo app operations
         if source == 2:
@@ -3041,7 +3042,17 @@ class MainWindow(object):
             self.ui_myapp_pop_app.set_markup(
                 "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
-            self.ui_myapp_pop_icon.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
+
+            try:
+                if os.path.isfile(icon):
+                    px = GdkPixbuf.Pixbuf.new_from_file_at_size(icon, 64, 64)
+                    self.ui_myapp_pop_icon.set_from_pixbuf(px)
+                else:
+                    self.ui_myapp_pop_icon.set_from_icon_name(icon, Gtk.IconSize.DIALOG)
+            except Exception as e:
+                self.ui_myapp_pop_icon.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
+            self.ui_myapp_pop_icon.set_pixel_size(64)
+
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
 
             if details["to_delete"] and details["to_delete"] is not None:
@@ -3084,7 +3095,17 @@ class MainWindow(object):
         else:
             self.Logger.info("package not found: {}".format(myapp))
             self.ui_myapp_pop_stack.set_visible_child_name("notfound")
-            self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
+
+            try:
+                if os.path.isfile(icon):
+                    px = GdkPixbuf.Pixbuf.new_from_file_at_size(icon, 64, 64)
+                    self.ui_myapp_pop_notfound_image.set_from_pixbuf(px)
+                else:
+                    self.ui_myapp_pop_notfound_image.set_from_icon_name(icon, Gtk.IconSize.DIALOG)
+            except Exception as e:
+                self.ui_myapp_pop_notfound_image.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
+            self.ui_myapp_pop_notfound_image.set_pixel_size(64)
+
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
 
     def on_MyAppsDetailsPopover_closed(self, popover):
