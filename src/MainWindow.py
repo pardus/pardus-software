@@ -4750,7 +4750,7 @@ class MainWindow(object):
         self.ui_comment_bottom_stack.set_visible_child_name("disclaimer")
         if self.ui_comment_own:
             self.ui_comment_fullname_entry.set_text(self.ui_comment_own["fullname"])
-            start, end = self.wpcComment.get_buffer().get_bounds()
+            start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
             self.ui_comment_content_textview.get_buffer().delete(start, end)
             self.ui_comment_content_textview.get_buffer().insert(
                 self.ui_comment_content_textview.get_buffer().get_end_iter(),
