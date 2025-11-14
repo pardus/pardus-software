@@ -203,45 +203,80 @@ class Package(object):
 
         return None
 
-    def get_records(self, packagename):
+    def get_record(self, packagename):
         try:
             package = self.cache[packagename]
         except Exception as e:
-            self.Logger.exception(f"get_records: lookup failed for {packagename}: {e}")
-            return "", "", ""
+            self.Logger.exception(f"get_record: lookup failed for {packagename}: {e}")
+            return None
 
-        version = getattr(package, "candidate", None)
-        if not version:
+        version = None
+
+        try:
+            installed = getattr(package, "installed", None)
+            if installed and getattr(installed, "version", None):
+                version = installed
+        except Exception as e:
+            self.Logger.exception(f"get_record: failed checking installed version for {packagename}: {e}")
+
+        if version is None:
+            try:
+                candidate = getattr(package, "candidate", None)
+                if candidate:
+                    version = candidate
+            except Exception as e:
+                self.Logger.exception(f"get_record: failed checking candidate version for {packagename}: {e}")
+
+        if version is None:
             try:
                 versions = getattr(package, "versions", [])
                 if not versions:
-                    return "", "", ""
+                    return None
                 highest = versions[0]
                 for v in versions[1:]:
                     if apt_pkg.version_compare(v.version, highest.version) > 0:
                         highest = v
                 version = highest
             except Exception as e:
-                self.Logger.exception(f"get_records: failed to determine version for {packagename}: {e}")
-                return "", "", ""
+                self.Logger.exception(f"get_record: failed to determine highest version for {packagename}: {e}")
+                return None
 
         record = getattr(version, "record", {}) or {}
+        return record
 
-        maintainer = record.get("Maintainer", "")
-        homepage = record.get("Homepage", "")
+    def get_maintainer_info(self, packagename):
+        record = self.get_record(packagename)
+        if record:
+            maintainer = record.get("Maintainer", "")
+            homepage = record.get("Homepage", "")
 
-        maintainer_name = ""
-        maintainer_mail = ""
+            maintainer_name = ""
+            maintainer_mail = ""
 
+            try:
+                match = re.match(r"^(.*?)(?:\s*<([^>]+)>)?$", maintainer)
+                if match:
+                    maintainer_name = (match.group(1) or "").strip()
+                    maintainer_mail = (match.group(2) or "").strip()
+            except Exception as e:
+                self.Logger.exception(f"get_records: maintainer parse error for {packagename}: {e}")
+
+            return {"name": maintainer_name, "mail": maintainer_mail, "web": homepage}
+        else:
+            return {}
+
+    def get_license_from_file(self, packagename):
         try:
-            match = re.match(r"^(.*?)(?:\s*<([^>]+)>)?$", maintainer)
-            if match:
-                maintainer_name = (match.group(1) or "").strip()
-                maintainer_mail = (match.group(2) or "").strip()
-        except Exception as e:
-            self.Logger.exception(f"get_records: maintainer parse error for {packagename}: {e}")
+            path = f"/usr/share/doc/{packagename}/copyright"
+            if os.path.exists(path):
+                with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                    for line in f:
+                        if "License:" in line:
+                            return line.split("License:")[-1].strip()
+        except:
+            pass
 
-        return maintainer_name, maintainer_mail, homepage
+        return ""
 
     def get_uri(self, packagename):
         package = self.cache[packagename]

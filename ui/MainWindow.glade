@@ -3097,75 +3097,105 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkBox">
+                                                  <object class="GtkStack" id="ui_ad_action_stack">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="spacing">16</property>
                                                     <child>
-                                                      <object class="GtkButton" id="ui_ad_disclaimer_button">
+                                                      <object class="GtkBox">
                                                         <property name="visible">True</property>
-                                                        <property name="can-focus">True</property>
-                                                        <property name="receives-default">True</property>
-                                                        <property name="halign">center</property>
-                                                        <property name="valign">center</property>
-                                                        <property name="relief">none</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="spacing">16</property>
                                                         <child>
-                                                          <object class="GtkImage">
+                                                          <object class="GtkButton" id="ui_ad_disclaimer_button">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="relief">none</property>
+                                                            <child>
+                                                            <object class="GtkImage">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="icon-name">dialog-warning-symbolic</property>
+                                                            </object>
+                                                            </child>
                                                           </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
                                                         </child>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">0</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkButton" id="ui_ad_action_button">
-                                                        <property name="width-request">77</property>
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">True</property>
-                                                        <property name="receives-default">True</property>
-                                                        <property name="valign">center</property>
-                                                        <signal name="clicked" handler="on_ui_ad_action_button_clicked" swapped="no"/>
                                                         <child>
-                                                          <object class="GtkLabel">
+                                                          <object class="GtkButton" id="ui_ad_action_button">
+                                                            <property name="width-request">77</property>
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="valign">center</property>
+                                                            <signal name="clicked" handler="on_ui_ad_action_button_clicked" swapped="no"/>
+                                                            <child>
+                                                            <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label">action</property>
+                                                            </object>
+                                                            </child>
                                                           </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkButton" id="ui_ad_remove_button">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">True</property>
+                                                            <property name="receives-default">True</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="valign">center</property>
+                                                            <property name="relief">none</property>
+                                                            <signal name="clicked" handler="on_ui_ad_remove_button_clicked" swapped="no"/>
+                                                            <child>
+                                                            <object class="GtkImage">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">user-trash-symbolic</property>
+                                                            </object>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                          </packing>
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">1</property>
+                                                        <property name="name">action</property>
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkButton" id="ui_ad_remove_button">
+                                                      <object class="GtkButton">
                                                         <property name="visible">True</property>
+                                                        <property name="sensitive">False</property>
                                                         <property name="can-focus">True</property>
                                                         <property name="receives-default">True</property>
                                                         <property name="halign">center</property>
                                                         <property name="valign">center</property>
-                                                        <property name="relief">none</property>
-                                                        <signal name="clicked" handler="on_ui_ad_remove_button_clicked" swapped="no"/>
                                                         <child>
                                                           <object class="GtkImage">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="icon-name">user-trash-symbolic</property>
+                                                            <property name="icon-name">action-unavailable-symbolic</property>
                                                           </object>
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">2</property>
+                                                        <property name="name">external</property>
+                                                        <property name="position">1</property>
                                                       </packing>
                                                     </child>
                                                   </object>
@@ -3195,14 +3225,18 @@
                                                     <property name="label-yalign">0</property>
                                                     <property name="shadow-type">in</property>
                                                     <child>
-                                                      <object class="GtkBox">
+                                                      <object class="GtkStack" id="ui_ad_top_stack">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="margin-start">50</property>
-                                                        <property name="margin-end">50</property>
-                                                        <property name="homogeneous">True</property>
                                                         <child>
                                                           <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="margin-start">50</property>
+                                                            <property name="margin-end">50</property>
+                                                            <property name="homogeneous">True</property>
+                                                            <child>
+                                                            <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="margin-top">11</property>
@@ -3265,28 +3299,28 @@
                                                             <property name="position">1</property>
                                                             </packing>
                                                             </child>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">0</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkSeparator">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkSeparator">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="opacity">0.7019607843137254</property>
                                                             <property name="halign">center</property>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="margin-top">11</property>
@@ -3336,28 +3370,28 @@
                                                             <property name="position">1</property>
                                                             </packing>
                                                             </child>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">2</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkSeparator">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkSeparator">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="opacity">0.7019607843137254</property>
                                                             <property name="halign">center</property>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">3</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="margin-top">11</property>
@@ -3407,28 +3441,28 @@
                                                             <property name="position">1</property>
                                                             </packing>
                                                             </child>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">4</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkSeparator">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkSeparator">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="opacity">0.7019607843137254</property>
                                                             <property name="halign">center</property>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">5</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkBox">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkBox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="margin-top">11</property>
@@ -3478,11 +3512,45 @@
                                                             <property name="position">1</property>
                                                             </packing>
                                                             </child>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">6</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="name">stats</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="label">Limited information is available for this app.</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="wrap">True</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="name">limited</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="label">Detailed information isn’t available for this app. 
+The application may have been installed using tools such as Flatpak, Snap, or Wine.</property>
+                                                            <property name="justify">center</property>
+                                                            <property name="wrap">True</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="name">external</property>
+                                                            <property name="position">2</property>
                                                           </packing>
                                                         </child>
                                                       </object>
@@ -3537,7 +3605,7 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkBox">
+                                              <object class="GtkBox" id="ui_ad_about_box">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="orientation">vertical</property>
@@ -3578,7 +3646,7 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkBox">
+                                              <object class="GtkBox" id="ui_ad_details_box">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="orientation">vertical</property>
@@ -4118,7 +4186,7 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkBox">
+                                              <object class="GtkBox" id="ui_ad_dependencies_box">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="orientation">vertical</property>
@@ -4518,7 +4586,7 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkBox">
+                                              <object class="GtkBox" id="ui_ad_availablerepos_box">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="orientation">vertical</property>
@@ -4551,6 +4619,18 @@
                                                     <property name="position">1</property>
                                                   </packing>
                                                 </child>
+                                                <child>
+                                                  <object class="GtkSeparator">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-top">25</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">2</property>
+                                                  </packing>
+                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -4559,18 +4639,7 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkSeparator">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">7</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkBox">
+                                              <object class="GtkBox" id="ui_ad_ratings_box">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="orientation">vertical</property>

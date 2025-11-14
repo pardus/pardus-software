@@ -403,6 +403,14 @@ class MainWindow(object):
         self.ui_ad_remove_button = self.GtkBuilder.get_object("ui_ad_remove_button")
         self.ui_ad_image_box = self.GtkBuilder.get_object("ui_ad_image_box")
 
+        self.ui_ad_top_stack = self.GtkBuilder.get_object("ui_ad_top_stack")
+        self.ui_ad_action_stack = self.GtkBuilder.get_object("ui_ad_action_stack")
+        self.ui_ad_about_box = self.GtkBuilder.get_object("ui_ad_about_box")
+        self.ui_ad_details_box = self.GtkBuilder.get_object("ui_ad_details_box")
+        self.ui_ad_dependencies_box = self.GtkBuilder.get_object("ui_ad_dependencies_box")
+        self.ui_ad_availablerepos_box = self.GtkBuilder.get_object("ui_ad_availablerepos_box")
+        self.ui_ad_ratings_box = self.GtkBuilder.get_object("ui_ad_ratings_box")
+
         self.ui_ad_image_scrolledwindow = self.GtkBuilder.get_object("ui_ad_image_scrolledwindow")
         self.ui_ad_image_scrolledwindow.add_events(
             Gdk.EventMask.BUTTON_PRESS_MASK |
@@ -1899,6 +1907,8 @@ class MainWindow(object):
 
         app = button.get_parent().get_parent().get_parent().name
 
+        self.Logger.info(f"app_widget_action_clicked: {app}")
+
         if isinstance(app, dict):
             app_name, details = next(iter(app.items()))
         elif isinstance(app, str):
@@ -1914,12 +1924,19 @@ class MainWindow(object):
 
         if button.name == 3:
             print("{} opening".format(app_name))
-            if not self.launch_desktop_file(details["desktop"]):
-                if details["desktopextras"] != "":
-                    extras = details["desktopextras"].split(",")
-                    for extra in extras:
-                        if self.launch_desktop_file(extra):
-                            break
+            desktop = details.get("desktop")
+            desk_id = details.get("id")
+            extras = details.get("desktopextras", "")
+            if desktop:
+                if self.launch_desktop_file(desktop):
+                    return
+            if extras:
+                for extra in extras.split(","):
+                    if self.launch_desktop_file(extra):
+                        break
+            if desk_id:
+                if self.launch_desktop_file(desk_id):
+                    return
             return
 
         if button.name == 9:
@@ -1953,11 +1970,19 @@ class MainWindow(object):
                 app_name, command, desktop_id, button.name == 2))
 
     def on_ui_ad_action_button_clicked(self, button):
-        button.get_parent().get_parent().get_parent().name = self.ui_app_name
+        if self.ui_app_name in self.fullapplist.keys():
+            name = self.ui_app_name
+        else:
+            name = self.ui_myapp_name_dic
+        button.get_parent().get_parent().get_parent().name = name
         self.app_widget_action_clicked(button)
 
     def on_ui_ad_remove_button_clicked(self, button):
-        button.get_parent().get_parent().get_parent().name = self.ui_app_name
+        if self.ui_app_name in self.fullapplist.keys():
+            name = self.ui_app_name
+        else:
+            name = self.ui_myapp_name_dic
+        button.get_parent().get_parent().get_parent().name = name
         self.app_widget_action_clicked(button)
 
     def launch_desktop_file(self, desktop):
@@ -2287,9 +2312,7 @@ class MainWindow(object):
         action_button.name = app["id"]
 
         uninstallbutton = Gtk.Button.new()
-        uninstallbutton.name = {"name": app["name"], "filename": app["filename"], "icon_name": app["icon_name"],
-                                "description": app["description"], "keywords": app["keywords"],
-                                "executable": app["executable"]}
+        uninstallbutton.name = app
         uninstallbutton.props.valign = Gtk.Align.CENTER
         uninstallbutton.props.always_show_image = True
         uninstallbutton.set_image(Gtk.Image.new_from_icon_name("user-trash-symbolic", Gtk.IconSize.BUTTON))
@@ -2355,7 +2378,7 @@ class MainWindow(object):
 
         listbox = Gtk.ListBox.new()
         listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        listbox.connect("row-activated", self.on_app_listbox_row_activated)
+        listbox.connect("row-activated", self.on_myapp_listbox_row_activated)
         listbox_row = Gtk.ListBoxRow()
         GLib.idle_add(listbox_row.add, box)
         listbox_row.name = app
@@ -2908,6 +2931,9 @@ class MainWindow(object):
                 "ps-rating-star-full" if point == 5 else "ps-rating-star-empty", Gtk.IconSize.LARGE_TOOLBAR)
 
     def clear_app_details(self):
+        self.ui_ad_name.set_text("")
+        self.ui_ad_subcategory_label.set_text("")
+        self.ui_ad_top_category_label.set_text("")
 
         self.ui_ad_top_avgrate_label.set_text("")
         self.ui_ad_top_size_label.set_text("")
@@ -2960,9 +2986,15 @@ class MainWindow(object):
         for image in self.ui_image_stack:
             self.ui_image_stack.remove(image)
 
-    def set_app_details_page(self, app):
+    def set_app_details_page(self, app, source=1):
+        """
+        :param app: package name of application
+        :param source: 1:store_app, 2:repo_app, 0:external_app
+        """
 
         self.ui_app_name = ""
+
+        self.ui_myapp_name_dic = ""
 
         if isinstance(app, dict):
             app_name, details = next(iter(app.items()))
@@ -2984,129 +3016,202 @@ class MainWindow(object):
 
         self.clear_app_details()
 
+        self.ui_ad_image_scrolledwindow.set_visible(source == 1)
+        self.ui_ad_ratings_box.set_visible(source == 1)
+        self.ui_ad_about_box.set_visible(source == 1 or source == 2)
+        self.ui_ad_details_box.set_visible(source == 1 or source == 2)
+        self.ui_ad_dependencies_box.set_visible(source == 1 or source == 2)
+        self.ui_ad_availablerepos_box.set_visible(source == 1 or source == 2)
+        self.ui_ad_top_stack.set_visible_child_name("stats" if source == 1 else "limited" if source == 2 else "external")
+        self.ui_ad_action_stack.set_visible_child_name("action" if source == 1 or source == 2 else "external")
+
         # set scroll position to top (reset)
         self.ui_appdetails_scrolledwindow.set_vadjustment(Gtk.Adjustment())
 
         self.ui_right_stack.set_visible_child_name("appdetails")
 
-        for image in details["screenshots"]:
-            self.AppImage.get_image(self.Server.serverurl + image, app_name)
+        # store app operations
+        if source == 1:
+            for image in details["screenshots"]:
+                self.AppImage.get_image(self.Server.serverurl + image, app_name)
 
-        self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
+            self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
 
-        self.comment_limit = 10
-        self.gnome_comment_limit = 10
-        self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
-                                        {"mac": self.mac, "app": app_name, "limit": self.comment_limit}, app_name)
+            self.comment_limit = 10
+            self.gnome_comment_limit = 10
+            self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
+                                            {"mac": self.mac, "app": app_name, "limit": self.comment_limit}, app_name)
 
-        app_pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
-        app_category_name = ((details.get("category") or [{}])[0].get(self.locale, "") or "").title()
-        app_subcategory_name = (details.get("subcategory") or [{}])[0].get(self.locale) or (details.get("subcategory") or [{}])[0].get("en") or ""
+            app_pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
+            app_category_name = ((details.get("category") or [{}])[0].get(self.locale, "") or "").title()
+            app_subcategory_name = (details.get("subcategory") or [{}])[0].get(self.locale) or (details.get("subcategory") or [{}])[0].get("en") or ""
 
-        self.ui_ad_name.set_markup("<b>{}</b>".format(app_pretty_name))
-        self.ui_ad_top_category_label.set_text("{}".format(app_category_name))
-        self.ui_ad_subcategory_label.set_text("{}".format(app_subcategory_name))
+            self.ui_ad_name.set_text("{}".format(app_pretty_name))
+            self.ui_ad_top_category_label.set_text("{}".format(app_category_name))
+            self.ui_ad_subcategory_label.set_text("{}".format(app_subcategory_name))
 
-        self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
-        self.ui_ad_icon.set_pixel_size(68)
+            self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
+            self.ui_ad_icon.set_pixel_size(68)
 
-        self.ui_ad_action_button.remove(self.ui_ad_action_button.get_children()[0])
-        action_button_label = Gtk.Label.new()
-        action_button_label.set_line_wrap(False)
-        action_button_label.set_justify(Gtk.Justification.LEFT)
-        action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
-        self.ui_ad_action_button.add(action_button_label)
-        is_installed = self.Package.isinstalled(app_name)
-        is_upgradable = self.Package.is_upgradable(app_name)
-        is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
-        if is_installed is not None:
-            threading.Thread(target=self.app_detail_requireds_thread, args=(app_name,), daemon=True).start()
-            if is_installed:
-                self.ui_ad_remove_button.set_visible(True)
-                self.ui_ad_remove_button.set_sensitive(True)
-                if is_upgradable:
-                    self.set_button_class(self.ui_ad_action_button, 3)
-                    action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                    self.ui_ad_action_button.name = 2
-                else:
-                    if is_openable:
-                        self.set_button_class(self.ui_ad_action_button, 4)
-                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                        self.ui_ad_action_button.name = 3
-                    else:
-                        self.set_button_class(self.ui_ad_action_button, 4)
-                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                        self.ui_ad_action_button.name = 9
-            else:
-                self.set_button_class(self.ui_ad_action_button, 0)
-                action_button_label.set_markup("<small>{}</small>".format(_("Install")))
-                self.ui_ad_action_button.name = 1
-        else:
-            self.set_button_class(self.ui_ad_action_button, 2)
-            action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
-            self.ui_ad_sizetitle_label.set_text(_("Download Size"))
-            self.ui_ad_required_sizetitle_label.set_text(_("Required Disk Space"))
-            self.ui_ad_size_label.set_text("{}".format(_("None")))
-            self.ui_ad_required_size_label.set_text("{}".format(_("None")))
-            self.ui_ad_top_size_label.set_text("{}".format(_("None")))
-        self.ui_ad_action_button.show_all()
+            self.ui_ad_description_label.set_text(details["description"][self.locale])
+            app_version = self.Package.installed_version(app_name)
+            self.ui_ad_version_label.set_text("{}".format(app_version))
 
-        self.ui_ad_remove_button.name = 0
-
-        app_in_queue = next((q for q in self.queue if q["name"] == app_name), None)
-        if app_in_queue:
-            if is_installed:
-                if is_upgradable and app_in_queue["upgrade"]:
-                    self.ui_ad_action_button.set_label(_("Upgrading"))
-                else:
-                    self.ui_ad_action_button.set_label(_("Removing"))
-            else:
-                self.ui_ad_action_button.set_label(_("Installing"))
-            self.ui_ad_action_button.set_sensitive(False)
-            if self.ui_ad_remove_button.get_visible():
-                self.ui_ad_remove_button.set_sensitive(False)
-
-        self.ui_ad_description_label.set_text(details["description"][self.locale])
-        app_version = self.Package.installed_version(app_name)
-        self.ui_ad_version_label.set_text("{}".format(app_version))
-
-        maintainer_info = (details.get("maintainer") or [{}])[0]
-        m_name = maintainer_info.get("name", "")
-        m_mail = maintainer_info.get("mail", "")
-        m_web = maintainer_info.get("website", "")
-        self.ui_ad_maintainer_name_label.set_markup(m_name)
-        self.ui_ad_maintainer_mail_label.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
+            maintainer_info = (details.get("maintainer") or [{}])[0]
+            m_name = maintainer_info.get("name", "")
+            m_mail = maintainer_info.get("mail", "")
+            m_web = maintainer_info.get("website", "")
+            self.ui_ad_maintainer_name_label.set_markup(m_name)
+            self.ui_ad_maintainer_mail_label.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
                 GLib.markup_escape_text(m_mail, -1),
                 GLib.markup_escape_text(m_mail, -1),
                 GLib.markup_escape_text(m_mail, -1)))
 
-        self.ui_ad_maintainer_web_label.set_markup("<a title='{}' href='{}'>{}</a>".format(
+            self.ui_ad_maintainer_web_label.set_markup("<a title='{}' href='{}'>{}</a>".format(
                 GLib.markup_escape_text(m_web, -1),
                 GLib.markup_escape_text(m_web, -1),
                 GLib.markup_escape_text(m_web, -1)))
 
-        self.ui_ad_category_label.set_text(app_category_name)
+            self.ui_ad_category_label.set_text(app_category_name)
+            self.ui_ad_license_label.set_text(details.get("license") or "")
 
-        origin_info = self.Package.origins(app_name)
-        component = getattr(origin_info, "component", "")
-        origin = getattr(origin_info, "origin", "")
-        if component == "non-free" or (details.get("component") or {}).get("name", "") == "non-free":
-            self.ui_ad_disclaimer_button.set_visible(True)
-            type_label = _("Non-Free")
-        else:
-            self.ui_ad_disclaimer_button.set_visible(False)
-            type_label = _("Open Source")
-        self.ui_ad_component_label.set_markup(f"{origin} {component}" if origin_info else _("None"))
-        self.ui_ad_type_label.set_markup(type_label)
+            self.ui_comment_appname_label.set_markup("<b>{}</b>".format(app_pretty_name))
+            self.ui_comment_icon_image.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
+            self.ui_comment_icon_image.set_pixel_size(48)
+            self.ui_comment_version_label.set_text("{}".format(app_version))
+            self.ui_comment_fullname_entry.set_text("{}".format(self.UserSettings.user_real_name))
 
-        self.ui_ad_license_label.set_text(details.get("license") or "")
+        # store app and repo app operations
+        if source == 1 or source == 2:
+            self.ui_ad_action_button.remove(self.ui_ad_action_button.get_children()[0])
+            action_button_label = Gtk.Label.new()
+            action_button_label.set_line_wrap(False)
+            action_button_label.set_justify(Gtk.Justification.LEFT)
+            action_button_label.set_ellipsize(Pango.EllipsizeMode.END)
+            self.ui_ad_action_button.add(action_button_label)
+            is_installed = self.Package.isinstalled(app_name)
+            is_upgradable = self.Package.is_upgradable(app_name)
+            if source == 1:
+                is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
+            else:
+                is_openable = details.get("id", False)
+            if is_installed is not None:
+                threading.Thread(target=self.app_detail_requireds_thread, args=(app_name,), daemon=True).start()
+                if is_installed:
+                    self.ui_ad_remove_button.set_visible(True)
+                    self.ui_ad_remove_button.set_sensitive(True)
+                    if is_upgradable:
+                        self.set_button_class(self.ui_ad_action_button, 3)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                        self.ui_ad_action_button.name = 2
+                    else:
+                        if is_openable:
+                            self.set_button_class(self.ui_ad_action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            self.ui_ad_action_button.name = 3
+                        else:
+                            self.set_button_class(self.ui_ad_action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            self.ui_ad_action_button.name = 9
+                else:
+                    self.set_button_class(self.ui_ad_action_button, 0)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                    self.ui_ad_action_button.name = 1
+            else:
+                self.set_button_class(self.ui_ad_action_button, 2)
+                action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+                self.ui_ad_sizetitle_label.set_text(_("Download Size"))
+                self.ui_ad_required_sizetitle_label.set_text(_("Required Disk Space"))
+                self.ui_ad_size_label.set_text("{}".format(_("None")))
+                self.ui_ad_required_size_label.set_text("{}".format(_("None")))
+                self.ui_ad_top_size_label.set_text("{}".format(_("None")))
+            self.ui_ad_action_button.show_all()
 
-        self.ui_comment_appname_label.set_markup("<b>{}</b>".format(app_pretty_name))
-        self.ui_comment_icon_image.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
-        self.ui_comment_icon_image.set_pixel_size(48)
-        self.ui_comment_version_label.set_text("{}".format(app_version))
+            self.ui_ad_remove_button.name = 0
 
-        self.ui_comment_fullname_entry.set_text("{}".format(self.UserSettings.user_real_name))
+            app_in_queue = next((q for q in self.queue if q["name"] == app_name), None)
+            if app_in_queue:
+                if is_installed:
+                    if is_upgradable and app_in_queue["upgrade"]:
+                        self.ui_ad_action_button.set_label(_("Upgrading"))
+                    else:
+                        self.ui_ad_action_button.set_label(_("Removing"))
+                else:
+                    self.ui_ad_action_button.set_label(_("Installing"))
+                self.ui_ad_action_button.set_sensitive(False)
+                if self.ui_ad_remove_button.get_visible():
+                    self.ui_ad_remove_button.set_sensitive(False)
+
+            origin_info = self.Package.origins(app_name)
+            component = getattr(origin_info, "component", "")
+            origin = getattr(origin_info, "origin", "")
+            if component == "non-free" or (details.get("component") or {}).get("name", "") == "non-free":
+                self.ui_ad_disclaimer_button.set_visible(True)
+                type_label = _("Non-Free")
+            else:
+                self.ui_ad_disclaimer_button.set_visible(False)
+                type_label = _("Open Source")
+            self.ui_ad_component_label.set_markup(f"{origin} {component}" if origin_info else _("None"))
+            self.ui_ad_type_label.set_markup(type_label)
+
+        # repo app and external app operations
+        if source == 2 or source == 0:
+            self.ui_ad_name.set_text(details["name"])
+            try:
+                if os.path.isfile(details["icon_name"]):
+                    px = GdkPixbuf.Pixbuf.new_from_file_at_size(details["icon_name"], 68, 68)
+                    self.ui_ad_icon.set_from_pixbuf(px)
+                else:
+                    self.ui_ad_icon.set_from_icon_name(details["icon_name"], Gtk.IconSize.DIALOG)
+            except Exception as e:
+                self.ui_ad_icon.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
+
+        # repo app operations
+        if source == 2:
+
+            self.ui_myapp_name_dic = {app_name : details}
+
+            maintainer_name = ""
+            maintainer_mail = ""
+            maintainer_web = ""
+            app_section = ""
+            app_version = ""
+            app_license = ""
+            record = self.Package.get_record(app_name)
+            if record:
+                app_section = record.get("Section", "")
+                app_version = record.get("Version", "")
+                maintainer = record.get("Maintainer", "")
+                maintainer_web = record.get("Homepage", "")
+                app_license = record.get("License", "")
+                try:
+                    match = re.match(r"^(.*?)(?:\s*<([^>]+)>)?$", maintainer)
+                    if match:
+                        maintainer_name = (match.group(1) or "").strip()
+                        maintainer_mail = (match.group(2) or "").strip()
+                except Exception as e:
+                    self.Logger.exception("{}".format(e))
+
+            self.ui_ad_maintainer_name_label.set_markup(maintainer_name)
+            self.ui_ad_maintainer_mail_label.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
+                GLib.markup_escape_text(maintainer_mail, -1),
+                GLib.markup_escape_text(maintainer_mail, -1),
+                GLib.markup_escape_text(maintainer_mail, -1)) if maintainer_mail else "-")
+
+            self.ui_ad_maintainer_web_label.set_markup("<a title='{}' href='{}'>{}</a>".format(
+                GLib.markup_escape_text(maintainer_web, -1),
+                GLib.markup_escape_text(maintainer_web, -1),
+                GLib.markup_escape_text(maintainer_web, -1)) if maintainer_web else "-")
+
+            self.ui_ad_top_category_label.set_text("{}".format(app_section))
+            self.ui_ad_subcategory_label.set_text("{}".format(app_name))
+            self.ui_ad_version_label.set_text("{}".format(app_version))
+            self.ui_ad_category_label.set_text("{}".format(app_section if app_section else "-"))
+            self.ui_ad_description_label.set_text(details["description"])
+
+            if not app_license:
+                app_license = self.Package.get_license_from_file(app_name)
+            self.ui_ad_license_label.set_text("{}".format(app_license if app_license else "-"))
 
     def app_detail_requireds_thread(self, app):
         app_detail_requireds = self.app_detail_requireds_worker(app)
@@ -4427,7 +4532,6 @@ class MainWindow(object):
             self.ui_myapp_pop_notfound_image.set_from_pixbuf(self.getMyAppIcon(icon, size=64))
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
 
-
     def on_MyAppsDetailsPopover_closed(self, popover):
         self.ui_myapp_pop_spinner.stop()
         self.ui_myapp_pop_stack.set_visible_child_name("spinner")
@@ -4442,6 +4546,33 @@ class MainWindow(object):
 
     def on_ui_myapp_pop_close_clicked(self, button):
         self.MyAppsDetailsPopover.popdown()
+
+    def on_myapp_listbox_row_activated(self, listbox, row):
+        print(row.name)
+        # unselect the flowbox
+        GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
+
+        threading.Thread(target=self.myappsdetail_page_worker_thread,
+                         args=(row.name["filename"], row.name,), daemon=True).start()
+
+    def myappsdetail_page_worker_thread(self, filename, details):
+        package = self.myappsdetail_page_worker(filename)
+        GLib.idle_add(self.on_myappsdetail_page_worker_done, package, details)
+
+    def myappsdetail_page_worker(self, filename):
+        package = self.Package.get_appname_from_desktopfile(filename)
+        return package
+
+    def on_myappsdetail_page_worker_done(self, package, details):
+        found, package_name = package
+
+        if found:
+            if package_name in self.fullapplist.keys():
+                self.set_app_details_page(app=package_name, source=1)
+            else:
+                self.set_app_details_page(app={package_name: details}, source=2)
+        else:
+            self.set_app_details_page(app={package_name: details}, source=0)
 
     def on_ma_action_info_button_clicked(self, button):
         self.set_myapp_popup_details(self.clicked_myapp)
@@ -6026,9 +6157,7 @@ class MainWindow(object):
         self.MyAppsDetailsPopover.set_relative_to(button)
         self.MyAppsDetailsPopover.popup()
 
-        myappsdetailsthread = threading.Thread(target=self.myappsdetail_popup_worker_thread,
-                                               args=(button.name, True,), daemon=True)
-        myappsdetailsthread.start()
+        threading.Thread(target=self.myappsdetail_popup_worker_thread, args=(button.name, True,), daemon=True).start()
 
     def open_from_myapps(self, button):
         self.Logger.info("Opening {}".format(button.name))
@@ -6077,8 +6206,9 @@ class MainWindow(object):
             return True
 
     def installedapps_sort_func(self, row1, row2):
-        return locale.strxfrm(row1.get_children()[0].get_children()[0].name["name"]) > locale.strxfrm(
-            row2.get_children()[0].get_children()[0].name["name"])
+        # get app name from uninstal button widget name
+        return locale.strxfrm(row1.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].name["name"]) > locale.strxfrm(
+            row2.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].name["name"])
 
     def on_ui_top_searchentry_focus_in_event(self, widget, event):
         print("on_ui_top_searchentry_focus_in_event")
@@ -6901,7 +7031,8 @@ class MainWindow(object):
                 self.Logger.info("{} removing from myapps".format(actionedappdesktop))
                 desktop_id = actionedappdesktop.rsplit('/', 1)[-1]
                 for fbc in self.ui_installedapps_flowbox:
-                    if fbc.get_children()[0].get_children()[0].name["id"] == desktop_id:
+                    # get desktop id from open button widget name
+                    if fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].name == desktop_id:
                         if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
                             self.Logger.info("in pop_myapp popdown")
                             self.MyAppsDetailsPopover.set_relative_to(self.ui_installedapps_flowbox)
