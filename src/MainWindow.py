@@ -322,7 +322,7 @@ class MainWindow(object):
         self.ui_image_stack = self.GtkBuilder.get_object("ui_image_stack")
         self.ui_image_resize_image = self.GtkBuilder.get_object("ui_image_resize_image")
 
-        self.MyAppsDetailsPopover = self.GtkBuilder.get_object("MyAppsDetailsPopover")
+        self.ui_myapp_details_popover = self.GtkBuilder.get_object("ui_myapp_details_popover")
 
         self.ui_headermenu_popover = self.GtkBuilder.get_object("ui_headermenu_popover")
         self.ui_headermenu_button = self.GtkBuilder.get_object("ui_headermenu_button")
@@ -3100,7 +3100,7 @@ class MainWindow(object):
         self.ui_myapp_pop_isize_label.set_can_focus(False)
 
     def on_ui_myapp_pop_close_clicked(self, button):
-        self.MyAppsDetailsPopover.popdown()
+        self.ui_myapp_details_popover.popdown()
 
     def on_myapp_listbox_row_activated(self, listbox, row):
         print(row.name)
@@ -3660,8 +3660,8 @@ class MainWindow(object):
         self.ui_myapp_pop_spinner.start()
         self.ui_myapp_pop_stack.set_visible_child_name("spinner")
 
-        self.MyAppsDetailsPopover.set_relative_to(button)
-        self.MyAppsDetailsPopover.popup()
+        self.ui_myapp_details_popover.set_relative_to(button)
+        self.ui_myapp_details_popover.popup()
 
         threading.Thread(target=self.myappsdetail_popup_worker_thread, args=(button.name, True,), daemon=True).start()
 
@@ -4362,8 +4362,8 @@ class MainWindow(object):
                     if fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].name == desktop_id:
                         if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
                             self.Logger.info("in pop_myapp popdown")
-                            self.MyAppsDetailsPopover.set_relative_to(self.ui_installedapps_flowbox)
-                            self.MyAppsDetailsPopover.popdown()
+                            self.ui_myapp_details_popover.set_relative_to(self.ui_installedapps_flowbox)
+                            self.ui_myapp_details_popover.popdown()
                         self.ui_installedapps_flowbox.remove(fbc)
             else:
                 self.Logger.info("{} adding to myapps".format(actionedappdesktop))
@@ -4375,7 +4375,7 @@ class MainWindow(object):
             if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
                 self.Logger.info("in pop_myapp details status=0")
                 self.ui_myapp_pop_uninstall_button.set_sensitive(False)
-                self.MyAppsDetailsPopover.popdown()
+                self.ui_myapp_details_popover.popdown()
         else:
             if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
                 self.Logger.info("in pop_myapp details status!=0")
