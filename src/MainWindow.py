@@ -2836,6 +2836,15 @@ class MainWindow(object):
 
         return cat
 
+    def get_sub_category_name_from_app_name(self, name):
+        details = self.fullapplist.get(name)
+        if details:
+            app_subcategory_name = (details.get("subcategory") or [{}])[0].get(self.user_locale) or (details.get("subcategory") or [{}])[0].get("en") or ""
+        else:
+            app_subcategory_name = ""
+
+        return app_subcategory_name
+
     def get_description_from_app_name(self, name):
         details = self.fullapplist.get(name)
         if details and "description" in details and details["description"]:
