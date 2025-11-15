@@ -2820,52 +2820,54 @@ class MainWindow(object):
 
     def get_pretty_name_from_app_name(self, name):
         details = self.fullapplist.get(name)
-        if details:
-            pretty_name = details["prettyname"].get(self.user_locale) or details["prettyname"].get("en", name)
-        else:
-            pretty_name = name
+        if not details:
+            return name
 
-        return pretty_name
+        pretty = details.get("prettyname", {})
+        return pretty.get(self.user_locale) or pretty.get("en") or name
 
     def get_category_name_from_app_name(self, name):
         details = self.fullapplist.get(name)
-        if details and "category" in details and details["category"]:
-            cat = details["category"][0].get(self.user_locale, _("Unknown")).title()
-        else:
-            cat = _("Unknown")
+        if not details:
+            return _("Unknown")
 
-        return cat
+        category_list = details.get("category") or []
+        if not category_list:
+            return _("Unknown")
+
+        value = category_list[0].get(self.user_locale) or category_list[0].get("en") or _("Unknown")
+
+        return value.title()
 
     def get_sub_category_name_from_app_name(self, name):
         details = self.fullapplist.get(name)
-        if details:
-            app_subcategory_name = (details.get("subcategory") or [{}])[0].get(self.user_locale) or (details.get("subcategory") or [{}])[0].get("en") or ""
-        else:
-            app_subcategory_name = ""
+        if not details:
+            return ""
 
-        return app_subcategory_name
+        subcat_list = details.get("subcategory") or []
+        if not subcat_list:
+            return ""
+
+        subcat = subcat_list[0]
+        value = subcat.get(self.user_locale) or subcat.get("en") or ""
+
+        return value.title()
 
     def get_description_from_app_name(self, name):
         details = self.fullapplist.get(name)
-        if details and "description" in details and details["description"]:
-            desc = details["description"].get(self.user_locale, _("Unknown")).title()
-        else:
-            desc = _("Unknown")
-        return desc
+        if not details:
+            return _("Unknown")
+
+        desc = details.get("description", {})
+        return desc.get(self.user_locale) or desc.get("en") or _("Unknown")
 
     def get_desktop_filename_from_app_name(self, name):
         details = self.fullapplist.get(name)
-        desktop = ""
-        if details and "desktop" in details and details["desktop"]:
-            desktop = details["desktop"]
-        return desktop
+        return details.get("desktop") if details else ""
 
     def get_gnome_desktop_filename_from_app_name(self, name):
         details = self.fullapplist.get(name)
-        desktop = ""
-        if details and "gnomename" in details and details["gnomename"]:
-            desktop = details["gnomename"]
-        return desktop
+        return details.get("gnomename") if details else ""
 
     def onDestroy(self, widget):
         self.MainWindow.destroy()
