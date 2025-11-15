@@ -83,19 +83,6 @@ class MainWindow(object):
 
         self.isPardusSearching = False
 
-        self.RepoCategoryListBox = self.GtkBuilder.get_object("RepoCategoryListBox")
-
-        self.SubCategoryFlowBox = self.GtkBuilder.get_object("SubCategoryFlowBox")
-        self.MostDownFlowBox = self.GtkBuilder.get_object("MostDownFlowBox")
-        self.MostRateFlowBox = self.GtkBuilder.get_object("MostRateFlowBox")
-        self.LastAddedFlowBox = self.GtkBuilder.get_object("LastAddedFlowBox")
-
-        self.hometotaldc = self.GtkBuilder.get_object("hometotaldc")
-        self.hometotalrc = self.GtkBuilder.get_object("hometotalrc")
-        self.statstotaldc = self.GtkBuilder.get_object("statstotaldc")
-        self.statstotalrc = self.GtkBuilder.get_object("statstotalrc")
-        self.statsweblabel = self.GtkBuilder.get_object("statsweblabel")
-
         self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")
 
         self.bottomerrorlabel = self.GtkBuilder.get_object("bottomerrorlabel")
@@ -121,7 +108,6 @@ class MainWindow(object):
         self.commentstack = self.GtkBuilder.get_object("commentstack")
         self.prefstack = self.GtkBuilder.get_object("prefstack")
         self.activatestack = self.GtkBuilder.get_object("activatestack")
-        # self.pardusAppsStack = self.GtkBuilder.get_object("pardusAppsStack")
         self.ui_pardusapps_stack = self.GtkBuilder.get_object("ui_pardusapps_stack")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
@@ -505,11 +491,6 @@ class MainWindow(object):
 
         self.dpkgconfigure_vteterm = None
         self.interrupt_vte_box = self.GtkBuilder.get_object("interrupt_vte_box")
-
-        self.PardusCommentListBox = self.GtkBuilder.get_object("PardusCommentListBox")
-        self.GnomeCommentListBoxEN = self.GtkBuilder.get_object("GnomeCommentListBoxEN")
-        self.GnomeCommentListBoxTR = self.GtkBuilder.get_object("GnomeCommentListBoxTR")
-        self.QueueListBox = self.GtkBuilder.get_object("QueueListBox")
 
         self.ui_queue_flowbox = self.GtkBuilder.get_object("ui_queue_flowbox")
         self.ui_queue_stack = self.GtkBuilder.get_object("ui_queue_stack")
