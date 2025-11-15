@@ -69,11 +69,8 @@ class MainWindow(object):
         self.applist = {}
         self.catlist = []
 
-        self.locale = self.getLocale()
-        self.Logger.info("{}".format(self.locale))
-
-        self.parduspixbuf = Gtk.IconTheme.new()
-        self.parduspixbuf.set_custom_theme("pardus")
+        self.user_locale = self.get_user_locale()
+        self.Logger.info("user_locale: {}".format(self.user_locale))
 
         self.error = False
         self.dpkglockerror = False
@@ -354,7 +351,7 @@ class MainWindow(object):
         self.GnomeTRCommentScroll = self.GtkBuilder.get_object("GnomeTRCommentScroll")
         self.GnomeENCommentScroll = self.GtkBuilder.get_object("GnomeENCommentScroll")
 
-        if self.locale == "tr":
+        if self.user_locale == "tr":
             self.current_category = "tümü"
         else:
             self.current_category = "all"
@@ -590,19 +587,16 @@ class MainWindow(object):
                 break
         return mac
 
-    def getLocale(self):
-        try:
-            user_locale = os.getenv("LANG").split(".")[0].split("_")[0]
-        except Exception as e:
-            self.Logger.exception("{}".format(e))
-            try:
-                user_locale = getlocale()[0].split("_")[0]
-            except Exception as e:
-                self.Logger.exception("{}".format(e))
-                user_locale = "en"
-        if user_locale != "tr" and user_locale != "en":
-            user_locale = "en"
-        return user_locale
+    def get_user_locale(self):
+        lang = os.getenv("LANG")
+        if lang:
+            lang = lang.split(".", 1)[0].split("_", 1)[0]
+        if not lang:
+            loc = locale.getlocale()[0]
+            if loc:
+                lang = loc.split("_", 1)[0]
+        lang = (lang or "en").lower()
+        return lang if lang in ("tr", "en") else "en"
 
     # def on_MainWindow_configure_event(self, widget, event):
     #     width, height = widget.get_size()
@@ -1006,7 +1000,7 @@ class MainWindow(object):
                 with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
                     self.applist = dict(sorted(response.items(),
-                                               key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+                                               key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
                     self.fullapplist = self.applist
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
@@ -1067,9 +1061,9 @@ class MainWindow(object):
         for slider_app in self.Server.sliderapplist:
 
             slider_app_name = slider_app["name"]
-            slider_app_pretty_name = slider_app["prettyname"].get(self.locale) or slider_app["prettyname"].get("en")
-            slider_app_slogan = slider_app["slogan"].get(self.locale) or slider_app["slogan"].get("en")
-            slider_app_short_desc = slider_app["shortdesc"].get(self.locale) or slider_app["shortdesc"].get("en")
+            slider_app_pretty_name = slider_app["prettyname"].get(self.user_locale) or slider_app["prettyname"].get("en")
+            slider_app_slogan = slider_app["slogan"].get(self.user_locale) or slider_app["slogan"].get("en")
+            slider_app_short_desc = slider_app["shortdesc"].get(self.user_locale) or slider_app["shortdesc"].get("en")
 
             flowbox = Gtk.FlowBox()
             flowbox.set_min_children_per_line(1)
@@ -1242,11 +1236,11 @@ class MainWindow(object):
         if self.Server.connection:
             self.categories = []
             for cat in self.catlist:
-                self.categories.append({"name": cat[self.locale], "icon": cat["en"]})
+                self.categories.append({"name": cat[self.user_locale], "icon": cat["en"]})
 
             self.categories = sorted(self.categories, key=lambda x: x["name"])
 
-            if self.locale == "tr":
+            if self.user_locale == "tr":
                 self.categories.insert(0, {"name": "tümü", "icon": "all"})
             else:
                 self.categories.insert(0, {"name": "all", "icon": "all"})
@@ -1468,7 +1462,7 @@ class MainWindow(object):
         command = app_name
         cmd = details.get("command", [])
         if isinstance(cmd, dict):
-            command = cmd.get(self.locale, "").strip()
+            command = cmd.get(self.user_locale, "").strip()
             packages = [p for p in command.split() if self.Package.controlPackageCache(p)]
             command = " ".join(packages) if packages else app_name
 
@@ -2169,8 +2163,8 @@ class MainWindow(object):
         for editor_app in self.Server.ediapplist:
 
             editor_app_name = editor_app["name"]
-            editor_app_pretty_name = editor_app["prettyname"].get(self.locale) or editor_app["prettyname"].get("en")
-            editor_app_short_desc = editor_app["shortdesc"].get(self.locale) or editor_app["shortdesc"].get("en")
+            editor_app_pretty_name = editor_app["prettyname"].get(self.user_locale) or editor_app["prettyname"].get("en")
+            editor_app_short_desc = editor_app["shortdesc"].get(self.user_locale) or editor_app["shortdesc"].get("en")
 
             app_image = Gtk.Image.new()
             app_image.set_pixel_size(128)
@@ -2564,9 +2558,9 @@ class MainWindow(object):
             self.PardusComment.get_comments(self.Server.serverurl + self.Server.serverparduscomments,
                                             {"mac": self.mac, "app": app_name, "limit": self.comment_limit}, app_name)
 
-            app_pretty_name = details["prettyname"].get(self.locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
-            app_category_name = ((details.get("category") or [{}])[0].get(self.locale, "") or "").title()
-            app_subcategory_name = (details.get("subcategory") or [{}])[0].get(self.locale) or (details.get("subcategory") or [{}])[0].get("en") or ""
+            app_pretty_name = details["prettyname"].get(self.user_locale) or details["prettyname"].get("en", "{}".format(app_name.title()))
+            app_category_name = ((details.get("category") or [{}])[0].get(self.user_locale, "") or "").title()
+            app_subcategory_name = (details.get("subcategory") or [{}])[0].get(self.user_locale) or (details.get("subcategory") or [{}])[0].get("en") or ""
 
             self.ui_ad_name.set_text("{}".format(app_pretty_name))
             self.ui_ad_top_category_label.set_text("{}".format(app_category_name))
@@ -2575,7 +2569,7 @@ class MainWindow(object):
             self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
             self.ui_ad_icon.set_pixel_size(68)
 
-            self.ui_ad_description_label.set_text(details["description"][self.locale])
+            self.ui_ad_description_label.set_text(details["description"][self.user_locale])
             app_version = self.Package.installed_version(app_name)
             self.ui_ad_version_label.set_text("{}".format(app_version))
 
@@ -2827,7 +2821,7 @@ class MainWindow(object):
     def getPrettyName(self, name, split=True):
         details = self.fullapplist.get(name)
         if details:
-            prettyname = details["prettyname"].get(self.locale) or details["prettyname"].get("en", name)
+            prettyname = details["prettyname"].get(self.user_locale) or details["prettyname"].get("en", name)
         else:
             prettyname = name
 
@@ -2836,7 +2830,7 @@ class MainWindow(object):
     def get_category_name_from_app_name(self, name):
         details = self.fullapplist.get(name)
         if details and "category" in details and details["category"]:
-            cat = details["category"][0].get(self.locale, _("Unknown")).title()
+            cat = details["category"][0].get(self.user_locale, _("Unknown")).title()
         else:
             cat = _("Unknown")
 
@@ -2845,7 +2839,7 @@ class MainWindow(object):
     def get_description_from_app_name(self, name):
         details = self.fullapplist.get(name)
         if details and "description" in details and details["description"]:
-            desc = details["description"].get(self.locale, _("Unknown")).title()
+            desc = details["description"].get(self.user_locale, _("Unknown")).title()
         else:
             desc = _("Unknown")
         return desc
@@ -3517,7 +3511,7 @@ class MainWindow(object):
         app = row.get_children()[0].get_children()[0].name
         appname, details = next(iter(app.items()))
 
-        categories = {cat[self.locale] for cat in details.get("category", [])}
+        categories = {cat[self.user_locale] for cat in details.get("category", [])}
 
         search_entry_text = self.ui_top_searchentry.get_text().lower()
 
@@ -3538,7 +3532,7 @@ class MainWindow(object):
     def on_ui_pardusapps_combobox_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
             self.applist = dict(sorted(self.applist.items(),
-                                       key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+                                       key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
             GLib.idle_add(self.set_applications)
         elif combo_box.get_active() == 1:  # sort by download
             self.applist = dict(sorted(
@@ -3565,7 +3559,7 @@ class MainWindow(object):
     def on_ui_upgradables_combobox_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
             self.upgradables = dict(sorted(self.upgradables.items(),
-                                       key=lambda item: locale.strxfrm(item[1]["prettyname"][self.locale])))
+                                           key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
             GLib.idle_add(self.set_upgradables)
         elif combo_box.get_active() == 1:  # sort by download
             self.upgradables = dict(sorted(
