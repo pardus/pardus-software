@@ -1683,7 +1683,7 @@ class MainWindow(object):
         app_icon.props.halign = Gtk.Align.CENTER
         app_icon.props.valign = Gtk.Align.CENTER
 
-        prettyname = "{}".format(self.getPrettyName(app))
+        prettyname = "{}".format(self.get_pretty_name_from_app_name(app))
 
         app_name = Gtk.Label.new()
         app_name.set_markup("<b>{}</b>".format(prettyname))
@@ -1903,7 +1903,7 @@ class MainWindow(object):
     def create_upgradable_myapp_widget(self, app, details=None):
 
         app_name = Gtk.Label.new()
-        app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text("{}".format(self.getPrettyName(app)), -1)))
+        app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text("{}".format(self.get_pretty_name_from_app_name(app)), -1)))
         app_name.props.halign = Gtk.Align.START
         app_name.set_line_wrap(False)
         app_name.set_justify(Gtk.Justification.LEFT)
@@ -2031,7 +2031,7 @@ class MainWindow(object):
     def create_queue_widget(self, app, upgrade=False):
 
         app_name = Gtk.Label.new()
-        app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(self.getPrettyName(app), -1)))
+        app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(self.get_pretty_name_from_app_name(app), -1)))
         app_name.props.halign = Gtk.Align.START
         app_name.set_line_wrap(False)
         app_name.set_justify(Gtk.Justification.LEFT)
@@ -2818,14 +2818,14 @@ class MainWindow(object):
 
         GLib.idle_add(self.ui_image_stack.add_named, image, "{}".format(name))
 
-    def getPrettyName(self, name, split=True):
+    def get_pretty_name_from_app_name(self, name):
         details = self.fullapplist.get(name)
         if details:
-            prettyname = details["prettyname"].get(self.user_locale) or details["prettyname"].get("en", name)
+            pretty_name = details["prettyname"].get(self.user_locale) or details["prettyname"].get("en", name)
         else:
-            prettyname = name
+            pretty_name = name
 
-        return prettyname
+        return pretty_name
 
     def get_category_name_from_app_name(self, name):
         details = self.fullapplist.get(name)
@@ -4349,10 +4349,10 @@ class MainWindow(object):
                 Notify.init(self.inprogress_app_name)
                 if self.isinstalled:
                     notification = Notify.Notification.new("{} {}".format(
-                        self.getPrettyName(self.inprogress_app_name),_("Updated") if self.isupgrade else _("Removed")))
+                        self.get_pretty_name_from_app_name(self.inprogress_app_name),_("Updated") if self.isupgrade else _("Removed")))
                 else:
                     notification = Notify.Notification.new("{} {}".format(
-                        self.getPrettyName(self.inprogress_app_name), _("Installed")))
+                        self.get_pretty_name_from_app_name(self.inprogress_app_name), _("Installed")))
                 try:
                     notification.set_app_icon("pardus-software")
                 except AttributeError:
