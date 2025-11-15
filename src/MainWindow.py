@@ -1736,7 +1736,7 @@ class MainWindow(object):
 
         summary_label = Gtk.Label.new()
         summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
-            self.get_description_from_app_name(app), -1)[:50].replace("\n", "").replace("\r", "")))
+            self.get_sub_category_name_from_app_name(app), -1)))
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
@@ -1968,7 +1968,7 @@ class MainWindow(object):
 
         summary_label = Gtk.Label.new()
         summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
-            self.get_description_from_app_name(app), -1)[:50].replace("\n", "").replace("\r", "")))
+            self.get_sub_category_name_from_app_name(app), -1)))
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
@@ -2069,7 +2069,7 @@ class MainWindow(object):
 
         summary_label = Gtk.Label.new()
         summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
-            self.get_description_from_app_name(app), -1)[:20].replace("\n", "").replace("\r", "")))
+            self.get_sub_category_name_from_app_name(app), -1)))
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
@@ -2163,8 +2163,8 @@ class MainWindow(object):
         for editor_app in self.Server.ediapplist:
 
             editor_app_name = editor_app["name"]
-            editor_app_pretty_name = editor_app["prettyname"].get(self.user_locale) or editor_app["prettyname"].get("en")
-            editor_app_short_desc = editor_app["shortdesc"].get(self.user_locale) or editor_app["shortdesc"].get("en")
+            editor_app_pretty_name = self.get_pretty_name_from_app_name(editor_app_name)
+            editor_app_sub_categoy = self.get_sub_category_name_from_app_name(editor_app_name)
 
             app_image = Gtk.Image.new()
             app_image.set_pixel_size(128)
@@ -2241,7 +2241,7 @@ class MainWindow(object):
                 action_button.add(not_found_image)
 
             summary_label = Gtk.Label.new()
-            summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(editor_app_short_desc))
+            summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(editor_app_sub_categoy))
             summary_label.props.halign = Gtk.Align.START
             summary_label.set_line_wrap(False)
             summary_label.set_max_width_chars(22)
