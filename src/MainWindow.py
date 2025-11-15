@@ -66,9 +66,6 @@ class MainWindow(object):
             self.Logger.exception("{}".format(e))
             raise
 
-        self.applist = {}
-        self.catlist = []
-
         self.user_locale = self.get_user_locale()
         self.Logger.info("user_locale: {}".format(self.user_locale))
 
@@ -415,9 +412,7 @@ class MainWindow(object):
         self.keep_ok_clicked = False
 
         self.applist = {}
-        self.fullapplist = {}
         self.catlist = []
-        self.fullcatlist = []
         self.upgradable_packages = []
 
         self.myapp_toremove_list = []
@@ -687,9 +682,9 @@ class MainWindow(object):
                         self.notify(message_summary=_("Pardus Software Center | New version available"),
                                     message_body=_("Please upgrade application using Menu/Updates"))
 
-    def controlAvailableApps(self):
+    def control_available_apps(self):
         if self.Server.connection:
-            self.setAvailableApps(available=self.UserSettings.config_saa)
+            self.set_available_apps(available=self.UserSettings.config_saa)
 
     def control_args(self):
         if "details" in self.Application.args.keys():
@@ -706,7 +701,7 @@ class MainWindow(object):
             try:
                 package_name = ""
                 app_name_without_desktop = app.replace(".desktop", "").strip()
-                for key, details in self.fullapplist.items():
+                for key, details in self.applist.items():
                     candidates = [
                         key,
                         (details.get("desktop") or "").replace(".desktop", ""),
@@ -871,7 +866,7 @@ class MainWindow(object):
     def afterServers(self):
         GLib.idle_add(self.set_initial_home)
         # GLib.idle_add(self.controlServer)
-        GLib.idle_add(self.controlAvailableApps)
+        GLib.idle_add(self.control_available_apps)
         # GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.set_categories)
         GLib.idle_add(self.set_applications)
@@ -1001,12 +996,10 @@ class MainWindow(object):
                     response = json.load(f)
                     self.applist = dict(sorted(response.items(),
                                                key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
-                    self.fullapplist = self.applist
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
                     self.catlist = response["cat-list"]
-                    self.fullcatlist = self.catlist
 
                 with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
@@ -1423,7 +1416,7 @@ class MainWindow(object):
             app_name, details = next(iter(app.items()))
         elif isinstance(app, str):
             app_name = app
-            details = self.fullapplist.get(app_name, {})
+            details = self.applist.get(app_name, {})
         else:
             self.Logger.warning("{} {}".format("app_widget_action_clicked func ERROR for: ", app))
             return
@@ -1480,7 +1473,7 @@ class MainWindow(object):
                 app_name, command, desktop_id, button.name == 2))
 
     def on_ui_ad_action_button_clicked(self, button):
-        if self.ui_app_name in self.fullapplist.keys():
+        if self.ui_app_name in self.applist.keys():
             name = self.ui_app_name
         else:
             name = self.ui_myapp_name_dic
@@ -1488,7 +1481,7 @@ class MainWindow(object):
         self.app_widget_action_clicked(button)
 
     def on_ui_ad_remove_button_clicked(self, button):
-        if self.ui_app_name in self.fullapplist.keys():
+        if self.ui_app_name in self.applist.keys():
             name = self.ui_app_name
         else:
             name = self.ui_myapp_name_dic
@@ -2516,7 +2509,7 @@ class MainWindow(object):
             app_name, details = next(iter(app.items()))
         elif isinstance(app, str):
             app_name = app
-            details = self.fullapplist.get(app_name, {})
+            details = self.applist.get(app_name, {})
         else:
             self.Logger.warning("{} {}".format("set_app_details_page func ERROR for: ", app))
             return
@@ -2819,7 +2812,7 @@ class MainWindow(object):
         GLib.idle_add(self.ui_image_stack.add_named, image, "{}".format(name))
 
     def get_pretty_name_from_app_name(self, name):
-        details = self.fullapplist.get(name)
+        details = self.applist.get(name)
         if not details:
             return name
 
@@ -2827,7 +2820,7 @@ class MainWindow(object):
         return pretty.get(self.user_locale) or pretty.get("en") or name
 
     def get_category_name_from_app_name(self, name):
-        details = self.fullapplist.get(name)
+        details = self.applist.get(name)
         if not details:
             return _("Unknown")
 
@@ -2840,7 +2833,7 @@ class MainWindow(object):
         return value.title()
 
     def get_sub_category_name_from_app_name(self, name):
-        details = self.fullapplist.get(name)
+        details = self.applist.get(name)
         if not details:
             return ""
 
@@ -2854,7 +2847,7 @@ class MainWindow(object):
         return value.title()
 
     def get_description_from_app_name(self, name):
-        details = self.fullapplist.get(name)
+        details = self.applist.get(name)
         if not details:
             return _("Unknown")
 
@@ -2862,11 +2855,11 @@ class MainWindow(object):
         return desc.get(self.user_locale) or desc.get("en") or _("Unknown")
 
     def get_desktop_filename_from_app_name(self, name):
-        details = self.fullapplist.get(name)
+        details = self.applist.get(name)
         return details.get("desktop") if details else ""
 
     def get_gnome_desktop_filename_from_app_name(self, name):
-        details = self.fullapplist.get(name)
+        details = self.applist.get(name)
         return details.get("gnomename") if details else ""
 
     def onDestroy(self, widget):
@@ -3092,7 +3085,7 @@ class MainWindow(object):
         found, package_name = package
 
         if found:
-            if package_name in self.fullapplist.keys():
+            if package_name in self.applist.keys():
                 self.set_app_details_page(app=package_name, source=1)
             else:
                 self.set_app_details_page(app={package_name: details}, source=2)
@@ -3902,7 +3895,7 @@ class MainWindow(object):
                                           self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                           self.UserSettings.config_forceaptuptime)
             self.usersettings()
-            self.setAvailableApps(available=state)
+            self.set_available_apps(available=state)
             GLib.idle_add(self.set_applications)
 
     def on_ui_settings_cache_button_clicked(self, button):
@@ -4067,29 +4060,17 @@ class MainWindow(object):
                 self.ui_comment_error_label.set_visible(True)
                 self.ui_comment_error_label.set_text(f"{e}")
 
-    def setAvailableApps(self, available, showextapps=False):
+    def set_available_apps(self, available):
         self.applist = {
             app: details
-            for app, details in self.fullapplist.items()
+            for app, details in self.applist.items()
             if (
-                    (showextapps or not details["external"]) and
-                    (
-                            (available and (self.Package.isinstalled(app) is not None or any(
-                                code["name"] == self.UserSettings.usercodename for code in details["codename"])))
-                            or
-                            (not available)
-                    )
+                    (available and (self.Package.isinstalled(app) is not None or any(
+                        code["name"] == self.UserSettings.usercodename for code in details["codename"])))
+                    or
+                    (not available)
             )
         }
-
-        if showextapps:  # control category list too
-            self.catlist = self.fullcatlist
-        else:
-            newlist = []
-            for cat in self.fullcatlist:
-                if cat["external"] is False:
-                    newlist.append(cat)
-            self.catlist = newlist
 
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
