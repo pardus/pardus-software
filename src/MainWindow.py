@@ -902,11 +902,14 @@ class MainWindow(object):
             return local_md5 != server_md5
 
         if status:
-            download_apps = compare_md5_re_download(self.UserSettings.apps_dir + self.UserSettings.apps_archive, response["md5"]["apps"])
+            # download_apps = compare_md5_re_download(self.UserSettings.apps_dir + self.UserSettings.apps_archive, response["md5"]["apps"])
+            download_apps = True
+            # download_home = compare_md5_re_download(self.UserSettings.home_dir + self.UserSettings.home_archive, response["md5"]["home"])
+            download_home = True
+
             download_icons = compare_md5_re_download(self.UserSettings.icons_dir + self.UserSettings.icons_archive, response["md5"]["icons"])
             download_images = compare_md5_re_download(self.UserSettings.images_dir + self.UserSettings.images_archive, response["md5"]["images"])
             download_cats = compare_md5_re_download(self.UserSettings.cats_dir + self.UserSettings.cats_archive, response["md5"]["cats"])
-            download_home = compare_md5_re_download(self.UserSettings.home_dir + self.UserSettings.home_archive, response["md5"]["home"])
 
             self.Logger.info("download_apps: {}".format(download_apps))
             self.Logger.info("download_icons: {}".format(download_icons))
@@ -931,9 +934,12 @@ class MainWindow(object):
                     # GLib.idle_add(self.splashlabel.set_markup,
                     #               "<b>{}</b>".format(_("Getting applications from server")))
 
-                    self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_apps_archive,
+                    # self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_apps_archive,
+                    #                      download_location=self.UserSettings.apps_dir + self.UserSettings.apps_archive,
+                    #                      server_md5=response["md5"]["apps"], type="apps")
+                    self.Server.get_file(url=self.Server.serverurl + self.Server.serverapps,
                                          download_location=self.UserSettings.apps_dir + self.UserSettings.apps_archive,
-                                         server_md5=response["md5"]["apps"], type="apps")
+                                         server_md5=response["md5"]["apps"], type="apps", save_file=False)
                 if download_icons:
                     self.Logger.info("Getting icons from server")
                     # GLib.idle_add(self.splashlabel.set_markup,
@@ -964,10 +970,13 @@ class MainWindow(object):
                     self.Logger.info("Getting homepage from server")
                     # GLib.idle_add(self.splashlabel.set_markup,
                     #               "<b>{}</b>".format(_("Getting homepage from server")))
-
-                    self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_home_archive,
+                    # self.Server.get_file(url=self.Server.serverurl + "/files/" + self.Server.server_home_archive,
+                    #                      download_location=self.UserSettings.home_dir + self.UserSettings.home_archive,
+                    #                      server_md5=response["md5"]["home"], type="home")
+                    self.Server.get_file(url=self.Server.serverurl + self.Server.serverhomepage,
                                          download_location=self.UserSettings.home_dir + self.UserSettings.home_archive,
-                                         server_md5=response["md5"]["home"], type="home")
+                                         server_md5=response["md5"]["home"], type="home", save_file=False)
+
             else:
                 self.ServerFilesCB(True, "ok")
         else:
@@ -976,12 +985,14 @@ class MainWindow(object):
                 GLib.idle_add(self.afterServers)
                 self.connection_error_after = True
 
-    def ServerFilesCB(self, status, type=""):
+    def ServerFilesCB(self, status, type="", response=None):
         self.Logger.info("ServerFilesCB {} : {}".format(type, status))
 
         if status:
             if type == "apps":
                 self.status_server_apps = True
+                self.applist = dict(sorted(response.items(),
+                                           key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
             elif type == "icons":
                 self.status_server_icons = True
             elif type == "images":
@@ -990,42 +1001,65 @@ class MainWindow(object):
                 self.status_server_cats = True
             elif type == "home":
                 self.status_server_home = True
+                self.Server.ediapplist = response["editor-apps"]
+                self.Server.sliderapplist = response["slider-apps"]
+                self.Server.mostdownapplist = response["mostdown-apps"]
+                self.Server.trendapplist = response["trend-apps"]
+                self.Server.lastaddedapplist = response["last-apps"]
+                # self.Server.totalstatistics = response["total"]
+                # self.Server.servermd5 = response["md5"]
+                self.Server.appversion = response["version"]
+                if "version_pardus21" in response.keys():
+                    self.Server.appversion_pardus21 = response["version_pardus21"]
+                else:
+                    self.Server.appversion_pardus21 = self.Server.appversion
+                if "version_pardus23" in response.keys():
+                    self.Server.appversion_pardus23 = response["version_pardus23"]
+                else:
+                    self.Server.appversion_pardus23 = self.Server.appversion
+                # self.Server.iconnames = response["iconnames"]
+                self.Server.badwords = response["badwords"]
+                if "important-packages" in response and response["important-packages"]:
+                    self.important_packages = response["important-packages"]
+                if "i386-packages" in response and response["i386-packages"]:
+                    self.i386_packages = response["i386-packages"]
+                self.Server.aptuptime = response["aptuptime"]
 
             if self.status_server_apps and self.status_server_icons and self.status_server_images and self.status_server_cats and self.status_server_home:
-                with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
-                    response = json.load(f)
-                    self.applist = dict(sorted(response.items(),
-                                               key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
+                # with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
+                #     response = json.load(f)
+                #     self.applist = dict(sorted(response.items(),
+                #                                key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
                     self.catlist = response["cat-list"]
 
-                with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
-                    response = json.load(f)
-                    self.Server.ediapplist = response["editor-apps"]
-                    self.Server.sliderapplist = response["slider-apps"]
-                    self.Server.mostdownapplist = response["mostdown-apps"]
-                    self.Server.trendapplist = response["trend-apps"]
-                    self.Server.lastaddedapplist = response["last-apps"]
-                    # self.Server.totalstatistics = response["total"]
-                    # self.Server.servermd5 = response["md5"]
-                    self.Server.appversion = response["version"]
-                    if "version_pardus21" in response.keys():
-                        self.Server.appversion_pardus21 = response["version_pardus21"]
-                    else:
-                        self.Server.appversion_pardus21 = self.Server.appversion
-                    if "version_pardus23" in response.keys():
-                        self.Server.appversion_pardus23 = response["version_pardus23"]
-                    else:
-                        self.Server.appversion_pardus23 = self.Server.appversion
-                    # self.Server.iconnames = response["iconnames"]
-                    self.Server.badwords = response["badwords"]
-                    if "important-packages" in response and response["important-packages"]:
-                        self.important_packages = response["important-packages"]
-                    if "i386-packages" in response and response["i386-packages"]:
-                        self.i386_packages = response["i386-packages"]
-                    self.Server.aptuptime = response["aptuptime"]
+                # with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
+                #     response = json.load(f)
+                #     self.Server.ediapplist = response["editor-apps"]
+                #     self.Server.sliderapplist = response["slider-apps"]
+                #     self.Server.mostdownapplist = response["mostdown-apps"]
+                #     self.Server.trendapplist = response["trend-apps"]
+                #     self.Server.lastaddedapplist = response["last-apps"]
+                #     # self.Server.totalstatistics = response["total"]
+                #     # self.Server.servermd5 = response["md5"]
+                #     self.Server.appversion = response["version"]
+                #     if "version_pardus21" in response.keys():
+                #         self.Server.appversion_pardus21 = response["version_pardus21"]
+                #     else:
+                #         self.Server.appversion_pardus21 = self.Server.appversion
+                #     if "version_pardus23" in response.keys():
+                #         self.Server.appversion_pardus23 = response["version_pardus23"]
+                #     else:
+                #         self.Server.appversion_pardus23 = self.Server.appversion
+                #     # self.Server.iconnames = response["iconnames"]
+                #     self.Server.badwords = response["badwords"]
+                #     if "important-packages" in response and response["important-packages"]:
+                #         self.important_packages = response["important-packages"]
+                #     if "i386-packages" in response and response["i386-packages"]:
+                #         self.i386_packages = response["i386-packages"]
+                #     self.Server.aptuptime = response["aptuptime"]
 
                 self.prepend_server_icons()
 

@@ -27,13 +27,11 @@ class Server(object):
         self.serverurl = ""  # This is setting from MainWindow server func
         self.serverhash = "/api/v3/hash"
         self.serverapps = "/api/v3/apps/"
-        self.serverapps_v2 = "/api/v2/apps/"
-        self.servercats = "/api/v2/cats/"
-        self.serverhomepage = "/api/v2/homepage"
-        self.serverstatistics = "/api/v2/statistics"
+        # self.servercats = "/api/v2/cats/"
+        self.serverhomepage = "/api/v3/homepage"
         self.serversendrate = "/api/v2/rate"
         self.serversenddownload = "/api/v2/download"
-        self.serversendsuggestapp = "/api/v3/suggestapp"
+        # self.serversendsuggestapp = "/api/v3/suggestapp"
         self.serverparduscomments = "/api/v2/parduscomments"
         self.serverfiles = "/files/"
         self.server_apps_archive = "apps.tar.gz"
@@ -125,11 +123,11 @@ class Server(object):
             self.Logger.warning("_open_hashes_stream is not success")
             self.ServerHashesCB(False)  # Send to MainWindow
 
-    def get_file(self, url, download_location, server_md5, type=""):
+    def get_file(self, url, download_location, server_md5, type="", save_file=True):
         file = Gio.File.new_for_uri(url)
-        file.load_contents_async(None, self._open_file_stream, download_location, server_md5, type)
+        file.load_contents_async(None, self._open_file_stream, download_location, server_md5, type, save_file)
 
-    def _open_file_stream(self, file, result, download_location, server_md5, type):
+    def _open_file_stream(self, file, result, download_location, server_md5, type, save_file=True):
         try:
             success, data, etag = file.load_contents_finish(result)
         except GLib.Error as error:
@@ -140,28 +138,31 @@ class Server(object):
             self.ServerFilesCB(False)
             return False
 
-        try:
-            Path(os.path.dirname(download_location)).mkdir(parents=True, exist_ok=True)
-            with open(download_location, "wb") as file:
-                file.write(data)
-        except Exception as e:
-            self.error_message = "{}".format(e)
-            self.Logger.warning("_open_file_stream Error: {}".format(e))
-            self.Logger.exception("{}".format(e))
-            self.ServerFilesCB(False)
-            return False
+        if save_file:
+            try:
+                Path(os.path.dirname(download_location)).mkdir(parents=True, exist_ok=True)
+                with open(download_location, "wb") as file:
+                    file.write(data)
+            except Exception as e:
+                self.error_message = "{}".format(e)
+                self.Logger.warning("_open_file_stream Error: {}".format(e))
+                self.Logger.exception("{}".format(e))
+                self.ServerFilesCB(False)
+                return False
 
-        if md5(open(download_location, "rb").read()).hexdigest() == server_md5:
-            if self.extract_archive(download_location):
-                self.ServerFilesCB(True, type=type)
+            if md5(open(download_location, "rb").read()).hexdigest() == server_md5:
+                if self.extract_archive(download_location):
+                    self.ServerFilesCB(True, type=type)
+                else:
+                    self.error_message = "{} extract error".format(type)
+                    self.Logger.warning("{} extract error".format(type))
+                    self.ServerFilesCB(False)
             else:
-                self.error_message = "{} extract error".format(type)
-                self.Logger.warning("{} extract error".format(type))
+                self.error_message = "{} file downloaded but md5 is different!".format(download_location)
+                self.Logger.warning("{} file downloaded but md5 is different!".format(download_location))
                 self.ServerFilesCB(False)
         else:
-            self.error_message = "{} file downloaded but md5 is different!".format(download_location)
-            self.Logger.warning("{} file downloaded but md5 is different!".format(download_location))
-            self.ServerFilesCB(False)
+            self.ServerFilesCB(True, type=type, response=json.loads(data))
 
     def extract_archive(self, archive):
         def remove_subdirectories_and_files(directory, excepted_file):
