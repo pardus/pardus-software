@@ -697,9 +697,9 @@ class MainWindow(object):
         if self.Server.connection:
             self.setAvailableApps(available=self.UserSettings.config_saa)
 
-    def controlArgs(self):
+    def control_args(self):
         if "details" in self.Application.args.keys():
-            found = False
+            pardus_found = False
             myapps_found = False
             app = self.Application.args["details"]
             try:
@@ -710,80 +710,43 @@ class MainWindow(object):
             except Exception as e:
                 self.Logger.exception("{}".format(e))
             try:
-                if ".desktop" in app:
-                    app = "{}".format(app.split(".desktop")[0])
-                for apps in self.fullapplist:
-                    if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or \
-                            app == apps["gnomename"].split(".desktop")[0] or \
-                            any(app == e for e in
-                                apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
-                        found = True
-                        # self.set_stack_n_search(1)
-                        self.topsearchbutton.set_active(False)
-                        app = apps["name"]  # if the name is coming from desktop then set it to app name
-                        self.fromdetails = True
-                        self.detailsappname = app
-                        self.mostappname = None
-                        self.fromqueue = False
-                        GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
+                package_name = ""
+                app_name_without_desktop = app.replace(".desktop", "").strip()
+                for key, details in self.fullapplist.items():
+                    candidates = [
+                        key,
+                        (details.get("desktop") or "").replace(".desktop", ""),
+                        (details.get("gnomename") or "").replace(".desktop", "")
+                    ]
+                    extras = (details.get("desktopextras") or "").replace(" ", "")
+                    if extras:
+                        candidates.extend(e.replace(".desktop", "") for e in extras.split(",") if e)
+                    if app_name_without_desktop in candidates:
+                        pardus_found = True
+                        package_name = key
+                        break
+                if pardus_found:
+                    GLib.idle_add(self.set_app_details_page, package_name)
             except Exception as e:
                 self.Logger.exception("{}".format(e))
             try:
-                if not found:
-                    app = self.Application.args["details"]
-                    if ".desktop" not in self.Application.args["details"]:
-                        app = "{}.desktop".format(self.Application.args["details"])
-                    for row in self.MyAppsListBox:
-                        id = "{}".format(row.get_children()[0].name.rsplit('/', 1)[-1])
-                        if id == app:
+                if not pardus_found:
+                    app_name_with_desktop = app
+                    if not app.endswith(".desktop"):
+                        app_name_with_desktop = f"{app}.desktop"
+                    for fbc in self.ui_installedapps_flowbox:
+                        myapp_dic = fbc.get_children()[0].get_children()[0].name
+                        if myapp_dic["id"] == app_name_with_desktop:
                             myapps_found = True
-                            self.open_myapps_detailspage_from_desktopfile(row.get_children()[0].name)
+                            threading.Thread(target=self.myappsdetail_page_worker_thread,
+                                             args=(myapp_dic["filename"], myapp_dic,), daemon=True).start()
                     if not myapps_found:
-                        process = subprocess.run(["dpkg", "-S", app], stdout=subprocess.PIPE)
-                        output = process.stdout.decode("utf-8")
-                        app = output[:output.find(":")].split(",")[0]
-                        if app == "":
-                            app = "{}".format(self.Application.args["details"].split(".desktop")[0])
-                        self.repo_searchentry.set_text(app)
-                        self.on_repo_button_clicked(None)
-                        self.on_repo_searchbutton_clicked(self.repo_searchbutton)
-                        for row in self.searchstore:
-                            if app == row[1]:
-                                self.RepoAppsTreeView.set_cursor(row.path)
-                                # self.on_RepoAppsTreeView_row_activated(self.RepoAppsTreeView, row.path, 0)
+                        # TODO
+                        # Add repo apps support
+                        self.Logger.info(f"control_args: {app} not found")
+                        pass
             except Exception as e:
                 self.Logger.exception("{}".format(e))
-
-        elif "remove" in self.Application.args.keys():
-            if self.myapps_perm == 1:
-                app = self.Application.args["remove"]
-                if not app.endswith(".desktop"):
-                    app = "{}.desktop".format(app)
-
-                self.open_myapps_detailspage_from_desktopfile(app)
-
-            else:
-                self.Logger.info("myapps permission is 0 so you can not use remove arg")
-        else:
-            if len(sys.argv) > 1:
-                try:
-                    app = sys.argv[1].replace("pardus-software-app://", "")
-                    if ".desktop" in app:
-                        app = "{}".format(app.split(".desktop")[0])
-                    for apps in self.fullapplist:
-                        if app == apps["name"] or app == apps["desktop"].split(".desktop")[0] or \
-                                app == apps["gnomename"].split(".desktop")[0] or \
-                                any(app == e for e in
-                                    apps["desktopextras"].replace(" ", "").replace(".desktop", "").split(",")):
-                            self.topsearchbutton.set_active(False)
-                            app = apps["name"]  # if the name is coming from desktop then set it to app name
-                            self.fromdetails = True
-                            self.detailsappname = app
-                            self.mostappname = None
-                            self.fromqueue = False
-                            GLib.idle_add(self.on_PardusAppsIconView_selection_changed, app)
-                except Exception as e:
-                    self.Logger.exception("{}".format(e))
 
     def set_initial_home(self):
         self.Logger.info("in set_initial_home")
@@ -2985,7 +2948,7 @@ class MainWindow(object):
         GLib.idle_add(self.ui_myapps_du_spinner.stop)
         GLib.idle_add(self.ui_myapps_combobox.set_sensitive, True)
         GLib.idle_add(self.ui_installedapps_flowbox.show_all)
-        GLib.idle_add(self.controlArgs)
+        GLib.idle_add(self.control_args)
         if du:
             self.ui_installedapps_flowbox.set_sort_func(None)
         self.Logger.info("on_myapps_worker_done")
