@@ -1807,6 +1807,7 @@ class MainWindow(object):
         bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
         bottom_separator.props.valign = Gtk.Align.END
         bottom_separator.set_vexpand(True)
+        bottom_separator.set_size_request(310, -1)
         GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
 
         box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
