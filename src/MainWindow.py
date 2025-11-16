@@ -1275,7 +1275,7 @@ class MainWindow(object):
                 self.categories.insert(0, {"name": "all", "icon": "all"})
 
             # discover
-            icon = Gtk.Image.new_from_icon_name("ps-discover-symbolic",  Gtk.IconSize.BUTTON)
+            icon = Gtk.Image.new_from_icon_name("ps-cat-discover-symbolic",  Gtk.IconSize.BUTTON)
             label = Gtk.Label.new()
             label.set_markup("<b>{}</b>".format(_("Discover")))
             box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
@@ -1293,7 +1293,7 @@ class MainWindow(object):
             # categories
             for cat in self.categories:
 
-                cat["icon"] = "ps-{}-symbolic".format(cat["icon"])
+                cat["icon"] = "ps-cat-{}-symbolic".format(cat["icon"])
                 cat_icon = Gtk.Image.new_from_icon_name(cat["icon"],  Gtk.IconSize.BUTTON)
 
                 label = Gtk.Label.new()
@@ -1314,7 +1314,7 @@ class MainWindow(object):
                 GLib.idle_add(self.ui_leftcats_listbox.add, row)
 
             # installed
-            installed_icon = Gtk.Image.new_from_icon_name("ps-installed-symbolic",  Gtk.IconSize.BUTTON)
+            installed_icon = Gtk.Image.new_from_icon_name("ps-cat-installed-symbolic",  Gtk.IconSize.BUTTON)
 
             label = Gtk.Label.new()
             label.set_markup("<b>{}</b>".format(_("Installed Apps")))
@@ -1334,7 +1334,7 @@ class MainWindow(object):
             GLib.idle_add(self.ui_leftinstalled_listbox.add, row)
 
             # updates
-            updates_icon = Gtk.Image.new_from_icon_name("ps-updates-symbolic", Gtk.IconSize.BUTTON)
+            updates_icon = Gtk.Image.new_from_icon_name("ps-cat-updates-symbolic", Gtk.IconSize.BUTTON)
             updates_icon.props.halign = Gtk.Align.START
 
             label = Gtk.Label.new()
