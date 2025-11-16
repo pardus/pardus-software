@@ -734,8 +734,10 @@ class MainWindow(object):
                             threading.Thread(target=self.myappsdetail_page_worker_thread,
                                              args=(myapp_dic["filename"], myapp_dic,), daemon=True).start()
                     if not myapps_found:
-                        # TODO
-                        # Add repo apps support
+                        app_name = app.replace(".desktop", "").strip()
+                        details = {"name": app_name, "icon_name": "ps-repo-package-symbolic",
+                                   "description": self.Package.adv_description(app), "repo_app": True}
+                        self.set_app_details_page({app_name: details}, source=2)
                         self.Logger.info(f"control_args: {app} not found")
                         pass
             except Exception as e:
