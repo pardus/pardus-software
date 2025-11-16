@@ -75,7 +75,7 @@ class MainWindow(object):
         self.dpkglockerror_message = ""
         self.error_message = ""
 
-        self.isPardusSearching = False
+        self.searching = False
 
         self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")
 
@@ -169,6 +169,7 @@ class MainWindow(object):
 
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
+        self.ui_installedapps_flowbox.set_filter_func(self.installedapps_filter_function)
 
         self.ui_appdetails_scrolledwindow = self.GtkBuilder.get_object("ui_appdetails_scrolledwindow")
 
@@ -1386,7 +1387,7 @@ class MainWindow(object):
             GLib.idle_add(lambda: self.ui_leftcats_listbox.select_row(self.ui_leftcats_listbox.get_row_at_index(0)))
 
     def on_ui_leftcats_listbox_row_activated(self, listbox, row):
-        self.isPardusSearching = False
+        self.searching = False
         self.ui_leftupdates_listbox.unselect_all()
         self.ui_leftinstalled_listbox.unselect_all()
         print(row.name)
@@ -1407,16 +1408,20 @@ class MainWindow(object):
             self.ui_currentcat_image.set_pixel_size(55)
 
     def on_ui_leftupdates_listbox_row_activated(self, listbox, row):
+        self.searching = False
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftinstalled_listbox.unselect_all()
         print("in updates")
         self.ui_right_stack.set_visible_child_name("installed")
+        self.ui_installedapps_flowbox.invalidate_filter()
 
     def on_ui_leftinstalled_listbox_row_activated(self, listbox, row):
+        self.searching = False
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftupdates_listbox.unselect_all()
         print("in installed")
         self.ui_right_stack.set_visible_child_name("installed")
+        self.ui_installedapps_flowbox.invalidate_filter()
 
     def on_queue_cancel_button_clicked(self, button):
         for fbc in self.ui_queue_flowbox.get_children():
@@ -3547,6 +3552,23 @@ class MainWindow(object):
     def on_ui_image_close_button_clicked(self, button):
         self.ui_image_popover.popdown()
 
+    def installedapps_filter_function(self, row):
+        search_entry_text = self.ui_top_searchentry.get_text().lower()
+        app = row.get_children()[0].get_children()[0].name
+
+        name = app.get("name", "")
+        description = app.get("description", "")
+        keywords = app.get("keywords", "")
+        executable = app.get("executable", "")
+
+        if self.searching:
+            if any(search_entry_text in field.lower() for field in [name, description, keywords, executable]):
+                return True
+        else:
+            return True
+
+        return False
+
     def pardusapps_filter_function(self, row):
         app = row.get_children()[0].get_children()[0].name
         appname, details = next(iter(app.items()))
@@ -3560,7 +3582,7 @@ class MainWindow(object):
         desc_en = details.get("description", {}).get("en", "")
         desc_tr = details.get("description", {}).get("tr", "")
 
-        if self.isPardusSearching:
+        if self.searching:
             if any(search_entry_text in field.lower() for field in [appname, pn_en, pn_tr, desc_en, desc_tr]):
                 return True
         else:
@@ -3717,23 +3739,27 @@ class MainWindow(object):
 
     def on_ui_top_searchentry_focus_in_event(self, widget, event):
         print("on_ui_top_searchentry_focus_in_event")
+        self.searching = True
 
-        self.homestack.set_visible_child_name("pardushome")
-        self.ui_right_stack.set_visible_child_name("apps")
+        if self.ui_right_stack.get_visible_child_name() == "installed":
+            self.ui_installedapps_flowbox.invalidate_filter()
+        else:
+            self.ui_right_stack.set_visible_child_name("apps")
 
-        self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.categories[0]["name"].title()))
-        self.ui_currentcat_image.set_from_icon_name(self.categories[0]["icon"], Gtk.IconSize.DIALOG)
-        self.ui_currentcat_image.set_pixel_size(55)
-        self.isPardusSearching = True
-        self.ui_pardusapps_flowbox.invalidate_filter()
+            self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.categories[0]["name"].title()))
+            self.ui_currentcat_image.set_from_icon_name(self.categories[0]["icon"], Gtk.IconSize.DIALOG)
+            self.ui_currentcat_image.set_pixel_size(55)
+            self.ui_pardusapps_flowbox.invalidate_filter()
 
     def on_ui_top_searchentry_search_changed(self, entry_search):
         print("on_top_searchentry_search_changed")
+        self.searching = True
 
-        self.homestack.set_visible_child_name("pardushome")
-        self.ui_right_stack.set_visible_child_name("apps")
-        self.isPardusSearching = True
-        self.ui_pardusapps_flowbox.invalidate_filter()
+        if self.ui_right_stack.get_visible_child_name() == "installed":
+            self.ui_installedapps_flowbox.invalidate_filter()
+        else:
+            self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_pardusapps_flowbox.invalidate_filter()
 
     def on_ui_top_searchentry_activate(self, entry):
         print("on_top_searchentry_search_changed")
