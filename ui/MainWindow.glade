@@ -2205,7 +2205,7 @@
                                                             <object class="GtkImage">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="icon-name">dialog-warning-symbolic</property>
+                                                            <property name="icon-name">ps-detail-disclaimer</property>
                                                             </object>
                                                             </child>
                                                           </object>
