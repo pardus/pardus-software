@@ -3746,6 +3746,10 @@ class MainWindow(object):
         else:
             self.ui_right_stack.set_visible_child_name("apps")
 
+            self.ui_leftcats_listbox.unselect_all()
+            self.ui_leftinstalled_listbox.unselect_all()
+            self.ui_leftupdates_listbox.unselect_all()
+
             self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.categories[0]["name"].title()))
             self.ui_currentcat_image.set_from_icon_name(self.categories[0]["icon"], Gtk.IconSize.DIALOG)
             self.ui_currentcat_image.set_pixel_size(55)
@@ -3762,46 +3766,29 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
 
     def on_ui_top_searchentry_activate(self, entry):
-        print("on_top_searchentry_search_changed")
+        print("on_ui_top_searchentry_activate")
 
     def on_ui_top_searchentry_icon_press(self, entry, icon_pos, event):
         print("on_ui_top_searchentry_icon_press")
 
     def on_main_key_press_event(self, widget, event):
-        pass
-        # if self.mainstack.get_visible_child_name() == "home":
-        #     if self.homestack.get_visible_child_name() == "pardushome" or self.homestack.get_visible_child_name() == "pardusapps":
-        #         if not self.topsearchbutton.get_active():
-        #             if event.string.isdigit() or event.string.isalpha():
-        #                 self.pardus_searchentry.get_buffer().delete_text(0, -1)
-        #                 self.pardus_searchentry.grab_focus()
-        #                 self.topsearchbutton.set_active(True)
-        #                 self.toprevealer.set_reveal_child(True)
-        #                 self.pardus_searchentry.get_buffer().insert_text(1, event.string, 1)
-        #                 self.pardus_searchentry.set_position(2)
-        #                 return True
-        #         else:
-        #             if event.keyval == Gdk.KEY_Escape:
-        #                 self.pardus_searchentry.get_buffer().delete_text(0, -1)
-        #                 self.topsearchbutton.set_active(False)
-        #                 self.toprevealer.set_reveal_child(False)
-        #                 return True
-        #     elif self.homestack.get_visible_child_name() == "myapps" and self.myappsstack.get_visible_child_name() == "myapps":
-        #         if not self.topsearchbutton.get_active():
-        #             if event.string.isdigit() or event.string.isalpha():
-        #                 self.myapps_searchentry.get_buffer().delete_text(0, -1)
-        #                 self.myapps_searchentry.grab_focus()
-        #                 self.topsearchbutton.set_active(True)
-        #                 self.toprevealer.set_reveal_child(True)
-        #                 self.myapps_searchentry.get_buffer().insert_text(1, event.string, 1)
-        #                 self.myapps_searchentry.set_position(2)
-        #                 return True
-        #         else:
-        #             if event.keyval == Gdk.KEY_Escape:
-        #                 self.myapps_searchentry.get_buffer().delete_text(0, -1)
-        #                 self.topsearchbutton.set_active(False)
-        #                 self.toprevealer.set_reveal_child(False)
-        #                 return True
+        if self.mainstack.get_visible_child_name() == "home":
+            if self.homestack.get_visible_child_name() == "pardushome":
+
+                entry = self.ui_top_searchentry
+                buf = entry.get_buffer()
+
+                if entry.is_focus():
+                    return False
+
+                if event.string.isdigit() or event.string.isalpha():
+                    buf.delete_text(0, -1)
+                    entry.grab_focus()
+                    buf.insert_text(0, event.string, -1)
+                    entry.set_position(-1)
+                    return True
+
+        return False
 
     def on_menu_settings_clicked(self, button):
         self.ui_headermenu_button.grab_focus()
