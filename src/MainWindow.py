@@ -155,6 +155,8 @@ class MainWindow(object):
         self.ui_top_searchentry.props.primary_icon_activatable = True
         self.ui_top_searchentry.props.primary_icon_sensitive = True
 
+        self.ui_repoapps_flowbox = self.GtkBuilder.get_object("ui_repoapps_flowbox")
+
         self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
 
@@ -1485,7 +1487,8 @@ class MainWindow(object):
 
         if button.name == 9:
             print("{} opening details page".format(app_name))
-            self.set_app_details_page(app)
+            repo_app = details.get("repo_app", "")
+            self.set_app_details_page(app, source=1 if not repo_app else 2)
             return
 
         print("app_name: {}".format(app_name))
@@ -1709,15 +1712,19 @@ class MainWindow(object):
                 self.ui_ad_remove_button.set_sensitive(True)
                 self.ui_ad_remove_button.set_visible(self.Package.isinstalled(app_name))
 
-    def create_app_widget(self, app, details=None, number=0):
+    def create_app_widget(self, app, details=None, number=0, repo_app=False):
 
-        app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
+        if repo_app:
+            details = {"name": app, "icon_name": "ps-repo-package-symbolic",
+                       "description": self.Package.adv_description(app), "repo_app": True}
+
+        app_icon = Gtk.Image.new_from_icon_name(app if not repo_app else "ps-repo-package-symbolic", Gtk.IconSize.DND)
         app_icon.set_pixel_size(32)
         app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
         app_icon.props.halign = Gtk.Align.CENTER
         app_icon.props.valign = Gtk.Align.CENTER
 
-        prettyname = "{}".format(self.get_pretty_name_from_app_name(app))
+        prettyname = "{}".format(self.get_pretty_name_from_app_name(app) if not repo_app else app)
 
         app_name = Gtk.Label.new()
         app_name.set_markup("<b>{}</b>".format(prettyname))
@@ -1808,7 +1815,7 @@ class MainWindow(object):
 
         listbox = Gtk.ListBox.new()
         listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        listbox.connect("row-activated", self.on_app_listbox_row_activated)
+        listbox.connect("row-activated", self.on_app_listbox_row_activated if not repo_app else self.on_repoapp_listbox_row_activated)
         listbox_row = Gtk.ListBoxRow()
         GLib.idle_add(listbox_row.add, box)
         listbox_row.name = {app: details} if details else app
@@ -2367,10 +2374,16 @@ class MainWindow(object):
         GLib.idle_add(self.ui_recentapps_flowbox.show_all)
 
     def on_app_listbox_row_activated(self, listbox, row):
-        print(row.name)
+        print(f"on_app_listbox_row_activated: {row.name}")
         # unselect the flowbox
         GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
         self.set_app_details_page(row.name)
+
+    def on_repoapp_listbox_row_activated(self, listbox, row):
+        print(f"on_repoapp_listbox_row_activated: {row.name}")
+        # unselect the flowbox
+        GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
+        self.set_app_details_page(row.name, source=2)
 
     def set_rating_stars(self, average):
         sub_point = int("{:.1f}".format(average).split(".")[1])
@@ -3107,7 +3120,7 @@ class MainWindow(object):
         self.ui_myapp_details_popover.popdown()
 
     def on_myapp_listbox_row_activated(self, listbox, row):
-        print(row.name)
+        print(f"on_myapp_listbox_row_activated: {row.name}")
         # unselect the flowbox
         GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
 
@@ -3764,6 +3777,117 @@ class MainWindow(object):
         else:
             self.ui_right_stack.set_visible_child_name("apps")
             self.ui_pardusapps_flowbox.invalidate_filter()
+
+            text = entry_search.get_text().strip().lower()
+            if hasattr(self, "_repo_search_cancel_flag"):
+                self._repo_search_cancel_flag = True
+
+            self._repo_search_cancel_flag = False
+
+            GLib.idle_add(self._clear_repo_results)
+
+            if len(text) < 3:
+                return
+
+            GLib.idle_add(self._start_repo_search, text)
+
+    def _clear_repo_results(self):
+        if self.ui_repoapps_flowbox:
+            for row in list(self.ui_repoapps_flowbox.get_children()):
+                self.ui_repoapps_flowbox.remove(row)
+
+    def _start_repo_search(self, text):
+        if hasattr(self, "_repo_search_cancel_flag"):
+            self._repo_search_cancel_flag = True
+
+        if len(text) < 3:
+            return
+
+        self._repo_search_cancel_flag = False
+
+        repo_list = self.Package.load_repo_packages()
+
+        GLib.idle_add(self._clear_repo_results)
+
+        self._repo_search_text = text
+        self._repo_startswith = []
+        self._repo_contains = []
+        self._repo_results = []
+        self._repo_matched_set = set()
+        self._repo_phase = "startswith"
+
+        self._repo_iter = iter(repo_list)
+
+        GLib.idle_add(self._repo_search_step)
+
+    def _repo_search_step(self):
+        if self._repo_search_cancel_flag:
+            return False
+
+        text = self._repo_search_text
+        CHUNK = 400
+
+        try:
+            if self._repo_phase == "startswith":
+                for _ in range(CHUNK):
+                    pkg = next(self._repo_iter)
+                    name = pkg.lower()
+                    if name.startswith(text):
+                        if pkg not in self._repo_matched_set:
+                            self._repo_startswith.append(pkg)
+                            self._repo_matched_set.add(pkg)
+
+                            if len(self._repo_startswith) >= 6:
+                                return self._repo_search_finish()
+                return True
+
+            elif self._repo_phase == "contains":
+                for _ in range(CHUNK):
+                    pkg = next(self._repo_iter)
+                    name = pkg.lower()
+                    if pkg in self._repo_matched_set:
+                        continue
+                    if text in name:
+                        self._repo_contains.append(pkg)
+                        self._repo_matched_set.add(pkg)
+
+                        if len(self._repo_startswith) + len(self._repo_contains) >= 6:
+                            return self._repo_search_finish()
+                return True
+
+        except StopIteration:
+            if self._repo_phase == "startswith":
+                repo_list = self.Package.load_repo_packages()
+                self._repo_iter = iter(repo_list)
+                self._repo_phase = "contains"
+
+                return True
+            else:
+                return self._repo_search_finish()
+
+        return True
+
+    def _repo_search_finish(self):
+        if self._repo_search_cancel_flag:
+            return False
+
+        final_list = list(self._repo_startswith)
+
+        if len(final_list) < 6:
+            need = 6 - len(final_list)
+            final_list += self._repo_contains[:need]
+
+        for pkg in final_list:
+            widget = self.create_app_widget(pkg, repo_app=True)
+            GLib.idle_add(self.ui_repoapps_flowbox.add, widget)
+
+        GLib.idle_add(self.ui_repoapps_flowbox.show_all)
+
+        self._repo_startswith = []
+        self._repo_contains = []
+        self._repo_matched_set = set()
+        self._repo_phase = None
+        return False
 
     def on_ui_top_searchentry_activate(self, entry):
         print("on_ui_top_searchentry_activate")

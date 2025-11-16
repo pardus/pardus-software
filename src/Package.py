@@ -21,6 +21,7 @@ from Logger import Logger
 
 class Package(object):
     def __init__(self):
+        self._repo_packages_cache = None
         self.apps = []
         self.secs = []
         self.sections = []
@@ -45,6 +46,17 @@ class Package(object):
             except:
                 section = mypkg.versions[0].section.lower()
             self.apps.append({"name": name, "category": section})
+
+    def load_repo_packages(self):
+        if self._repo_packages_cache is not None:
+            return self._repo_packages_cache
+
+        cache = apt.Cache()
+        self._repo_packages_cache = [pkg.name for pkg in cache if pkg.candidate]
+
+        self.Logger.info(f"Repo package count: {len(self._repo_packages_cache)}")
+
+        return self._repo_packages_cache
 
     def control_dpkg_interrupt(self):
         return self.cache.dpkg_journal_dirty
