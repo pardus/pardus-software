@@ -411,8 +411,9 @@ class MainWindow(object):
         self.upgrade_inprogress = False
         self.keep_ok_clicked = False
 
-        self.applist = {}
-        self.catlist = []
+        self.apps = {}
+        self.apps_full = {}
+        self.cats = []
         self.upgradable_packages = []
 
         self.myapp_toremove_list = []
@@ -701,7 +702,7 @@ class MainWindow(object):
             try:
                 package_name = ""
                 app_name_without_desktop = app.replace(".desktop", "").strip()
-                for key, details in self.applist.items():
+                for key, details in self.apps_full.items():
                     candidates = [
                         key,
                         (details.get("desktop") or "").replace(".desktop", ""),
@@ -991,8 +992,9 @@ class MainWindow(object):
         if status:
             if type == "apps":
                 self.status_server_apps = True
-                self.applist = dict(sorted(response.items(),
-                                           key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
+                self.apps = dict(sorted(response.items(),
+                                        key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
+                self.apps_full = self.apps.copy()
             elif type == "icons":
                 self.status_server_icons = True
             elif type == "images":
@@ -1033,7 +1035,7 @@ class MainWindow(object):
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
-                    self.catlist = response["cat-list"]
+                    self.cats = response["cat-list"]
 
                 # with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
                 #     response = json.load(f)
@@ -1210,7 +1212,7 @@ class MainWindow(object):
     def get_upgradables(self):
         if self.Server.connection:
             self.upgradables = {}
-            for app, details in self.applist.items():
+            for app, details in self.apps.items():
                 is_installed = self.Package.isinstalled(app)
                 is_upgradable = self.Package.is_upgradable(app)
 
@@ -1238,7 +1240,7 @@ class MainWindow(object):
             lambda row: self.ui_pardusapps_flowbox.remove(row)), False))
 
         if self.Server.connection:
-            for app, details in self.applist.items():
+            for app, details in self.apps.items():
 
                 listbox = self.create_app_widget(app, details)
                 GLib.idle_add(self.ui_pardusapps_flowbox.insert, listbox, -1)
@@ -1262,7 +1264,7 @@ class MainWindow(object):
 
         if self.Server.connection:
             self.categories = []
-            for cat in self.catlist:
+            for cat in self.cats:
                 self.categories.append({"name": cat[self.user_locale], "icon": cat["en"]})
 
             self.categories = sorted(self.categories, key=lambda x: x["name"])
@@ -1450,7 +1452,7 @@ class MainWindow(object):
             app_name, details = next(iter(app.items()))
         elif isinstance(app, str):
             app_name = app
-            details = self.applist.get(app_name, {})
+            details = self.apps_full.get(app_name, {})
         else:
             self.Logger.warning("{} {}".format("app_widget_action_clicked func ERROR for: ", app))
             return
@@ -1507,7 +1509,7 @@ class MainWindow(object):
                 app_name, command, desktop_id, button.name == 2))
 
     def on_ui_ad_action_button_clicked(self, button):
-        if self.ui_app_name in self.applist.keys():
+        if self.ui_app_name in self.apps_full.keys():
             name = self.ui_app_name
         else:
             name = self.ui_myapp_name_dic
@@ -1515,7 +1517,7 @@ class MainWindow(object):
         self.app_widget_action_clicked(button)
 
     def on_ui_ad_remove_button_clicked(self, button):
-        if self.ui_app_name in self.applist.keys():
+        if self.ui_app_name in self.apps_full.keys():
             name = self.ui_app_name
         else:
             name = self.ui_myapp_name_dic
@@ -2543,7 +2545,7 @@ class MainWindow(object):
             app_name, details = next(iter(app.items()))
         elif isinstance(app, str):
             app_name = app
-            details = self.applist.get(app_name, {})
+            details = self.apps_full.get(app_name, {})
         else:
             self.Logger.warning("{} {}".format("set_app_details_page func ERROR for: ", app))
             return
@@ -2846,7 +2848,7 @@ class MainWindow(object):
         GLib.idle_add(self.ui_image_stack.add_named, image, "{}".format(name))
 
     def get_pretty_name_from_app_name(self, name):
-        details = self.applist.get(name)
+        details = self.apps_full.get(name)
         if not details:
             return name
 
@@ -2854,7 +2856,7 @@ class MainWindow(object):
         return pretty.get(self.user_locale) or pretty.get("en") or name
 
     def get_category_name_from_app_name(self, name):
-        details = self.applist.get(name)
+        details = self.apps_full.get(name)
         if not details:
             return _("Unknown")
 
@@ -2867,7 +2869,7 @@ class MainWindow(object):
         return value.title()
 
     def get_sub_category_name_from_app_name(self, name):
-        details = self.applist.get(name)
+        details = self.apps_full.get(name)
         if not details:
             return ""
 
@@ -2881,7 +2883,7 @@ class MainWindow(object):
         return value.title()
 
     def get_description_from_app_name(self, name):
-        details = self.applist.get(name)
+        details = self.apps_full.get(name)
         if not details:
             return _("Unknown")
 
@@ -2889,11 +2891,11 @@ class MainWindow(object):
         return desc.get(self.user_locale) or desc.get("en") or _("Unknown")
 
     def get_desktop_filename_from_app_name(self, name):
-        details = self.applist.get(name)
+        details = self.apps_full.get(name)
         return details.get("desktop") if details else ""
 
     def get_gnome_desktop_filename_from_app_name(self, name):
-        details = self.applist.get(name)
+        details = self.apps_full.get(name)
         return details.get("gnomename") if details else ""
 
     def onDestroy(self, widget):
@@ -3119,7 +3121,7 @@ class MainWindow(object):
         found, package_name = package
 
         if found:
-            if package_name in self.applist.keys():
+            if package_name in self.apps_full.keys():
                 self.set_app_details_page(app=package_name, source=1)
             else:
                 self.set_app_details_page(app={package_name: details}, source=2)
@@ -3569,26 +3571,26 @@ class MainWindow(object):
 
     def on_ui_pardusapps_combobox_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
-            self.applist = dict(sorted(self.applist.items(),
-                                       key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
+            self.apps = dict(sorted(self.apps.items(),
+                                    key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
             GLib.idle_add(self.set_applications)
         elif combo_box.get_active() == 1:  # sort by download
-            self.applist = dict(sorted(
-                self.applist.items(),
+            self.apps = dict(sorted(
+                self.apps.items(),
                 key=lambda item: (item[1]["download"], item[1]["rate_average"]),
                 reverse=True
             ))
             GLib.idle_add(self.set_applications)
         elif combo_box.get_active() == 2:  # sort by popularity
-            self.applist = dict(sorted(
-                self.applist.items(),
+            self.apps = dict(sorted(
+                self.apps.items(),
                 key=lambda item: (item[1].get("popularity", item[1]["rate_average"]), item[1]["download"]),
                 reverse=True
             ))
             GLib.idle_add(self.set_applications)
         elif combo_box.get_active() == 3:  # sort by last added
-            self.applist = dict(sorted(
-                self.applist.items(),
+            self.apps = dict(sorted(
+                self.apps.items(),
                 key=lambda item: datetime.strptime(item[1]["date"], "%d-%m-%Y %H:%M"),
                 reverse=True
             ))
@@ -4095,9 +4097,9 @@ class MainWindow(object):
                 self.ui_comment_error_label.set_text(f"{e}")
 
     def set_available_apps(self, available):
-        self.applist = {
+        self.apps = {
             app: details
-            for app, details in self.applist.items()
+            for app, details in self.apps_full.items()
             if (
                     (available and (self.Package.isinstalled(app) is not None or any(
                         code["name"] == self.UserSettings.usercodename for code in details["codename"])))
