@@ -869,20 +869,18 @@ class MainWindow(object):
 
     def afterServers(self):
         GLib.idle_add(self.set_initial_home)
-        # GLib.idle_add(self.controlServer)
         GLib.idle_add(self.control_available_apps)
-        # GLib.idle_add(self.clearBoxes)
         GLib.idle_add(self.set_categories)
         GLib.idle_add(self.set_applications)
         GLib.idle_add(self.get_upgradables)
         GLib.idle_add(self.set_upgradables)
         GLib.idle_add(self.set_slider)
         GLib.idle_add(self.set_most_apps)
-        # GLib.idle_add(self.setEditorApps)
-        # GLib.idle_add(self.setMostApps)
-        # GLib.idle_add(self.setRepoApps)
-        GLib.idle_add(self.controlPSUpdate)
-        GLib.idle_add(self.aptUpdate)
+
+        # TODO : enable controlPSUpdate and aptUpdate
+        # GLib.idle_add(self.controlPSUpdate)
+        # GLib.idle_add(self.aptUpdate)
+
         GLib.idle_add(self.set_myapps)
 
     # def ServerAppsURLControlCB(self, status):
