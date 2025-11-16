@@ -3778,6 +3778,7 @@ class MainWindow(object):
         #                 return True
 
     def on_menu_settings_clicked(self, button):
+        self.ui_headermenu_button.grab_focus()
         self.ui_right_stack.set_visible_child_name("settings")
         self.ui_headermenu_popover.popdown()
 
