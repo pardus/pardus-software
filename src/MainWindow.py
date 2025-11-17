@@ -170,6 +170,8 @@ class MainWindow(object):
         self.ui_recentapps_flowbox = self.GtkBuilder.get_object("ui_recentapps_flowbox")
 
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
+        self.ui_upgradableapps_box = self.GtkBuilder.get_object("ui_upgradableapps_box")
+        self.ui_upgradableapps_count_label = self.GtkBuilder.get_object("ui_upgradableapps_count_label")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
         self.ui_installedapps_flowbox.set_filter_func(self.installedapps_filter_function)
 
@@ -1228,12 +1230,64 @@ class MainWindow(object):
         GLib.idle_add(lambda: (self.ui_upgradableapps_flowbox and self.ui_upgradableapps_flowbox.foreach(
             lambda row: self.ui_upgradableapps_flowbox.remove(row)), False))
 
-        if self.Server.connection:
+        GLib.idle_add(lambda: (self.ui_leftupdates_listbox and self.ui_leftupdates_listbox.foreach(
+            lambda child: self.ui_leftupdates_listbox.remove(child)), False))
+
+        GLib.idle_add(self.ui_upgradableapps_box.set_visible, self.upgradables)
+
+        if self.Server.connection and self.upgradables:
+            updates_icon = Gtk.Image.new_from_icon_name("ps-cat-updates-symbolic", Gtk.IconSize.BUTTON)
+            updates_icon.props.halign = Gtk.Align.START
+
+            label = Gtk.Label.new()
+            label.set_markup("<b>{}</b>".format(_("Updates")))
+            box_updates_count = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+            label_updates_count = Gtk.Label.new()
+            label_updates_count.set_markup("{}".format(len(self.upgradables)))
+            label_updates_count.set_margin_start(5)
+            label_updates_count.set_margin_end(5)
+            label_updates_count.set_margin_top(3)
+            label_updates_count.set_margin_bottom(3)
+            box_updates_count.pack_start(label_updates_count, False, True, 0)
+            box_updates_count.props.halign = Gtk.Align.END
+            box_updates_count.get_style_context().add_class("pardus-software-left-updates-count-box")
+
+            label_updates = Gtk.Label.new()
+            label_updates.set_markup("<small>{}</small>".format(_("Some applications are outdated.")))
+            label_updates.props.halign = Gtk.Align.START
+            label_updates.set_margin_start(3)
+            label_updates.set_opacity(0.7)
+
+            box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+            box_h.pack_start(updates_icon, False, True, 0)
+            box_h.pack_start(label, False, True, 0)
+            box_h.pack_end(box_updates_count, True, True, 0)
+
+            box_v = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+            box_v.pack_start(box_h, False, True, 0)
+            box_v.pack_start(label_updates, False, True, 0)
+            box_v.set_margin_start(8)
+            box_v.set_margin_end(12)
+            box_v.set_margin_top(5)
+            box_v.set_margin_bottom(5)
+            box_v.set_spacing(8)
+
+            row = Gtk.ListBoxRow()
+            row.add(box_v)
+            row.name = "updates"
+            row.props.valign = Gtk.Align.END
+            row.set_vexpand(True)
+
+            GLib.idle_add(self.ui_leftupdates_listbox.add, row)
+
             for app, details in self.upgradables.items():
                 listbox = self.create_upgradable_myapp_widget(app, details)
                 GLib.idle_add(self.ui_upgradableapps_flowbox.insert, listbox, -1)
 
+            self.ui_upgradableapps_count_label.set_markup("<span size='large'><b>({})</b></span>".format(len(self.upgradables)))
+
             GLib.idle_add(self.ui_upgradableapps_flowbox.show_all)
+            GLib.idle_add(self.ui_leftupdates_listbox.show_all)
 
         self.Logger.info("set_upgradables done")
 
@@ -1333,59 +1387,13 @@ class MainWindow(object):
             row = Gtk.ListBoxRow()
             row.add(box)
             row.name = "installed"
-
             GLib.idle_add(self.ui_leftinstalled_listbox.add, row)
 
-            # updates
-            updates_icon = Gtk.Image.new_from_icon_name("ps-cat-updates-symbolic", Gtk.IconSize.BUTTON)
-            updates_icon.props.halign = Gtk.Align.START
-
-            label = Gtk.Label.new()
-            label.set_markup("<b>{}</b>".format(_("Updates")))
-            box_updates_count = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
-            label_updates_count = Gtk.Label.new()
-            label_updates_count.set_markup("{}".format("13"))
-            label_updates_count.set_margin_start(5)
-            label_updates_count.set_margin_end(5)
-            label_updates_count.set_margin_top(3)
-            label_updates_count.set_margin_bottom(3)
-            box_updates_count.pack_start(label_updates_count, False, True, 0)
-            box_updates_count.props.halign = Gtk.Align.END
-            box_updates_count.get_style_context().add_class("pardus-software-left-updates-count-box")
-
-            label_updates = Gtk.Label.new()
-            label_updates.set_markup("<small>{}</small>".format(_("Some applications are outdated.")))
-            label_updates.props.halign = Gtk.Align.START
-            label_updates.set_margin_start(3)
-            label_updates.set_opacity(0.7)
-
-            box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
-            box_h.pack_start(updates_icon, False, True, 0)
-            box_h.pack_start(label, False, True, 0)
-            box_h.pack_end(box_updates_count, True, True, 0)
-
-            box_v = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-            box_v.pack_start(box_h, False, True, 0)
-            box_v.pack_start(label_updates, False, True, 0)
-            box_v.set_margin_start(8)
-            box_v.set_margin_end(12)
-            box_v.set_margin_top(5)
-            box_v.set_margin_bottom(5)
-            box_v.set_spacing(8)
-
-            row = Gtk.ListBoxRow()
-            row.add(box_v)
-            row.name = "updates"
-            row.props.valign = Gtk.Align.END
-            row.set_vexpand(True)
-
-            GLib.idle_add(self.ui_leftupdates_listbox.add, row)
-
+            # show widgets
             GLib.idle_add(self.ui_leftcats_listbox.show_all)
-            GLib.idle_add(self.ui_leftupdates_listbox.show_all)
             GLib.idle_add(self.ui_leftinstalled_listbox.show_all)
 
-            # GLib.idle_add(self.ui_leftcats_listbox.select_row, self.ui_leftcats_listbox.get_row_at_index(0))
+            # default select discover
             GLib.idle_add(lambda: self.ui_leftcats_listbox.select_row(self.ui_leftcats_listbox.get_row_at_index(0)))
 
     def on_ui_leftcats_listbox_row_activated(self, listbox, row):
@@ -4415,6 +4423,10 @@ class MainWindow(object):
 
 
         self.update_app_widget_label(self.inprogress_app_name)
+
+        if self.isupgrade:
+            self.get_upgradables()
+            self.set_upgradables()
 
         self.Logger.info("Exit Code: {}".format(status))
 
