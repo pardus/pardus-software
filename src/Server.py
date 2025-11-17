@@ -30,7 +30,7 @@ class Server(object):
         self.serverhomepage = "/api/v3/homepage"
         self.serverdetails = "/api/v3/details"
         self.serverparduscomments = "/api/v3/parduscomments"
-        self.serversendrate = "/api/v2/rate"
+        self.serversendrate = "/api/v3/rate"
         self.serversenddownload = "/api/v2/download"
         # self.serversendsuggestapp = "/api/v3/suggestapp"
         self.serverfiles = "/files/"

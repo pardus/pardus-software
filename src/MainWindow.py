@@ -3171,11 +3171,10 @@ class MainWindow(object):
                         "<span font='54'><b>{:.1f}</b></span>".format(float(response["rating"]["rate"]["average"])))
                     self.ui_ad_bottom_rate_count_label.set_text("{} Ratings".format(response["rating"]["rate"]["count"]))
 
-                    # TODO
-                    # GLib.idle_add(self.set_rating_progressbar, response["rating"]["rate"]["count"],
-                    #               response["rating"]["rate"]["rates"]["1"], response["rating"]["rate"]["rates"]["2"],
-                    #               response["rating"]["rate"]["rates"]["3"], response["rating"]["rate"]["rates"]["4"],
-                    #               response["rating"]["rate"]["rates"]["5"])
+                    GLib.idle_add(self.set_rating_progressbar, response["rating"]["rate"]["count"],
+                                  response["rating"]["rate"]["rates"]["1"], response["rating"]["rate"]["rates"]["2"],
+                                  response["rating"]["rate"]["rates"]["3"], response["rating"]["rate"]["rates"]["4"],
+                                  response["rating"]["rate"]["rates"]["5"])
 
                     self.ui_comment_main_stack.set_visible_child_name("done")
                 else:
