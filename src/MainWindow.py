@@ -313,6 +313,7 @@ class MainWindow(object):
         self.ui_headermenu_button = self.GtkBuilder.get_object("ui_headermenu_button")
 
         self.ui_header_queue_button = self.GtkBuilder.get_object("ui_header_queue_button")
+        self.ui_header_aptupdate_spinner = self.GtkBuilder.get_object("ui_header_aptupdate_spinner")
 
         self.aboutdialog = self.GtkBuilder.get_object("aboutdialog")
         self.aboutdialog.set_program_name(_("Pardus Software Center"))
@@ -651,6 +652,7 @@ class MainWindow(object):
     def hide_some_widgets(self):
         self.ui_myapps_du_progress_box.set_visible(False)
         self.ui_header_queue_button.set_visible(False)
+        self.ui_header_aptupdate_spinner.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -658,7 +660,7 @@ class MainWindow(object):
         self.package()
         self.server()
 
-    def aptUpdate(self):
+    def start_auto_apt_update_control(self):
         if self.Server.connection and self.UserSettings.config_aptup:
             waittime = 86400
             if self.UserSettings.config_forceaptuptime == 0:
@@ -666,9 +668,10 @@ class MainWindow(object):
             else:
                 waittime = self.UserSettings.config_forceaptuptime
             if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()):
-                # self.headerAptUpdateSpinner.start()
+                GLib.idle_add(self.ui_header_aptupdate_spinner.start)
+                GLib.idle_add(self.ui_header_aptupdate_spinner.set_visible, True)
                 command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py"]
-                self.startAptUpdateProcess(command)
+                self.apt_update_process(command)
             else:
                 self.auto_apt_update_finished = True
         else:
@@ -880,10 +883,10 @@ class MainWindow(object):
         GLib.idle_add(self.set_upgradables)
         GLib.idle_add(self.set_slider)
         GLib.idle_add(self.set_most_apps)
+        GLib.idle_add(self.start_auto_apt_update_control)
 
-        # TODO : enable controlPSUpdate and aptUpdate
+        # TODO : enable controlPSUpdate
         # GLib.idle_add(self.controlPSUpdate)
-        # GLib.idle_add(self.aptUpdate)
 
         GLib.idle_add(self.set_myapps)
 
@@ -4643,55 +4646,51 @@ class MainWindow(object):
 
         self.Logger.info("SysProcess Exit Code: {}".format(status))
 
-    def startAptUpdateProcess(self, params):
+    def apt_update_process(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onAptUpdateProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onAptUpdateProcessStderr)
-        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onAptUpdateProcessExit)
+        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.on_apt_update_process_stdout)
+        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.on_apt_update_process_stderr)
+        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.on_apt_update_process_exit)
 
         return pid
 
-    def onAptUpdateProcessStdout(self, source, condition):
+    def on_apt_update_process_stdout(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
         self.Logger.info("{}".format(line))
         return True
 
-    def onAptUpdateProcessStderr(self, source, condition):
+    def on_apt_update_process_stderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
         self.Logger.info("{}".format(line))
         return True
 
-    def onAptUpdateProcessExit(self, pid, status):
+    def on_apt_update_process_exit(self, pid, status):
         self.Package.updatecache()
-        # self.headerAptUpdateSpinner.set_visible(False)
-        # self.headerAptUpdateSpinner.stop()
+        GLib.idle_add(self.ui_header_aptupdate_spinner.stop)
+        GLib.idle_add(self.ui_header_aptupdate_spinner.set_visible, False)
         if status == 0:
             try:
                 timestamp = int(datetime.now().timestamp())
             except Exception as e:
                 self.Logger.warning("timestamp Error: {}")
                 self.Logger.exception("{}".format(e))
-
                 timestamp = 0
+
             self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
                                           self.UserSettings.config_saa, self.UserSettings.config_sera,
                                           self.UserSettings.config_icon, self.UserSettings.config_sgc,
                                           self.UserSettings.config_udt, self.UserSettings.config_aptup,
                                           timestamp, self.UserSettings.config_forceaptuptime)
 
-            if self.Package.upgradable():
-                if not self.updates_button.get_visible():
-                    GLib.idle_add(self.header_buttonbox.pack_start, self.updates_button, False, True, 0)
-                    GLib.idle_add(self.updates_button.set_visible, True)
-                    GLib.idle_add(self.updates_button.set_sensitive, True)
-            else:
-                GLib.idle_add(self.updates_button.set_visible, False)
-                GLib.idle_add(self.updates_button.set_sensitive, False)
+            old_upgradables = self.upgradables.copy()
+            self.get_upgradables()
+            if old_upgradables != self.upgradables:
+                self.set_upgradables()
 
             self.auto_apt_update_finished = True
 

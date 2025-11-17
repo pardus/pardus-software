@@ -5912,7 +5912,7 @@ Use with caution. Are you sure you want to continue?</property>
             </child>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -5953,6 +5953,19 @@ Use with caution. Are you sure you want to continue?</property>
           <packing>
             <property name="pack-type">end</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinner" id="ui_header_aptupdate_spinner">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="tooltip-text" translatable="yes">Auto apt update in progress.</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -6012,7 +6025,7 @@ Use with caution. Are you sure you want to continue?</property>
             </child>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -6031,7 +6044,7 @@ Use with caution. Are you sure you want to continue?</property>
             </child>
           </object>
           <packing>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
