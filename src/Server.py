@@ -27,8 +27,8 @@ class Server(object):
         self.serverurl = ""  # This is setting from MainWindow server func
         self.serverhash = "/api/v3/hash"
         self.serverapps = "/api/v3/apps/"
-        # self.servercats = "/api/v2/cats/"
         self.serverhomepage = "/api/v3/homepage"
+        self.serverdetails = "/api/v3/details"
         self.serversendrate = "/api/v2/rate"
         self.serversenddownload = "/api/v2/download"
         # self.serversendsuggestapp = "/api/v3/suggestapp"

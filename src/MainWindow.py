@@ -2612,7 +2612,7 @@ class MainWindow(object):
             for image in details["screenshots"]:
                 self.AppImage.get_image(self.Server.serverurl + image, app_name)
 
-            self.AppDetail.get_details(self.Server.serverurl + "/api/v2/details",{"mac": self.mac, "app": app_name})
+            self.AppDetail.get_details(self.Server.serverurl + self.Server.serverdetails, {"mac": self.mac, "app": app_name})
 
             self.comment_limit = 10
             self.gnome_comment_limit = 10
