@@ -172,6 +172,7 @@ class MainWindow(object):
         self.ui_upgradableapps_flowbox = self.GtkBuilder.get_object("ui_upgradableapps_flowbox")
         self.ui_upgradableapps_box = self.GtkBuilder.get_object("ui_upgradableapps_box")
         self.ui_upgradableapps_count_label = self.GtkBuilder.get_object("ui_upgradableapps_count_label")
+        self.ui_upgradables_combobox = self.GtkBuilder.get_object("ui_upgradables_combobox")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
         self.ui_installedapps_flowbox.set_filter_func(self.installedapps_filter_function)
 
@@ -653,6 +654,7 @@ class MainWindow(object):
         self.ui_myapps_du_progress_box.set_visible(False)
         self.ui_header_queue_button.set_visible(False)
         self.ui_header_aptupdate_spinner.set_visible(False)
+        self.ui_upgradables_combobox.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
