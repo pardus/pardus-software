@@ -31,7 +31,7 @@ class Server(object):
         self.serverdetails = "/api/v3/details"
         self.serverparduscomments = "/api/v3/parduscomments"
         self.serversendrate = "/api/v3/rate"
-        self.serversenddownload = "/api/v2/download"
+        self.serversenddownload = "/api/v3/download"
         # self.serversendsuggestapp = "/api/v3/suggestapp"
         self.serverfiles = "/files/"
         self.server_apps_archive = "apps.tar.gz"
