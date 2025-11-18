@@ -123,7 +123,7 @@ class Server(object):
             self.Logger.warning("_open_hashes_stream is not success")
             self.ServerHashesCB(False)  # Send to MainWindow
 
-    def get_file(self, url, download_location, server_md5, type="", save_file=True):
+    def get_file(self, url, download_location, server_md5="", type="", save_file=True):
         file = Gio.File.new_for_uri(url)
         file.load_contents_async(None, self._open_file_stream, download_location, server_md5, type, save_file)
 

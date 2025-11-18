@@ -951,7 +951,7 @@ class MainWindow(object):
                     #                      server_md5=response["md5"]["apps"], type="apps")
                     self.Server.get_file(url=self.Server.serverurl + self.Server.serverapps,
                                          download_location=self.UserSettings.apps_dir + self.UserSettings.apps_archive,
-                                         server_md5=response["md5"]["apps"], type="apps", save_file=False)
+                                         type="apps", save_file=False)
                 if download_icons:
                     self.Logger.info("Getting icons from server")
                     # GLib.idle_add(self.splashlabel.set_markup,
@@ -987,7 +987,7 @@ class MainWindow(object):
                     #                      server_md5=response["md5"]["home"], type="home")
                     self.Server.get_file(url=self.Server.serverurl + self.Server.serverhomepage,
                                          download_location=self.UserSettings.home_dir + self.UserSettings.home_archive,
-                                         server_md5=response["md5"]["home"], type="home", save_file=False)
+                                         type="home", save_file=False)
 
             else:
                 self.ServerFilesCB(True, "ok")
