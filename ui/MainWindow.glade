@@ -1181,7 +1181,7 @@
                                           <object class="GtkBox" id="ui_discover_box">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="halign">center</property>
+                                            <property name="valign">start</property>
                                             <property name="margin-start">32</property>
                                             <property name="margin-end">20</property>
                                             <property name="margin-top">32</property>
