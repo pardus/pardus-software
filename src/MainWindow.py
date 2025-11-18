@@ -3384,7 +3384,7 @@ class MainWindow(object):
         label_comment.set_text("{}".format(comment))
         label_comment.set_selectable(True)
         label_comment.set_line_wrap(True)
-        label_comment.set_line_wrap_mode(0)
+        label_comment.set_line_wrap_mode(1)
         label_comment.props.halign = Gtk.Align.START
         label_comment.set_xalign = 0.0
 
