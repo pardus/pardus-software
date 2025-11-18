@@ -305,6 +305,18 @@ class MainWindow(object):
         self.ui_comment_own_edit_button = self.GtkBuilder.get_object("ui_comment_own_edit_button")
         self.ui_comment_own_date_label = self.GtkBuilder.get_object("ui_comment_own_date_label")
 
+        self.ui_suggest_dialog = self.GtkBuilder.get_object("ui_suggest_dialog")
+        self.ui_suggest_main_stack = self.GtkBuilder.get_object("ui_suggest_main_stack")
+        self.ui_suggest_appname_entry = self.GtkBuilder.get_object("ui_suggest_appname_entry")
+        self.ui_suggest_appweb_entry = self.GtkBuilder.get_object("ui_suggest_appweb_entry")
+        self.ui_suggest_username_entry = self.GtkBuilder.get_object("ui_suggest_username_entry")
+        self.ui_suggest_usermail_entry = self.GtkBuilder.get_object("ui_suggest_usermail_entry")
+        self.ui_suggest_appweb_entry = self.GtkBuilder.get_object("ui_suggest_appweb_entry")
+        self.ui_suggest_why_textview = self.GtkBuilder.get_object("ui_suggest_why_textview")
+        self.ui_suggest_why_textbuffer = self.GtkBuilder.get_object("ui_suggest_why_textbuffer")
+        self.ui_suggest_error_label = self.GtkBuilder.get_object("ui_suggest_error_label")
+        self.ui_suggest_send_button = self.GtkBuilder.get_object("ui_suggest_send_button")
+
         self.ui_image_popover = self.GtkBuilder.get_object("ui_image_popover")
         self.ui_image_stack = self.GtkBuilder.get_object("ui_image_stack")
         self.ui_image_resize_image = self.GtkBuilder.get_object("ui_image_resize_image")
@@ -342,12 +354,6 @@ class MainWindow(object):
         self.ui_settings_password_info_label = self.GtkBuilder.get_object("ui_settings_password_info_label")
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
-
-        self.ui_suggest_app_entry = self.GtkBuilder.get_object("ui_suggest_app_entry")
-        self.ui_suggest_web_entry = self.GtkBuilder.get_object("ui_suggest_web_entry")
-        self.ui_suggest_send_button = self.GtkBuilder.get_object("ui_suggest_send_button")
-        self.ui_suggest_stack = self.GtkBuilder.get_object("ui_suggest_stack")
-        self.ui_suggest_info_label = self.GtkBuilder.get_object("ui_suggest_info_label")
 
         self.SuggestScroll = self.GtkBuilder.get_object("SuggestScroll")
         self.PardusAppDetailScroll = self.GtkBuilder.get_object("PardusAppDetailScroll")
@@ -656,6 +662,7 @@ class MainWindow(object):
         self.ui_header_queue_button.set_visible(False)
         self.ui_header_aptupdate_spinner.set_visible(False)
         self.ui_upgradables_combobox.set_visible(False)
+        self.ui_suggest_error_label.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -3163,8 +3170,11 @@ class MainWindow(object):
             self.set_app_details_page(app={package_name: details}, source=0)
 
     def rating_response_from_server(self, status, response=None, appname=None):
-        if status and appname == self.ui_app_name:
-            if response["response-type"] == 10:
+        if status:
+            r_type = response.get("response-type", 0)
+            if r_type == 10:
+                if appname != self.ui_app_name:
+                    return
                 self.ui_comment_send_button.set_sensitive(True)
                 if response["rating"]["status"]:
                     self.set_rating_stars(response["rating"]["rate"]["average"])
@@ -3186,22 +3196,22 @@ class MainWindow(object):
                     else:
                         self.ui_comment_error_label.set_text(_("Error"))
 
-            # if response["response-type"] == 12:
-            #     self.SuggestSend.set_sensitive(True)
-            #     if response["suggestapp"]["status"]:
-            #         self.SuggestInfoLabel.set_text("")
-            #         self.SuggestStack.set_visible_child_name("success")
-            #         self.SuggestScroll.set_vadjustment(Gtk.Adjustment())
-            #         self.resetSuggestAppForm()
-            #     else:
-            #         if response["suggestapp"]["flood"]:
-            #             self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
-            #                 _("Please try again soon")))
-            #         else:
-            #             self.SuggestInfoLabel.set_markup("<b><span color='red'>{}</span></b>".format(
-            #                 _("Error")))
+            elif r_type == 12:
+                self.ui_suggest_send_button.set_sensitive(True)
+                if response["suggestapp"]["status"]:
+                    self.ui_suggest_main_stack.set_visible_child_name("done")
+                    self.clear_suggest_dialog()
+                else:
+                    self.ui_suggest_error_label.set_visible(True)
+                    if response["suggestapp"]["flood"]:
+                        self.ui_suggest_error_label.set_text("{}".format(_("Please try again soon")))
+                    else:
+                        self.ui_suggest_error_label.set_markup("{}".format(_("Error")))
         else:
+            self.ui_comment_error_label.set_visible(True)
             self.ui_comment_error_label.set_text(_("Error"))
+            self.ui_suggest_error_label.set_visible(True)
+            self.ui_suggest_error_label.set_text(_("Error"))
 
     def app_details_from_server(self, status, response=None, appname=None):
         print("app_details_from_server, status: {}".format(status))
@@ -4248,6 +4258,56 @@ class MainWindow(object):
             except Exception as e:
                 self.ui_comment_error_label.set_visible(True)
                 self.ui_comment_error_label.set_text(f"{e}")
+
+    def on_ui_suggestapp_eventbox_button_press_event(self, widget, event):
+        self.ui_suggest_main_stack.set_visible_child_name("main")
+        self.ui_suggest_dialog.run()
+        self.ui_suggest_dialog.hide()
+
+    def on_ui_suggest_close_button_clicked(self, button):
+        self.ui_suggest_dialog.hide()
+
+    def on_ui_suggest_send_button_clicked(self, button):
+        app_name = self.ui_suggest_appname_entry.get_text().strip()
+        app_web = self.ui_suggest_appweb_entry.get_text().strip()
+        user_name = self.ui_suggest_username_entry.get_text().strip()
+        user_mail = self.ui_suggest_usermail_entry.get_text().strip()
+        start, end = self.ui_suggest_why_textbuffer.get_bounds()
+        why = self.ui_suggest_why_textbuffer.get_text(start, end, False).strip()
+
+        if app_name == "" or app_web == "" or user_name == "" or user_mail == "" or why == "":
+            self.ui_suggest_error_label.set_visible(True)
+            self.ui_suggest_error_label.set_text(_("All fields must be filled."))
+        else:
+
+            dic = {"app_name": app_name, "app_web": app_web, "user_name": user_name, "user_mail": user_mail, "why": why,
+                   "mac": self.mac, "distro": self.user_distro_full}
+            try:
+                self.AppRequest.send(self.Server.serverurl + self.Server.serversendsuggest, dic)
+                self.ui_suggest_send_button.set_sensitive(False)
+            except Exception as e:
+                self.ui_suggest_error_label.set_visible(True)
+                self.ui_suggest_error_label.set_text(f"{e}")
+
+    def on_ui_suggest_why_textbuffer_insert_text(self, buffer, location, text, length):
+        max_chars = 500
+        current_len = buffer.get_char_count()
+        new_len = len(text)
+        if current_len + new_len > max_chars:
+            GObject.signal_stop_emission_by_name(buffer, "insert-text")
+            remaining = max_chars - current_len
+            if remaining > 0:
+                buffer.insert(location, text[:remaining])
+
+    def clear_suggest_dialog(self):
+        self.ui_suggest_appname_entry.set_text("")
+        self.ui_suggest_appweb_entry.set_text("")
+        self.ui_suggest_username_entry.set_text("")
+        self.ui_suggest_usermail_entry.set_text("")
+        self.ui_suggest_error_label.set_text("")
+        self.ui_suggest_error_label.set_visible(False)
+        start, end = self.ui_suggest_why_textbuffer.get_bounds()
+        self.ui_suggest_why_textbuffer.delete(start, end)
 
     def set_available_apps(self, available):
         self.apps = {
