@@ -19,7 +19,7 @@ import math
 import cairo
 from pathlib import Path
 from hashlib import md5
-from datetime import datetime
+from datetime import datetime, timezone
 from locale import getlocale
 from locale import gettext as _
 
@@ -3170,6 +3170,70 @@ class MainWindow(object):
         else:
             self.set_app_details_page(app={package_name: details}, source=0)
 
+    def format_date_as_ago(self, dt_utc):
+        local_tz = datetime.now().astimezone().tzinfo
+
+        try:
+            if isinstance(dt_utc, (int, float)):
+                dt_utc = datetime.fromtimestamp(dt_utc, tz=timezone.utc)
+            elif isinstance(dt_utc, str):
+                dt_utc = datetime.fromisoformat(dt_utc)
+            else:
+                return "{}".format(dt_utc)
+        except Exception:
+            return "{}".format(dt_utc)
+
+        try:
+            dt_local = dt_utc.astimezone(local_tz)
+        except Exception:
+            return "{}".format(dt_utc)
+
+        now = datetime.now(local_tz)
+        diff = now - dt_local
+        seconds = diff.total_seconds()
+
+        minutes = seconds / 60
+        hours = minutes / 60
+        days = hours / 24
+        weeks = days / 7
+        months = days / 30
+        years = days / 365
+
+        if seconds < 60:
+            return _("{} seconds ago").format(int(seconds))
+        elif minutes < 60:
+            return _("{} minutes ago").format(int(minutes))
+        elif hours < 24:
+            return _("{} hours ago").format(int(hours))
+        elif days < 7:
+            return _("{} days ago").format(int(days))
+        elif weeks < 4:
+            return _("{} weeks ago").format(int(weeks))
+        elif months < 12:
+            return _("{} months ago").format(int(months))
+        else:
+            return _("{} years ago").format(int(years))
+
+    def format_date_as_full(self, dt_utc):
+        local_tz = datetime.now().astimezone().tzinfo
+
+        try:
+            if isinstance(dt_utc, (int, float)):
+                dt_utc = datetime.fromtimestamp(dt_utc, tz=timezone.utc)
+            elif isinstance(dt_utc, str):
+                dt_utc = datetime.fromisoformat(dt_utc)
+            else:
+                return "{}".format(dt_utc)
+        except Exception:
+            return "{}".format(dt_utc)
+
+        try:
+            dt_local = dt_utc.astimezone(local_tz)
+        except Exception:
+            return "{}".format(dt_utc)
+
+        return dt_local.strftime("%d-%m-%Y %H:%M")
+
     def rating_response_from_server(self, status, response=None, appname=None):
         if status:
             r_type = response.get("response-type", 0)
@@ -3248,6 +3312,11 @@ class MainWindow(object):
             else:
                 self.ui_comment_mid_stack.set_visible_child_name("read")
                 self.ui_comment_bottom_stack.set_visible_child_name("info")
+
+                self.ui_comment_own_date_label.set_text("{}".format(self.format_date_as_ago(
+                    response["details"]["individual"]["date"])))
+                self.ui_comment_own_date_label.set_tooltip_text(self.format_date_as_full(
+                    response["details"]["individual"]["date"]))
 
                 self.ui_comment_own_fullname_label.set_text("{}".format(response["details"]["individual"]["author"]))
                 self.ui_comment_own_content_label.set_text("{}".format(response["details"]["individual"]["comment"]))
@@ -3364,7 +3433,8 @@ class MainWindow(object):
         label_author.set_selectable(True)
 
         label_date = Gtk.Label.new()
-        label_date.set_markup("{}".format(date))
+        label_date.set_text("{}".format(self.format_date_as_ago(date)))
+        label_date.set_tooltip_text("{}".format(self.format_date_as_full(date)))
         label_date.set_selectable(True)
 
         star_image_1 = Gtk.Image.new_from_icon_name(
