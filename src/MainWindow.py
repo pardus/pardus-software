@@ -283,6 +283,7 @@ class MainWindow(object):
         self.ui_comment_bottom_stack = self.GtkBuilder.get_object("ui_comment_bottom_stack")
         self.ui_comment_icon_image = self.GtkBuilder.get_object("ui_comment_icon_image")
         self.ui_comment_appname_label = self.GtkBuilder.get_object("ui_comment_appname_label")
+        self.ui_comment_subcategory_label = self.GtkBuilder.get_object("ui_comment_subcategory_label")
         self.ui_comment_version_label = self.GtkBuilder.get_object("ui_comment_version_label")
         self.ui_comment_fullname_entry = self.GtkBuilder.get_object("ui_comment_fullname_entry")
         self.ui_comment_content_textview = self.GtkBuilder.get_object("ui_comment_content_textview")
@@ -2653,6 +2654,7 @@ class MainWindow(object):
             self.ui_ad_license_label.set_text(details.get("license") or "")
 
             self.ui_comment_appname_label.set_markup("<b>{}</b>".format(app_pretty_name))
+            self.ui_comment_subcategory_label.set_markup("{}".format(app_subcategory_name))
             self.ui_comment_icon_image.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
             self.ui_comment_icon_image.set_pixel_size(48)
             self.ui_comment_version_label.set_text("{}".format(app_version))
