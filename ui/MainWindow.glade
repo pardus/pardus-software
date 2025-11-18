@@ -591,6 +591,9 @@
       </object>
     </child>
   </object>
+  <object class="GtkTextBuffer" id="ui_comment_content_textbuffer">
+    <signal name="insert-text" handler="on_ui_comment_content_textbuffer_insert_text" swapped="no"/>
+  </object>
   <object class="GtkPopover" id="ui_headermenu_popover">
     <property name="can-focus">False</property>
     <property name="position">bottom</property>
@@ -6623,6 +6626,7 @@ Use with caution. Are you sure you want to continue?</property>
                                 <property name="right-margin">8</property>
                                 <property name="top-margin">8</property>
                                 <property name="bottom-margin">8</property>
+                                <property name="buffer">ui_comment_content_textbuffer</property>
                                 <property name="input-hints">GTK_INPUT_HINT_NO_EMOJI | GTK_INPUT_HINT_NONE</property>
                                 <style>
                                   <class name="pardus-software-comment-textview"/>

@@ -287,6 +287,7 @@ class MainWindow(object):
         self.ui_comment_version_label = self.GtkBuilder.get_object("ui_comment_version_label")
         self.ui_comment_fullname_entry = self.GtkBuilder.get_object("ui_comment_fullname_entry")
         self.ui_comment_content_textview = self.GtkBuilder.get_object("ui_comment_content_textview")
+        self.ui_comment_content_textbuffer = self.GtkBuilder.get_object("ui_comment_content_textbuffer")
         self.ui_comment_send_button = self.GtkBuilder.get_object("ui_comment_send_button")
         self.ui_comment_error_label = self.GtkBuilder.get_object("ui_comment_error_label")
         self.ui_comment_info_label = self.GtkBuilder.get_object("ui_comment_info_label")
@@ -2556,8 +2557,8 @@ class MainWindow(object):
 
         self.set_comment_stars(0)
         self.ui_comment_fullname_entry.set_text("")
-        start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
-        self.ui_comment_content_textview.get_buffer().delete(start, end)
+        start, end = self.ui_comment_content_textbuffer.get_bounds()
+        self.ui_comment_content_textbuffer.delete(start, end)
         self.ui_comment_error_label.set_text("")
         self.ui_comment_error_label.set_visible(False)
         self.ui_comment_send_button.set_sensitive(False)
@@ -4227,17 +4228,17 @@ class MainWindow(object):
         self.ui_comment_send_button.set_sensitive(True)
         if self.ui_comment_own:
             self.ui_comment_fullname_entry.set_text(self.ui_comment_own["fullname"])
-            start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
-            self.ui_comment_content_textview.get_buffer().delete(start, end)
-            self.ui_comment_content_textview.get_buffer().insert(
-                self.ui_comment_content_textview.get_buffer().get_end_iter(),
+            start, end = self.ui_comment_content_textbuffer.get_bounds()
+            self.ui_comment_content_textbuffer.delete(start, end)
+            self.ui_comment_content_textbuffer.insert(
+                self.ui_comment_content_textbuffer.get_end_iter(),
                 "{}".format(self.ui_comment_own["comment"]))
             self.set_comment_stars(self.ui_comment_own["point"])
 
     def on_ui_comment_send_button_clicked(self, button):
         author = self.ui_comment_fullname_entry.get_text().strip()
-        start, end = self.ui_comment_content_textview.get_buffer().get_bounds()
-        comment = self.ui_comment_content_textview.get_buffer().get_text(start, end, False).strip()
+        start, end = self.ui_comment_content_textbuffer.get_bounds()
+        comment = self.ui_comment_content_textbuffer.get_text(start, end, False).strip()
         value = self.comment_star_point
         if value == 0 or comment == "" or author == "":
             self.ui_comment_error_label.set_visible(True)
@@ -4258,6 +4259,16 @@ class MainWindow(object):
             except Exception as e:
                 self.ui_comment_error_label.set_visible(True)
                 self.ui_comment_error_label.set_text(f"{e}")
+
+    def on_ui_comment_content_textbuffer_insert_text(self, buffer, location, text, length):
+        max_chars = 500
+        current_len = buffer.get_char_count()
+        new_len = len(text)
+        if current_len + new_len > max_chars:
+            GObject.signal_stop_emission_by_name(buffer, "insert-text")
+            remaining = max_chars - current_len
+            if remaining > 0:
+                buffer.insert(location, text[:remaining])
 
     def on_ui_suggestapp_eventbox_button_press_event(self, widget, event):
         self.ui_suggest_main_stack.set_visible_child_name("main")
