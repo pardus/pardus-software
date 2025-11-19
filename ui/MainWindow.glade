@@ -5843,7 +5843,7 @@ Use with caution. Are you sure you want to continue?</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox" id="VteBox">
+                          <object class="GtkBox" id="ui_tryfix_vte_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>

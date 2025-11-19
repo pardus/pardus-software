@@ -490,17 +490,9 @@ class MainWindow(object):
         styleContext = Gtk.StyleContext()
         styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
-        # fix apt vte box
-        self.vteterm = Vte.Terminal()
-        self.vteterm.set_scrollback_lines(-1)
-        menu = Gtk.Menu()
-        menu_items = Gtk.MenuItem(label=_("Copy selected text"))
-        menu.append(menu_items)
-        menu_items.connect("activate", self.menu_action, self.vteterm)
-        menu_items.show()
-        self.vteterm.connect_object("event", self.vte_event, menu)
-        vtebox = self.GtkBuilder.get_object("VteBox")
-        vtebox.add(self.vteterm)
+
+        self.tryfix_vteterm = None
+        self.ui_tryfix_vte_box = self.GtkBuilder.get_object("ui_tryfix_vte_box")
 
         self.dpkgconfigure_vteterm = None
         self.interrupt_vte_box = self.GtkBuilder.get_object("interrupt_vte_box")
@@ -4893,7 +4885,55 @@ class MainWindow(object):
     def on_ui_tryfix_done_button_clicked(self, button):
         GLib.idle_add(self.afterServers)
 
-    def vte_event(self, widget, event):
+    def tryfix_vte_process(self, command):
+        if self.tryfix_vteterm:
+            self.tryfix_vteterm.get_parent().remove(self.tryfix_vteterm)
+
+        self.tryfix_vteterm = Vte.Terminal()
+        self.tryfix_vteterm.set_scrollback_lines(-1)
+        tryfix_vte_menu = Gtk.Menu()
+        tryfix_vte_menu_items = Gtk.MenuItem(label=_("Copy selected text"))
+        tryfix_vte_menu.append(tryfix_vte_menu_items)
+        tryfix_vte_menu_items.connect("activate", self.on_tryfix_vte_menu_action, self.tryfix_vteterm)
+        tryfix_vte_menu_items.show()
+        self.tryfix_vteterm.connect_object("event", self.on_tryfix_vte_event, tryfix_vte_menu)
+        self.ui_tryfix_vte_box.add(self.tryfix_vteterm)
+        self.tryfix_vteterm.show_all()
+
+        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
+        self.tryfix_vteterm.set_pty(pty)
+        try:
+            self.tryfix_vteterm.spawn_async(
+                Vte.PtyFlags.DEFAULT,
+                os.environ['HOME'],
+                command,
+                None,
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
+                -1,
+                None,
+                self.on_tryfix_vte_create_spawn_callback,
+                None
+            )
+        except Exception as e:
+            # old version VTE doesn't have spawn_async so use spawn_sync
+            self.Logger.exception("{}".format(e))
+            self.tryfix_vteterm.connect("child-exited", self.on_tryfix_vte_process_done)
+            self.tryfix_vteterm.spawn_sync(
+                Vte.PtyFlags.DEFAULT,
+                os.environ['HOME'],
+                command,
+                [],
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                None,
+                None,
+            )
+
+    def on_tryfix_vte_menu_action(self, widget, terminal):
+        terminal.copy_clipboard()
+
+    def on_tryfix_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
             if event.button.button == 3:
                 widget.popup_for_device(None, None, None, None, None,
@@ -4901,24 +4941,11 @@ class MainWindow(object):
                 return True
         return False
 
-    def menu_action(self, widget, terminal):
-        terminal.copy_clipboard()
-
-    def tryfix_vte_process(self, command):
-        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
-        self.vteterm.set_pty(pty)
-        self.vteterm.connect("child-exited", self.on_tryfix_vte_process_done)
-        self.vteterm.spawn_sync(
-            Vte.PtyFlags.DEFAULT,
-            os.environ['HOME'],
-            command,
-            [],
-            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-            None,
-            None,
-        )
+    def on_tryfix_vte_create_spawn_callback(self, terminal, pid, error, userdata):
+        self.tryfix_vteterm.connect("child-exited", self.on_tryfix_vte_process_done)
 
     def on_tryfix_vte_process_done(self, obj, status):
+        self.Logger.info("on_tryfix_vte_process_done: status: {}".format(status))
         self.ui_tryfix_spinner.stop()
         self.ui_tryfix_button.set_sensitive(True)
         if status == 0:
@@ -4931,8 +4958,6 @@ class MainWindow(object):
                 self.ui_tryfix_stack.set_visible_child_name("error")
                 self.isbroken = True
                 self.Logger.warning("on_tryfix_vte_process_done: Error while updating Cache")
-        else:
-            self.Logger.info("on_tryfix_vte_process_done: status: {}".format(status))
 
     def upgrade_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
