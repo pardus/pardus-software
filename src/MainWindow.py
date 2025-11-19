@@ -1738,7 +1738,7 @@ class MainWindow(object):
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(23)
+        summary_label.set_max_width_chars(23 if number==0 else 21)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
         summary_label.set_margin_start(1)
 
