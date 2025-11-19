@@ -1085,28 +1085,15 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="ui_leftinstalled_box">
+                                  <object class="GtkListBox" id="ui_leftinstalled_listbox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <property name="spacing">8</property>
-                                    <child>
-                                      <object class="GtkListBox" id="ui_leftinstalled_listbox">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="margin-start">12</property>
-                                        <property name="margin-end">12</property>
-                                        <signal name="row-activated" handler="on_ui_leftinstalled_listbox_row_activated" swapped="no"/>
-                                        <style>
-                                          <class name="pardus-software-left-cats-listbox"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                    <signal name="row-activated" handler="on_ui_leftinstalled_listbox_row_activated" swapped="no"/>
+                                    <style>
+                                      <class name="pardus-software-left-cats-listbox"/>
+                                    </style>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1115,28 +1102,15 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="ui_leftupdates_box">
+                                  <object class="GtkListBox" id="ui_leftupdates_listbox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <property name="spacing">8</property>
-                                    <child>
-                                      <object class="GtkListBox" id="ui_leftupdates_listbox">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="margin-start">12</property>
-                                        <property name="margin-end">12</property>
-                                        <signal name="row-activated" handler="on_ui_leftupdates_listbox_row_activated" swapped="no"/>
-                                        <style>
-                                          <class name="pardus-software-left-cats-listbox"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                    <signal name="row-activated" handler="on_ui_leftupdates_listbox_row_activated" swapped="no"/>
+                                    <style>
+                                      <class name="pardus-software-left-cats-listbox"/>
+                                    </style>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
