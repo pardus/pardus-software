@@ -1,27 +1,10 @@
-.pardus-software-listbox{
-    background-color:transparent;
-}
-
 /*
-.pardus-software-flowbox flowboxchild{
-    background-color:transparent;
-}
+    base css
 */
 
-
-/*
-.pardus-software-listbox{
-    background-color:alpha(@unfocused_borders, 0.3);
+.pardus-software-frame > border{
+    border-radius: 8px;
 }
-
-list row:hover{
-    background-color:alpha(@unfocused_borders, 0.5);;
-
-}
-
-list row {
-    margin: 0px;
-}*/
 
 .pardus-software-accent-label{
     color: @theme_selected_bg_color;
@@ -36,35 +19,10 @@ list row {
     background-color: #FFB400;
 }
 
-.pardus-software-frame > border{
-    border-radius: 8px;
-}
-
-
-.pardus-software-listbox{
-    background-color:alpha(@unfocused_borders, 0.3);
-}
-
-.pardus-software-listbox row:hover{
-    background-color:alpha(@unfocused_borders, 0.5);;
-
-}
-
-.pardus-software-listbox row {
-    margin: 0px;
-}
-
-/*
-.pardus-software-left-cats-flowbox{
-    background-color:alpha(@unfocused_borders, 0.3);
-    border-radius:8px;
-}
-*/
-
 .pardus-software-left-cats-box{
     background-color:alpha(@unfocused_borders, 0.3);
-    /*border-radius:8px;*/
 }
+
 .pardus-software-left-cats-box:backdrop{
     background-color:alpha(@unfocused_borders, 0.1);
 }
@@ -75,16 +33,20 @@ list row {
     padding-bottom: 0px;
 }
 
-.pardus-software-left-installed-listbox{
-    padding-top: 0px;
-}
-
 .pardus-software-left-cats-listbox row{
     margin-bottom: 8px;
 }
 
 .pardus-software-left-cats-listbox row:hover, row:selected{
     border-radius:8px;
+}
+
+.pardus-software-left-cats-listbox row:backdrop:hover:not(:selected) {
+    background-color: alpha(@unfocused_borders, 0.23);
+}
+
+.pardus-software-left-installed-listbox{
+    padding-top: 0px;
 }
 
 .pardus-software-left-updates-count-box {
@@ -94,38 +56,6 @@ list row {
     color: @theme_selected_bg_color;
 }
 
-.pardus-software-mostapp-empty-label{
-    color:transparent;
-    padding-top: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin-bottom: -5px;
-}
-
-.pardus-software-mostapp-number-label{
-    margin-left: -5px;
-    margin-top: -5px;
-    background-color: @theme_bg_color;
-    border-radius: 8px;
-    padding: 3px 5px 3px 5px;
-}
-
-.pardus-software-mostapp-action-button{
-    padding: 1px 5px 1px 5px;
-    margin: 0px;
-    /*border-width: 0px;*/
-    min-height: 0px;
-    min-width: 0px;
-}
-
-.pardus-software-apps-action-button{
-    padding: 0px 3px 0px 3px;
-    margin: 0px;
-    margin-top: -5px;
-
-}
-
 .pardus-software-listbox-mostdown{
     background-color:transparent;
 }
@@ -133,6 +63,7 @@ list row {
 .pardus-software-listbox-mostdown row {
     margin: 0px;
     padding: 0px;
+    border-radius: 8px;
 }
 
 .pardus-software-listbox-mostdown row:hover{
@@ -150,27 +81,15 @@ list row {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.pardus-software-editorapp-icon{
-    border-radius: 8px;
-    background-color: alpha(@unfocused_borders, 0.5);
-    border-radius: 8px;
-    padding: 8px;
+.headersep{
+ margin: 0px;
 }
-/*
-headerbar {
-    border-bottom: none;
-    box-shadow: none;
-}
-*/
+
 button.openup-action { color: @theme_unfocused_selected_bg_color; outline-color: alpha(@theme_selected_bg_color, 0.5); background-color: mix(@theme_unfocused_selected_bg_color, @theme_unfocused_selected_fg_color, 0.86); }
 button.openup-action:hover { color: @theme_unfocused_selected_bg_color; background-color: mix(@theme_unfocused_selected_bg_color, @theme_unfocused_selected_fg_color, 0.81); box-shadow: none; }
 button.openup-action:active, button.openable-action:checked { color: @theme_unfocused_selected_bg_color; background-color: mix(@theme_unfocused_selected_bg_color, @theme_unfocused_selected_fg_color, 0.77); box-shadow: none; text-shadow: none; -gtk-icon-shadow: none; }
 button.openup-action:disabled { color: mix(@window_fg_color, @window_bg_color, 0.5); background-color: mix(currentColor, @window_bg_color,0.9); text-shadow: none; -gtk-icon-shadow: none; box-shadow: none; }
 
-
-.headersep{
- margin: 0px;
-}
 
 /*
 button.upgradable-action {
