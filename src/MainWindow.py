@@ -4705,6 +4705,13 @@ class MainWindow(object):
             self.Logger.warning("send_downloaded_request Error")
             self.Logger.exception("{}".format(e))
 
+    def update_vte_color(self, vte):
+        style_context = self.MainWindow.get_style_context()
+        background_color = style_context.get_background_color(Gtk.StateFlags.NORMAL);
+        foreground_color = style_context.get_color(Gtk.StateFlags.NORMAL);
+        vte.set_color_background(background_color)
+        vte.set_color_foreground(foreground_color)
+
     def startSysProcess(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
@@ -4890,6 +4897,7 @@ class MainWindow(object):
             self.tryfix_vteterm.get_parent().remove(self.tryfix_vteterm)
 
         self.tryfix_vteterm = Vte.Terminal()
+        self.update_vte_color(self.tryfix_vteterm)
         self.tryfix_vteterm.set_scrollback_lines(-1)
         tryfix_vte_menu = Gtk.Menu()
         tryfix_vte_menu_items = Gtk.MenuItem(label=_("Copy selected text"))
