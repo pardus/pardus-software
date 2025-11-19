@@ -492,7 +492,7 @@ class MainWindow(object):
 
 
         self.tryfix_vteterm = None
-        self.ui_tryfix_vte_box = self.GtkBuilder.get_object("ui_tryfix_vte_box")
+        self.ui_tryfix_vte_sw = self.GtkBuilder.get_object("ui_tryfix_vte_sw")
 
         self.dpkgconfigure_vteterm = None
         self.interrupt_vte_box = self.GtkBuilder.get_object("interrupt_vte_box")
@@ -4905,7 +4905,7 @@ class MainWindow(object):
         tryfix_vte_menu_items.connect("activate", self.on_tryfix_vte_menu_action, self.tryfix_vteterm)
         tryfix_vte_menu_items.show()
         self.tryfix_vteterm.connect_object("event", self.on_tryfix_vte_event, tryfix_vte_menu)
-        self.ui_tryfix_vte_box.add(self.tryfix_vteterm)
+        self.ui_tryfix_vte_sw.add(self.tryfix_vteterm)
         self.tryfix_vteterm.show_all()
 
         pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)

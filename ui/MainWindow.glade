@@ -5843,16 +5843,15 @@ Use with caution. Are you sure you want to continue?</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox" id="ui_tryfix_vte_box">
+                          <object class="GtkScrolledWindow" id="ui_tryfix_vte_sw">
                             <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="orientation">vertical</property>
+                            <property name="can-focus">True</property>
                             <child>
                               <placeholder/>
                             </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">2</property>
                           </packing>
