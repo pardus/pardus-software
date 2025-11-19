@@ -97,12 +97,7 @@ class MainWindow(object):
 
         self.mainstack = self.GtkBuilder.get_object("mainstack")
         self.homestack = self.GtkBuilder.get_object("homestack")
-        self.searchstack = self.GtkBuilder.get_object("searchstack")
         self.bottomstack = self.GtkBuilder.get_object("bottomstack")
-        self.commentstack = self.GtkBuilder.get_object("commentstack")
-        self.prefstack = self.GtkBuilder.get_object("prefstack")
-        self.activatestack = self.GtkBuilder.get_object("activatestack")
-        self.ui_pardusapps_stack = self.GtkBuilder.get_object("ui_pardusapps_stack")
 
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
@@ -361,24 +356,10 @@ class MainWindow(object):
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
-        self.SuggestScroll = self.GtkBuilder.get_object("SuggestScroll")
-        self.PardusAppDetailScroll = self.GtkBuilder.get_object("PardusAppDetailScroll")
-
-        self.PardusCommentScroll = self.GtkBuilder.get_object("PardusCommentScroll")
-        self.GnomeTRCommentScroll = self.GtkBuilder.get_object("GnomeTRCommentScroll")
-        self.GnomeENCommentScroll = self.GtkBuilder.get_object("GnomeENCommentScroll")
-
         if self.user_locale == "tr":
             self.current_category = "tümü"
         else:
             self.current_category = "all"
-
-        self.PardusCurrentCategorySubCats = False
-        self.PardusCurrentCategoryExternal = False
-        self.PardusCurrentCategorySubCategories = []
-
-        self.repoappname = ""
-        self.repoappclicked = False
 
         self.mac = self.getMac()
 
@@ -390,11 +371,8 @@ class MainWindow(object):
         self.control_display()
         self.mainstack.set_visible_child_name("splash")
 
-        self.fromexternal = False
-        self.externalactioned = False
         self.isinstalled = None
         self.isupgrade = False
-        self.correctsourcesclicked = False
 
         self.dpkgconfiguring = False
 
@@ -406,35 +384,17 @@ class MainWindow(object):
         self.inprogress_command = ""
         self.inprogress_desktop = ""
 
-        self.actionedappname = ""
-        self.actionedappdesktop = ""
-        self.actionedappcommand = ""
-
         self.queue = []
         self.inprogress = False
 
-        self.serverappicons = False
-        self.servercaticons = False
-
-        self.repoappsinit = False
-
         self.isbroken = False
-
-        self.mostappname = None
-        self.detailsappname = None
-        self.queueappname = None
-        self.myappname = None
 
         self.connection_error_after = False
         self.auto_apt_update_finished = False
-        self.upgradables_page_setted = False
-        self.upgrade_inprogress = False
-        self.keep_ok_clicked = False
 
         self.apps = {}
         self.apps_full = {}
         self.cats = []
-        self.upgradable_packages = []
 
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
@@ -448,31 +408,12 @@ class MainWindow(object):
 
         self.i386_packages = ["wine"]
 
-        self.clicked_myapp = ""
-
         self.errormessage = ""
         self.grouperrormessage = ""
 
-        self.aptupdateclicked = False
-
-        self.desktop_file = ""
-        self.desktop_file_extras = ""
-
-        self.command = ""
-
-        self.rate_average = 0
-        self.rate_individual = _("is None")
-        self.rate_author = ""
-        self.rate_comment = ""
-
-        self.imgfullscreen = False
-
         self.imgfullscreen_count = 0
-        self.down_image = 0
 
         self.slider_current_page = 0
-
-        self.last_width = 0
 
         self.comment_star_point = 0
 
@@ -526,14 +467,6 @@ class MainWindow(object):
         self.status_server_images = False
         self.status_server_cats = False
         self.status_server_home = False
-
-        self.status_serverapps = False
-        self.status_servercats = False
-        self.status_serverhome = False
-        self.status_serverstatistics = False
-        self.serverappicons_done = False
-        self.servercaticons_done = False
-        self.server_icons_done = False
 
         self.AppImage = AppImage()
         self.AppImage.app_image_from_server = self.app_image_from_server
@@ -1463,7 +1396,7 @@ class MainWindow(object):
                             self.Logger.info(f"{button.name} removed from queue, updating widget actions")
                             self.update_app_widget_label(app_name=button.name, from_queue_cancelled=True)
                     else:
-                        self.Logger.info("Cancelling {} {}".format(self.actionedappname, self.pid))
+                        self.Logger.info("Cancelling {} {}".format(self.inprogress_app_name, self.pid))
                         command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
                                    "kill", "{}".format(self.pid)]
                         self.start_kill_process(command)
@@ -3050,7 +2983,6 @@ class MainWindow(object):
         return valid, myapp_details, myapp_package, app["name"], app["icon_name"], app["filename"], app["description"]
 
     def on_myappsdetail_popup_worker_done(self, myapp, popup=False):
-        self.clicked_myapp = myapp
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
@@ -3503,29 +3435,6 @@ class MainWindow(object):
         GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
 
         return listbox
-
-    def isCommentClean(self, content):
-        if self.Server.connection and self.Server.badwords and content:
-            for badword in self.Server.badwords:
-                if re.search(r'\b' + badword["word"] + r'\b', content):
-                    return False
-        return True
-
-    def on_starEvent_button_press_event(self, widget, event):
-        installed = self.Package.isinstalled(self.appname)
-        if installed is None:
-            installed = False
-
-        if installed:
-            version = self.Package.installed_version(self.appname)
-            if version is None:
-                version = ""
-            dic = {"app": self.appname, "mac": self.mac, "value": widget.get_name()[-1],
-                   "author": self.UserSettings.user_real_name, "installed": installed, "comment": "",
-                   "appversion": version, "distro": self.user_distro_full, "justrate": True}
-            self.AppRequest.send("POST", self.Server.serverurl + self.Server.serversendrate, dic, self.appname)
-        else:
-            self.dtUserRating.set_markup("<span color='red'>{}</span>".format(_("You need to install the application")))
 
     def round_corners(self, pixbuf, radius):
         width = pixbuf.get_width()
@@ -4654,15 +4563,6 @@ class MainWindow(object):
                     self.notify()
 
         self.control_myapps(self.inprogress_app_name, self.inprogress_desktop, status, self.error, cachestatus)
-        # self.controlView(self.actionedappname, self.actionedappdesktop, self.actionedcommand)
-
-        # ui_appname = self.getActiveAppOnUI()
-        # if ui_appname == self.actionedappname:
-        #     if cachestatus and self.Package.controlPackageCache(ui_appname):
-        #         self.dActionButton.set_sensitive(True)
-        #         self.dActionInfoButton.set_sensitive(True)
-        #         self.raction.set_sensitive(True)
-
 
         self.update_app_widget_label(self.inprogress_app_name)
 
