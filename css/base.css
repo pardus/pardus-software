@@ -50,10 +50,10 @@
 }
 
 .pardus-software-left-updates-count-box {
-    background-color: alpha(@theme_selected_bg_color, 0.2);
+    background-color: alpha(mix(currentColor, @theme_selected_bg_color, 0.1), 0.2);
     border-radius: 8px;
-    border: 1px solid @theme_selected_bg_color;
-    color: @theme_selected_bg_color;
+    border: 1px solid mix(currentColor, @theme_selected_bg_color, 0.75);
+    color: mix(currentColor, @theme_selected_bg_color, 0.75);
 }
 
 .pardus-software-listbox-mostdown{
