@@ -1310,7 +1310,7 @@
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
                                                         <property name="homogeneous">True</property>
-                                                        <property name="column-spacing">12</property>
+                                                        <property name="column-spacing">28</property>
                                                         <property name="min-children-per-line">2</property>
                                                         <property name="max-children-per-line">4</property>
                                                         <property name="selection-mode">none</property>
@@ -1378,7 +1378,7 @@
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
                                                         <property name="homogeneous">True</property>
-                                                        <property name="column-spacing">12</property>
+                                                        <property name="column-spacing">28</property>
                                                         <property name="min-children-per-line">2</property>
                                                         <property name="max-children-per-line">4</property>
                                                         <property name="selection-mode">none</property>
@@ -1470,7 +1470,7 @@
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
                                                         <property name="homogeneous">True</property>
-                                                        <property name="column-spacing">12</property>
+                                                        <property name="column-spacing">28</property>
                                                         <property name="min-children-per-line">2</property>
                                                         <property name="max-children-per-line">4</property>
                                                         <property name="selection-mode">none</property>
@@ -1562,7 +1562,7 @@
                                                         <property name="can-focus">False</property>
                                                         <property name="valign">start</property>
                                                         <property name="homogeneous">True</property>
-                                                        <property name="column-spacing">12</property>
+                                                        <property name="column-spacing">28</property>
                                                         <property name="min-children-per-line">2</property>
                                                         <property name="max-children-per-line">4</property>
                                                         <property name="selection-mode">none</property>
@@ -1751,7 +1751,7 @@
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
                                                     <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">12</property>
+                                                    <property name="column-spacing">28</property>
                                                     <property name="min-children-per-line">2</property>
                                                     <property name="max-children-per-line">4</property>
                                                     <property name="selection-mode">none</property>
@@ -1771,7 +1771,7 @@
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
                                                     <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">12</property>
+                                                    <property name="column-spacing">28</property>
                                                     <property name="min-children-per-line">2</property>
                                                     <property name="max-children-per-line">4</property>
                                                     <property name="selection-mode">none</property>
@@ -4455,7 +4455,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
                                                     <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">12</property>
+                                                    <property name="column-spacing">28</property>
                                                     <property name="min-children-per-line">2</property>
                                                     <property name="max-children-per-line">4</property>
                                                     <property name="selection-mode">none</property>
@@ -4542,7 +4542,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
                                                     <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">12</property>
+                                                    <property name="column-spacing">28</property>
                                                     <property name="min-children-per-line">2</property>
                                                     <property name="max-children-per-line">4</property>
                                                     <property name="selection-mode">none</property>
@@ -4629,7 +4629,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
                                                     <property name="homogeneous">True</property>
-                                                    <property name="column-spacing">12</property>
+                                                    <property name="column-spacing">28</property>
                                                     <property name="min-children-per-line">2</property>
                                                     <property name="max-children-per-line">4</property>
                                                     <property name="selection-mode">none</property>

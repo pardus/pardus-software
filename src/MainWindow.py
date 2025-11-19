@@ -578,8 +578,11 @@ class MainWindow(object):
                 height = int(h * 0.6944)
 
             if w <= 1366 or h <= 768:
-                width = 1000
+                width = 1028
                 height = 661
+
+            if w <= 1024:
+                width = 925
 
             self.MainWindow.resize(width, height)
 
@@ -1735,15 +1738,17 @@ class MainWindow(object):
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(23 if number==0 else 21)
+        summary_label.set_max_width_chars(23)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+        summary_label.set_margin_start(1)
 
         box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
         box_app.props.valign = Gtk.Align.CENTER
         box_app.pack_start(app_name, False, True, 0)
         box_app.pack_start(summary_label, False, True, 0)
+        box_app.set_margin_end(8)
 
-        box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+        box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 16)
         if number != 0:
             number_label = Gtk.Label.new()
             number_label.set_markup("{}".format(number))
@@ -1753,15 +1758,16 @@ class MainWindow(object):
         box_h.pack_start(app_icon, False, True, 0)
         box_h.pack_start(box_app, False, True, 0)
         box_h.pack_start(action_button, False, True, 0)
-        box_h.set_margin_start(5)
-        box_h.set_margin_end(5)
-        box_h.set_margin_top(5)
+        box_h.set_margin_start(8)
+        box_h.set_margin_end(8)
+        box_h.set_margin_top(8)
         box_h.set_margin_bottom(5)
 
         bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
         bottom_separator.props.valign = Gtk.Align.END
         bottom_separator.set_vexpand(True)
-        bottom_separator.set_size_request(310, -1)
+        if 1024 < self.display_width <= 1366:
+            bottom_separator.set_size_request(333, -1)
         GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
 
         box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 7)
@@ -1786,7 +1792,7 @@ class MainWindow(object):
         app_name.props.halign = Gtk.Align.START
         app_name.set_line_wrap(False)
         app_name.set_justify(Gtk.Justification.LEFT)
-        app_name.set_max_width_chars(23 if self.display_width >= 1920 else 21)
+        app_name.set_max_width_chars(23)
         app_name.set_ellipsize(Pango.EllipsizeMode.END)
         app_name.props.halign = Gtk.Align.START
 
@@ -1835,7 +1841,7 @@ class MainWindow(object):
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(23 if self.display_width >= 1920 else 21)
+        summary_label.set_max_width_chars(33)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
 
         box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
@@ -1868,7 +1874,7 @@ class MainWindow(object):
         box_h.pack_start(box_app, False, True, 0)
         box_h.pack_end(uninstallbutton, False, True, 0)
         box_h.pack_end(action_button, False, True, 0)
-        box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 6)
+        box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 20)
 
         box_h.set_margin_start(5)
         box_h.set_margin_end(5)
@@ -1903,7 +1909,7 @@ class MainWindow(object):
         app_name.props.halign = Gtk.Align.START
         app_name.set_line_wrap(False)
         app_name.set_justify(Gtk.Justification.LEFT)
-        app_name.set_max_width_chars(23 if self.display_width >= 1920 else 21)
+        app_name.set_max_width_chars(23)
         app_name.set_ellipsize(Pango.EllipsizeMode.END)
         app_name.props.halign = Gtk.Align.START
 
@@ -1968,7 +1974,7 @@ class MainWindow(object):
         summary_label.props.valign = Gtk.Align.START
         summary_label.props.halign = Gtk.Align.START
         summary_label.set_line_wrap(False)
-        summary_label.set_max_width_chars(23 if self.display_width >= 1920 else 21)
+        summary_label.set_max_width_chars(33)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
 
         box_app = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
@@ -1989,14 +1995,14 @@ class MainWindow(object):
         box_du.props.valign = Gtk.Align.CENTER
         box_du.pack_start(du_static, False, True, 0)
         box_du.pack_start(du_size, False, True, 0)
-        box_du.set_size_request(77, -1)
+        box_du.set_size_request(177, -1)
 
         box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
         box_h.pack_start(app_icon, False, True, 0)
         box_h.pack_start(box_app, False, True, 0)
         box_h.pack_end(uninstallbutton, False, True, 0)
         box_h.pack_end(action_button, False, True, 0)
-        box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 6)
+        box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 20)
 
         box_h.set_margin_start(5)
         box_h.set_margin_end(5)
@@ -2110,8 +2116,8 @@ class MainWindow(object):
         box_h.pack_start(app_icon, False, True, 0)
         box_h.pack_start(box_app, False, True, 0)
         box_h.pack_end(cancel_button, False, True, 0)
-        box_h.pack_end(progress_bar, False, True, 40 if self.display_width >= 1920 else 6)
-        box_h.pack_end(box_version, False, True, 40 if self.display_width >= 1920 else 6)
+        box_h.pack_end(progress_bar, False, True, 20 if self.display_width >= 1920 else 6)
+        box_h.pack_end(box_version, False, True, 20 if self.display_width >= 1920 else 6)
 
         box_h.set_margin_start(5)
         box_h.set_margin_end(5)
@@ -2185,7 +2191,7 @@ class MainWindow(object):
             app_name.set_markup("<b>{}</b>".format(editor_app_pretty_name))
             app_name.set_line_wrap(False)
             app_name.set_justify(Gtk.Justification.LEFT)
-            app_name.set_max_width_chars(22)
+            app_name.set_max_width_chars(23)
             app_name.set_ellipsize(Pango.EllipsizeMode.END)
             app_name.props.halign = Gtk.Align.START
 
@@ -2247,6 +2253,7 @@ class MainWindow(object):
             box_v.props.valign = Gtk.Align.CENTER
             box_v.pack_start(app_name, False, True, 0)
             box_v.pack_start(summary_label, False, True, 0)
+            box_v.set_margin_end(12)
 
             box_h = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
             box_h.pack_start(app_icon, False, True, 0)
