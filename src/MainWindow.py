@@ -422,15 +422,12 @@ class MainWindow(object):
 
         cssProvider = Gtk.CssProvider()
         if theme_name.startswith("pardus") or theme_name.startswith("adwaita"):
-            cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/all.css")
-        elif theme_name.startswith("adw-gtk3") or theme_name.startswith("eta"):
-            cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/adw.css")
+            cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/adwaita.css")
         else:
             cssProvider.load_from_path(os.path.dirname(os.path.abspath(__file__)) + "/../css/base.css")
         screen = Gdk.Screen.get_default()
         styleContext = Gtk.StyleContext()
         styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-
 
         self.tryfix_vteterm = None
         self.ui_tryfix_vte_sw = self.GtkBuilder.get_object("ui_tryfix_vte_sw")
