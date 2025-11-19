@@ -1109,6 +1109,7 @@
                                                 <signal name="row-activated" handler="on_ui_leftinstalled_listbox_row_activated" swapped="no"/>
                                                 <style>
                                                   <class name="pardus-software-left-cats-listbox"/>
+                                                  <class name="pardus-software-left-installed-listbox"/>
                                                 </style>
                                               </object>
                                               <packing>

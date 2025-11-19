@@ -72,6 +72,11 @@ list row {
 .pardus-software-left-cats-listbox{
     background-color:transparent;
     border-radius:8px;
+    padding-bottom: 0px;
+}
+
+.pardus-software-left-installed-listbox{
+    padding-top: 0px;
 }
 
 .pardus-software-left-cats-listbox row{
