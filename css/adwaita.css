@@ -1,0 +1,61 @@
+/*
+    css for adwaita based themes
+*/
+
+@import url("base.css");
+
+button.openup-action {
+    color: @theme_selected_bg_color;
+    outline-color: alpha(@theme_selected_bg_color, 0.5);
+    background-color: mix(@theme_selected_bg_color,
+                          @theme_unfocused_selected_fg_color,
+                          0.78);
+    border-color: transparent;
+    background-image: none;
+    text-shadow: none;
+    -gtk-icon-shadow: none;
+    box-shadow: none;
+}
+
+button.openup-action:hover {
+    color: @theme_selected_bg_color;
+    background-color: mix(@theme_selected_bg_color,
+                          @theme_unfocused_selected_fg_color,
+                          0.73);
+    box-shadow: none;
+}
+
+button.openup-action:active,
+button.openup-action:checked {
+    color: @theme_selected_bg_color;
+    background-color: mix(@theme_selected_bg_color,
+                          @theme_unfocused_selected_fg_color,
+                          0.70);
+    box-shadow: none;
+    text-shadow: none;
+    -gtk-icon-shadow: none;
+}
+
+button.openup-action:backdrop,
+button.openup-action.flat:backdrop {
+    color: @theme_selected_bg_color;
+    background-color: mix(@theme_selected_bg_color,
+                          @theme_unfocused_selected_fg_color,
+                          0.83);
+}
+
+button.openup-action:backdrop:active,
+button.openup-action:backdrop:checked,
+button.openup-action.flat:backdrop:active,
+button.openup-action.flat:backdrop:checked {
+    background-color: mix(@theme_selected_bg_color,
+                          @theme_unfocused_selected_fg_color,
+                          0.78);
+}
+
+.pardus-software-left-updates-count-box {
+    background-color: alpha(mix(currentColor, @theme_selected_bg_color, 0.9), 0.1);
+    border-radius: 8px;
+    border: 1px solid mix(currentColor, @theme_selected_bg_color, 0.5);
+    color: mix(currentColor, @theme_selected_bg_color, 0.5);
+}
