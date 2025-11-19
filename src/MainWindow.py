@@ -577,6 +577,10 @@ class MainWindow(object):
                 width = int(w * 0.5578)
                 height = int(h * 0.6944)
 
+            if w <= 1366 or h <= 768:
+                width = 1000
+                height = 661
+
             self.MainWindow.resize(width, height)
 
         except Exception as e:
