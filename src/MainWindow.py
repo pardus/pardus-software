@@ -4187,7 +4187,7 @@ class MainWindow(object):
         else:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
                        self.UserSettings.username]
-        self.startGroupProcess(command)
+        self.group_process(command)
 
     def on_ui_ad_image_button_press(self, widget, event):
         # Detect input device type (mouse/touchpad vs touchscreen)
@@ -4442,6 +4442,104 @@ class MainWindow(object):
     def on_bottomerrordetails_button_clicked(self, button):
         self.bottomerrordetails_popover.popup()
 
+    def on_ui_tryfix_button_clicked(self, button):
+        self.ui_tryfix_stack.set_visible_child_name("info")
+
+    def on_ui_tryfix_confirm_button_clicked(self, button):
+        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
+                   "fixapt"]
+        self.ui_tryfix_stack.set_visible_child_name("main")
+        self.ui_tryfix_button.set_sensitive(False)
+        self.ui_tryfix_spinner.start()
+        self.tryfix_vte_process(command)
+
+    def on_ui_tryfix_cancel_button_clicked(self, button):
+        self.ui_tryfix_stack.set_visible_child_name("main")
+
+    def on_ui_tryfix_done_button_clicked(self, button):
+        GLib.idle_add(self.afterServers)
+
+    def update_vte_color(self, vte):
+        style_context = self.MainWindow.get_style_context()
+        background_color = style_context.get_background_color(Gtk.StateFlags.NORMAL);
+        foreground_color = style_context.get_color(Gtk.StateFlags.NORMAL);
+        vte.set_color_background(background_color)
+        vte.set_color_foreground(foreground_color)
+
+    def send_downloaded_request(self, appname):
+        try:
+            installed = self.Package.isinstalled(appname)
+            if installed is None:
+                installed = False
+            version = self.Package.installed_version(appname)
+            if version is None:
+                version = ""
+            dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
+                   "distro": self.user_distro_full}
+            self.AppRequest.send(self.Server.serverurl + self.Server.serversenddownload, dic)
+        except Exception as e:
+            self.Logger.warning("send_downloaded_request Error")
+            self.Logger.exception("{}".format(e))
+
+    def control_myapps(self, actionedappname, actionedappdesktop, status, error, cachestatus):
+        self.Logger.info("in control_myapps")
+        if status == 0 and not error and cachestatus:
+            if self.isinstalled:
+                if self.isupgrade:
+                    return
+                self.Logger.info("{} removing from myapps".format(actionedappdesktop))
+                desktop_id = actionedappdesktop.rsplit('/', 1)[-1]
+                for fbc in self.ui_installedapps_flowbox:
+                    # get desktop id from open button widget name
+                    if fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].name == desktop_id:
+                        if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                            self.Logger.info("in pop_myapp popdown")
+                            self.ui_myapp_details_popover.set_relative_to(self.ui_installedapps_flowbox)
+                            self.ui_myapp_details_popover.popdown()
+                        self.ui_installedapps_flowbox.remove(fbc)
+            else:
+                self.Logger.info("{} adding to myapps".format(actionedappdesktop))
+                valid, dic = self.Package.parse_desktopfile(os.path.basename(actionedappdesktop))
+                if valid:
+                    self.add_to_myapps_ui(dic)
+                    GLib.idle_add(self.ui_installedapps_flowbox.show_all)
+                    self.ui_installedapps_flowbox.set_sort_func(self.installedapps_sort_func)
+            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                self.Logger.info("in pop_myapp details status=0")
+                self.ui_myapp_pop_uninstall_button.set_sensitive(False)
+                self.ui_myapp_details_popover.popdown()
+        else:
+            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
+                self.Logger.info("in pop_myapp details status!=0")
+                self.ui_myapp_pop_uninstall_button.set_sensitive(True)
+
+    def notify(self, message_summary="", message_body=""):
+        try:
+            if Notify.is_initted():
+                Notify.uninit()
+
+            if message_summary == "" and message_body == "":
+                Notify.init(self.inprogress_app_name)
+                if self.isinstalled:
+                    notification = Notify.Notification.new("{} {}".format(
+                        self.get_pretty_name_from_app_name(self.inprogress_app_name),_("Updated") if self.isupgrade else _("Removed")))
+                else:
+                    notification = Notify.Notification.new("{} {}".format(
+                        self.get_pretty_name_from_app_name(self.inprogress_app_name), _("Installed")))
+                try:
+                    notification.set_app_icon("pardus-software")
+                except AttributeError:
+                    notification.set_image_from_pixbuf(
+                        Gtk.IconTheme.get_default().load_icon("pardus-software", 64, Gtk.IconLookupFlags(16)))
+                except Exception as e:
+                    self.Logger.exception("{}".format(e))
+            else:
+                Notify.init(message_summary)
+                notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
+            notification.show()
+        except Exception as e:
+            self.Logger.exception("{}".format(e))
+
     def start_kill_process(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
@@ -4631,169 +4729,6 @@ class MainWindow(object):
         self.error_message = ""
         self.dpkglockerror_message = ""
 
-    def control_myapps(self, actionedappname, actionedappdesktop, status, error, cachestatus):
-        self.Logger.info("in control_myapps")
-        if status == 0 and not error and cachestatus:
-            if self.isinstalled:
-                if self.isupgrade:
-                    return
-                self.Logger.info("{} removing from myapps".format(actionedappdesktop))
-                desktop_id = actionedappdesktop.rsplit('/', 1)[-1]
-                for fbc in self.ui_installedapps_flowbox:
-                    # get desktop id from open button widget name
-                    if fbc.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].name == desktop_id:
-                        if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                            self.Logger.info("in pop_myapp popdown")
-                            self.ui_myapp_details_popover.set_relative_to(self.ui_installedapps_flowbox)
-                            self.ui_myapp_details_popover.popdown()
-                        self.ui_installedapps_flowbox.remove(fbc)
-            else:
-                self.Logger.info("{} adding to myapps".format(actionedappdesktop))
-                valid, dic = self.Package.parse_desktopfile(os.path.basename(actionedappdesktop))
-                if valid:
-                    self.add_to_myapps_ui(dic)
-                    GLib.idle_add(self.ui_installedapps_flowbox.show_all)
-                    self.ui_installedapps_flowbox.set_sort_func(self.installedapps_sort_func)
-            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                self.Logger.info("in pop_myapp details status=0")
-                self.ui_myapp_pop_uninstall_button.set_sensitive(False)
-                self.ui_myapp_details_popover.popdown()
-        else:
-            if self.ui_myapp_pop_stack.get_visible_child_name() == "details" and actionedappname == self.myapp_toremove:
-                self.Logger.info("in pop_myapp details status!=0")
-                self.ui_myapp_pop_uninstall_button.set_sensitive(True)
-
-    def notify(self, message_summary="", message_body=""):
-        try:
-            if Notify.is_initted():
-                Notify.uninit()
-
-            if message_summary == "" and message_body == "":
-                Notify.init(self.inprogress_app_name)
-                if self.isinstalled:
-                    notification = Notify.Notification.new("{} {}".format(
-                        self.get_pretty_name_from_app_name(self.inprogress_app_name),_("Updated") if self.isupgrade else _("Removed")))
-                else:
-                    notification = Notify.Notification.new("{} {}".format(
-                        self.get_pretty_name_from_app_name(self.inprogress_app_name), _("Installed")))
-                try:
-                    notification.set_app_icon("pardus-software")
-                except AttributeError:
-                    notification.set_image_from_pixbuf(
-                        Gtk.IconTheme.get_default().load_icon("pardus-software", 64, Gtk.IconLookupFlags(16)))
-                except Exception as e:
-                    self.Logger.exception("{}".format(e))
-            else:
-                Notify.init(message_summary)
-                notification = Notify.Notification.new(message_summary, message_body, "pardus-software")
-            notification.show()
-        except Exception as e:
-            self.Logger.exception("{}".format(e))
-
-    def send_downloaded_request(self, appname):
-        try:
-            installed = self.Package.isinstalled(appname)
-            if installed is None:
-                installed = False
-            version = self.Package.installed_version(appname)
-            if version is None:
-                version = ""
-            dic = {"mac": self.mac, "app": appname, "installed": installed, "appversion": version,
-                   "distro": self.user_distro_full}
-            self.AppRequest.send(self.Server.serverurl + self.Server.serversenddownload, dic)
-        except Exception as e:
-            self.Logger.warning("send_downloaded_request Error")
-            self.Logger.exception("{}".format(e))
-
-    def update_vte_color(self, vte):
-        style_context = self.MainWindow.get_style_context()
-        background_color = style_context.get_background_color(Gtk.StateFlags.NORMAL);
-        foreground_color = style_context.get_color(Gtk.StateFlags.NORMAL);
-        vte.set_color_background(background_color)
-        vte.set_color_foreground(foreground_color)
-
-    def startSysProcess(self, params):
-        pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                                      standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onSysProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onSysProcessStderr)
-        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onSysProcessExit)
-
-        return pid
-
-    def onSysProcessStdout(self, source, condition):
-        if condition == GLib.IO_HUP:
-            return False
-        line = source.readline()
-        self.Logger.info("{}".format(line))
-        return True
-
-    def onSysProcessStderr(self, source, condition):
-        if condition == GLib.IO_HUP:
-            return False
-        line = source.readline()
-        self.Logger.info("{}".format(line))
-        return True
-
-    def onSysProcessExit(self, pid, status):
-        if self.externalactioned:
-            ui_appname = self.getActiveAppOnUI()
-            if ui_appname == self.actionedenablingappname:
-                self.dActionButton.set_sensitive(True)
-                self.raction.set_sensitive(True)
-                self.activating_spinner.stop()
-                self.activatestack.set_visible_child_name("main")
-                if status == 0:
-                    self.externalactioned = False
-                else:  # if cancelled then may be retry
-                    self.externalactioned = True
-            else:
-                self.externalactioned = False
-
-            self.Package.updatecache()
-
-            if status == 0 and not self.error:
-                self.notify(message_summary=_("Pardus Software Center"), message_body=_("Repo Activation Completed"))
-
-            self.controlView(self.actionedenablingappname, self.actionedenablingappdesktop,
-                             self.actionedenablingappcommand)
-
-        if self.correctsourcesclicked:
-            if status == 0:
-                self.preflabel_settext("<span weight='bold'>{}\n{}</span>".format(
-                    _("Fixing of system package manager sources list is done."),
-                    _("Package manager cache automatically updated.")))
-                self.Package.updatecache()
-            # self.headerAptUpdateSpinner.set_visible(False)
-            # self.headerAptUpdateSpinner.stop()
-            self.prefcorrectbutton.set_sensitive(True)
-
-            self.correctsourcesclicked = False
-
-        if self.aptupdateclicked:
-            self.Logger.info("apt update done (detail page), status code : {}".format(status))
-            self.dAptUpdateButton.set_sensitive(True)
-            self.dAptUpdateSpinner.stop()
-            self.Package.updatecache()
-            self.controlView(self.appname, self.desktop_file, self.command)
-            if status == 0:
-                self.dAptUpdateBox.set_visible(False)
-                self.dAptUpdateButton.set_visible(False)
-                self.dAptUpdateInfoLabel.set_visible(True)
-                self.dAptUpdateInfoLabel.set_text("")
-            elif status == 32256:
-                self.dAptUpdateInfoLabel.set_visible(True)
-                self.dAptUpdateInfoLabel.set_text("")
-                self.Logger.info("wrong password on apt update (detail page)")
-            else:
-                self.dAptUpdateBox.set_visible(True)
-                self.dAptUpdateInfoLabel.set_visible(True)
-                self.dAptUpdateInfoLabel.set_markup("<span color='red'>{}{}</span>".format(
-                    _("An error occurred while updating the package cache. Exit Code: "), status))
-            self.aptupdateclicked = False
-
-        self.Logger.info("SysProcess Exit Code: {}".format(status))
-
     def apt_update_process(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
@@ -4842,55 +4777,38 @@ class MainWindow(object):
 
             self.auto_apt_update_finished = True
 
-    def startGroupProcess(self, params):
+    def group_process(self, params):
         pid, stdin, stdout, stderr = GLib.spawn_async(params, flags=GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                                       standard_output=True, standard_error=True)
-        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStdout)
-        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.onGroupProcessStderr)
-        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.onGroupProcessExit)
+        GLib.io_add_watch(GLib.IOChannel(stdout), GLib.IO_IN | GLib.IO_HUP, self.on_group_process_stdout)
+        GLib.io_add_watch(GLib.IOChannel(stderr), GLib.IO_IN | GLib.IO_HUP, self.on_group_process_stderr)
+        GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, self.on_group_process_exit)
 
         return pid
 
-    def onGroupProcessStdout(self, source, condition):
+    def on_group_process_stdout(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        self.Logger.info("onGroupProcessStdout - line: {}".format(line))
+        self.Logger.info("on_group_process_stdout - line: {}".format(line))
         return True
 
-    def onGroupProcessStderr(self, source, condition):
+    def on_group_process_stderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
         line = source.readline()
-        self.Logger.info("onGroupProcessStderr - line: {}".format(line))
+        self.Logger.info("on_group_process_stderr - line: {}".format(line))
         self.grouperrormessage = line
         return True
 
-    def onGroupProcessExit(self, pid, status):
-        self.Logger.info("onGroupProcessExit - status: {}".format(status))
+    def on_group_process_exit(self, pid, status):
+        self.Logger.info("on_group_process_exit - status: {}".format(status))
         self.control_groups()
         if status != 0:
             self.ui_settings_password_info_label.set_markup(
                 "<small><span color='red' weight='light'>{}</span></small>".format(self.grouperrormessage))
         else:
             self.ui_settings_password_info_label.set_text("")
-
-    def on_ui_tryfix_button_clicked(self, button):
-        self.ui_tryfix_stack.set_visible_child_name("info")
-
-    def on_ui_tryfix_confirm_button_clicked(self, button):
-        command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
-                   "fixapt"]
-        self.ui_tryfix_stack.set_visible_child_name("main")
-        self.ui_tryfix_button.set_sensitive(False)
-        self.ui_tryfix_spinner.start()
-        self.tryfix_vte_process(command)
-
-    def on_ui_tryfix_cancel_button_clicked(self, button):
-        self.ui_tryfix_stack.set_visible_child_name("main")
-
-    def on_ui_tryfix_done_button_clicked(self, button):
-        GLib.idle_add(self.afterServers)
 
     def tryfix_vte_process(self, command):
         if self.tryfix_vteterm:
@@ -4966,80 +4884,6 @@ class MainWindow(object):
                 self.ui_tryfix_stack.set_visible_child_name("error")
                 self.isbroken = True
                 self.Logger.warning("on_tryfix_vte_process_done: Error while updating Cache")
-
-    def upgrade_vte_event(self, widget, event):
-        if event.type == Gdk.EventType.BUTTON_PRESS:
-            if event.button.button == 3:
-                widget.popup_for_device(None, None, None, None, None,
-                                        event.button.button, event.time)
-                return True
-        return False
-
-    def upgrade_vte_menu_action(self, widget, terminal):
-        terminal.copy_clipboard()
-
-    def upgrade_vte_start_process(self, command):
-        pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
-        self.upgrade_vteterm.set_pty(pty)
-        try:
-            self.upgrade_vteterm.spawn_async(
-                Vte.PtyFlags.DEFAULT,
-                os.environ['HOME'],
-                command,
-                None,
-                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                None,
-                None,
-                -1,
-                None,
-                self.upgrade_vte_create_spawn_callback,
-                None
-            )
-        except Exception as e:
-            # old version VTE doesn't have spawn_async so use spawn_sync
-            self.Logger.exception("{}".format(e))
-            self.upgrade_vteterm.connect("child-exited", self.upgrade_vte_on_done)
-            self.upgrade_vteterm.spawn_sync(
-                Vte.PtyFlags.DEFAULT,
-                os.environ['HOME'],
-                command,
-                [],
-                GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                None,
-                None,
-            )
-
-    def upgrade_vte_create_spawn_callback(self, terminal, pid, error, userdata):
-        self.upgrade_vteterm.connect("child-exited", self.upgrade_vte_on_done)
-
-    def upgrade_vte_on_done(self, terminal, status):
-        self.Logger.info("upgrade_vte_on_done status: {}".format(status))
-        self.upgrade_inprogress = False
-        if status == 32256:  # operation cancelled | Request dismissed
-            self.upgrade_stack.set_visible_child_name("main")
-        elif status == 2816:  # dpkg lock error
-            GLib.idle_add(self.upgrade_info_box.set_visible, True)
-            GLib.idle_add(self.upgrade_info_dpkgfix_button.set_visible, True)
-            GLib.idle_add(self.upgrade_info_back_button.set_visible, True)
-            self.upgrade_info_label.set_markup("<span color='red'><b>{}</b></span>".format(
-                _("Only one software management tool is allowed to run at the same time.\n"
-                  "Please close the other application e.g. 'Update Manager', 'aptitude' or 'Synaptic' first.")))
-        elif status == 3072:  # dpkg interrupt error
-            GLib.idle_add(self.upgrade_info_box.set_visible, True)
-            GLib.idle_add(self.upgrade_info_dpkgfix_button.set_visible, True)
-            GLib.idle_add(self.upgrade_info_back_button.set_visible, True)
-            self.upgrade_info_label.set_markup("<span color='red'><b>{}</b></span>".format(
-                _("dpkg interrupt detected. Click the 'Fix' button or\n"
-                  "manually run 'sudo dpkg --configure -a' to fix the problem.")))
-        else:
-            self.Package.updatecache()
-            self.upgradables_page_setted = False
-            if self.homestack.get_visible_child_name() == "upgrade":
-                GLib.idle_add(self.upgrade_info_label.set_markup,
-                              "<b>{}</b>".format(_("Process completed.")))
-                GLib.idle_add(self.upgrade_info_box.set_visible, True)
-                GLib.idle_add(self.upgrade_info_back_button.set_visible, False)
-                GLib.idle_add(self.upgrade_info_ok_button.set_visible, True)
 
     def dpkgconfigure_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
