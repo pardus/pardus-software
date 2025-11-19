@@ -661,6 +661,7 @@ class MainWindow(object):
         self.ui_header_aptupdate_spinner.set_visible(False)
         self.ui_upgradables_combobox.set_visible(False)
         self.ui_suggest_error_label.set_visible(False)
+        self.bottomerrordetails_button.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -4434,7 +4435,6 @@ class MainWindow(object):
     def on_pop_interruptinfo_ok_button_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
         self.interruptpopover.popdown()
-        self.upgrade_stack.set_visible_child_name("main")
 
     def on_bottominterrupthide_button_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
@@ -4885,17 +4885,6 @@ class MainWindow(object):
                 self.isbroken = True
                 self.Logger.warning("on_tryfix_vte_process_done: Error while updating Cache")
 
-    def dpkgconfigure_vte_event(self, widget, event):
-        if event.type == Gdk.EventType.BUTTON_PRESS:
-            if event.button.button == 3:
-                widget.popup_for_device(None, None, None, None, None,
-                                        event.button.button, event.time)
-                return True
-        return False
-
-    def dpkgconfigure_vte_menu_action(self, widget, terminal):
-        terminal.copy_clipboard()
-
     def dpkgconfigure_vte_start_process(self, command):
         if self.dpkgconfigure_vteterm:
             self.dpkgconfigure_vteterm.get_parent().remove(self.dpkgconfigure_vteterm)
@@ -4941,6 +4930,17 @@ class MainWindow(object):
                 None,
             )
 
+    def dpkgconfigure_vte_event(self, widget, event):
+        if event.type == Gdk.EventType.BUTTON_PRESS:
+            if event.button.button == 3:
+                widget.popup_for_device(None, None, None, None, None,
+                                        event.button.button, event.time)
+                return True
+        return False
+
+    def dpkgconfigure_vte_menu_action(self, widget, terminal):
+        terminal.copy_clipboard()
+
     def dpkgconfigure_vte_create_spawn_callback(self, terminal, pid, error, userdata):
         self.dpkgconfigure_vteterm.connect("child-exited", self.dpkgconfigure_vte_on_done)
 
@@ -4950,9 +4950,6 @@ class MainWindow(object):
         self.dpkgconfiguring = False
         self.bottominterrupt_fix_button.set_sensitive(True)
         self.bottominterrupthide_button.set_sensitive(True)
-
-        self.upgrade_info_dpkgfix_button.set_sensitive(True)
-
         self.pop_interruptinfo_spinner.set_visible(False)
         self.pop_interruptinfo_spinner.stop()
 
