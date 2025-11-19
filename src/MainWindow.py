@@ -109,10 +109,6 @@ class MainWindow(object):
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
         self.splashbarstatus = True
 
-        self.tryfixButton = self.GtkBuilder.get_object("tryfixButton")
-        self.tryfixSpinner = self.GtkBuilder.get_object("tryfixSpinner")
-        self.headerAptUpdateSpinner = self.GtkBuilder.get_object("headerAptUpdateSpinner")
-
         # myapps remove popup
         self.ui_myapp_pop_stack = self.GtkBuilder.get_object("ui_myapp_pop_stack")
         self.ui_myapp_pop_spinner = self.GtkBuilder.get_object("ui_myapp_pop_spinner")
@@ -353,6 +349,15 @@ class MainWindow(object):
         self.ui_settings_cache_size_label = self.GtkBuilder.get_object("ui_settings_cache_size_label")
         self.ui_settings_password_button = self.GtkBuilder.get_object("ui_settings_password_button")
         self.ui_settings_password_info_label = self.GtkBuilder.get_object("ui_settings_password_info_label")
+
+        self.ui_tryfix_stack = self.GtkBuilder.get_object("ui_tryfix_stack")
+        self.ui_tryfix_button = self.GtkBuilder.get_object("ui_tryfix_button")
+        self.ui_tryfix_spinner = self.GtkBuilder.get_object("ui_tryfix_spinner")
+        self.ui_tryfix_spinner = self.GtkBuilder.get_object("ui_tryfix_spinner")
+        self.ui_tryfix_cancel_button = self.GtkBuilder.get_object("ui_tryfix_cancel_button")
+        self.ui_tryfix_confirm_button = self.GtkBuilder.get_object("ui_tryfix_confirm_button")
+        self.ui_tryfix_done_button = self.GtkBuilder.get_object("ui_tryfix_done_button")
+
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
@@ -4871,22 +4876,22 @@ class MainWindow(object):
         else:
             self.ui_settings_password_info_label.set_text("")
 
-    def on_tryfixButton_clicked(self, button):
-        self.tryfixstack.set_visible_child_name("info")
+    def on_ui_tryfix_button_clicked(self, button):
+        self.ui_tryfix_stack.set_visible_child_name("info")
 
-    def on_tryfixconfirm_clicked(self, button):
+    def on_ui_tryfix_confirm_button_clicked(self, button):
         command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/SysActions.py",
                    "fixapt"]
-        self.tryfixstack.set_visible_child_name("main")
-        self.tryfixButton.set_sensitive(False)
-        self.tryfixSpinner.start()
-        self.startVteProcess(command)
+        self.ui_tryfix_stack.set_visible_child_name("main")
+        self.ui_tryfix_button.set_sensitive(False)
+        self.ui_tryfix_spinner.start()
+        self.tryfix_vte_process(command)
 
-    def on_tryfixcancel_clicked(self, button):
-        self.tryfixstack.set_visible_child_name("main")
+    def on_ui_tryfix_cancel_button_clicked(self, button):
+        self.ui_tryfix_stack.set_visible_child_name("main")
 
-    def on_tryfixdone_clicked(self, button):
-        self.homestack.set_visible_child_name("pardushome")
+    def on_ui_tryfix_done_button_clicked(self, button):
+        GLib.idle_add(self.afterServers)
 
     def vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:
@@ -4899,10 +4904,10 @@ class MainWindow(object):
     def menu_action(self, widget, terminal):
         terminal.copy_clipboard()
 
-    def startVteProcess(self, command):
+    def tryfix_vte_process(self, command):
         pty = Vte.Pty.new_sync(Vte.PtyFlags.DEFAULT)
         self.vteterm.set_pty(pty)
-        self.vteterm.connect("child-exited", self.onVteDone)
+        self.vteterm.connect("child-exited", self.on_tryfix_vte_process_done)
         self.vteterm.spawn_sync(
             Vte.PtyFlags.DEFAULT,
             os.environ['HOME'],
@@ -4913,31 +4918,21 @@ class MainWindow(object):
             None,
         )
 
-    def onVteDone(self, obj, status):
-        self.tryfixSpinner.stop()
-        self.tryfixButton.set_sensitive(True)
+    def on_tryfix_vte_process_done(self, obj, status):
+        self.ui_tryfix_spinner.stop()
+        self.ui_tryfix_button.set_sensitive(True)
         if status == 0:
             self.Package = Package()
             if self.Package.updatecache():
-                self.tryfixstack.set_visible_child_name("done")
+                self.ui_tryfix_stack.set_visible_child_name("done")
                 self.isbroken = False
                 self.Package.getApps()
-                GLib.idle_add(self.topsearchbutton.set_sensitive, True)
-                if self.myapps_perm == 1:
-                    GLib.idle_add(self.myapps_button.set_sensitive, True)
-                else:
-                    GLib.idle_add(self.myapps_button.set_sensitive, False)
-                GLib.idle_add(self.store_button.set_sensitive, True)
-                if self.repo_perm == 1:
-                    GLib.idle_add(self.repo_button.set_sensitive, True)
-                else:
-                    GLib.idle_add(self.repo_button.set_sensitive, False)
             else:
-                self.tryfixstack.set_visible_child_name("error")
+                self.ui_tryfix_stack.set_visible_child_name("error")
                 self.isbroken = True
-                self.Logger.warning("Error while updating Cache")
+                self.Logger.warning("on_tryfix_vte_process_done: Error while updating Cache")
         else:
-            self.Logger.info("onVteDone status: {}".format(status))
+            self.Logger.info("on_tryfix_vte_process_done: status: {}".format(status))
 
     def upgrade_vte_event(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_PRESS:

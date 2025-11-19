@@ -5536,7 +5536,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkStack" id="tryfixstack">
+                          <object class="GtkStack" id="ui_tryfix_stack">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="transition-type">slide-left-right</property>
@@ -5547,14 +5547,14 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                 <property name="halign">center</property>
                                 <property name="spacing">13</property>
                                 <child>
-                                  <object class="GtkButton" id="tryfixButton">
+                                  <object class="GtkButton" id="ui_tryfix_button">
                                     <property name="label" translatable="yes">Try Fix</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <property name="halign">center</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_tryfixButton_clicked" swapped="no"/>
+                                    <signal name="clicked" handler="on_ui_tryfix_button_clicked" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -5563,7 +5563,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkSpinner" id="tryfixSpinner">
+                                  <object class="GtkSpinner" id="ui_tryfix_spinner">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">center</property>
@@ -5612,12 +5612,12 @@ Use with caution. Are you sure you want to continue?</property>
                                     <property name="halign">center</property>
                                     <property name="spacing">21</property>
                                     <child>
-                                      <object class="GtkButton" id="tryfixcancel">
+                                      <object class="GtkButton" id="ui_tryfix_cancel_button">
                                         <property name="label" translatable="yes">Cancel</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
                                         <property name="receives-default">True</property>
-                                        <signal name="clicked" handler="on_tryfixcancel_clicked" swapped="no"/>
+                                        <signal name="clicked" handler="on_ui_tryfix_cancel_button_clicked" swapped="no"/>
                                         <style>
                                           <class name="destructive-action"/>
                                         </style>
@@ -5629,12 +5629,12 @@ Use with caution. Are you sure you want to continue?</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="tryfixconfirm">
+                                      <object class="GtkButton" id="ui_tryfix_confirm_button">
                                         <property name="label" translatable="yes">Yes</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
                                         <property name="receives-default">True</property>
-                                        <signal name="clicked" handler="on_tryfixconfirm_clicked" swapped="no"/>
+                                        <signal name="clicked" handler="on_ui_tryfix_confirm_button_clicked" swapped="no"/>
                                         <style>
                                           <class name="suggested-action"/>
                                         </style>
@@ -5691,14 +5691,14 @@ Use with caution. Are you sure you want to continue?</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="tryfixdone">
+                                      <object class="GtkButton" id="ui_tryfix_done_button">
                                         <property name="label" translatable="yes">Go to Homepage</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">True</property>
                                         <property name="receives-default">True</property>
                                         <property name="halign">center</property>
                                         <property name="valign">center</property>
-                                        <signal name="clicked" handler="on_tryfixdone_clicked" swapped="no"/>
+                                        <signal name="clicked" handler="on_ui_tryfix_done_button_clicked" swapped="no"/>
                                         <style>
                                           <class name="suggested-action"/>
                                         </style>
