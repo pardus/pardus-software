@@ -4902,11 +4902,10 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
+                                            <property name="halign">center</property>
+                                            <property name="valign">center</property>
                                             <property name="orientation">vertical</property>
-                                            <property name="homogeneous">True</property>
-                                            <child>
-                                              <placeholder/>
-                                            </child>
+                                            <property name="spacing">24</property>
                                             <child>
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
@@ -4933,8 +4932,8 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                   <object class="GtkImage">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="icon-name">emblem-ok-symbolic</property>
-                                                    <property name="icon_size">5</property>
+                                                    <property name="icon-name">object-select-symbolic</property>
+                                                    <property name="icon_size">3</property>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
@@ -4950,7 +4949,23 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                               </packing>
                                             </child>
                                             <child>
-                                              <placeholder/>
+                                              <object class="GtkButton" id="ui_queue_goto_discover_button">
+                                                <property name="label" translatable="yes">Discover</property>
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">True</property>
+                                                <property name="receives-default">True</property>
+                                                <property name="halign">center</property>
+                                                <property name="valign">center</property>
+                                                <signal name="clicked" handler="on_ui_queue_goto_discover_button_clicked" swapped="no"/>
+                                                <style>
+                                                  <class name="suggested-action"/>
+                                                </style>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">2</property>
+                                              </packing>
                                             </child>
                                           </object>
                                           <packing>

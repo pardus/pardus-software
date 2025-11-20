@@ -3963,6 +3963,13 @@ class MainWindow(object):
 
         return False
 
+    def on_ui_queue_goto_discover_button_clicked(self, button):
+        self.searching = False
+        self.ui_leftupdates_listbox.unselect_all()
+        self.ui_leftinstalled_listbox.unselect_all()
+        self.ui_right_stack_navigate_to("discover")
+        self.ui_leftcats_listbox.select_row(self.ui_leftcats_listbox.get_row_at_index(0))
+
     def on_menu_settings_clicked(self, button):
         self.ui_headermenu_button.grab_focus()
         self.ui_right_stack_navigate_to("settings")
