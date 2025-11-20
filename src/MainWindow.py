@@ -99,6 +99,9 @@ class MainWindow(object):
         self.homestack = self.GtkBuilder.get_object("homestack")
         self.bottomstack = self.GtkBuilder.get_object("bottomstack")
 
+        self.ui_back_button = self.GtkBuilder.get_object("ui_back_button")
+        self.ui_back_button.set_sensitive(False)
+
         self.splashspinner = self.GtkBuilder.get_object("splashspinner")
         self.splashbar = self.GtkBuilder.get_object("splashbar")
         self.splashlabel = self.GtkBuilder.get_object("splashlabel")
@@ -143,6 +146,7 @@ class MainWindow(object):
         self.ui_currentcat_image = self.GtkBuilder.get_object("ui_currentcat_image")
 
         self.ui_top_searchentry = self.GtkBuilder.get_object("ui_top_searchentry")
+        self.ui_top_searchentry.set_sensitive(False)
         self.ui_top_searchentry.props.primary_icon_activatable = True
         self.ui_top_searchentry.props.primary_icon_sensitive = True
 
@@ -706,7 +710,8 @@ class MainWindow(object):
         if self.Server.connection:
             if not self.isbroken:
                 GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
-
+                GLib.idle_add(self.ui_back_button.set_sensitive, True)
+                GLib.idle_add(self.ui_top_searchentry.set_sensitive, True)
             else:
                 GLib.idle_add(self.homestack.set_visible_child_name, "fixapt")
         else:
