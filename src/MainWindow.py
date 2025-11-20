@@ -3111,7 +3111,7 @@ class MainWindow(object):
 
             self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
 
-    def on_MyAppsDetailsPopover_closed(self, popover):
+    def on_ui_myapp_details_popover_closed(self, popover):
         self.ui_myapp_pop_spinner.stop()
         self.ui_myapp_pop_stack.set_visible_child_name("spinner")
         self.ui_myapp_pop_app.set_can_focus(False)

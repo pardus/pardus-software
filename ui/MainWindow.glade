@@ -7337,7 +7337,7 @@ Use with caution. Are you sure you want to continue?</property>
   <object class="GtkPopover" id="ui_myapp_details_popover">
     <property name="can-focus">False</property>
     <property name="position">left</property>
-    <signal name="closed" handler="on_MyAppsDetailsPopover_closed" swapped="no"/>
+    <signal name="closed" handler="on_ui_myapp_details_popover_closed" swapped="no"/>
     <child>
       <object class="GtkScrolledWindow" id="ui_myapp_pop_sw">
         <property name="visible">True</property>
