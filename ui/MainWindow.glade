@@ -5070,6 +5070,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="label" translatable="yes">Dark Theme</property>
+                                                    <property name="ellipsize">end</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -5121,6 +5122,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="label" translatable="yes">Enable Animations</property>
+                                                    <property name="ellipsize">end</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -5172,6 +5174,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="label" translatable="yes">Show Gnome Comments</property>
+                                                    <property name="ellipsize">end</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -5236,6 +5239,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="label" translatable="yes">Update Package Manager on Start</property>
+                                                    <property name="ellipsize">end</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -5287,6 +5291,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="label" translatable="yes">Show Only Available Applications</property>
+                                                    <property name="ellipsize">end</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -5391,6 +5396,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="label" translatable="yes">Clear Cache Files</property>
+                                                    <property name="ellipsize">end</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
@@ -5485,6 +5491,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="label" translatable="yes">Passwordless Application Usage</property>
+                                                    <property name="ellipsize">end</property>
                                                     <attributes>
                                                       <attribute name="weight" value="bold"/>
                                                     </attributes>
