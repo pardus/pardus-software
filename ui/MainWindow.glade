@@ -6153,6 +6153,7 @@ Use with caution. Are you sure you want to continue?</property>
             <property name="receives-default">True</property>
             <property name="halign">start</property>
             <property name="margin-start">8</property>
+            <signal name="clicked" handler="on_ui_back_button_clicked" swapped="no"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>

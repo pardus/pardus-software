@@ -425,6 +425,8 @@ class MainWindow(object):
 
         self.comment_star_point = 0
 
+        self.stack_history = []
+
         settings = Gtk.Settings.get_default()
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
 
@@ -710,7 +712,6 @@ class MainWindow(object):
         if self.Server.connection:
             if not self.isbroken:
                 GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
-                GLib.idle_add(self.ui_back_button.set_sensitive, True)
                 GLib.idle_add(self.ui_top_searchentry.set_sensitive, True)
             else:
                 GLib.idle_add(self.homestack.set_visible_child_name, "fixapt")
@@ -1366,14 +1367,14 @@ class MainWindow(object):
         self.current_category = row.name
         if self.current_category == "discover":
             print("in discover")
-            self.ui_right_stack.set_visible_child_name("discover")
+            self.ui_right_stack_navigate_to("discover")
         # elif self.current_category == "installed":
         #     print("in installed")
-        #     self.ui_right_stack.set_visible_child_name("installed")
+        #     self.ui_right_stack_navigate_to("installed")
         else:
             print("in category")
             self.ui_pardusapps_flowbox.invalidate_filter()
-            self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("apps")
 
             self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.current_category.title()))
@@ -1386,7 +1387,7 @@ class MainWindow(object):
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftinstalled_listbox.unselect_all()
         print("in updates")
-        self.ui_right_stack.set_visible_child_name("installed")
+        self.ui_right_stack_navigate_to("installed")
         self.ui_installedapps_flowbox.invalidate_filter()
 
     def on_ui_leftinstalled_listbox_row_activated(self, listbox, row):
@@ -1394,7 +1395,7 @@ class MainWindow(object):
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftupdates_listbox.unselect_all()
         print("in installed")
-        self.ui_right_stack.set_visible_child_name("installed")
+        self.ui_right_stack_navigate_to("installed")
         self.ui_installedapps_flowbox.invalidate_filter()
 
     def on_queue_cancel_button_clicked(self, button):
@@ -2568,7 +2569,7 @@ class MainWindow(object):
         # set scroll position to top (reset)
         self.ui_appdetails_scrolledwindow.set_vadjustment(Gtk.Adjustment())
 
-        self.ui_right_stack.set_visible_child_name("appdetails")
+        self.ui_right_stack_navigate_to("appdetails")
 
         # store app operations
         if source == 1:
@@ -3691,7 +3692,7 @@ class MainWindow(object):
             GLib.idle_add(self.set_myapps, True)
 
     def on_ui_header_queue_button_clicked(self, button):
-        self.ui_right_stack.set_visible_child_name("queue")
+        self.ui_right_stack_navigate_to("queue")
 
     def remove_from_queue_clicked(self, button):
         for row in self.QueueListBox:
@@ -3783,7 +3784,7 @@ class MainWindow(object):
         if self.ui_right_stack.get_visible_child_name() == "installed":
             self.ui_installedapps_flowbox.invalidate_filter()
         else:
-            self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("search")
 
             self.ui_leftcats_listbox.unselect_all()
@@ -3799,7 +3800,7 @@ class MainWindow(object):
         if self.ui_right_stack.get_visible_child_name() == "installed":
             self.ui_installedapps_flowbox.invalidate_filter()
         else:
-            self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("search")
 
             self.ui_pardusapps_flowbox.invalidate_filter()
@@ -3946,7 +3947,7 @@ class MainWindow(object):
 
     def on_menu_settings_clicked(self, button):
         self.ui_headermenu_button.grab_focus()
-        self.ui_right_stack.set_visible_child_name("settings")
+        self.ui_right_stack_navigate_to("settings")
         self.ui_headermenu_popover.popdown()
 
         self.ui_leftcats_listbox.unselect_all()
@@ -3965,6 +3966,44 @@ class MainWindow(object):
         self.set_cache_size()
 
         self.set_settings_tooltips()
+
+    def on_ui_back_button_clicked(self, button):
+        # If there is no history, there is nowhere to go back to.
+        if not self.stack_history:
+            return
+
+        # Get the previous page from history.
+        previous = self.stack_history.pop()
+
+        # Navigate back without recording this transition in history.
+        # Using navigate_to ensures the back button visibility is updated.
+        self.ui_right_stack_navigate_to(previous, record=False)
+
+    def ui_right_stack_navigate_to(self, page_name, record=True):
+        current = self.ui_right_stack.get_visible_child_name()
+
+        # Do nothing if trying to navigate to the current page.
+        if current == page_name:
+            return
+
+        # When moving forward (record=True), push the current page into history
+        # unless it's already the last entry (prevents duplicates).
+        if record and current:
+            if not self.stack_history or self.stack_history[-1] != current:
+                self.stack_history.append(current)
+
+        # Perform the actual page switch.
+        # Back navigation sets record=False to avoid polluting history.
+        self.ui_right_stack.set_visible_child_name(page_name)
+
+        # Update back button availability after the page change.
+        self.update_back_button_visibility()
+
+    def update_back_button_visibility(self):
+        current = self.ui_right_stack.get_visible_child_name()
+
+        # Disable the back button when on the root page (discover).
+        self.ui_back_button.set_sensitive(current != "discover")
 
     def set_cache_size(self):
         cache_size = self.Utils.get_path_size(self.Server.cachedir)
@@ -4017,13 +4056,13 @@ class MainWindow(object):
         self.aboutdialog.hide()
 
     def on_ui_trend_seeall_eventbox_button_release_event(self, widget, event):
-        self.ui_right_stack.set_visible_child_name("trendapps")
+        self.ui_right_stack_navigate_to("trendapps")
 
     def on_ui_mostdown_seeall_eventbox_button_release_event(self, widget, event):
-        self.ui_right_stack.set_visible_child_name("mostdownapps")
+        self.ui_right_stack_navigate_to("mostdownapps")
 
     def on_ui_recent_seeall_eventbox_button_release_event(self, widget, event):
-        self.ui_right_stack.set_visible_child_name("recentapps")
+        self.ui_right_stack_navigate_to("recentapps")
 
     def displayTime(self, seconds, granularity=5):
         result = []
