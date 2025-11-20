@@ -147,9 +147,13 @@ class MainWindow(object):
         self.ui_top_searchentry.props.primary_icon_sensitive = True
 
         self.ui_repoapps_flowbox = self.GtkBuilder.get_object("ui_repoapps_flowbox")
+        self.ui_repotitle_box = self.GtkBuilder.get_object("ui_repotitle_box")
 
         self.ui_pardusapps_flowbox = self.GtkBuilder.get_object("ui_pardusapps_flowbox")
         self.ui_pardusapps_flowbox.set_filter_func(self.pardusapps_filter_function)
+
+        self.ui_pardusapps_title_stack = self.GtkBuilder.get_object("ui_pardusapps_title_stack")
+        self.ui_searchterm_label = self.GtkBuilder.get_object("ui_searchterm_label")
 
         self.ui_trend_flowbox = self.GtkBuilder.get_object("ui_trend_flowbox")
         self.ui_mostdown_flowbox = self.GtkBuilder.get_object("ui_mostdown_flowbox")
@@ -599,6 +603,7 @@ class MainWindow(object):
         self.ui_upgradables_combobox.set_visible(False)
         self.ui_suggest_error_label.set_visible(False)
         self.bottomerrordetails_button.set_visible(False)
+        self.ui_repotitle_box.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -1361,6 +1366,8 @@ class MainWindow(object):
             print("in category")
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_pardusapps_title_stack.set_visible_child_name("apps")
+
             self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.current_category.title()))
             icon = next((cat["icon"] for cat in self.categories if cat["name"] == self.current_category), "image-missing-symbolic")
             self.ui_currentcat_image.set_from_icon_name(icon, Gtk.IconSize.DIALOG)
@@ -3769,14 +3776,12 @@ class MainWindow(object):
             self.ui_installedapps_flowbox.invalidate_filter()
         else:
             self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_pardusapps_title_stack.set_visible_child_name("search")
 
             self.ui_leftcats_listbox.unselect_all()
             self.ui_leftinstalled_listbox.unselect_all()
             self.ui_leftupdates_listbox.unselect_all()
 
-            self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.categories[0]["name"].title()))
-            self.ui_currentcat_image.set_from_icon_name(self.categories[0]["icon"], Gtk.IconSize.DIALOG)
-            self.ui_currentcat_image.set_pixel_size(55)
             self.ui_pardusapps_flowbox.invalidate_filter()
 
     def on_ui_top_searchentry_search_changed(self, entry_search):
@@ -3787,9 +3792,14 @@ class MainWindow(object):
             self.ui_installedapps_flowbox.invalidate_filter()
         else:
             self.ui_right_stack.set_visible_child_name("apps")
+            self.ui_pardusapps_title_stack.set_visible_child_name("search")
+
             self.ui_pardusapps_flowbox.invalidate_filter()
 
             text = entry_search.get_text().strip().lower()
+
+            self.ui_searchterm_label.set_text(_("Results for {}").format(text))
+
             if hasattr(self, "_repo_search_cancel_flag"):
                 self._repo_search_cancel_flag = True
 
@@ -3893,6 +3903,7 @@ class MainWindow(object):
             GLib.idle_add(self.ui_repoapps_flowbox.add, widget)
 
         GLib.idle_add(self.ui_repoapps_flowbox.show_all)
+        GLib.idle_add(self.ui_repotitle_box.set_visible, final_list)
 
         self._repo_startswith = []
         self._repo_contains = []

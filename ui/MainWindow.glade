@@ -1621,24 +1621,48 @@
                                                 <property name="margin-bottom">21</property>
                                                 <property name="orientation">vertical</property>
                                                 <child>
-                                                  <object class="GtkBox">
+                                                  <object class="GtkStack" id="ui_pardusapps_title_stack">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="margin-start">2</property>
-                                                    <property name="margin-end">18</property>
-                                                    <property name="margin-bottom">21</property>
-                                                    <property name="spacing">21</property>
                                                     <child>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="spacing">16</property>
+                                                        <property name="margin-start">2</property>
+                                                        <property name="margin-end">18</property>
+                                                        <property name="margin-bottom">21</property>
+                                                        <property name="spacing">21</property>
                                                         <child>
-                                                          <object class="GtkImage" id="ui_currentcat_image">
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="spacing">16</property>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_currentcat_image">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="icon-name">image-missing-symbolic</property>
                                                             <property name="icon_size">6</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_currentcat_label">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label">&lt;span size='x-large'&gt;&lt;b&gt;Category&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="use-markup">True</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -1647,32 +1671,12 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkLabel" id="ui_currentcat_label">
+                                                          <object class="GtkEventBox" id="ui_suggestapp_eventbox">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">&lt;span size='x-large'&gt;&lt;b&gt;Category&lt;/b&gt;&lt;/span&gt;</property>
-                                                            <property name="use-markup">True</property>
-                                                          </object>
-                                                          <packing>
-                                                            <property name="expand">False</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                          </packing>
-                                                        </child>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">0</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkEventBox" id="ui_suggestapp_eventbox">
-                                                        <property name="visible">True</property>
-                                                        <property name="can-focus">False</property>
-                                                        <signal name="button-press-event" handler="on_ui_suggestapp_eventbox_button_press_event" swapped="no"/>
-                                                        <child>
-                                                          <object class="GtkLabel">
+                                                            <signal name="button-press-event" handler="on_ui_suggestapp_eventbox_button_press_event" swapped="no"/>
+                                                            <child>
+                                                            <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="label" translatable="yes">+ Suggest an App</property>
@@ -1680,13 +1684,78 @@
                                                             <attribute name="underline" value="True"/>
                                                             <attribute name="foreground" value="#21207b7aeaea"/>
                                                             </attributes>
+                                                            </object>
+                                                            </child>
                                                           </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="pack-type">end</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="pack-type">end</property>
+                                                        <property name="name">apps</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkBox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="margin-start">2</property>
+                                                        <property name="margin-end">18</property>
+                                                        <property name="margin-bottom">21</property>
+                                                        <property name="spacing">21</property>
+                                                        <child>
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="spacing">16</property>
+                                                            <child>
+                                                            <object class="GtkImage" id="ui_currentcat_image2">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="icon-name">system-search-symbolic</property>
+                                                            <property name="icon_size">3</property>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkLabel" id="ui_searchterm_label">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label" translatable="yes">Results</property>
+                                                            <property name="ellipsize">end</property>
+                                                            <property name="max-width-chars">60</property>
+                                                            <attributes>
+                                                            <attribute name="weight" value="bold"/>
+                                                            <attribute name="size" value="19456"/>
+                                                            </attributes>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
+                                                            </packing>
+                                                            </child>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <placeholder/>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="name">search</property>
                                                         <property name="position">1</property>
                                                       </packing>
                                                     </child>
@@ -1766,6 +1835,35 @@
                                                   </packing>
                                                 </child>
                                                 <child>
+                                                  <object class="GtkBox" id="ui_repotitle_box">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="margin-start">8</property>
+                                                    <property name="margin-end">8</property>
+                                                    <property name="margin-top">5</property>
+                                                    <property name="margin-bottom">5</property>
+                                                    <property name="spacing">21</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;Packages&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="use-markup">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">3</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
                                                   <object class="GtkFlowBox" id="ui_repoapps_flowbox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
@@ -1782,7 +1880,7 @@
                                                   <packing>
                                                     <property name="expand">False</property>
                                                     <property name="fill">True</property>
-                                                    <property name="position">3</property>
+                                                    <property name="position">4</property>
                                                   </packing>
                                                 </child>
                                               </object>
