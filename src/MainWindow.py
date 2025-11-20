@@ -407,6 +407,7 @@ class MainWindow(object):
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
+        self.myapp_toremove_icon = ""
 
         self.important_packages = ["pardus-common-desktop", "pardus-xfce-desktop", "pardus-gnome-desktop",
                                    "pardus-edu-common-desktop", "pardus-edu-gnome-desktop", "eta-common-desktop",
@@ -1491,7 +1492,7 @@ class MainWindow(object):
         self.ui_queue_stack.set_visible_child_name("inprogress")
 
         self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id, "upgrade": button.name == 2})
-        self.add_to_queue_ui(app_name, button.name == 2)
+        self.add_to_queue_ui(app_name, button.name == 2, details.get("icon_name"))
         if not self.inprogress:
             self.action_package(app_name, command, desktop_id, button.name == 2)
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
@@ -1525,8 +1526,8 @@ class MainWindow(object):
             self.Logger.exception("{}".format(e))
             return False
 
-    def add_to_queue_ui(self, app_name, upgrade=False):
-        listbox = self.create_queue_widget(app_name, upgrade)
+    def add_to_queue_ui(self, app_name, upgrade=False, icon_name=None):
+        listbox = self.create_queue_widget(app_name, upgrade, icon_name)
         GLib.idle_add(self.ui_queue_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_queue_flowbox.show_all)
 
@@ -2054,7 +2055,7 @@ class MainWindow(object):
 
         return listbox
 
-    def create_queue_widget(self, app, upgrade=False):
+    def create_queue_widget(self, app, upgrade=False, icon_name=None):
 
         app_name = Gtk.Label.new()
         app_name.set_markup("<b>{}</b>".format(GLib.markup_escape_text(self.get_pretty_name_from_app_name(app), -1)))
@@ -2066,12 +2067,12 @@ class MainWindow(object):
         app_name.props.halign = Gtk.Align.START
 
         try:
-            if os.path.isfile(app):
+            if os.path.isfile(icon_name if icon_name else app):
                 px = GdkPixbuf.Pixbuf.new_from_file_at_size(app, 32, 32)
                 app_icon = Gtk.Image.new()
                 app_icon.set_from_pixbuf(px)
             else:
-                app_icon = Gtk.Image.new_from_icon_name(app, Gtk.IconSize.DND)
+                app_icon = Gtk.Image.new_from_icon_name(icon_name if icon_name else app, Gtk.IconSize.DND)
         except Exception as e:
             app_icon = Gtk.Image.new_from_icon_name("image-missing-symbolic", Gtk.IconSize.DND)
             print("Exception on create_queue_widget: {}, app: {}".format(e, app))
@@ -3018,12 +3019,15 @@ class MainWindow(object):
         self.myapp_toremove_list = []
         self.myapp_toremove = ""
         self.myapp_toremove_desktop = ""
+        self.myapp_toremove_icon = ""
 
         valid, details, package, name, icon, desktop, description = myapp
         if valid and details is not None:
             self.ui_myapp_pop_app.set_markup(
                 "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
             self.ui_myapp_pop_package.set_markup("<i>{}</i>".format(package))
+
+            self.myapp_toremove_icon = icon
 
             try:
                 if os.path.isfile(icon):
@@ -3765,7 +3769,7 @@ class MainWindow(object):
 
         self.queue.append({"name": self.myapp_toremove, "command": self.myapp_toremove,
                            "desktop_id": self.myapp_toremove_desktop, "upgrade": False})
-        self.add_to_queue_ui(self.myapp_toremove)
+        self.add_to_queue_ui(self.myapp_toremove, icon_name=self.myapp_toremove_icon)
         if not self.inprogress:
             self.action_package(self.myapp_toremove, self.myapp_toremove, self.myapp_toremove_desktop)
             self.inprogress = True
