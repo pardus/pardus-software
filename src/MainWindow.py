@@ -2144,9 +2144,9 @@ class MainWindow(object):
         box_h.pack_end(progress_bar, False, True, 20 if self.display_width >= 1920 else 6)
         box_h.pack_end(box_version, False, True, 20 if self.display_width >= 1920 else 6)
 
-        box_h.set_margin_start(5)
-        box_h.set_margin_end(5)
-        box_h.set_margin_top(5)
+        box_h.set_margin_start(8)
+        box_h.set_margin_end(8)
+        box_h.set_margin_top(8)
         box_h.set_margin_bottom(5)
 
         bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
