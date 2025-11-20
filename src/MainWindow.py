@@ -429,7 +429,21 @@ class MainWindow(object):
         self.stack_history = []
 
         settings = Gtk.Settings.get_default()
+
+        layout = settings.get_property("gtk-decoration-layout") or ""
+        self.Logger.info(f"decoration_layout: {layout}")
+        parts = layout.split(":", 1)
+        left = parts[0].strip() if len(parts) > 0 else ""
+        right = parts[1].strip() if len(parts) > 1 else ""
+        left_items = [item for item in left.split(",") if item.strip() != "icon"]
+        left_clean = ",".join(left_items)
+        new_layout = f"{left_clean}:{right}" if right else left_clean
+        new_layout = new_layout.strip(":")
+        settings.set_property("gtk-decoration-layout", new_layout)
+        self.Logger.info(f"new_decoration_layout: {new_layout}")
+
         theme_name = "{}".format(settings.get_property('gtk-theme-name')).lower().strip()
+        self.Logger.info(f"theme_name: {theme_name}")
 
         cssProvider = Gtk.CssProvider()
         if theme_name.startswith("pardus") or theme_name.startswith("adwaita"):
