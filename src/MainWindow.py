@@ -1240,6 +1240,8 @@ class MainWindow(object):
 
             label_updates = Gtk.Label.new()
             label_updates.set_markup("<small>{}</small>".format(_("Some applications are outdated.")))
+            label_updates.set_max_width_chars(23)
+            label_updates.set_ellipsize(Pango.EllipsizeMode.END)
             label_updates.props.halign = Gtk.Align.START
             label_updates.set_margin_start(3)
             label_updates.set_opacity(0.7)
