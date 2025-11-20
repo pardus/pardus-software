@@ -34,6 +34,14 @@ if os.path.exists(changelog):
     f.write(version)
     f.close()
 
+def pythonic_version(version):
+    return (version
+        .replace("~alpha", "a")
+        .replace("~beta", "b")
+        .replace("~rc", "rc")
+        .replace("~dev", ".dev")
+    )
+
 data_files = [
                  ("/usr/bin", ["pardus-software"]),
                  ("/usr/share/applications",
@@ -88,7 +96,7 @@ data_files = [
 
 setup(
     name="Pardus Software",
-    version=version,
+    version=pythonic_version(version),
     packages=find_packages(),
     scripts=["pardus-software"],
     install_requires=["PyGObject"],
