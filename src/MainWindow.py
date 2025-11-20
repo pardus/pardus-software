@@ -1169,16 +1169,19 @@ class MainWindow(object):
         self.slider_current_page = int(self.ui_slider_stack.get_visible_child_name())
 
     def get_upgradables(self):
-        if self.Server.connection:
-            self.upgradables = {}
-            for app, details in self.apps.items():
-                is_installed = self.Package.isinstalled(app)
-                is_upgradable = self.Package.is_upgradable(app)
+        if not self.Server.connection:
+            return
+        self.upgradables = {}
+        for app, details in self.apps.items():
+            is_installed = self.Package.isinstalled(app)
+            is_upgradable = self.Package.is_upgradable(app)
 
-                if is_installed and is_upgradable:
-                    self.upgradables[app] = details
+            if is_installed and is_upgradable:
+                self.upgradables[app] = details
 
     def set_upgradables(self):
+        if not self.Server.connection:
+            return
         self.Logger.info("in set_upgradables")
 
         GLib.idle_add(lambda: (self.ui_upgradableapps_flowbox and self.ui_upgradableapps_flowbox.foreach(
