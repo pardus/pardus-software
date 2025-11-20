@@ -1059,13 +1059,6 @@ class MainWindow(object):
             slider_app_slogan = slider_app["slogan"].get(self.user_locale) or slider_app["slogan"].get("en")
             slider_app_short_desc = slider_app["shortdesc"].get(self.user_locale) or slider_app["shortdesc"].get("en")
 
-            flowbox = Gtk.FlowBox()
-            flowbox.set_min_children_per_line(1)
-            flowbox.set_max_children_per_line(1)
-            flowbox.set_row_spacing(0)
-            flowbox.set_column_spacing(0)
-            flowbox.set_homogeneous(True)
-
             label_name = Gtk.Label.new()
             label_name.props.halign = Gtk.Align.START
             label_name.set_markup("<b>{}</b>".format(slider_app_pretty_name))
@@ -1107,13 +1100,24 @@ class MainWindow(object):
             style_provider = Gtk.CssProvider()
             style_provider.load_from_data(str.encode(css))
 
+            flowbox = Gtk.FlowBox()
+            flowbox.set_min_children_per_line(1)
+            flowbox.set_max_children_per_line(1)
+            flowbox.set_row_spacing(0)
+            flowbox.set_column_spacing(0)
+            flowbox.set_homogeneous(True)
+            flowbox.connect("child-activated", self.on_slider_app_activated)
+
             flowbox_child = Gtk.FlowBoxChild()
+            flowbox_child.name = slider_app_name
             flowbox_child.add(hbox)
             flowbox_child.set_size_request(-1, 200)
             flowbox_child.get_style_context().add_class("pardus-software-slider")
             flowbox_child.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-            self.ui_slider_stack.add_named(flowbox_child, "{}".format(stack_counter))
+            flowbox.add(flowbox_child)
+
+            self.ui_slider_stack.add_named(flowbox, "{}".format(stack_counter))
             stack_counter += 1
 
         # Slider back button
@@ -1138,6 +1142,10 @@ class MainWindow(object):
 
         GLib.idle_add(self.ui_slider_overlay.show_all)
         # GLib.idle_add(self.ui_slider_stack.show_all)
+
+    def on_slider_app_activated(self, flow_box, child):
+        print(child.name)
+        self.set_app_details_page(child.name)
 
     def on_ui_slider_left_button_clicked(self, button):
 
