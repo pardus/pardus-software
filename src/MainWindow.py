@@ -1000,7 +1000,7 @@ class MainWindow(object):
                 else:
                     self.Server.appversion_pardus23 = self.Server.appversion
                 # self.Server.iconnames = response["iconnames"]
-                self.Server.badwords = response["badwords"]
+                self.Server.blocked_gnome_reviews = response.get("blocked_gnome_reviews", [])
                 if "important-packages" in response and response["important-packages"]:
                     self.important_packages = response["important-packages"]
                 if "i386-packages" in response and response["i386-packages"]:
@@ -3364,12 +3364,15 @@ class MainWindow(object):
             GLib.idle_add(self.ui_ad_more_comment_button.set_visible, response_comment_len == self.gnome_comment_limit)
             GLib.idle_add(self.ui_ad_more_comment_button.set_sensitive, response_comment_len == self.gnome_comment_limit)
 
-            required_keys = ["rating", "user_display", "date_created", "summary", "description", "distro", "version"]
+            required_keys = ["rating", "user_display", "date_created", "summary", "description", "distro", "version", "review_id"]
 
             for comment in response:
                 if all(key in comment for key in required_keys):
-                    listbox = self.create_comment_widget(comment, True)
-                    GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
+                    if comment["review_id"] not in self.Server.blocked_gnome_reviews:
+                        listbox = self.create_comment_widget(comment, True)
+                        GLib.idle_add(self.ui_ad_comments_flowbox.insert, listbox, -1)
+                    else:
+                        self.Logger.info(f"Gnome comment blocked: {comment['review_id']}")
             GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
 
     def on_ui_ad_more_comment_button_clicked(self, button):

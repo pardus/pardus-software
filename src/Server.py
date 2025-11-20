@@ -73,7 +73,7 @@ class Server(object):
         self.appversion_pardus21 = ""
         self.appversion_pardus23 = ""
         self.iconnames = ""
-        self.badwords = []
+        self.blocked_gnome_reviews = []
         self.dailydowns = []
         self.osdowns = []
         self.appdowns = []
