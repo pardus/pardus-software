@@ -1,3 +1,320 @@
+pardus-software (1.0.0~beta1) unstable; urgency=medium
+
+  * Add initial pardus apps flowbox structure
+  * Rm total statistics from home page
+  * Add initial main left cats
+  * Update category icons as gtk image from appended theme
+  * Update cats listbox backend and Add discover
+  * Add initial right main stack with initial banner
+  * Update banner as created from backend
+  * Add dynamic stack to banner and left, right controls
+  * Rm left Pardus Store label
+  * Add some spacing to top left cats
+  * Add installed section to left cats listbox
+  * Update default window size
+  * Fix left cats expand
+  * Add most downloaded apps section to homepage
+  * Rm header buttons from ui and Add searchentry to headerbar
+  * Add stack for category and app connections
+  * Update headerbar menubutton
+  * Update server icons funcs
+  * Update app icons method
+  * Add glib idle to initial clear of app, cat widgets
+  * Fix icon theme prepend
+  * Add installed state to most downloaded apps
+  * Add installed state to cat apps
+  * Add markup to most downloaded apps action button
+  * Update default window size
+  * Add recently added apps to discover page
+  * Add scrolledwindow to discover page
+  * Update apps flowbox spacing values
+  * Add initial app details page with some funcs
+  * Update server apps version and update related funcs
+  * Add compatibility for old server apps api
+  * Update set_initial_home func
+  * Add get metadata archive files from server for faster startup
+  * Update sort functions for new app dict
+  * Update get_hashes exception controls
+  * Update get_file exception controls
+  * Update splash and logger texts
+  * Update app details func
+  * Update banner design as picture-text
+  * Update mostdown apss ui
+  * Update mostapp action button ui
+  * Update mostapp icon ui
+  * Update left,right button sizes
+  * Add editor apps ui template
+  * Update homepage most apps ui with dynamic size allocation
+  * Disable unnecessary server variables
+  * Add new slider variables from server
+  * Add get server images for editor and slider apps
+  * Update installed-updates listbox view
+  * Update left side view of homebox
+  * Rm bottom border and shadow of headerbar
+  * Update getting editor app prettyname and short desc
+  * Add backdrop to left-cats css
+  * Fix slider animation
+  * Add .sources and .list filename control to externalrepo
+  * Update hide external repo pref as show on settings
+  * Fix pardus apps stack typos
+  * Rm some unnecessary server funcs
+  * Enable temporary search funcs
+  * Update suggest app ui for new api as temp
+  * Fix and Rm some typos on server
+  * Add buttonbox to most downloaded apps with upgradable control
+  * Add stack pages to most down apps
+  * Add transition to most down stack
+  * Rm prev, next, see all buttons from editor apps
+  * Update most app page count method
+  * Add stack pages to recently added apps
+  * Update applications layout as same with home page app layout
+  * Add upgradable button css class and openable control to app action button
+  * Update app action class for main app and recent too
+  * Rm icons from other popover open and uninstall buttons
+  * Add installed, upgradable apps page layout
+  * Add upgradableapps, installedapps clean funcs
+  * Update other actions button icon size
+  * Add app flowbox unselect for all related listbox widgets
+  * Add row-activated signal for editor apps too
+  * Update headerbar css
+  * Add static width to cats and headerbar left box area
+  * Add tmp editor apps view as 1x_2 and 1x2
+  * Update size_allocate func as only two view control
+  * Update slider buttons as inside of slider with overlay
+  * Rm prev, next buttons from most apps
+  * Add some spacing to discover page
+  * Update editor apps style as old one row
+  * Rm size-allocate controls
+  * Update mostdown apps widget and rm stack
+  * Rm unused create_mda_widget func
+  * Update recent apps widget and rm stack
+  * Update base applications widget
+  * Update min, max child counts of base application widgets
+  * Update editor apps widget
+  * Fix typo
+  * Update recent app max child count
+  * Add back button to headerbar
+  * Update app details page draft
+  * Add v_center to details app_name box
+  * Update left installed row as updates
+  * Add left installed row
+  * Update installed and updates page as separate page
+  * Update left cat labels as bold
+  * Update headerbar widget alignments
+  * Rm unused headerbar back box
+  * Update left cats clicked controls
+  * Update installed apps and updates as same page
+  * Add trending apps to homepage
+  * Update max-children-per-line as 4 on homepage apps
+  * Rm number label from most downloaded apps
+  * Update max_width_chars counts of base app widget
+  * Add openable button css and update upgradable button css
+  * Add openable control to button action
+  * Add upgradable and openable control to editor app action button
+  * Add initial clicked action to base app_widget
+  * Fix typo
+  * Add open app funcs to base app_widget action
+  * Add initial update_app_widget_label with action funcs
+  * Fix on_queue_button_clicked
+  * Fix updates-count css
+  * Add initially gtk3-adwaita based upgradable, openable action css
+  * Update openable button css
+  * Update slider next, prev button style
+  * Add initial installed apps from desktop apps
+  * Fix openable button active css
+  * Update installed apps ui
+  * Update upgradable apps ui like installed apps
+  * Update label size and views on installed apps page
+  * Add separate func for upgradeable apps for faster sorting
+  * Update open_n_up button css as respecting accent color
+  * Add sort by disk usage to installed apps
+  * Add spinner and cancel button to myapps du thread
+  * Update homepage most app counts
+  * Add see all funcs for trend apps
+  * Add see all funcs for most down apps
+  * Add see all funcs for recent apps
+  * Update control_display func as compatible with wayland
+  * Add header queue button, queue page with funcs as initially
+  * Fix inprogress sets on exit
+  * Add other widgets to update_app_widget_label funcs too
+  * Rm some unnecessary codes
+  * Update control_myapps func for removed app controls
+  * Rm some unnecessary codes
+  * Add desktop_id to action_package and Update control_myapps
+  * Update installedapps_sort_func
+  * Update main stack transtion type
+  * Rm some unnecessary codes
+  * Update categories header ui
+  * Update installed apps header ui
+  * Update settings page ui
+  * Add state-set signal connections for settings page
+  * Add actions for settings cache and passwordless buttons
+  * Add readconfig to on settings clicked
+  * Rm some unnecessary old settings codes
+  * Rm some unnecessary codes
+  * Update see all application pages header ui
+  * Update queue page header ui
+  * Update queue app version box ui
+  * Fix installed apps sort func on disk usage
+  * Update uninstall option as open detail page on app widget
+  * Update not found button as button image
+  * Update app detail action button
+  * Fix set_button_class func
+  * Update not found button as label on app detail page
+  * Add upgrade action backend and ui controls
+  * Add disclaimer and remove button to app detail page
+  * Add initial screenshot to details and Update fetch image funcs
+  * Add clean screenshots on details page
+  * Add description label to app detail page
+  * Add initial about info to app detail ui
+  * Add backend funcs to action button on app detail page
+  * Add backend funcs to remove button on app detail page
+  * Add round_corners to app image on detail page
+  * Fix detail page remove button sensitive
+  * Fix update_app_widget_label func for queue cancel operations
+  * Add upgradableapps to update_app_widget_label func
+  * Rm unnecessary vars from ui_myapps_uninstall
+  * Update optimization on required_changes func
+  * Fix unnecessary variable on required_changes func
+  * Add initially app_detail_requireds_thread for app size info labels
+  * Fix installed_version and Update candidate_version funcs on Package
+  * Add package size info
+  * Update get_records funcs
+  * Update origins func
+  * Add maintainer, component, type infos to details page
+  * Add collapsable dependencies info to app detail page
+  * Update dependencies label text format
+  * Add dependencies count to app detail
+  * Add license info to app detail
+  * Fix translatable state of some labels
+  * Update frame css
+  * Update top info box ui on app detail page
+  * Add values to top info labels on app detail page
+  * Fix version set format on app detail page
+  * Add None values for if app not exists on detail page
+  * Add clear_app_details func
+  * Fix color change bug on round_corners
+  * Add ui_app_name control to app_details_from_server
+  * Add available repositories ui to app details page
+  * Add bottom ratings, avg to app detail page
+  * Add rating-progressbar style class
+  * Add bottom rating progressbar to app detail page
+  * Add initially reset to rating_progressbar
+  * Add initially reset to bottom_avgrate and rate_count
+  * Add scroll position reset to app details page
+  * Add show gnome comments checkbox with info to app detail page
+  * Add pardus comments initial template to app detail page
+  * Add load more comment action
+  * Disable GnomeRatingServer
+  * Update GnomeComment class
+  * Add gnome comments to comments
+  * Add comments filter function for show, hide gnome comment
+  * Rm some unnecessary comment codes
+  * Add write comment dialog template
+  * Update write comment dialog template
+  * Add some app details to comment dialog
+  * Add comment rating star events
+  * Add stack pages to write comment dialog
+  * Add some missing ids to comment dialog
+  * Add stack controls to comment details
+  * Update comment disclaimer label ui
+  * Add own comment clicked funcs and Update some comment controls
+  * Add pardus-software-accent-label css
+  * Add subcategory and category values to app detail page
+  * Update rating image name on app detail
+  * Rm show gnome comments check box from app detail page
+  * Add show gnome comment control before gnome request
+  * Add image fullscreen funcs, connections and controls
+  * Add ui_app_name control to get app image from server
+  * Add empty area click control for app image
+  * Add open clicked image on image gallery open clicks
+  * Update dependencies as not revealed on app detail page
+  * Update isupgrade controls and notify icon
+  * Update remove from myapps funcs and rm some unnecessary codes
+  * Add repo and external app details page from installed apps
+  * Rm some unnecessary codes
+  * Fix typo
+  * Rm some unnecessary codes
+  * Update disclaimer popover and connect signals
+  * Add comment_send_button sensitive states
+  * Rm some unnecessary codes
+  * Update write comment input control
+  * Add rating response, request funcs with some updates
+  * Rm some unnecessary codes
+  * Update old button images
+  * Update myapp details popover name
+  * Fix my app popover icons
+  * Rm some unnecessary codes
+  * Rm --remove arg
+  * Update control args
+  * Update get user locale func
+  * Update get_pretty_name
+  * Add get sub category name func
+  * Update get values from app name funcs
+  * Update app secondary text as subcategory on app widgets
+  * Update available apps control due to external apps removed
+  * Add save_file control to server request and Update apps, home requests
+  * Add apps_full dic
+  * Update cat icon names
+  * Fix focus bug on settings menu
+  * Add search func for installed apps too
+  * Fix some flowbox selection modes
+  * Add window key press event for searching
+  * Add repo search results funcs, ui
+  * Add size_request to app widget separator
+  * Update disclaimer info image
+  * Add controlPSUpdate and aptUpdate to todo
+  * Add repo apps support for details arg
+  * Update set_upgradables as dynamically
+  * Add listbox_row_activated to upgradable apps too
+  * Add auto apt update controls
+  * Update upgradables_combobox as not shown temporary
+  * Update details api
+  * Update pardus comments api
+  * Update rate api and enable set_rating_progressbar too
+  * Update downloads api
+  * Fix discover box alignment for hidpi screens
+  * Update comment subcategory label from response
+  * Update wrapmode as wordchar on comment view label
+  * Update get_file
+  * Update suggest api
+  * Add suggest app ui with funcs
+  * Add limit to comment textbuffer
+  * Add format_date_as ago and full funcs for comments
+  * Add trixie to known sources
+  * Update tryfix stack actions, enable tryfix controls
+  * Update tryfix vte initialization
+  * Add update_vte_color
+  * Update tryfix_vte box as scrolledwindow
+  * Rm some unnecessary codes and update some func names
+  * Update dpkgconfigure funcs
+  * Fix apt error message handling
+  * Rm some unnecessary codes
+  * Add margin-top to upgradables flowbox
+  * Fix ids of main left box
+  * Rm some unnecessary left boxes
+  * Add scrolled window to left cats
+  * Fix spacing bug between left cats-installed listbox
+  * Update color compatibilities
+  * Rm some unnecessary css codes and update some radius
+  * Fix css compatilibity
+  * Update left-updates-count-box css as compatible with other themes
+  * Update css names and some classes
+  * Update css load controls
+  * Add separator to left upgrade box and Fix discover hscroll
+  * Add window size control for smaller than 1366x768
+  * Update some spacing values
+  * Add number control to max_width_chars of app widget
+  * Add search result title with stack and repo title controls
+  * Fix server connection control for upgradables
+  * Add sensitive controls for back button and search entry
+  * Add back button controls with stack history
+  * Add slider activated signal for set app details
+  * Add adwaita.css to setup.py
+  * Fix invalid version on setup.py
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 20 Nov 2025 15:24:40 +0300
+
 pardus-software (0.8.2) unstable; urgency=medium
 
   [ Hugo Carvalho ]
