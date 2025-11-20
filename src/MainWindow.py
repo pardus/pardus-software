@@ -2121,6 +2121,7 @@ class MainWindow(object):
 
         box_version = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
         box_version.props.halign = Gtk.Align.END
+        box_version.props.valign = Gtk.Align.CENTER
         box_version.pack_start(version_title, False, True, 0)
         box_version.pack_start(version_label, False, True, 0)
         box_version.set_size_request(120, -1)
