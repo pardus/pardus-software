@@ -1,3 +1,19 @@
+pardus-software (1.0.0~beta2) unstable; urgency=medium
+
+  * Fix queue widget app icon for myapp and repo apps
+  * Update queue widget margins
+  * Add valign center to queue box_version
+  * Rm icon from gtk-decoration-layout
+  * Add gnome comment review id control
+  * Update app icon
+  * Add ellipsize end to settings labels
+  * Add ellipsize with max chars for updates info label
+  * Update on_ui_myapp_details_popover_closed func name
+  * Update myapps remove popover ui
+  * Update queue completed page
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 21 Nov 2025 02:13:35 +0300
+
 pardus-software (1.0.0~beta1) unstable; urgency=medium
 
   * Add initial pardus apps flowbox structure
