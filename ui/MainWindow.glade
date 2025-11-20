@@ -7353,6 +7353,10 @@ Use with caution. Are you sure you want to continue?</property>
               <object class="GtkStack" id="ui_myapp_pop_stack">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-start">16</property>
+                <property name="margin-end">16</property>
+                <property name="margin-top">16</property>
+                <property name="margin-bottom">16</property>
                 <property name="transition-type">crossfade</property>
                 <child>
                   <object class="GtkBox" id="ui_myapp_pop_spinner_box">
@@ -7404,24 +7408,22 @@ Use with caution. Are you sure you want to continue?</property>
                   <object class="GtkBox" id="ui_myapp_pop_details_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-start">13</property>
-                    <property name="margin-end">13</property>
-                    <property name="margin-top">13</property>
-                    <property name="margin-bottom">13</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="halign">center</property>
+                        <property name="halign">start</property>
                         <property name="spacing">8</property>
                         <child>
-                          <object class="GtkImage" id="ui_myapp_pop_icon">
+                          <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="pixel-size">48</property>
-                            <property name="icon-name">pardus-software</property>
+                            <property name="halign">center</property>
+                            <property name="valign">start</property>
+                            <property name="margin-top">2</property>
+                            <property name="icon-name">dialog-information-symbolic</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -7446,6 +7448,9 @@ Use with caution. Are you sure you want to continue?</property>
                                 <property name="valign">start</property>
                                 <property name="label">Application Name</property>
                                 <property name="selectable">True</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -7510,16 +7515,15 @@ Use with caution. Are you sure you want to continue?</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">8</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkImage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Packages to remove</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <property name="halign">center</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin-top">2</property>
+                                    <property name="icon-name">package-x-generic-symbolic</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7528,11 +7532,43 @@ Use with caution. Are you sure you want to continue?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="ui_myapp_pop_toremove_label">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="wrap">True</property>
-                                    <property name="selectable">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Packages to remove</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ui_myapp_pop_toremove_label">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="wrap">True</property>
+                                        <property name="selectable">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7575,16 +7611,15 @@ Use with caution. Are you sure you want to continue?</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">8</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkImage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Packages to install</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <property name="halign">center</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin-top">2</property>
+                                    <property name="icon-name">package-x-generic-symbolic</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7593,11 +7628,43 @@ Use with caution. Are you sure you want to continue?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="ui_myapp_pop_toinstall_label">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="wrap">True</property>
-                                    <property name="selectable">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Packages to install</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ui_myapp_pop_toinstall_label">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="wrap">True</property>
+                                        <property name="selectable">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7640,16 +7707,15 @@ Use with caution. Are you sure you want to continue?</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">8</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkImage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Broken packages</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <property name="halign">center</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin-top">2</property>
+                                    <property name="icon-name">package-x-generic-symbolic</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7658,11 +7724,43 @@ Use with caution. Are you sure you want to continue?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="ui_myapp_pop_broken_label">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="wrap">True</property>
-                                    <property name="selectable">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Broken packages</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ui_myapp_pop_broken_label">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="wrap">True</property>
+                                        <property name="selectable">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7705,16 +7803,15 @@ Use with caution. Are you sure you want to continue?</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">8</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkImage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Disk space to be freed</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <property name="halign">center</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin-top">2</property>
+                                    <property name="icon-name">folder-symbolic</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7723,11 +7820,43 @@ Use with caution. Are you sure you want to continue?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="ui_myapp_pop_fsize_label">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="wrap">True</property>
-                                    <property name="selectable">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Disk space to be freed</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ui_myapp_pop_fsize_label">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="wrap">True</property>
+                                        <property name="selectable">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7770,16 +7899,15 @@ Use with caution. Are you sure you want to continue?</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">8</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkImage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Download size</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <property name="halign">center</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin-top">2</property>
+                                    <property name="icon-name">folder-symbolic</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7788,11 +7916,43 @@ Use with caution. Are you sure you want to continue?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="ui_myapp_pop_dsize_label">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="wrap">True</property>
-                                    <property name="selectable">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Download size</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ui_myapp_pop_dsize_label">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="wrap">True</property>
+                                        <property name="selectable">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7835,16 +7995,15 @@ Use with caution. Are you sure you want to continue?</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">8</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkImage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Required disk space</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <property name="halign">center</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin-top">2</property>
+                                    <property name="icon-name">folder-symbolic</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7853,11 +8012,43 @@ Use with caution. Are you sure you want to continue?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="ui_myapp_pop_isize_label">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="wrap">True</property>
-                                    <property name="selectable">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Required disk space</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ui_myapp_pop_isize_label">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="wrap">True</property>
+                                        <property name="selectable">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -7901,8 +8092,8 @@ Use with caution. Are you sure you want to continue?</property>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="spacing">21</property>
+                        <property name="halign">end</property>
+                        <property name="spacing">12</property>
                         <child>
                           <object class="GtkButton">
                             <property name="label" translatable="yes">Close</property>
@@ -7951,20 +8142,73 @@ Use with caution. Are you sure you want to continue?</property>
                   <object class="GtkBox" id="myapp_pop_disclaimer">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin-start">13</property>
-                    <property name="margin-end">13</property>
-                    <property name="margin-top">13</property>
-                    <property name="margin-bottom">13</property>
                     <property name="orientation">vertical</property>
-                    <property name="spacing">13</property>
+                    <property name="spacing">12</property>
                     <child>
-                      <object class="GtkLabel" id="ui_myapp_pop_disclaimer_label">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="justify">center</property>
-                        <property name="wrap">True</property>
+                        <property name="halign">start</property>
+                        <property name="spacing">8</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="valign">start</property>
+                            <property name="margin-top">2</property>
+                            <property name="icon-name">dialog-warning-symbolic</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">2</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">System stability could be impacted</property>
+                                <property name="wrap">True</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                  <attribute name="foreground" value="#efef44433b3b"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">The following important packages will also be removed.</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -7976,8 +8220,138 @@ Use with caution. Are you sure you want to continue?</property>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="spacing">21</property>
+                        <property name="halign">start</property>
+                        <property name="spacing">8</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">center</property>
+                            <property name="valign">start</property>
+                            <property name="margin-top">2</property>
+                            <property name="icon-name">package-x-generic-symbolic</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Packages to remove</property>
+                                <property name="wrap">True</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="ui_myapp_pop_disclaimer_remove_label">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="wrap">True</property>
+                                <property name="selectable">True</property>
+                                <property name="xalign">0</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="spacing">8</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">2</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;Are you sure you want to proceed with this action?&lt;/b&gt;&lt;/big&gt;</property>
+                                <property name="use-markup">True</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="spacing">12</property>
                         <child>
                           <object class="GtkButton" id="ui_myapp_pop_cancel_disclaimer">
                             <property name="label" translatable="yes">Back</property>
@@ -8013,7 +8387,7 @@ Use with caution. Are you sure you want to continue?</property>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                   </object>
@@ -8026,19 +8400,14 @@ Use with caution. Are you sure you want to continue?</property>
                   <object class="GtkBox" id="myapp_notfound_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="halign">center</property>
                     <property name="valign">start</property>
-                    <property name="margin-start">13</property>
-                    <property name="margin-end">13</property>
-                    <property name="margin-top">13</property>
-                    <property name="margin-bottom">13</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">8</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="halign">center</property>
+                        <property name="halign">start</property>
                         <property name="spacing">8</property>
                         <child>
                           <object class="GtkImage" id="ui_myapp_pop_notfound_image">
@@ -8078,6 +8447,7 @@ Use with caution. Are you sure you want to continue?</property>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="halign">start</property>
                         <property name="label" translatable="yes">&lt;b&gt;Application could not be uninstalled.&lt;/b&gt;</property>
                         <property name="use-markup">True</property>
                         <property name="justify">center</property>
@@ -8113,7 +8483,7 @@ Use with caution. Are you sure you want to continue?</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="halign">center</property>
+                        <property name="halign">end</property>
                         <signal name="clicked" handler="on_ui_myapp_pop_close_clicked" swapped="no"/>
                       </object>
                       <packing>

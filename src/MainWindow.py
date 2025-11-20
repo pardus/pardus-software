@@ -114,7 +114,6 @@ class MainWindow(object):
 
         self.ui_myapp_pop_app = self.GtkBuilder.get_object("ui_myapp_pop_app")
         self.ui_myapp_pop_package = self.GtkBuilder.get_object("ui_myapp_pop_package")
-        self.ui_myapp_pop_icon = self.GtkBuilder.get_object("ui_myapp_pop_icon")
         self.ui_myapp_pop_uninstall_button = self.GtkBuilder.get_object("ui_myapp_pop_uninstall_button")
 
         self.ui_myapp_pop_toremove_label = self.GtkBuilder.get_object("ui_myapp_pop_toremove_label")
@@ -124,7 +123,7 @@ class MainWindow(object):
         self.ui_myapp_pop_dsize_label = self.GtkBuilder.get_object("ui_myapp_pop_dsize_label")
         self.ui_myapp_pop_isize_label = self.GtkBuilder.get_object("ui_myapp_pop_isize_label")
 
-        self.ui_myapp_pop_disclaimer_label = self.GtkBuilder.get_object("ui_myapp_pop_disclaimer_label")
+        self.ui_myapp_pop_disclaimer_remove_label = self.GtkBuilder.get_object("ui_myapp_pop_disclaimer_remove_label")
 
         self.ui_myapp_pop_notfound_image = self.GtkBuilder.get_object("ui_myapp_pop_notfound_image")
         self.ui_myapp_pop_notfound_name = self.GtkBuilder.get_object("ui_myapp_pop_notfound_name")
@@ -3046,16 +3045,6 @@ class MainWindow(object):
 
             self.myapp_toremove_icon = icon
 
-            try:
-                if os.path.isfile(icon):
-                    px = GdkPixbuf.Pixbuf.new_from_file_at_size(icon, 64, 64)
-                    self.ui_myapp_pop_icon.set_from_pixbuf(px)
-                else:
-                    self.ui_myapp_pop_icon.set_from_icon_name(icon, Gtk.IconSize.DIALOG)
-            except Exception as e:
-                self.ui_myapp_pop_icon.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
-            self.ui_myapp_pop_icon.set_pixel_size(64)
-
             self.ui_myapp_pop_uninstall_button.set_sensitive(True)
 
             if details["to_delete"] and details["to_delete"] is not None:
@@ -3766,10 +3755,7 @@ class MainWindow(object):
         importants = [i for i in self.important_packages if i in self.myapp_toremove_list]
         if importants:
             self.ui_myapp_pop_stack.set_visible_child_name("disclaimer")
-            self.ui_myapp_pop_disclaimer_label.set_markup("<big>{}\n\n<b>{}</b>\n\n{}</big>".format(
-                _("The following important packages will also be removed."),
-                ", ".join(importants),
-                _("Are you sure you accept this?")))
+            self.ui_myapp_pop_disclaimer_remove_label.set_markup("{}".format(", ".join(importants)))
         else:
             self.Logger.info("not important package")
             self.ui_myapps_uninstall()
