@@ -987,18 +987,18 @@ class MainWindow(object):
                 self.status_server_cats = True
             elif type == "home":
                 self.status_server_home = True
-                self.Server.ediapplist = response["editor-apps"]
-                self.Server.sliderapplist = response["slider-apps"]
-                self.Server.mostdownapplist = response["mostdown-apps"]
-                self.Server.trendapplist = response["trend-apps"]
-                self.Server.lastaddedapplist = response["last-apps"]
+                self.Server.ediapplist = response.get("editor-apps", [])
+                self.Server.sliderapplist = response.get("slider-apps", [])
+                self.Server.mostdownapplist = response.get("mostdown-apps", [])
+                self.Server.trendapplist = response.get("trend-apps", [])
+                self.Server.lastaddedapplist = response.get("last-apps", [])
                 self.Server.appversion_pardus25 = response.get("version_pardus25")
                 self.Server.blocked_gnome_reviews = response.get("blocked_gnome_reviews", [])
-                if "important-packages" in response and response["important-packages"]:
-                    self.important_packages = response["important-packages"]
-                if "i386-packages" in response and response["i386-packages"]:
-                    self.i386_packages = response["i386-packages"]
-                self.Server.aptuptime = response["aptuptime"]
+                if response.get("important-packages"):
+                    self.important_packages = response.get("important-packages")
+                if response.get("i386-packages"):
+                    self.i386_packages = response.get("i386-packages")
+                self.Server.aptuptime = response.get("aptuptime", 86400)
 
             if self.status_server_apps and self.status_server_icons and self.status_server_images and self.status_server_cats and self.status_server_home:
                 # with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
@@ -1008,7 +1008,7 @@ class MainWindow(object):
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
-                    self.cats = response["cat-list"]
+                    self.cats = response.get("cat-list", [])
 
                 # with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
                 #     response = json.load(f)
