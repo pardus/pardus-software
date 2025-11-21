@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 13:50+0300\n"
+"POT-Creation-Date: 2025-11-21 13:57+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -628,6 +628,10 @@ msgstr ""
 
 #: src/MainWindow.py:3211
 msgid "{} years ago"
+msgstr ""
+
+#: src/MainWindow.py:3245
+msgid "{} Ratings"
 msgstr ""
 
 #: src/MainWindow.py:3256 src/MainWindow.py:3268
