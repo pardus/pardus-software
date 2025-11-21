@@ -3838,12 +3838,12 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkLabel" id="ui_ad_available_repos_label">
+                                                  <object class="GtkBox" id="ui_ad_available_repos_box">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
-                                                    <property name="label">ondokuz yirmibir yirmiuc yirmibes</property>
-                                                    <property name="wrap">True</property>
-                                                    <property name="xalign">0</property>
+                                                    <child>
+                                                      <placeholder/>
+                                                    </child>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>

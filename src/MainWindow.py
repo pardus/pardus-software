@@ -223,6 +223,7 @@ class MainWindow(object):
         self.ui_ad_maintainer_name_label = self.GtkBuilder.get_object("ui_ad_maintainer_name_label")
         self.ui_ad_maintainer_web_label = self.GtkBuilder.get_object("ui_ad_maintainer_web_label")
         self.ui_ad_maintainer_mail_label = self.GtkBuilder.get_object("ui_ad_maintainer_mail_label")
+        self.ui_ad_available_repos_box = self.GtkBuilder.get_object("ui_ad_available_repos_box")
 
         self.ui_ad_install_list_box = self.GtkBuilder.get_object("ui_ad_install_list_box")
         self.ui_ad_install_list_eventbox = self.GtkBuilder.get_object("ui_ad_install_list_eventbox")
@@ -2556,6 +2557,9 @@ class MainWindow(object):
         for image in self.ui_image_stack:
             self.ui_image_stack.remove(image)
 
+        for child in self.ui_ad_available_repos_box.get_children():
+            self.ui_ad_available_repos_box.remove(child)
+
     def set_app_details_page(self, app, source=1):
         """
         :param app: package name of application
@@ -2644,6 +2648,19 @@ class MainWindow(object):
 
             self.ui_ad_category_label.set_text(app_category_name)
             self.ui_ad_license_label.set_text(details.get("license") or "")
+
+            codenames = [c.get("name") for c in (details.get("codename") or [])]
+            for codename in codenames:
+                label = Gtk.Label.new()
+                label.set_markup("<b>{}</b>".format(codename.title()))
+                label.get_style_context().add_class("pardus-software-codename-label")
+                label.set_alignment(0.5, 0.5)
+                label.set_margin_left(4)
+                label.set_margin_right(4)
+                label.set_margin_top(4)
+                label.set_margin_bottom(4)
+                self.ui_ad_available_repos_box.pack_start(label, False, False, 0)
+            self.ui_ad_available_repos_box.show_all()
 
             self.ui_comment_appname_label.set_markup("<b>{}</b>".format(app_pretty_name))
             self.ui_comment_subcategory_label.set_markup("{}".format(app_subcategory_name))
