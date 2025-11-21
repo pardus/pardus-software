@@ -81,10 +81,10 @@
 }
 
 .pardus-software-mostapp-icon{
-    background-color: alpha(@unfocused_borders, 0.3);
+    background-color: alpha(@unfocused_borders, 0.4);
     border-radius: 8px;
     padding: 8px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    /*box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);*/
 }
 
 .headersep{
