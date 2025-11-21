@@ -1777,7 +1777,7 @@
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;All Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="label" translatable="yes">&lt;span size='large'&gt;&lt;b&gt;All Apps&lt;/b&gt;&lt;/span&gt;</property>
                                                         <property name="use-markup">True</property>
                                                       </object>
                                                       <packing>
@@ -1847,7 +1847,7 @@
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;Packages&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="label" translatable="yes">&lt;span size='large'&gt;&lt;b&gt;Packages&lt;/b&gt;&lt;/span&gt;</property>
                                                         <property name="use-markup">True</property>
                                                       </object>
                                                       <packing>
@@ -1984,7 +1984,7 @@
                                                           <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">&lt;span size='large'&gt;&lt;b&gt;Updates&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="label" translatable="yes">&lt;span size='large'&gt;&lt;b&gt;Updates&lt;/b&gt;&lt;/span&gt;</property>
                                                             <property name="use-markup">True</property>
                                                           </object>
                                                           <packing>
@@ -2074,7 +2074,7 @@
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;All Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="label" translatable="yes">&lt;span size='large'&gt;&lt;b&gt;All Apps&lt;/b&gt;&lt;/span&gt;</property>
                                                         <property name="use-markup">True</property>
                                                       </object>
                                                       <packing>
@@ -2479,7 +2479,7 @@
                                                             <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">Ratings</property>
+                                                            <property name="label" translatable="yes">Ratings</property>
                                                             <attributes>
                                                             <attribute name="weight" value="light"/>
                                                             </attributes>
@@ -2563,7 +2563,7 @@
                                                             <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">Downloads</property>
+                                                            <property name="label" translatable="yes">Downloads</property>
                                                             <attributes>
                                                             <attribute name="weight" value="light"/>
                                                             </attributes>
@@ -2634,7 +2634,7 @@
                                                             <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">Size</property>
+                                                            <property name="label" translatable="yes">Size</property>
                                                             <attributes>
                                                             <attribute name="weight" value="light"/>
                                                             </attributes>
@@ -2705,7 +2705,7 @@
                                                             <object class="GtkLabel">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label">Dependencies</property>
+                                                            <property name="label" translatable="yes">Dependencies</property>
                                                             <attributes>
                                                             <attribute name="weight" value="light"/>
                                                             </attributes>
@@ -5047,7 +5047,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="label">&lt;span size='large'&gt;&lt;b&gt;Preferences&lt;/b&gt;&lt;/span&gt;</property>
+                                            <property name="label" translatable="yes">&lt;span size='large'&gt;&lt;b&gt;Preferences&lt;/b&gt;&lt;/span&gt;</property>
                                             <property name="use-markup">True</property>
                                           </object>
                                           <packing>
@@ -5373,7 +5373,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="label">&lt;span size='large'&gt;&lt;b&gt;Other&lt;/b&gt;&lt;/span&gt;</property>
+                                            <property name="label" translatable="yes">&lt;span size='large'&gt;&lt;b&gt;Other&lt;/b&gt;&lt;/span&gt;</property>
                                             <property name="use-markup">True</property>
                                           </object>
                                           <packing>
