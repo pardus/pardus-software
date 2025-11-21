@@ -1341,7 +1341,7 @@ class MainWindow(object):
             box.pack_start(icon, False, True, 0)
             box.pack_start(label, False, True, 0)
             box.set_margin_start(8)
-            box.set_margin_end(50)
+            box.set_margin_end(30)
             box.set_margin_top(8)
             box.set_margin_bottom(8)
             row = Gtk.ListBoxRow()
@@ -1362,7 +1362,7 @@ class MainWindow(object):
                 box.pack_start(cat_icon, False, True, 0)
                 box.pack_start(label, False, True, 0)
                 box.set_margin_start(8)
-                box.set_margin_end(50)
+                box.set_margin_end(30)
                 box.set_margin_top(8)
                 box.set_margin_bottom(8)
 
@@ -1382,7 +1382,7 @@ class MainWindow(object):
             box.pack_start(installed_icon, False, True, 0)
             box.pack_start(label, False, True, 0)
             box.set_margin_start(8)
-            box.set_margin_end(50)
+            box.set_margin_end(30)
             box.set_margin_top(8)
             box.set_margin_bottom(8)
 
