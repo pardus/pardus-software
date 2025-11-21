@@ -428,16 +428,29 @@ class MainWindow(object):
         self.stack_history = []
 
         settings = Gtk.Settings.get_default()
-
         layout = settings.get_property("gtk-decoration-layout") or ""
         self.Logger.info(f"decoration_layout: {layout}")
+
+        # remove icon from left side of decoration
         parts = layout.split(":", 1)
-        left = parts[0].strip() if len(parts) > 0 else ""
-        right = parts[1].strip() if len(parts) > 1 else ""
-        left_items = [item for item in left.split(",") if item.strip() != "icon"]
+        left = parts[0]
+        right = parts[1] if len(parts) > 1 else None
+        left_items = [item.strip() for item in left.split(",") if item.strip() and item.strip() != "icon"]
         left_clean = ",".join(left_items)
-        new_layout = f"{left_clean}:{right}" if right else left_clean
-        new_layout = new_layout.strip(":")
+        if right is None:
+            new_layout = left_clean
+        else:
+            new_left = left_clean
+            new_right = right
+            if new_left == "" and new_right != "":
+                new_layout = f":{new_right}"
+            elif new_left != "" and new_right == "":
+                new_layout = f"{new_left}:"
+            elif new_left != "" and new_right != "":
+                new_layout = f"{new_left}:{new_right}"
+            else:
+                new_layout = ":"
+
         settings.set_property("gtk-decoration-layout", new_layout)
         self.Logger.info(f"new_decoration_layout: {new_layout}")
 
