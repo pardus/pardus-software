@@ -88,8 +88,8 @@ data_files = [
                   ["images/pardus-software.svg"]),
                  ("/usr/share/mime/packages/",
                   ["pardus-software.xml"]),
-                 ("/var/lib/polkit-1/localauthority/50-local.d/",
-                  ["pardus-software-group.pkla"]),
+                 ("/usr/share/polkit-1/rules.d/",
+                  ["pardus-software-group.rules"]),
                  ("/etc/pardus/",
                   ["pardus-software.conf"])
              ] + create_mo_files()
