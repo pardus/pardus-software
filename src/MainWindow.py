@@ -1067,30 +1067,24 @@ class MainWindow(object):
             slider_app_name = slider_app["name"]
             slider_app_pretty_name = slider_app["prettyname"].get(self.user_locale) or slider_app["prettyname"].get("en")
             slider_app_slogan = slider_app["slogan"].get(self.user_locale) or slider_app["slogan"].get("en")
-            slider_app_short_desc = slider_app["shortdesc"].get(self.user_locale) or slider_app["shortdesc"].get("en")
 
             label_name = Gtk.Label.new()
             label_name.props.halign = Gtk.Align.START
-            label_name.set_markup("<b>{}</b>".format(slider_app_pretty_name))
+            label_name.set_markup("<span color='white'><b>{}</b></span>".format(slider_app_pretty_name))
 
             label_slogan = Gtk.Label.new()
             label_slogan.props.halign = Gtk.Align.START
             label_slogan.set_line_wrap(True)
-            label_slogan.set_max_width_chars(35)
+            label_slogan.set_max_width_chars(30)
             label_slogan.set_lines(4)
             label_slogan.set_ellipsize(Pango.EllipsizeMode.END)
-            label_slogan.set_markup("<span size='x-large'>{}</span>".format(slider_app_slogan))
+            label_slogan.set_markup("<span size='x-large' color='white'>{}</span>".format(slider_app_slogan))
 
-            label_summary = Gtk.Label.new()
-            label_summary.props.halign = Gtk.Align.START
-            label_summary.set_markup("<span weight='light'>{}</span>".format(slider_app_short_desc))
-
-            vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 12)
+            vbox = Gtk.Box.new(Gtk.Orientation.VERTICAL, 8)
+            vbox.props.valign = Gtk.Align.CENTER
             vbox.set_border_width(6)
             vbox.pack_start(label_name, False, False, 0)
             vbox.pack_start(label_slogan, False, False, 0)
-            vbox.pack_start(label_summary, False, False, 0)
-            vbox.set_margin_top(24)
             vbox.set_margin_start(24)
 
             hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
