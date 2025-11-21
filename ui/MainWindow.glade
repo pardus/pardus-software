@@ -3880,6 +3880,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                   <object class="GtkBox">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
+                                                    <property name="margin-bottom">12</property>
                                                     <child>
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
