@@ -166,6 +166,7 @@ class MainWindow(object):
         self.ui_upgradableapps_box = self.GtkBuilder.get_object("ui_upgradableapps_box")
         self.ui_upgradableapps_count_label = self.GtkBuilder.get_object("ui_upgradableapps_count_label")
         self.ui_upgradables_combobox = self.GtkBuilder.get_object("ui_upgradables_combobox")
+        self.ui_installedapps_box = self.GtkBuilder.get_object("ui_installedapps_box")
         self.ui_installedapps_flowbox = self.GtkBuilder.get_object("ui_installedapps_flowbox")
         self.ui_installedapps_flowbox.set_filter_func(self.installedapps_filter_function)
 
@@ -1407,6 +1408,10 @@ class MainWindow(object):
 
     def on_ui_leftupdates_listbox_row_activated(self, listbox, row):
         self.searching = False
+        # self.ui_installedapps_box.set_visible(False)
+        # self.ui_installedapps_flowbox.set_visible(False)
+        # self.ui_upgradableapps_box.set_visible(True)
+        # self.ui_upgradableapps_flowbox.set_visible(True)
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftinstalled_listbox.unselect_all()
         print("in updates")
@@ -1415,6 +1420,10 @@ class MainWindow(object):
 
     def on_ui_leftinstalled_listbox_row_activated(self, listbox, row):
         self.searching = False
+        # self.ui_installedapps_box.set_visible(True)
+        # self.ui_installedapps_flowbox.set_visible(True)
+        # self.ui_upgradableapps_box.set_visible(False)
+        # self.ui_upgradableapps_flowbox.set_visible(False)
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftupdates_listbox.unselect_all()
         print("in installed")

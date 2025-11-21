@@ -1931,7 +1931,7 @@
                                                     <property name="valign">center</property>
                                                     <property name="margin-start">2</property>
                                                     <property name="margin-end">18</property>
-                                                    <property name="margin-bottom">21</property>
+                                                    <property name="margin-bottom">20</property>
                                                     <property name="spacing">16</property>
                                                     <child>
                                                       <object class="GtkImage">
@@ -1974,6 +1974,7 @@
                                                     <property name="can-focus">False</property>
                                                     <property name="margin-start">8</property>
                                                     <property name="margin-end">8</property>
+                                                    <property name="margin-top">12</property>
                                                     <property name="spacing">21</property>
                                                     <child>
                                                       <object class="GtkBox">
@@ -2046,7 +2047,6 @@
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="valign">start</property>
-                                                    <property name="margin-top">5</property>
                                                     <property name="homogeneous">True</property>
                                                     <property name="column-spacing">34</property>
                                                     <property name="min-children-per-line">1</property>
@@ -2063,12 +2063,12 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkBox">
+                                                  <object class="GtkBox" id="ui_installedapps_box">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="margin-start">8</property>
                                                     <property name="margin-end">8</property>
-                                                    <property name="margin-top">21</property>
+                                                    <property name="margin-top">12</property>
                                                     <property name="spacing">21</property>
                                                     <child>
                                                       <object class="GtkLabel">
