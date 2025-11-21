@@ -3242,7 +3242,7 @@ class MainWindow(object):
                     self.ui_ad_top_avgrate_label.set_text("{:.1f}".format(float(response["rating"]["rate"]["average"])))
                     self.ui_ad_bottom_avgrate_label.set_markup(
                         "<span font='54'><b>{:.1f}</b></span>".format(float(response["rating"]["rate"]["average"])))
-                    self.ui_ad_bottom_rate_count_label.set_text("{} Ratings".format(response["rating"]["rate"]["count"]))
+                    self.ui_ad_bottom_rate_count_label.set_text(_("{} Ratings").format(response["rating"]["rate"]["count"]))
 
                     GLib.idle_add(self.set_rating_progressbar, response["rating"]["rate"]["count"],
                                   response["rating"]["rate"]["rates"]["1"], response["rating"]["rate"]["rates"]["2"],
