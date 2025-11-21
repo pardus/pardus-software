@@ -1377,6 +1377,7 @@ class MainWindow(object):
 
             label = Gtk.Label.new()
             label.set_markup("<b>{}</b>".format(_("Installed Apps")))
+            label.set_ellipsize(Pango.EllipsizeMode.END)
 
             box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
             box.pack_start(installed_icon, False, True, 0)
