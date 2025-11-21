@@ -11,16 +11,12 @@ import locale
 import os
 import re
 import subprocess
-import sys
 import threading
-import time
 import json
-import math
 import cairo
 from pathlib import Path
 from hashlib import md5
 from datetime import datetime, timezone
-from locale import getlocale
 from locale import gettext as _
 
 import gi
@@ -39,7 +35,6 @@ from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gdk, Vte, Pango
 
 from Package import Package
 from Server import Server
-# from CellRendererButton import CellRendererButton
 
 from AppImage import AppImage
 from AppDetail import AppDetail
@@ -662,19 +657,17 @@ class MainWindow(object):
         else:
             self.auto_apt_update_finished = True
 
-    def controlPSUpdate(self):
-        if self.UserSettings.usercodename == "yirmibir" or self.UserSettings.usercodename == "yirmiuc":
+    def control_pardus_software_update(self):
+        if self.UserSettings.usercodename == "yirmiuc":
             if self.Server.connection and not self.isbroken:
                 user_version = self.Package.installed_version("pardus-software")
-                if self.UserSettings.usercodename == "yirmibir":
-                    server_version = self.Server.appversion_pardus21
-                else:
-                    server_version = self.Server.appversion_pardus23
-                if user_version is not None:
-                    version = self.Package.versionCompare(user_version, server_version)
-                    if version and version < 0:
-                        self.notify(message_summary=_("Pardus Software Center | New version available"),
-                                    message_body=_("Please upgrade application using Menu/Updates"))
+                server_version = self.Server.appversion_pardus25
+                if server_version:
+                    if user_version is not None:
+                        version = self.Package.versionCompare(user_version, server_version)
+                        if version and version < 0:
+                            self.notify(message_summary=_("Pardus Software Center | New version available"),
+                                        message_body=_("Please upgrade application"))
 
     def control_available_apps(self):
         if self.Server.connection:
@@ -869,9 +862,7 @@ class MainWindow(object):
         GLib.idle_add(self.set_slider)
         GLib.idle_add(self.set_most_apps)
         GLib.idle_add(self.start_auto_apt_update_control)
-
-        # TODO : enable controlPSUpdate
-        # GLib.idle_add(self.controlPSUpdate)
+        GLib.idle_add(self.control_pardus_software_update)
 
         GLib.idle_add(self.set_myapps)
 
@@ -1001,18 +992,7 @@ class MainWindow(object):
                 self.Server.mostdownapplist = response["mostdown-apps"]
                 self.Server.trendapplist = response["trend-apps"]
                 self.Server.lastaddedapplist = response["last-apps"]
-                # self.Server.totalstatistics = response["total"]
-                # self.Server.servermd5 = response["md5"]
-                self.Server.appversion = response["version"]
-                if "version_pardus21" in response.keys():
-                    self.Server.appversion_pardus21 = response["version_pardus21"]
-                else:
-                    self.Server.appversion_pardus21 = self.Server.appversion
-                if "version_pardus23" in response.keys():
-                    self.Server.appversion_pardus23 = response["version_pardus23"]
-                else:
-                    self.Server.appversion_pardus23 = self.Server.appversion
-                # self.Server.iconnames = response["iconnames"]
+                self.Server.appversion_pardus25 = response.get("version_pardus25")
                 self.Server.blocked_gnome_reviews = response.get("blocked_gnome_reviews", [])
                 if "important-packages" in response and response["important-packages"]:
                     self.important_packages = response["important-packages"]

@@ -40,8 +40,6 @@ class Server(object):
         self.server_cats_archive = "cats.tar.gz"
         self.server_home_archive = "home.tar.gz"
 
-        self.serversettings = "/api/v2/settings"
-        self.settingsfile = "serversettings.ini"
 
         # The following cache and config assignments are for backward compatibility
         self.cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
@@ -59,30 +57,16 @@ class Server(object):
 
         self.error_message = ""
         self.connection = False
-        self.applist = []
-        self.orgapplist = []
         self.catlist = []
         self.ediapplist = []
         self.sliderapplist = []
         self.mostdownapplist = []
         self.trendapplist = []
         self.lastaddedapplist = []
-        self.totalstatistics = []
-        self.servermd5 = {}
-        self.appversion = ""
-        self.appversion_pardus21 = ""
-        self.appversion_pardus23 = ""
-        self.iconnames = ""
+        self.appversion_pardus25 = ""
         self.blocked_gnome_reviews = []
-        self.dailydowns = []
-        self.osdowns = []
-        self.appdowns = []
-        self.oscolors = []
-        self.appcolors = []
-        self.osexplode = []
         self.aptuptime = 86400  # default control value is 1 day if server value is none
 
-        self.old_server_tried = False
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"
         self.gnomecommentserver = "https://odrs.gnome.org/1.0/reviews/api/fetch"
