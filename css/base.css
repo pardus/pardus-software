@@ -19,6 +19,12 @@
     background-color: #FFB400;
 }
 
+.pardus-software-codename-label{
+    background: alpha(@unfocused_borders, 0.4);
+    padding: 5px 9px;
+    border-radius: 20px;
+}
+
 .pardus-software-left-cats-box{
     background-color:alpha(@unfocused_borders, 0.3);
 }
