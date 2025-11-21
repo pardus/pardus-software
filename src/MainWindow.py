@@ -1932,9 +1932,9 @@ class MainWindow(object):
         box_h.pack_end(action_button, False, True, 0)
         box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 20)
 
-        box_h.set_margin_start(5)
-        box_h.set_margin_end(5)
-        box_h.set_margin_top(5)
+        box_h.set_margin_start(8)
+        box_h.set_margin_end(8)
+        box_h.set_margin_top(8)
         box_h.set_margin_bottom(5)
 
         bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
@@ -2060,9 +2060,9 @@ class MainWindow(object):
         box_h.pack_end(action_button, False, True, 0)
         box_h.pack_end(box_du, False, True, 40 if self.display_width >= 1920 else 20)
 
-        box_h.set_margin_start(5)
-        box_h.set_margin_end(5)
-        box_h.set_margin_top(5)
+        box_h.set_margin_start(8)
+        box_h.set_margin_end(8)
+        box_h.set_margin_top(8)
         box_h.set_margin_bottom(5)
 
         bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
