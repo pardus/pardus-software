@@ -3545,7 +3545,7 @@ class MainWindow(object):
             name = uri.rsplit("/", 1)[-1].split(".", 1)[0]
             original_width = pixbuf.get_width()
             original_height = pixbuf.get_height()
-            fixed_height = 200
+            fixed_height = 256
             image = Gtk.Image.new_from_pixbuf(self.round_corners((pixbuf.scale_simple(
                 int(original_width * fixed_height / original_height), fixed_height, GdkPixbuf.InterpType.BILINEAR)), 7))
             image.name = name
