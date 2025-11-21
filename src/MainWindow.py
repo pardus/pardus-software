@@ -659,7 +659,7 @@ class MainWindow(object):
             self.auto_apt_update_finished = True
 
     def control_pardus_software_update(self):
-        if self.UserSettings.usercodename == "yirmiuc":
+        if self.UserSettings.usercodename == "yirmibes":
             if self.Server.connection and not self.isbroken:
                 user_version = self.Package.installed_version("pardus-software")
                 server_version = self.Server.appversion_pardus25
