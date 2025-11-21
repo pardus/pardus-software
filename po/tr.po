@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 13:50+0300\n"
-"PO-Revision-Date: 2025-11-21 13:52+0300\n"
+"POT-Creation-Date: 2025-11-21 13:57+0300\n"
+"PO-Revision-Date: 2025-11-21 13:58+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <dev@pardus.org.tr>\n"
 "Language: tr\n"
@@ -218,7 +218,7 @@ msgstr "<big><b>Mevcut Depolar</b></big>"
 
 #: ui/MainWindow.glade:3888
 msgid "<big><b>Ratings</b></big>"
-msgstr "<big><b>Değerlendirme</b></big>"
+msgstr "<big><b>Değerlendirmeler</b></big>"
 
 #: ui/MainWindow.glade:3899
 msgid "Write Comment"
@@ -661,6 +661,10 @@ msgstr "{} ay önce"
 #: src/MainWindow.py:3211
 msgid "{} years ago"
 msgstr "{} yıl önce"
+
+#: src/MainWindow.py:3245
+msgid "{} Ratings"
+msgstr "{} Değerlendirme"
 
 #: src/MainWindow.py:3256 src/MainWindow.py:3268
 msgid "Please try again soon"
