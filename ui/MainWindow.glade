@@ -3940,7 +3940,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <object class="GtkLabel" id="ui_ad_bottom_avgrate_label">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
-                                                            <property name="label" translatable="yes">&lt;span font='54'&gt;&lt;b&gt;3.8&lt;/b&gt;&lt;/span&gt;</property>
+                                                            <property name="label">&lt;span font='54'&gt;&lt;b&gt;3.8&lt;/b&gt;&lt;/span&gt;</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -3956,7 +3956,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="opacity">0.75</property>
                                                             <property name="valign">end</property>
                                                             <property name="margin-bottom">10</property>
-                                                            <property name="label" translatable="yes">&lt;span font='18'&gt;/5&lt;/span&gt;</property>
+                                                            <property name="label">&lt;span font='18'&gt;/5&lt;/span&gt;</property>
                                                             <property name="use-markup">True</property>
                                                             </object>
                                                             <packing>
@@ -4056,7 +4056,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="opacity">0.75</property>
-                                                            <property name="label" translatable="yes">123 Ratings</property>
+                                                            <property name="label">123 Ratings</property>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
@@ -5519,7 +5519,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                 </child>
                                                 <child>
                                                   <object class="GtkButton" id="ui_settings_password_button">
-                                                    <property name="label" translatable="yes">button</property>
+                                                    <property name="label">button</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="receives-default">True</property>
@@ -5601,7 +5601,6 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                       </object>
                       <packing>
                         <property name="name">pardushome</property>
-                        <property name="title" translatable="yes">Pardus</property>
                       </packing>
                     </child>
                     <child>
@@ -6038,7 +6037,7 @@ Use with caution. Are you sure you want to continue?</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="primary-icon-name">edit-find-symbolic</property>
-                <property name="placeholder-text" translatable="yes">search for apps</property>
+                <property name="placeholder-text" translatable="yes">Search for apps</property>
                 <signal name="activate" handler="on_ui_top_searchentry_activate" swapped="no"/>
                 <signal name="focus-in-event" handler="on_ui_top_searchentry_focus_in_event" swapped="no"/>
                 <signal name="icon-press" handler="on_ui_top_searchentry_icon_press" swapped="no"/>
@@ -6564,7 +6563,7 @@ Use with caution. Are you sure you want to continue?</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">start</property>
-                                    <property name="label">Version</property>
+                                    <property name="label" translatable="yes">Version</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
@@ -6580,7 +6579,7 @@ Use with caution. Are you sure you want to continue?</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">start</property>
-                                    <property name="label" translatable="yes">123.0.1313.13-1</property>
+                                    <property name="label">123.0.1313.13-1</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
