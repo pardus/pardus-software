@@ -615,7 +615,7 @@ class MainWindow(object):
                 width = int(w * 0.5578)
                 height = int(h * 0.6944)
 
-            if w <= 1366 or h <= 768:
+            if w <= 1370 or h <= 768:
                 width = 1028
                 height = 661
 
@@ -1822,7 +1822,7 @@ class MainWindow(object):
         bottom_separator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
         bottom_separator.props.valign = Gtk.Align.END
         bottom_separator.set_vexpand(True)
-        if 1024 < self.display_width <= 1366:
+        if 1024 < self.display_width <= 1370:
             bottom_separator.set_size_request(333, -1)
         GLib.idle_add(bottom_separator.get_style_context().add_class, "pardus-software-mostdown-bottom-seperator")
 
