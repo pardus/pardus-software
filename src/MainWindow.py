@@ -2215,7 +2215,7 @@ class MainWindow(object):
             editor_app_sub_categoy = self.get_sub_category_name_from_app_name(editor_app_name)
 
             app_image = Gtk.Image.new()
-            app_image.set_pixel_size(128)
+            app_image.set_pixel_size(200)
             app_image.set_hexpand(True)
             app_image.props.halign = Gtk.Align.FILL
 
