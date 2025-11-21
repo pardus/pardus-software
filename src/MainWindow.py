@@ -1101,7 +1101,7 @@ class MainWindow(object):
                 background-image: url("{}");
                 background-size: cover;
                 background-repeat: no-repeat;
-                background-position: center;
+                background-position: right;
                 border-radius: 8px;
             }}
             """.format(os.path.join(self.UserSettings.slider_images_dir, "{}.svg".format(slider_app_name)))
