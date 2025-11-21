@@ -478,6 +478,7 @@ class MainWindow(object):
         self.ui_leftcats_box = self.GtkBuilder.get_object("ui_leftcats_box")
         self.ui_leftcats_listbox = self.GtkBuilder.get_object("ui_leftcats_listbox")
         self.ui_leftupdates_listbox = self.GtkBuilder.get_object("ui_leftupdates_listbox")
+        self.ui_leftupdates_separator = self.GtkBuilder.get_object("ui_leftupdates_separator")
         self.ui_leftinstalled_listbox = self.GtkBuilder.get_object("ui_leftinstalled_listbox")
         self.ui_slider_stack = self.GtkBuilder.get_object("ui_slider_stack")
         self.ui_slider_overlay = self.GtkBuilder.get_object("ui_slider_overlay")
@@ -1231,6 +1232,7 @@ class MainWindow(object):
         GLib.idle_add(lambda: (self.ui_leftupdates_listbox and self.ui_leftupdates_listbox.foreach(
             lambda child: self.ui_leftupdates_listbox.remove(child)), False))
 
+        GLib.idle_add(self.ui_leftupdates_separator.set_visible, self.upgradables)
         GLib.idle_add(self.ui_upgradableapps_box.set_visible, self.upgradables)
 
         if self.Server.connection and self.upgradables:
