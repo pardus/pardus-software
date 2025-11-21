@@ -1397,6 +1397,8 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("apps")
+            self.ui_repotitle_box.set_visible(False)
+            self.ui_repoapps_flowbox.set_visible(False)
 
             self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.current_category.title()))
             icon = next((cat["icon"] for cat in self.categories if cat["name"] == self.current_category), "image-missing-symbolic")
@@ -3825,6 +3827,8 @@ class MainWindow(object):
         else:
             self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("search")
+            self.ui_repotitle_box.set_visible(True)
+            self.ui_repoapps_flowbox.set_visible(True)
 
             self.ui_leftcats_listbox.unselect_all()
             self.ui_leftinstalled_listbox.unselect_all()
