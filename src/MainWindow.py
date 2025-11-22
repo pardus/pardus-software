@@ -4490,6 +4490,15 @@ class MainWindow(object):
         self.ui_suggest_dialog.hide()
 
     def on_ui_suggest_send_button_clicked(self, button):
+        email_regex = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
+        url_regex = re.compile(r"^(https?://)?[A-Za-z0-9.-]+\.[A-Za-z]{2,}(/.*)?$")
+
+        def is_valid_email(email):
+            return email_regex.match(email) is not None
+
+        def is_valid_url(url):
+            return url_regex.match(url) is not None
+
         app_name = self.ui_suggest_appname_entry.get_text().strip()
         app_web = self.ui_suggest_appweb_entry.get_text().strip()
         user_name = self.ui_suggest_username_entry.get_text().strip()
@@ -4497,19 +4506,29 @@ class MainWindow(object):
         start, end = self.ui_suggest_why_textbuffer.get_bounds()
         why = self.ui_suggest_why_textbuffer.get_text(start, end, False).strip()
 
-        if app_name == "" or app_web == "" or user_name == "" or user_mail == "" or why == "":
+        if not all([app_name, app_web, user_name, user_mail, why]):
             self.ui_suggest_error_label.set_visible(True)
             self.ui_suggest_error_label.set_text(_("All fields must be filled."))
-        else:
+            return
 
-            dic = {"app_name": app_name, "app_web": app_web, "user_name": user_name, "user_mail": user_mail, "why": why,
-                   "mac": self.mac, "distro": self.user_distro_full}
-            try:
-                self.AppRequest.send(self.Server.serverurl + self.Server.serversendsuggest, dic)
-                self.ui_suggest_send_button.set_sensitive(False)
-            except Exception as e:
-                self.ui_suggest_error_label.set_visible(True)
-                self.ui_suggest_error_label.set_text(f"{e}")
+        if not is_valid_email(user_mail):
+            self.ui_suggest_error_label.set_visible(True)
+            self.ui_suggest_error_label.set_text(_("Please enter a valid e-mail address."))
+            return
+
+        if not is_valid_url(app_web):
+            self.ui_suggest_error_label.set_visible(True)
+            self.ui_suggest_error_label.set_text(_("Please enter a valid website."))
+            return
+
+        dic = {"app_name": app_name, "app_web": app_web, "user_name": user_name, "user_mail": user_mail, "why": why,
+               "mac": self.mac, "distro": self.user_distro_full}
+        try:
+            self.AppRequest.send(self.Server.serverurl + self.Server.serversendsuggest, dic)
+            self.ui_suggest_send_button.set_sensitive(False)
+        except Exception as e:
+            self.ui_suggest_error_label.set_visible(True)
+            self.ui_suggest_error_label.set_text(f"{e}")
 
     def on_ui_suggest_why_textbuffer_insert_text(self, buffer, location, text, length):
         max_chars = 500
