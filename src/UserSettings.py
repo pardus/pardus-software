@@ -32,13 +32,9 @@ class UserSettings(object):
         if self.user_real_name == "" or self.user_real_name == "Unknown":
             self.user_real_name = self.username
 
-        self.cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
-        self.configdir = "{}/pardus-software/".format(GLib.get_user_config_dir())
 
-        if not Path(self.cachedir).exists():
-            self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
-        if not Path(self.configdir).exists():
-            self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
+        self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
+        self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
         self.apps_dir = self.cachedir + "apps/"
         self.cats_dir = self.cachedir + "cats/"
@@ -60,12 +56,9 @@ class UserSettings(object):
         self.home_file = "home.json"
 
         self.configfile = "settings.ini"
-        self.config = configparser.ConfigParser(strict=False)
-        self.config_usi = None
+        self.config = configparser.ConfigParser()
         self.config_ea = None
         self.config_saa = None
-        self.config_sera = None
-        self.config_icon = None
         self.config_sgc = None
         self.config_udt = None
         self.config_aptup = None
@@ -75,13 +68,10 @@ class UserSettings(object):
         self.Logger = Logger(__name__)
 
     def createDefaultConfig(self, force=False):
-        self.config['DEFAULT'] = {'UseServerIcons': 'yes',
-                                  'Animations': 'yes',
-                                  'ShowAvailableApps': 'yes',
-                                  'ShowExternalRepoApps': 'no',
-                                  'IconName': 'default',
-                                  'ShowGnomeComments': 'yes',
-                                  'UseDarkTheme': 'no',
+        self.config['MAIN'] = {'Animations': 'yes',
+                                  'OnlyAvailableApps': 'yes',
+                                  'GnomeComments': 'yes',
+                                  'DarkTheme': 'no',
                                   'AutoAptUpdate': 'yes',
                                   'LastAutoAptUpdate': '0',
                                   'ForceAutoAptUpdateTime': '0'}
@@ -95,25 +85,19 @@ class UserSettings(object):
         try:
             self.Logger.info("in readconfig")
             self.config.read(self.configdir + self.configfile)
-            self.config_usi = self.config.getboolean('DEFAULT', 'UseServerIcons')
-            self.config_ea = self.config.getboolean('DEFAULT', 'Animations')
-            self.config_saa = self.config.getboolean('DEFAULT', 'ShowAvailableApps')
-            self.config_sera = self.config.getboolean('DEFAULT', 'ShowExternalRepoApps')
-            self.config_icon = self.config.get('DEFAULT', 'IconName')
-            self.config_sgc = self.config.getboolean('DEFAULT', 'ShowGnomeComments')
-            self.config_udt = self.config.getboolean('DEFAULT', 'UseDarkTheme')
-            self.config_aptup = self.config.getboolean('DEFAULT', 'AutoAptUpdate')
-            self.config_lastaptup = self.config.getint('DEFAULT', 'LastAutoAptUpdate')
-            self.config_forceaptuptime = self.config.getint('DEFAULT', 'ForceAutoAptUpdateTime')
+            self.config_ea = self.config.getboolean('MAIN', 'Animations')
+            self.config_saa = self.config.getboolean('MAIN', 'OnlyAvailableApps')
+            self.config_sgc = self.config.getboolean('MAIN', 'GnomeComments')
+            self.config_udt = self.config.getboolean('MAIN', 'DarkTheme')
+            self.config_aptup = self.config.getboolean('MAIN', 'AutoAptUpdate')
+            self.config_lastaptup = self.config.getint('MAIN', 'LastAutoAptUpdate')
+            self.config_forceaptuptime = self.config.getint('MAIN', 'ForceAutoAptUpdateTime')
         except Exception as e:
             self.Logger.warning("user config read error ! Trying create defaults")
             self.Logger.exception("{}".format(e))
             # if not read; try to create defaults
-            self.config_usi = True
             self.config_ea = True
             self.config_saa = True
-            self.config_sera = False
-            self.config_icon = "default"
             self.config_sgc = True
             self.config_udt = False
             self.config_aptup = True
@@ -125,21 +109,48 @@ class UserSettings(object):
                 self.Logger.warning("self.createDefaultConfig(force=True)")
                 self.Logger.exception("{}".format(e))
 
-    def writeConfig(self, srvicons, anims, avaiapps, extapps, iconname, gnomecom, darktheme, aptup, lastaptup, faptupt):
-        self.config['DEFAULT'] = {'UseServerIcons': srvicons,
-                                  'Animations': anims,
-                                  'ShowAvailableApps': avaiapps,
-                                  'ShowExternalRepoApps': extapps,
-                                  'IconName': iconname,
-                                  'ShowGnomeComments': gnomecom,
-                                  'UseDarkTheme': darktheme,
-                                  'AutoAptUpdate': aptup,
-                                  'LastAutoAptUpdate': lastaptup,
-                                  'ForceAutoAptUpdateTime': faptupt}
+    def writeConfig(self, **kwargs):
+        """
+        writeConfig(Animations=True)
+        writeConfig(OnlyAvailableApps=True)
+        writeConfig(DarkTheme=False)
+        """
+
+        current = {
+            'Animations': self.config_ea,
+            'OnlyAvailableApps': self.config_saa,
+            'GnomeComments': self.config_sgc,
+            'DarkTheme': self.config_udt,
+            'AutoAptUpdate': self.config_aptup,
+            'LastAutoAptUpdate': self.config_lastaptup,
+            'ForceAutoAptUpdateTime': self.config_forceaptuptime
+        }
+
+        for key, value in kwargs.items():
+            if key in current:
+                current[key] = value
+            else:
+                self.Logger.warning(f"Unknown config key: {key}")
+
+        self.config['MAIN'] = {
+            'Animations': current['Animations'],
+            'OnlyAvailableApps': current['OnlyAvailableApps'],
+            'GnomeComments': current['GnomeComments'],
+            'DarkTheme': current['DarkTheme'],
+            'AutoAptUpdate': current['AutoAptUpdate'],
+            'LastAutoAptUpdate': current['LastAutoAptUpdate'],
+            'ForceAutoAptUpdateTime': current['ForceAutoAptUpdateTime']
+        }
+
+        config_path = self.configdir + self.configfile
         if self.createDir(self.configdir):
-            with open(self.configdir + self.configfile, "w") as cf:
-                self.config.write(cf)
-                return True
+            try:
+                with open(config_path, "w") as cf:
+                    self.config.write(cf)
+                    return True
+            except Exception as e:
+                self.Logger.exception(f"writeConfig error: {e}")
+                return False
         return False
 
     def createDir(self, dir):

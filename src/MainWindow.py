@@ -797,11 +797,8 @@ class MainWindow(object):
         self.UserSettings.createDefaultConfig()
         self.UserSettings.readConfig()
 
-        self.Logger.info("{} {}".format("config_usi", self.UserSettings.config_usi))
         self.Logger.info("{} {}".format("config_anim", self.UserSettings.config_ea))
         self.Logger.info("{} {}".format("config_availableapps", self.UserSettings.config_saa))
-        self.Logger.info("{} {}".format("config_showextapps", self.UserSettings.config_sera))
-        self.Logger.info("{} {}".format("config_icon", self.UserSettings.config_icon))
         self.Logger.info("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
         self.Logger.info("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
         self.Logger.info("{} {}".format("config_aptup", self.UserSettings.config_aptup))
@@ -4244,11 +4241,7 @@ class MainWindow(object):
         user_config_dark = self.UserSettings.config_udt
         if state != user_config_dark:
             self.Logger.info("Updating dark theme state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc, state,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(DarkTheme=state)
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = state
             self.usersettings()
 
@@ -4256,11 +4249,7 @@ class MainWindow(object):
         user_config_animations = self.UserSettings.config_ea
         if state != user_config_animations:
             self.Logger.info("Updating animations state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, state, self.UserSettings.config_saa,
-                                          self.UserSettings.config_sera, self.UserSettings.config_icon,
-                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(Animations=state)
             self.usersettings()
 
             if self.UserSettings.config_ea:
@@ -4274,33 +4263,21 @@ class MainWindow(object):
         user_config_gcomments = self.UserSettings.config_sgc
         if state != user_config_gcomments:
             self.Logger.info("Updating gnome comments state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
-                                          self.UserSettings.config_icon, state, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(GnomeComments=state)
             self.usersettings()
 
     def on_ui_settings_update_switch_state_set(self, switch, state):
         user_config_update = self.UserSettings.config_aptup
         if state != user_config_update:
             self.Logger.info("Updating auto apt update state as {}".format(state))
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
-                                          self.UserSettings.config_udt, state,
-                                          self.UserSettings.config_lastaptup, self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(AutoAptUpdate=state)
             self.usersettings()
 
     def on_ui_settings_available_switch_state_set(self, switch, state):
         user_config_available = self.UserSettings.config_saa
         if state != user_config_available:
             self.Logger.info("Updating show available apps state")
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea, state,
-                                          self.UserSettings.config_sera, self.UserSettings.config_icon,
-                                          self.UserSettings.config_sgc, self.UserSettings.config_udt,
-                                          self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
-                                          self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(OnlyAvailableApps=state)
             self.usersettings()
             self.set_available_apps(available=state)
             GLib.idle_add(self.set_applications)
@@ -4917,11 +4894,7 @@ class MainWindow(object):
                 self.Logger.exception("{}".format(e))
                 timestamp = 0
 
-            self.UserSettings.writeConfig(self.UserSettings.config_usi, self.UserSettings.config_ea,
-                                          self.UserSettings.config_saa, self.UserSettings.config_sera,
-                                          self.UserSettings.config_icon, self.UserSettings.config_sgc,
-                                          self.UserSettings.config_udt, self.UserSettings.config_aptup,
-                                          timestamp, self.UserSettings.config_forceaptuptime)
+            self.UserSettings.writeConfig(LastAutoAptUpdate=timestamp)
 
             old_upgradables = self.upgradables.copy()
             self.get_upgradables()
