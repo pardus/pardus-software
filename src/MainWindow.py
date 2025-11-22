@@ -424,6 +424,8 @@ class MainWindow(object):
 
         self.stack_history = []
 
+        self.repo_final_list = []
+
         settings = Gtk.Settings.get_default()
         layout = settings.get_property("gtk-decoration-layout") or ""
         self.Logger.info(f"decoration_layout: {layout}")
@@ -3830,7 +3832,7 @@ class MainWindow(object):
         else:
             self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("search")
-            self.ui_repotitle_box.set_visible(True)
+            self.ui_repotitle_box.set_visible(self.repo_final_list)
             self.ui_repoapps_flowbox.set_visible(True)
 
             self.ui_leftcats_listbox.unselect_all()
@@ -3848,6 +3850,7 @@ class MainWindow(object):
         else:
             self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("search")
+            self.ui_repotitle_box.set_visible(self.repo_final_list)
 
             self.ui_pardusapps_flowbox.invalidate_filter()
 
@@ -3871,6 +3874,7 @@ class MainWindow(object):
         if self.ui_repoapps_flowbox:
             for row in list(self.ui_repoapps_flowbox.get_children()):
                 self.ui_repoapps_flowbox.remove(row)
+        self.repo_final_list = []
 
     def _start_repo_search(self, text):
         if hasattr(self, "_repo_search_cancel_flag"):
@@ -3947,18 +3951,18 @@ class MainWindow(object):
         if self._repo_search_cancel_flag:
             return False
 
-        final_list = list(self._repo_startswith)
+        self.repo_final_list = list(self._repo_startswith)
 
-        if len(final_list) < 6:
-            need = 6 - len(final_list)
-            final_list += self._repo_contains[:need]
+        if len(self.repo_final_list) < 6:
+            need = 6 - len(self.repo_final_list)
+            self.repo_final_list += self._repo_contains[:need]
 
-        for pkg in final_list:
+        for pkg in self.repo_final_list:
             widget = self.create_app_widget(pkg, repo_app=True)
             GLib.idle_add(self.ui_repoapps_flowbox.add, widget)
 
         GLib.idle_add(self.ui_repoapps_flowbox.show_all)
-        GLib.idle_add(self.ui_repotitle_box.set_visible, final_list)
+        GLib.idle_add(self.ui_repotitle_box.set_visible, self.repo_final_list)
 
         self._repo_startswith = []
         self._repo_contains = []
