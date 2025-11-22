@@ -136,6 +136,8 @@ class MainWindow(object):
 
         self.ui_right_stack = self.GtkBuilder.get_object("ui_right_stack")
 
+        self.ui_discover_scrolledwindow = self.GtkBuilder.get_object("ui_discover_scrolledwindow")
+
         self.ui_currentcat_label = self.GtkBuilder.get_object("ui_currentcat_label")
         self.ui_currentcat_image = self.GtkBuilder.get_object("ui_currentcat_image")
 
@@ -1425,9 +1427,8 @@ class MainWindow(object):
         if self.current_category == "discover":
             print("in discover")
             self.ui_right_stack_navigate_to("discover")
-        # elif self.current_category == "installed":
-        #     print("in installed")
-        #     self.ui_right_stack_navigate_to("installed")
+            # set scroll position to top (reset)
+            self.ui_discover_scrolledwindow.set_vadjustment(Gtk.Adjustment())
         else:
             print("in category")
             self.ui_pardusapps_flowbox.invalidate_filter()
