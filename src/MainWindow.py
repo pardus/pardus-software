@@ -1535,12 +1535,7 @@ class MainWindow(object):
 
         self.update_app_widget_label(app_name)
 
-        command = app_name
-        cmd = details.get("command", [])
-        if isinstance(cmd, dict):
-            command = cmd.get(self.user_locale, "").strip()
-            packages = [p for p in command.split() if self.Package.control_package_cache(p)]
-            command = " ".join(packages) if packages else app_name
+        command = self.get_action_command(app_name, details)
 
         desktop_id = details.get("desktop", "")
 
@@ -1554,6 +1549,57 @@ class MainWindow(object):
             self.action_package(app_name, command, desktop_id, button.name == 2)
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
                 app_name, command, desktop_id, button.name == 2))
+
+    def get_action_command(self, app_name, details):
+        """
+        Builds the action command based on server 'command' data
+        and 'install_recommends' option.
+        """
+
+        self.Logger.info(f"build_install_command: app_name={app_name}")
+
+        install_recommends = details.get("install_recommends", True)
+        self.Logger.info(f"install_recommends={install_recommends}")
+
+        cmd = details.get("command") or {}
+        self.Logger.info(f"raw command data: {cmd}")
+
+        # Default command (fallback)
+        command = app_name
+
+        if isinstance(cmd, dict):
+            raw_cmd = (cmd.get(self.user_locale) or "").strip()
+            self.Logger.info(f"localized raw_cmd='{raw_cmd}'")
+
+            if raw_cmd:
+                # Filter valid packages
+                packages = [
+                    p for p in raw_cmd.split()
+                    if self.Package.control_package_cache(p)
+                ]
+                self.Logger.info(f"valid packages: {packages}")
+
+                if packages:
+                    # Add no-install-recommends if needed
+                    if not install_recommends:
+                        packages.append("--no-install-recommends")
+                        self.Logger.info("added '--no-install-recommends'")
+
+                    command = " ".join(packages)
+                    self.Logger.info(f"final command built: {command}")
+                else:
+                    self.Logger.info("no valid packages found, using fallback app_name")
+            else:
+                self.Logger.info("raw_cmd empty, using fallback app_name")
+        else:
+            self.Logger.info("cmd is not a dict, using fallback app_name")
+
+        # FALLBACK CASE: command is app_name and install_recommends is False
+        if command == app_name and not install_recommends:
+            command = f"{app_name} --no-install-recommends"
+            self.Logger.info("added '--no-install-recommends' to fallback command")
+
+        return command
 
     def on_ui_ad_action_button_clicked(self, button):
         if self.ui_app_name in self.apps_full.keys():
@@ -2737,12 +2783,7 @@ class MainWindow(object):
             else:
                 is_openable = details.get("id", False)
             if is_installed is not None:
-                command = app_name
-                cmd = details.get("command", [])
-                if isinstance(cmd, dict):
-                    command = cmd.get(self.user_locale, "").strip()
-                    packages = [p for p in command.split() if self.Package.control_package_cache(p)]
-                    command = " ".join(packages) if packages else app_name
+                command = self.get_action_command(app_name, details)
                 threading.Thread(target=self.app_detail_requireds_thread, args=(command,), daemon=True).start()
                 if is_installed:
                     self.ui_ad_remove_button.set_visible(True)
