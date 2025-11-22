@@ -429,6 +429,9 @@ class MainWindow(object):
         self.slider_timer_id = None
         self.slider_pause_id = None
         self.pause_active = False
+        self.slider_auto_time = 6
+        self.slider_pause_time = 10
+        self.slider_slogan_max_chars = 30
 
         settings = Gtk.Settings.get_default()
         layout = settings.get_property("gtk-decoration-layout") or ""
@@ -1004,6 +1007,9 @@ class MainWindow(object):
                 self.Server.lastaddedapplist = response.get("last-apps", [])
                 self.Server.appversion_pardus25 = response.get("version_pardus25")
                 self.Server.blocked_gnome_reviews = response.get("blocked_gnome_reviews", [])
+                self.slider_auto_time = response.get("slider_auto_time", self.slider_auto_time)
+                self.slider_pause_time = response.get("slider_pause_time", self.slider_pause_time)
+                self.slider_slogan_max_chars = response.get("slider_slogan_max_chars", self.slider_slogan_max_chars)
                 if response.get("important-packages"):
                     self.important_packages = response.get("important-packages")
                 if response.get("i386-packages"):
@@ -1083,7 +1089,7 @@ class MainWindow(object):
             label_slogan = Gtk.Label.new()
             label_slogan.props.halign = Gtk.Align.START
             label_slogan.set_line_wrap(True)
-            label_slogan.set_max_width_chars(30)
+            label_slogan.set_max_width_chars(self.slider_slogan_max_chars)
             label_slogan.set_lines(4)
             label_slogan.set_ellipsize(Pango.EllipsizeMode.END)
             label_slogan.set_markup("<span size='x-large' color='white'>{}</span>".format(slider_app_slogan))
@@ -1202,7 +1208,7 @@ class MainWindow(object):
             return
 
         if self.slider_timer_id is None and not self.pause_active:
-            self.slider_timer_id = GLib.timeout_add_seconds(6, self._auto_slide)
+            self.slider_timer_id = GLib.timeout_add_seconds(self.slider_auto_time, self._auto_slide)
 
     def stop_slider_timer(self):
         if self.slider_timer_id is not None:
@@ -1217,7 +1223,7 @@ class MainWindow(object):
         if self.slider_pause_id is not None:
             GLib.source_remove(self.slider_pause_id)
 
-        self.slider_pause_id = GLib.timeout_add_seconds(10, self._resume_after_pause)
+        self.slider_pause_id = GLib.timeout_add_seconds(self.slider_pause_time, self._resume_after_pause)
 
     def _resume_after_pause(self):
         self.pause_active = False
