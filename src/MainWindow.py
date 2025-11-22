@@ -226,6 +226,7 @@ class MainWindow(object):
         self.ui_ad_maintainer_web_label = self.GtkBuilder.get_object("ui_ad_maintainer_web_label")
         self.ui_ad_maintainer_mail_label = self.GtkBuilder.get_object("ui_ad_maintainer_mail_label")
         self.ui_ad_available_repos_box = self.GtkBuilder.get_object("ui_ad_available_repos_box")
+        self.ui_ad_important_label = self.GtkBuilder.get_object("ui_ad_important_label")
 
         self.ui_ad_install_list_box = self.GtkBuilder.get_object("ui_ad_install_list_box")
         self.ui_ad_install_list_eventbox = self.GtkBuilder.get_object("ui_ad_install_list_eventbox")
@@ -2611,6 +2612,10 @@ class MainWindow(object):
 
         self.ui_ad_description_more_button.set_visible(False)
 
+        self.ui_ad_important_label.set_text("")
+        self.ui_ad_important_label.set_tooltip_text("")
+        self.ui_ad_important_label.set_visible(False)
+
         self.ui_ad_remove_button.set_visible(False)
         self.ui_ad_disclaimer_button.set_visible(False)
 
@@ -2808,6 +2813,9 @@ class MainWindow(object):
             else:
                 self.set_button_class(self.ui_ad_action_button, 2)
                 action_button_label.set_markup("<small>{}</small>".format(_("Not Found")))
+                self.ui_ad_important_label.set_text(_("This app is not available in the repos of your version."))
+                self.ui_ad_important_label.set_tooltip_text("")
+                self.ui_ad_important_label.set_visible(True)
                 self.ui_ad_sizetitle_label.set_text(_("Download Size"))
                 self.ui_ad_required_sizetitle_label.set_text(_("Required Disk Space"))
                 self.ui_ad_size_label.set_text("{}".format(_("None")))
@@ -2960,6 +2968,12 @@ class MainWindow(object):
             self.ui_ad_remove_list_count_label.set_text("({})".format(len(adr["to_delete"])))
             self.ui_ad_remove_list_box.set_visible(True)
             self.ui_ad_top_depends_count_label.set_text("{}".format(len(adr["to_delete"])))
+
+            importants = [i for i in self.important_packages if i in adr["to_delete"]]
+            self.ui_ad_important_label.set_text(_("Important Package"))
+            self.ui_ad_important_label.set_tooltip_text(_("Removing this package could impact system stability."))
+            self.ui_ad_important_label.set_visible(importants)
+
         else:
             self.ui_ad_remove_list_box.set_visible(False)
 

@@ -1746,9 +1746,17 @@
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="spacing">16</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="orientation">vertical</property>
+                                                        <property name="spacing">10</property>
                                                         <child>
-                                                          <object class="GtkButton" id="ui_ad_disclaimer_button">
+                                                          <object class="GtkBox">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">end</property>
+                                                            <property name="spacing">16</property>
+                                                            <child>
+                                                            <object class="GtkButton" id="ui_ad_disclaimer_button">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="receives-default">True</property>
@@ -1763,15 +1771,15 @@
                                                             <property name="icon-name">ps-detail-disclaimer</property>
                                                             </object>
                                                             </child>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">0</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkButton" id="ui_ad_action_button">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkButton" id="ui_ad_action_button">
                                                             <property name="width-request">77</property>
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
@@ -1785,15 +1793,15 @@
                                                             <property name="label">action</property>
                                                             </object>
                                                             </child>
-                                                          </object>
-                                                          <packing>
+                                                            </object>
+                                                            <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
                                                             <property name="position">1</property>
-                                                          </packing>
-                                                        </child>
-                                                        <child>
-                                                          <object class="GtkButton" id="ui_ad_remove_button">
+                                                            </packing>
+                                                            </child>
+                                                            <child>
+                                                            <object class="GtkButton" id="ui_ad_remove_button">
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">True</property>
                                                             <property name="receives-default">True</property>
@@ -1808,11 +1816,35 @@
                                                             <property name="icon-name">user-trash-symbolic</property>
                                                             </object>
                                                             </child>
+                                                            </object>
+                                                            <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">2</property>
+                                                            </packing>
+                                                            </child>
                                                           </object>
                                                           <packing>
                                                             <property name="expand">False</property>
                                                             <property name="fill">True</property>
-                                                            <property name="position">2</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel" id="ui_ad_important_label">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="halign">center</property>
+                                                            <property name="label" translatable="yes">This app is not available in the repos of your version.</property>
+                                                            <property name="ellipsize">end</property>
+                                                            <attributes>
+                                                            <attribute name="foreground" value="#9c9c0d0c0302"/>
+                                                            </attributes>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">1</property>
                                                           </packing>
                                                         </child>
                                                       </object>
@@ -1840,6 +1872,9 @@
                                                         <property name="name">external</property>
                                                         <property name="position">1</property>
                                                       </packing>
+                                                    </child>
+                                                    <child>
+                                                      <placeholder/>
                                                     </child>
                                                   </object>
                                                   <packing>
