@@ -1539,7 +1539,7 @@ class MainWindow(object):
         cmd = details.get("command", [])
         if isinstance(cmd, dict):
             command = cmd.get(self.user_locale, "").strip()
-            packages = [p for p in command.split() if self.Package.controlPackageCache(p)]
+            packages = [p for p in command.split() if self.Package.control_package_cache(p)]
             command = " ".join(packages) if packages else app_name
 
         desktop_id = details.get("desktop", "")
@@ -2737,7 +2737,13 @@ class MainWindow(object):
             else:
                 is_openable = details.get("id", False)
             if is_installed is not None:
-                threading.Thread(target=self.app_detail_requireds_thread, args=(app_name,), daemon=True).start()
+                command = app_name
+                cmd = details.get("command", [])
+                if isinstance(cmd, dict):
+                    command = cmd.get(self.user_locale, "").strip()
+                    packages = [p for p in command.split() if self.Package.control_package_cache(p)]
+                    command = " ".join(packages) if packages else app_name
+                threading.Thread(target=self.app_detail_requireds_thread, args=(command,), daemon=True).start()
                 if is_installed:
                     self.ui_ad_remove_button.set_visible(True)
                     self.ui_ad_remove_button.set_sensitive(True)
@@ -4782,10 +4788,10 @@ class MainWindow(object):
         cachestatus = self.Package.updatecache()
 
         self.Logger.info("Cache Status: {}, Package Cache Status: {}".format(
-            cachestatus, self.Package.controlPackageCache(self.inprogress_app_name)))
+            cachestatus, self.Package.control_package_cache(self.inprogress_app_name)))
 
         if status == 0 and not self.error and cachestatus:
-            if self.Package.controlPackageCache(self.inprogress_app_name):
+            if self.Package.control_package_cache(self.inprogress_app_name):
                 self.notify()
                 self.send_downloaded_request(self.inprogress_app_name)
             else:

@@ -61,10 +61,11 @@ class Package(object):
     def control_dpkg_interrupt(self):
         return self.cache.dpkg_journal_dirty
 
-    def controlPackageCache(self, packagename):
+    def control_package_cache(self, packagename):
         try:
             self.cache[packagename]
         except:
+            self.Logger.info(f"control_package_cache: {packagename} not in cache.")
             return False
         return True
 
