@@ -426,6 +426,10 @@ class MainWindow(object):
 
         self.repo_final_list = []
 
+        self.slider_timer_id = None
+        self.slider_pause_id = None
+        self.pause_active = False
+
         settings = Gtk.Settings.get_default()
         layout = settings.get_property("gtk-decoration-layout") or ""
         self.Logger.info(f"decoration_layout: {layout}")
@@ -640,7 +644,7 @@ class MainWindow(object):
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
-        self.setAnimations()
+        self.set_animations()
         self.package()
         self.server()
 
@@ -738,6 +742,8 @@ class MainWindow(object):
             if not self.isbroken:
                 GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
                 GLib.idle_add(self.ui_top_searchentry.set_sensitive, True)
+                if self.UserSettings.config_ea:
+                    self.start_slider_timer()
             else:
                 GLib.idle_add(self.homestack.set_visible_child_name, "fixapt")
         else:
@@ -1153,40 +1159,74 @@ class MainWindow(object):
         print(child.name)
         self.set_app_details_page(child.name)
 
-    def on_ui_slider_left_button_clicked(self, button):
-
-        slider_stack_len = 0
-        for row in self.ui_slider_stack:
-            slider_stack_len += 1
-
-        def get_prev_page(page):
-            increase = 0
-            for i in range(0, slider_stack_len):
-                increase += -1
-                if self.ui_slider_stack.get_child_by_name("{}".format(page + increase)) != None:
-                    return page + increase
-            return slider_stack_len - 1
-
-        self.ui_slider_stack.set_visible_child_name("{}".format(get_prev_page(self.slider_current_page)))
-        self.slider_current_page = int(self.ui_slider_stack.get_visible_child_name())
-
-
     def on_ui_slider_right_button_clicked(self, button):
+        self.pause_auto_slider()
+        self._slide_next_page()
 
-        slider_stack_len = 0
-        for row in self.ui_slider_stack:
-            slider_stack_len += 1
+    def on_ui_slider_left_button_clicked(self, button):
+        self.pause_auto_slider()
+        self._slide_prev_page()
+
+    def _slide_next_page(self):
+        slider_stack_len = len(self.ui_slider_stack.get_children())
 
         def get_next_page(page):
-            increase = 0
-            for i in range(0, slider_stack_len):
-                increase += 1
-                if self.ui_slider_stack.get_child_by_name("{}".format(page + increase)) != None:
-                    return page + increase
+            for i in range(1, slider_stack_len + 1):
+                if self.ui_slider_stack.get_child_by_name(str(page + i)) is not None:
+                    return page + i
             return 0
 
-        self.ui_slider_stack.set_visible_child_name("{}".format(get_next_page(self.slider_current_page)))
-        self.slider_current_page = int(self.ui_slider_stack.get_visible_child_name())
+        next_page = get_next_page(self.slider_current_page)
+        self.ui_slider_stack.set_visible_child_name(str(next_page))
+        self.slider_current_page = next_page
+
+    def _slide_prev_page(self):
+        slider_stack_len = len(self.ui_slider_stack.get_children())
+
+        def get_prev_page(page):
+            for i in range(1, slider_stack_len + 1):
+                if self.ui_slider_stack.get_child_by_name(str(page - i)) is not None:
+                    return page - i
+            return slider_stack_len - 1
+
+        prev_page = get_prev_page(self.slider_current_page)
+        self.ui_slider_stack.set_visible_child_name(str(prev_page))
+        self.slider_current_page = prev_page
+
+    def _auto_slide(self):
+        self._slide_next_page()
+        return True
+
+    def start_slider_timer(self):
+        if not self.UserSettings.config_ea:
+            return
+
+        if self.slider_timer_id is None and not self.pause_active:
+            self.slider_timer_id = GLib.timeout_add_seconds(6, self._auto_slide)
+
+    def stop_slider_timer(self):
+        if self.slider_timer_id is not None:
+            GLib.source_remove(self.slider_timer_id)
+            self.slider_timer_id = None
+
+    def pause_auto_slider(self):
+        self.stop_slider_timer()
+
+        self.pause_active = True
+
+        if self.slider_pause_id is not None:
+            GLib.source_remove(self.slider_pause_id)
+
+        self.slider_pause_id = GLib.timeout_add_seconds(10, self._resume_after_pause)
+
+    def _resume_after_pause(self):
+        self.pause_active = False
+        self.slider_pause_id = None
+
+        if self.UserSettings.config_ea:
+            self.start_slider_timer()
+
+        return False
 
     def get_upgradables(self):
         if not self.Server.connection:
@@ -2951,7 +2991,7 @@ class MainWindow(object):
     def onDestroy(self, widget):
         self.MainWindow.destroy()
 
-    def setAnimations(self):
+    def set_animations(self):
         pass
 
     def set_button_class(self, button, state):
@@ -4161,7 +4201,13 @@ class MainWindow(object):
                                           self.UserSettings.config_aptup, self.UserSettings.config_lastaptup,
                                           self.UserSettings.config_forceaptuptime)
             self.usersettings()
-            self.setAnimations()
+
+            if self.UserSettings.config_ea:
+                self.start_slider_timer()
+            else:
+                self.stop_slider_timer()
+
+            self.set_animations()
 
     def on_ui_settings_gcomments_switch_state_set(self, switch, state):
         user_config_gcomments = self.UserSettings.config_sgc
