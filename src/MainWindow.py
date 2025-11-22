@@ -138,6 +138,7 @@ class MainWindow(object):
 
         self.ui_discover_scrolledwindow = self.GtkBuilder.get_object("ui_discover_scrolledwindow")
         self.ui_pardusapps_scrolledwindow = self.GtkBuilder.get_object("ui_pardusapps_scrolledwindow")
+        self.ui_installedapps_scrolledwindow = self.GtkBuilder.get_object("ui_installedapps_scrolledwindow")
 
         self.ui_currentcat_label = self.GtkBuilder.get_object("ui_currentcat_label")
         self.ui_currentcat_image = self.GtkBuilder.get_object("ui_currentcat_image")
@@ -1456,6 +1457,10 @@ class MainWindow(object):
         self.ui_leftinstalled_listbox.unselect_all()
         print("in updates")
         self.ui_right_stack_navigate_to("installed")
+
+        # set scroll position to top (reset)
+        self.ui_installedapps_scrolledwindow.set_vadjustment(Gtk.Adjustment())
+
         self.ui_installedapps_flowbox.invalidate_filter()
 
     def on_ui_leftinstalled_listbox_row_activated(self, listbox, row):
@@ -1468,6 +1473,10 @@ class MainWindow(object):
         self.ui_leftupdates_listbox.unselect_all()
         print("in installed")
         self.ui_right_stack_navigate_to("installed")
+
+        # set scroll position to top (reset)
+        self.ui_installedapps_scrolledwindow.set_vadjustment(Gtk.Adjustment())
+
         self.ui_installedapps_flowbox.invalidate_filter()
 
     def on_queue_cancel_button_clicked(self, button):
