@@ -3856,7 +3856,7 @@ class MainWindow(object):
 
             text = entry_search.get_text().strip().lower()
 
-            self.ui_searchterm_label.set_text(_("Results for {}").format(text))
+            self.ui_searchterm_label.set_text(_("Results for {}").format(text) if text else _("Results"))
 
             if hasattr(self, "_repo_search_cancel_flag"):
                 self._repo_search_cancel_flag = True
