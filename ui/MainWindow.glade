@@ -2761,7 +2761,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="label">Limited information is available for this app.</property>
+                                                            <property name="label" translatable="yes">Limited information is available for this app.</property>
                                                             <property name="justify">center</property>
                                                             <property name="wrap">True</property>
                                                           </object>
@@ -2775,7 +2775,7 @@
                                                             <property name="visible">True</property>
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">center</property>
-                                                            <property name="label">Detailed information isn’t available for this app. 
+                                                            <property name="label" translatable="yes">Detailed information isn’t available for this app.
 The application may have been installed using tools such as Flatpak, Snap, or Wine.</property>
                                                             <property name="justify">center</property>
                                                             <property name="wrap">True</property>
