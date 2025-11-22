@@ -3910,20 +3910,11 @@ class MainWindow(object):
     def on_ui_myapps_combobox_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
             GLib.idle_add(self.set_myapps)
-        elif combo_box.get_active() == 1:  # sort by download
+        elif combo_box.get_active() == 1:  # sort by disk usage
             GLib.idle_add(self.set_myapps, True)
 
     def on_ui_header_queue_button_clicked(self, button):
         self.ui_right_stack_navigate_to("queue")
-
-    def remove_from_queue_clicked(self, button):
-        for row in self.QueueListBox:
-            if row.get_children()[0].name == button.name:
-                if row.get_index() != 0:
-                    self.QueueListBox.remove(row)
-                    # removing from queue list too
-                    index = next((index for (index, app) in enumerate(self.queue) if app["name"] == button.name), None)
-                    self.queue.pop(index)
 
     def add_to_myapps_ui(self, app, du=False):
 
