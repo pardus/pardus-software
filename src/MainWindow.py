@@ -1021,8 +1021,8 @@ class MainWindow(object):
                 self.home_trend_count = response.get("home_trend_count", self.home_trend_count)
                 self.home_most_down_count = response.get("home_most_down_count", self.home_most_down_count)
                 self.home_recent_count = response.get("home_recent_count", self.home_recent_count)
-                self.important_packages = response.get("important_packages", self.important_packages)
-                self.i386_packages = response.get("i386_packages", self.i386_packages)
+                self.important_packages = response.get("important_packages") or self.important_packages
+                self.i386_packages = response.get("i386_packages") or self.i386_packages
 
             if self.status_server_apps and self.status_server_icons and self.status_server_images and self.status_server_cats and self.status_server_home:
 
