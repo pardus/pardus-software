@@ -2273,6 +2273,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="can-focus">False</property>
                                                     <property name="label">app description</property>
                                                     <property name="wrap">True</property>
+                                                    <property name="selectable">True</property>
                                                     <property name="xalign">0</property>
                                                   </object>
                                                   <packing>
@@ -2354,6 +2355,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="label">1.0</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="ellipsize">end</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
@@ -2400,6 +2402,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="label">100 MB</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="ellipsize">end</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
@@ -2446,6 +2449,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="label">200 MB</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="ellipsize">end</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
@@ -2492,6 +2496,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="label">Open Source</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="ellipsize">end</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
@@ -2607,6 +2612,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="label">GPL-3.0</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="ellipsize">end</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
@@ -2653,6 +2659,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="label">Pardus Main</property>
                                                             <property name="wrap">True</property>
                                                             <property name="wrap-mode">word-char</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="ellipsize">end</property>
                                                             <attributes>
                                                             <attribute name="weight" value="bold"/>
@@ -2697,6 +2704,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="can-focus">False</property>
                                                             <property name="halign">start</property>
                                                             <property name="label">Pardus Developers</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="ellipsize">end</property>
                                                             <property name="single-line-mode">True</property>
                                                             <attributes>
@@ -2762,6 +2770,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                         <property name="label">https://www.pardus.org.tr</property>
                                                         <property name="wrap">True</property>
                                                         <property name="wrap-mode">word-char</property>
+                                                        <property name="selectable">True</property>
                                                         <property name="ellipsize">end</property>
                                                         <attributes>
                                                           <attribute name="weight" value="bold"/>
@@ -2808,6 +2817,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                         <property name="label">dev@pardus.org.tr</property>
                                                         <property name="wrap">True</property>
                                                         <property name="wrap-mode">word-char</property>
+                                                        <property name="selectable">True</property>
                                                         <property name="ellipsize">end</property>
                                                         <attributes>
                                                           <attribute name="weight" value="bold"/>
@@ -2970,6 +2980,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="halign">start</property>
                                                             <property name="label">label</property>
                                                             <property name="wrap">True</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="xalign">0</property>
                                                             <attributes>
                                                             <attribute name="weight" value="light"/>
@@ -3090,6 +3101,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="halign">start</property>
                                                             <property name="label">label</property>
                                                             <property name="wrap">True</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="xalign">0</property>
                                                             <attributes>
                                                             <attribute name="weight" value="light"/>
@@ -3210,6 +3222,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                             <property name="halign">start</property>
                                                             <property name="label">label</property>
                                                             <property name="wrap">True</property>
+                                                            <property name="selectable">True</property>
                                                             <property name="xalign">0</property>
                                                             <attributes>
                                                             <attribute name="weight" value="light"/>
