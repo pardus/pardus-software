@@ -2646,7 +2646,7 @@ class MainWindow(object):
         self.ui_ad_about_box.set_visible(source == 1 or source == 2)
         self.ui_ad_details_box.set_visible(source == 1 or source == 2)
         self.ui_ad_dependencies_box.set_visible(source == 1 or source == 2)
-        self.ui_ad_availablerepos_box.set_visible(source == 1 or source == 2)
+        self.ui_ad_availablerepos_box.set_visible(source == 1)
         self.ui_ad_top_stack.set_visible_child_name("stats" if source == 1 else "limited" if source == 2 else "external")
         self.ui_ad_action_stack.set_visible_child_name("action" if source == 1 or source == 2 else "external")
 
