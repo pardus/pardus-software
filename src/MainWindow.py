@@ -502,7 +502,7 @@ class MainWindow(object):
             pass
 
         self.home_trend_count = 8
-        self.home_mostdown_count = 8
+        self.home_most_down_count = 8
         self.home_recent_count = 4
 
         self.myapps_du_cancel_event = None
@@ -1016,6 +1016,9 @@ class MainWindow(object):
                 self.slider_pause_time = response.get("slider_pause_time", self.slider_pause_time)
                 self.slider_slogan_max_chars = response.get("slider_slogan_max_chars", self.slider_slogan_max_chars)
                 self.server_cat_all = response.get("cat_all") or {}
+                self.home_trend_count = response.get("home_trend_count", self.home_trend_count)
+                self.home_most_down_count = response.get("home_most_down_count", self.home_most_down_count)
+                self.home_recent_count = response.get("home_recent_count", self.home_recent_count)
                 self.important_packages = response.get("important_packages", self.important_packages)
                 self.i386_packages = response.get("i386_packages", self.i386_packages)
 
@@ -2399,7 +2402,7 @@ class MainWindow(object):
     def set_mostdown_apps(self):
         self.Logger.info("in set_mostdown_apps")
         GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
-        for app in self.Server.most_down_app_list[:self.home_mostdown_count]:
+        for app in self.Server.most_down_app_list[:self.home_most_down_count]:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_mostdown_flowbox.show_all)
