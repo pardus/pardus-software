@@ -532,10 +532,10 @@ class MainWindow(object):
         self.utils()
         self.usersettings()
 
-        self.user_distro_full = "{}, ({})".format(self.UserSettings.userdistro, self.user_desktop_env)
+        self.user_distro_full = "{}, ({})".format(self.UserSettings.user_distro, self.user_desktop_env)
         self.Logger.info("{}".format(self.user_distro_full))
 
-        if self.UserSettings.config_udt:
+        if self.UserSettings.config_dark_theme:
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = True
 
         self.MainWindow.show_all()
@@ -658,13 +658,13 @@ class MainWindow(object):
         self.server()
 
     def start_auto_apt_update_control(self):
-        if self.Server.connection and self.UserSettings.config_aptup:
+        if self.Server.connection and self.UserSettings.config_auto_apt_update:
             waittime = 86400
-            if self.UserSettings.config_forceaptuptime == 0:
+            if self.UserSettings.config_force_apt_update_time == 0:
                 waittime = self.Server.apt_uptime
             else:
-                waittime = self.UserSettings.config_forceaptuptime
-            if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()):
+                waittime = self.UserSettings.config_force_apt_update_time
+            if self.UserSettings.config_last_apt_update + waittime < int(datetime.now().timestamp()):
                 GLib.idle_add(self.ui_header_aptupdate_spinner.start)
                 GLib.idle_add(self.ui_header_aptupdate_spinner.set_visible, True)
                 command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/AutoAptUpdate.py"]
@@ -675,7 +675,7 @@ class MainWindow(object):
             self.auto_apt_update_finished = True
 
     def control_pardus_software_update(self):
-        if self.UserSettings.usercodename == "yirmibes":
+        if self.UserSettings.user_codename == "yirmibes":
             if self.Server.connection and not self.isbroken:
                 user_version = self.Package.installed_version("pardus-software")
                 server_version = self.Server.appversion_pardus25
@@ -688,7 +688,7 @@ class MainWindow(object):
 
     def control_available_apps(self):
         if self.Server.connection:
-            self.set_available_apps(available=self.UserSettings.config_saa)
+            self.set_available_apps(available=self.UserSettings.config_only_available)
 
     def control_args(self):
         if "details" in self.Application.args.keys():
@@ -751,7 +751,7 @@ class MainWindow(object):
             if not self.isbroken:
                 GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
                 GLib.idle_add(self.ui_top_searchentry.set_sensitive, True)
-                if self.UserSettings.config_ea:
+                if self.UserSettings.config_animations:
                     self.start_slider_timer()
             else:
                 GLib.idle_add(self.homestack.set_visible_child_name, "fixapt")
@@ -794,16 +794,16 @@ class MainWindow(object):
 
     def usersettings(self):
         self.UserSettings = UserSettings()
-        self.UserSettings.createDefaultConfig()
-        self.UserSettings.readConfig()
+        self.UserSettings.create_default_config()
+        self.UserSettings.read_config()
 
-        self.Logger.info("{} {}".format("config_anim", self.UserSettings.config_ea))
-        self.Logger.info("{} {}".format("config_availableapps", self.UserSettings.config_saa))
-        self.Logger.info("{} {}".format("config_showgnomecommments", self.UserSettings.config_sgc))
-        self.Logger.info("{} {}".format("config_usedarktheme", self.UserSettings.config_udt))
-        self.Logger.info("{} {}".format("config_aptup", self.UserSettings.config_aptup))
-        self.Logger.info("{} {}".format("config_lastaptup", self.UserSettings.config_lastaptup))
-        self.Logger.info("{} {}".format("config_forceaptuptime", self.UserSettings.config_forceaptuptime))
+        self.Logger.info(f"config_animations: {self.UserSettings.config_animations}")
+        self.Logger.info(f"config_only_available: {self.UserSettings.config_only_available}")
+        self.Logger.info(f"config_gnome_comments: {self.UserSettings.config_gnome_comments}")
+        self.Logger.info(f"config_dark_theme: {self.UserSettings.config_dark_theme}")
+        self.Logger.info(f"config_auto_apt_update: {self.UserSettings.config_auto_apt_update}")
+        self.Logger.info(f"config_last_apt_update: {self.UserSettings.config_last_apt_update}")
+        self.Logger.info(f"config_force_apt_update_time: {self.UserSettings.config_force_apt_update_time}")
 
     def server(self):
         self.Server = Server()
@@ -1179,7 +1179,7 @@ class MainWindow(object):
         return True
 
     def start_slider_timer(self):
-        if not self.UserSettings.config_ea:
+        if not self.UserSettings.config_animations:
             return
 
         if self.slider_timer_id is None and not self.pause_active:
@@ -1204,7 +1204,7 @@ class MainWindow(object):
         self.pause_active = False
         self.slider_pause_id = None
 
-        if self.UserSettings.config_ea:
+        if self.UserSettings.config_animations:
             self.start_slider_timer()
 
         return False
@@ -3020,7 +3020,7 @@ class MainWindow(object):
         self.MainWindow.destroy()
 
     def set_animations(self):
-        if self.UserSettings.config_ea:
+        if self.UserSettings.config_animations:
             trans_type = Gtk.StackTransitionType.CROSSFADE
             duration = 200
         else:
@@ -3460,7 +3460,7 @@ class MainWindow(object):
             GLib.idle_add(self.ui_ad_comments_flowbox.show_all)
 
             if response_comment_len != self.comment_limit:
-                if self.UserSettings.config_sgc:
+                if self.UserSettings.config_gnome_comments:
                     self.ui_ad_more_comment_button.name = "gnome"
                     gdic = {"user_hash": "0000000000000000000000000000000000000000",
                             "app_id": self.get_gnome_desktop_filename_from_app_name(self.ui_app_name),
@@ -4109,13 +4109,13 @@ class MainWindow(object):
         self.ui_leftinstalled_listbox.unselect_all()
         self.ui_leftupdates_listbox.unselect_all()
 
-        self.UserSettings.readConfig()
+        self.UserSettings.read_config()
 
-        self.ui_settings_animations_switch.set_state(self.UserSettings.config_ea)
-        self.ui_settings_available_switch.set_state(self.UserSettings.config_saa)
-        self.ui_settings_gcomments_switch.set_state(self.UserSettings.config_sgc)
-        self.ui_settings_dark_switch.set_state(self.UserSettings.config_udt)
-        self.ui_settings_update_switch.set_state(self.UserSettings.config_aptup)
+        self.ui_settings_animations_switch.set_state(self.UserSettings.config_animations)
+        self.ui_settings_available_switch.set_state(self.UserSettings.config_only_available)
+        self.ui_settings_gcomments_switch.set_state(self.UserSettings.config_gnome_comments)
+        self.ui_settings_dark_switch.set_state(self.UserSettings.config_dark_theme)
+        self.ui_settings_update_switch.set_state(self.UserSettings.config_auto_apt_update)
 
         self.control_groups()
         self.set_cache_size()
@@ -4167,7 +4167,7 @@ class MainWindow(object):
 
     def control_groups(self):
         try:
-            self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.username in g.gr_mem]
+            self.usergroups = [g.gr_name for g in grp.getgrall() if self.UserSettings.user_name in g.gr_mem]
         except Exception as e:
             self.Logger.exception("control_groups: {}".format(e))
             self.usergroups = []
@@ -4185,16 +4185,16 @@ class MainWindow(object):
             self.ui_settings_password_button.set_visible(False)
 
     def set_settings_tooltips(self):
-        if self.UserSettings.config_forceaptuptime != 0:
+        if self.UserSettings.config_force_apt_update_time != 0:
             self.ui_settings_update_label.set_tooltip_text(
                 "{} {} {}\n{}: {}\n\n{} ( {} )".format(
                     _("Allows the package manager cache to be updated again on the next application start if"),
                     self.displayTime(self.Server.apt_uptime),
                     _("have passed since the last successful update."),
                     _("Last successful update time is"),
-                    datetime.fromtimestamp(self.UserSettings.config_lastaptup),
+                    datetime.fromtimestamp(self.UserSettings.config_last_apt_update),
                     _("The value in your configuration file is used as the wait time."),
-                    self.displayTime(self.UserSettings.config_forceaptuptime)
+                    self.displayTime(self.UserSettings.config_force_apt_update_time)
                 ))
         else:
             self.ui_settings_update_label.set_tooltip_text("{} {} {}\n{}: {}".format(
@@ -4202,7 +4202,7 @@ class MainWindow(object):
                 self.displayTime(self.Server.apt_uptime),
                 _("have passed since the last successful update."),
                 _("Last successful update time is"),
-                datetime.fromtimestamp(self.UserSettings.config_lastaptup)
+                datetime.fromtimestamp(self.UserSettings.config_last_apt_update)
             ))
 
     def on_menu_about_clicked(self, button):
@@ -4238,21 +4238,21 @@ class MainWindow(object):
         return ', '.join(result[:granularity])
 
     def on_ui_settings_dark_switch_state_set(self, switch, state):
-        user_config_dark = self.UserSettings.config_udt
+        user_config_dark = self.UserSettings.config_dark_theme
         if state != user_config_dark:
             self.Logger.info("Updating dark theme state as {}".format(state))
-            self.UserSettings.writeConfig(DarkTheme=state)
+            self.UserSettings.write_config(DarkTheme=state)
             Gtk.Settings.get_default().props.gtk_application_prefer_dark_theme = state
             self.usersettings()
 
     def on_ui_settings_animations_switch_state_set(self, switch, state):
-        user_config_animations = self.UserSettings.config_ea
+        user_config_animations = self.UserSettings.config_animations
         if state != user_config_animations:
             self.Logger.info("Updating animations state as {}".format(state))
-            self.UserSettings.writeConfig(Animations=state)
+            self.UserSettings.write_config(Animations=state)
             self.usersettings()
 
-            if self.UserSettings.config_ea:
+            if self.UserSettings.config_animations:
                 self.start_slider_timer()
             else:
                 self.stop_slider_timer()
@@ -4260,24 +4260,24 @@ class MainWindow(object):
             self.set_animations()
 
     def on_ui_settings_gcomments_switch_state_set(self, switch, state):
-        user_config_gcomments = self.UserSettings.config_sgc
+        user_config_gcomments = self.UserSettings.config_gnome_comments
         if state != user_config_gcomments:
             self.Logger.info("Updating gnome comments state as {}".format(state))
-            self.UserSettings.writeConfig(GnomeComments=state)
+            self.UserSettings.write_config(GnomeComments=state)
             self.usersettings()
 
     def on_ui_settings_update_switch_state_set(self, switch, state):
-        user_config_update = self.UserSettings.config_aptup
+        user_config_update = self.UserSettings.config_auto_apt_update
         if state != user_config_update:
             self.Logger.info("Updating auto apt update state as {}".format(state))
-            self.UserSettings.writeConfig(AutoAptUpdate=state)
+            self.UserSettings.write_config(AutoAptUpdate=state)
             self.usersettings()
 
     def on_ui_settings_available_switch_state_set(self, switch, state):
-        user_config_available = self.UserSettings.config_saa
+        user_config_available = self.UserSettings.config_only_available
         if state != user_config_available:
             self.Logger.info("Updating show available apps state")
-            self.UserSettings.writeConfig(OnlyAvailableApps=state)
+            self.UserSettings.write_config(OnlyAvailableApps=state)
             self.usersettings()
             self.set_available_apps(available=state)
             GLib.idle_add(self.set_applications)
@@ -4300,10 +4300,10 @@ class MainWindow(object):
         self.grouperrormessage = ""
         if "pardus-software" in self.usergroups:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "del",
-                       self.UserSettings.username]
+                       self.UserSettings.user_name]
         else:
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
-                       self.UserSettings.username]
+                       self.UserSettings.user_name]
         self.group_process(command)
 
     def on_ui_ad_description_more_button_clicked(self, button):
@@ -4533,7 +4533,7 @@ class MainWindow(object):
             for app, details in self.apps_full.items()
             if (
                     (available and (self.Package.isinstalled(app) is not None or any(
-                        code["name"] == self.UserSettings.usercodename for code in details["codename"])))
+                        code["name"] == self.UserSettings.user_codename for code in details["codename"])))
                     or
                     (not available)
             )
@@ -4894,7 +4894,7 @@ class MainWindow(object):
                 self.Logger.exception("{}".format(e))
                 timestamp = 0
 
-            self.UserSettings.writeConfig(LastAutoAptUpdate=timestamp)
+            self.UserSettings.write_config(LastAutoAptUpdate=timestamp)
 
             old_upgradables = self.upgradables.copy()
             self.get_upgradables()

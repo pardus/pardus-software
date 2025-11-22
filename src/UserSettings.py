@@ -19,28 +19,26 @@ from Logger import Logger
 
 class UserSettings(object):
     def __init__(self):
-        self.userdistroid = distro.id()
-        self.userdistroversion = distro.major_version().lower()
-        self.usercodename = distro.codename().lower()
-        if self.usercodename == "etap":
-            self.usercodename = self.usercodename + self.userdistroversion
-        self.userdistro = ", ".join(filter(bool, (distro.name(), distro.version(), distro.codename())))
+        self.user_distro_version = distro.major_version().lower()
+        self.user_codename = distro.codename().lower()
+        if self.user_codename == "etap":
+            self.user_codename += self.user_distro_version
+        self.user_distro = ", ".join(filter(bool, (distro.name(), distro.version(), distro.codename())))
 
-        self.username = GLib.get_user_name()
+        self.user_name = GLib.get_user_name()
         self.user_real_name = GLib.get_real_name()
 
-        if self.user_real_name == "" or self.user_real_name == "Unknown":
-            self.user_real_name = self.username
+        if not self.user_real_name or self.user_real_name == "Unknown":
+            self.user_real_name = self.user_name
 
+        self.cache_dir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
+        self.config_dir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
-        self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
-        self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
-
-        self.apps_dir = self.cachedir + "apps/"
-        self.cats_dir = self.cachedir + "cats/"
-        self.home_dir = self.cachedir + "home/"
-        self.icons_dir = self.cachedir + "icons/"
-        self.images_dir = self.cachedir + "images/"
+        self.apps_dir = self.cache_dir + "apps/"
+        self.cats_dir = self.cache_dir + "cats/"
+        self.home_dir = self.cache_dir + "home/"
+        self.icons_dir = self.cache_dir + "icons/"
+        self.images_dir = self.cache_dir + "images/"
         self.app_icons_dir = self.icons_dir + "app-icons"
         self.cat_icons_dir = self.icons_dir + "cat-icons"
         self.slider_images_dir = self.images_dir + "slider-images"
@@ -48,8 +46,8 @@ class UserSettings(object):
 
         self.icons_archive = "icons.tar.gz"
         self.images_archive = "images.tar.gz"
-        self.apps_archive = "apps.tar.gz"
         self.cats_archive = "cats.tar.gz"
+        self.apps_archive = "apps.tar.gz"
         self.home_archive = "home.tar.gz"
         self.apps_file = "apps.json"
         self.cats_file = "cats.json"
@@ -57,59 +55,61 @@ class UserSettings(object):
 
         self.configfile = "settings.ini"
         self.config = configparser.ConfigParser()
-        self.config_ea = None
-        self.config_saa = None
-        self.config_sgc = None
-        self.config_udt = None
-        self.config_aptup = None
-        self.config_lastaptup = None
-        self.config_forceaptuptime = None
+        self.config_animations = None
+        self.config_only_available = None
+        self.config_gnome_comments = None
+        self.config_dark_theme = None
+        self.config_auto_apt_update = None
+        self.config_last_apt_update = None
+        self.config_force_apt_update_time = None
 
         self.Logger = Logger(__name__)
 
-    def createDefaultConfig(self, force=False):
-        self.config['MAIN'] = {'Animations': 'yes',
-                                  'OnlyAvailableApps': 'yes',
-                                  'GnomeComments': 'yes',
-                                  'DarkTheme': 'no',
-                                  'AutoAptUpdate': 'yes',
-                                  'LastAutoAptUpdate': '0',
-                                  'ForceAutoAptUpdateTime': '0'}
+    def create_default_config(self, force=False):
+        self.config['MAIN'] = {
+            'Animations': 'yes',
+            'OnlyAvailableApps': 'yes',
+            'GnomeComments': 'yes',
+            'DarkTheme': 'no',
+            'AutoAptUpdate': 'yes',
+            'LastAutoAptUpdate': '0',
+            'ForceAutoAptUpdateTime': '0'
+        }
 
-        if not Path.is_file(Path(self.configdir + self.configfile)) or force:
-            if self.createDir(self.configdir):
-                with open(self.configdir + self.configfile, "w") as cf:
+        if not Path.is_file(Path(self.config_dir + self.configfile)) or force:
+            if self.create_dir(self.config_dir):
+                with open(self.config_dir + self.configfile, "w") as cf:
                     self.config.write(cf)
 
-    def readConfig(self):
+    def read_config(self):
         try:
             self.Logger.info("in readconfig")
-            self.config.read(self.configdir + self.configfile)
-            self.config_ea = self.config.getboolean('MAIN', 'Animations')
-            self.config_saa = self.config.getboolean('MAIN', 'OnlyAvailableApps')
-            self.config_sgc = self.config.getboolean('MAIN', 'GnomeComments')
-            self.config_udt = self.config.getboolean('MAIN', 'DarkTheme')
-            self.config_aptup = self.config.getboolean('MAIN', 'AutoAptUpdate')
-            self.config_lastaptup = self.config.getint('MAIN', 'LastAutoAptUpdate')
-            self.config_forceaptuptime = self.config.getint('MAIN', 'ForceAutoAptUpdateTime')
+            self.config.read(self.config_dir + self.configfile)
+            self.config_animations = self.config.getboolean('MAIN', 'Animations')
+            self.config_only_available = self.config.getboolean('MAIN', 'OnlyAvailableApps')
+            self.config_gnome_comments = self.config.getboolean('MAIN', 'GnomeComments')
+            self.config_dark_theme = self.config.getboolean('MAIN', 'DarkTheme')
+            self.config_auto_apt_update = self.config.getboolean('MAIN', 'AutoAptUpdate')
+            self.config_last_apt_update = self.config.getint('MAIN', 'LastAutoAptUpdate')
+            self.config_force_apt_update_time = self.config.getint('MAIN', 'ForceAutoAptUpdateTime')
         except Exception as e:
             self.Logger.warning("user config read error ! Trying create defaults")
             self.Logger.exception("{}".format(e))
             # if not read; try to create defaults
-            self.config_ea = True
-            self.config_saa = True
-            self.config_sgc = True
-            self.config_udt = False
-            self.config_aptup = True
-            self.config_lastaptup = 0
-            self.config_forceaptuptime = 0
+            self.config_animations = True
+            self.config_only_available = True
+            self.config_gnome_comments = True
+            self.config_dark_theme = False
+            self.config_auto_apt_update = True
+            self.config_last_apt_update = 0
+            self.config_force_apt_update_time = 0
             try:
-                self.createDefaultConfig(force=True)
+                self.create_default_config(force=True)
             except Exception as e:
                 self.Logger.warning("self.createDefaultConfig(force=True)")
                 self.Logger.exception("{}".format(e))
 
-    def writeConfig(self, **kwargs):
+    def write_config(self, **kwargs):
         """
         writeConfig(Animations=True)
         writeConfig(OnlyAvailableApps=True)
@@ -117,13 +117,13 @@ class UserSettings(object):
         """
 
         current = {
-            'Animations': self.config_ea,
-            'OnlyAvailableApps': self.config_saa,
-            'GnomeComments': self.config_sgc,
-            'DarkTheme': self.config_udt,
-            'AutoAptUpdate': self.config_aptup,
-            'LastAutoAptUpdate': self.config_lastaptup,
-            'ForceAutoAptUpdateTime': self.config_forceaptuptime
+            'Animations': self.config_animations,
+            'OnlyAvailableApps': self.config_only_available,
+            'GnomeComments': self.config_gnome_comments,
+            'DarkTheme': self.config_dark_theme,
+            'AutoAptUpdate': self.config_auto_apt_update,
+            'LastAutoAptUpdate': self.config_last_apt_update,
+            'ForceAutoAptUpdateTime': self.config_force_apt_update_time
         }
 
         for key, value in kwargs.items():
@@ -142,8 +142,8 @@ class UserSettings(object):
             'ForceAutoAptUpdateTime': current['ForceAutoAptUpdateTime']
         }
 
-        config_path = self.configdir + self.configfile
-        if self.createDir(self.configdir):
+        config_path = self.config_dir + self.configfile
+        if self.create_dir(self.config_dir):
             try:
                 with open(config_path, "w") as cf:
                     self.config.write(cf)
@@ -153,7 +153,7 @@ class UserSettings(object):
                 return False
         return False
 
-    def createDir(self, dir):
+    def create_dir(self, dir):
         try:
             Path(dir).mkdir(parents=True, exist_ok=True)
             return True
