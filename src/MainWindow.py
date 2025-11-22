@@ -3023,7 +3023,37 @@ class MainWindow(object):
         self.MainWindow.destroy()
 
     def set_animations(self):
-        pass
+        if self.UserSettings.config_ea:
+            trans_type = Gtk.StackTransitionType.CROSSFADE
+            duration = 200
+        else:
+            trans_type = Gtk.StackTransitionType.NONE
+            duration = 0
+
+        stacks = [
+            self.mainstack,
+            self.homestack,
+            self.bottomstack,
+            self.ui_right_stack,
+            self.ui_slider_stack,
+            self.ui_pardusapps_title_stack,
+            self.ui_ad_action_stack,
+            self.ui_ad_top_stack,
+            self.ui_queue_stack,
+            self.ui_tryfix_stack,
+            self.ui_comment_main_stack,
+            self.ui_comment_mid_stack,
+            self.ui_comment_mid_editable_stack,
+            self.ui_comment_bottom_stack,
+            self.ui_image_stack,
+            self.ui_myapp_pop_stack,
+            self.ui_suggest_main_stack,
+        ]
+
+        for stack in stacks:
+            if stack:
+                stack.set_transition_type(trans_type)
+                stack.set_transition_duration(duration)
 
     def set_button_class(self, button, state):
         '''
