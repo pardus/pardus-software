@@ -24,7 +24,6 @@ Depends: ${misc:Depends},
          python3-netifaces,
          python3-psutil
 Recommends: desktop-file-utils,
-            python3-matplotlib,
             shared-mime-info
 Description: Pardus Software Center
  Install, remove, update applications
