@@ -57,15 +57,14 @@ class Server(object):
 
         self.error_message = ""
         self.connection = False
-        self.catlist = []
-        self.ediapplist = []
-        self.sliderapplist = []
-        self.mostdownapplist = []
-        self.trendapplist = []
-        self.lastaddedapplist = []
+        self.editor_app_list = []
+        self.slider_app_list = []
+        self.most_down_app_list = []
+        self.trend_app_list = []
+        self.recent_app_list = []
         self.appversion_pardus25 = ""
         self.blocked_gnome_reviews = []
-        self.aptuptime = 86400  # default control value is 1 day if server value is none
+        self.apt_uptime = 86400  # default control value is 1 day if server value is none
 
 
         self.gnomeratingserver = "https://odrs.gnome.org/1.0/reviews/api/ratings"

@@ -655,7 +655,7 @@ class MainWindow(object):
         if self.Server.connection and self.UserSettings.config_aptup:
             waittime = 86400
             if self.UserSettings.config_forceaptuptime == 0:
-                waittime = self.Server.aptuptime
+                waittime = self.Server.apt_uptime
             else:
                 waittime = self.UserSettings.config_forceaptuptime
             if self.UserSettings.config_lastaptup + waittime < int(datetime.now().timestamp()):
@@ -1000,57 +1000,25 @@ class MainWindow(object):
                 self.status_server_cats = True
             elif type == "home":
                 self.status_server_home = True
-                self.Server.ediapplist = response.get("editor-apps", [])
-                self.Server.sliderapplist = response.get("slider-apps", [])
-                self.Server.mostdownapplist = response.get("mostdown-apps", [])
-                self.Server.trendapplist = response.get("trend-apps", [])
-                self.Server.lastaddedapplist = response.get("last-apps", [])
+                self.Server.editor_app_list = response.get("editor_apps", [])
+                self.Server.slider_app_list = response.get("slider_apps", [])
+                self.Server.most_down_app_list = response.get("most_down_apps", [])
+                self.Server.trend_app_list = response.get("trend_apps", [])
+                self.Server.recent_app_list = response.get("recent_apps", [])
                 self.Server.appversion_pardus25 = response.get("version_pardus25")
                 self.Server.blocked_gnome_reviews = response.get("blocked_gnome_reviews", [])
+                self.Server.apt_uptime = response.get("apt_uptime", self.Server.apt_uptime)
                 self.slider_auto_time = response.get("slider_auto_time", self.slider_auto_time)
                 self.slider_pause_time = response.get("slider_pause_time", self.slider_pause_time)
                 self.slider_slogan_max_chars = response.get("slider_slogan_max_chars", self.slider_slogan_max_chars)
-                if response.get("important-packages"):
-                    self.important_packages = response.get("important-packages")
-                if response.get("i386-packages"):
-                    self.i386_packages = response.get("i386-packages")
-                self.Server.aptuptime = response.get("aptuptime", 86400)
+                self.important_packages = response.get("important_packages", self.important_packages)
+                self.i386_packages = response.get("i386_packages", self.i386_packages)
 
             if self.status_server_apps and self.status_server_icons and self.status_server_images and self.status_server_cats and self.status_server_home:
-                # with open(self.UserSettings.apps_dir + self.UserSettings.apps_file, 'r', encoding='utf-8') as f:
-                #     response = json.load(f)
-                #     self.applist = dict(sorted(response.items(),
-                #                                key=lambda item: locale.strxfrm(item[1]["prettyname"][self.user_locale])))
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
                     self.cats = response.get("cat-list", [])
-
-                # with open(self.UserSettings.home_dir + self.UserSettings.home_file, 'r', encoding='utf-8') as f:
-                #     response = json.load(f)
-                #     self.Server.ediapplist = response["editor-apps"]
-                #     self.Server.sliderapplist = response["slider-apps"]
-                #     self.Server.mostdownapplist = response["mostdown-apps"]
-                #     self.Server.trendapplist = response["trend-apps"]
-                #     self.Server.lastaddedapplist = response["last-apps"]
-                #     # self.Server.totalstatistics = response["total"]
-                #     # self.Server.servermd5 = response["md5"]
-                #     self.Server.appversion = response["version"]
-                #     if "version_pardus21" in response.keys():
-                #         self.Server.appversion_pardus21 = response["version_pardus21"]
-                #     else:
-                #         self.Server.appversion_pardus21 = self.Server.appversion
-                #     if "version_pardus23" in response.keys():
-                #         self.Server.appversion_pardus23 = response["version_pardus23"]
-                #     else:
-                #         self.Server.appversion_pardus23 = self.Server.appversion
-                #     # self.Server.iconnames = response["iconnames"]
-                #     self.Server.badwords = response["badwords"]
-                #     if "important-packages" in response and response["important-packages"]:
-                #         self.important_packages = response["important-packages"]
-                #     if "i386-packages" in response and response["i386-packages"]:
-                #         self.i386_packages = response["i386-packages"]
-                #     self.Server.aptuptime = response["aptuptime"]
 
                 self.prepend_server_icons()
 
@@ -1076,7 +1044,7 @@ class MainWindow(object):
     def set_slider(self):
 
         stack_counter = 0
-        for slider_app in self.Server.sliderapplist:
+        for slider_app in self.Server.slider_app_list:
 
             slider_app_name = slider_app["name"]
             slider_app_pretty_name = slider_app["prettyname"].get(self.user_locale) or slider_app["prettyname"].get("en")
@@ -2261,7 +2229,7 @@ class MainWindow(object):
 
         GLib.idle_add(lambda: self.ui_editor_flowbox.foreach(lambda child: self.ui_editor_flowbox.remove(child)))
 
-        for editor_app in self.Server.ediapplist:
+        for editor_app in self.Server.editor_app_list:
 
             editor_app_name = editor_app["name"]
             editor_app_pretty_name = self.get_pretty_name_from_app_name(editor_app_name)
@@ -2392,7 +2360,7 @@ class MainWindow(object):
         self.Logger.info("in set_trend_apps")
         GLib.idle_add(lambda: self.ui_trend_flowbox.foreach(lambda child: self.ui_trend_flowbox.remove(child)))
         counter = 0
-        for app in self.Server.trendapplist[:self.home_trend_count]:
+        for app in self.Server.trend_app_list[:self.home_trend_count]:
             counter += 1
             listbox = self.create_app_widget(app["name"], None, counter)
             GLib.idle_add(self.ui_trend_flowbox.insert, listbox, -1)
@@ -2400,7 +2368,7 @@ class MainWindow(object):
 
         GLib.idle_add(lambda: self.ui_trendapps_flowbox.foreach(lambda child: self.ui_trendapps_flowbox.remove(child)))
         counter = 0
-        for app in self.Server.trendapplist:
+        for app in self.Server.trend_app_list:
             counter += 1
             listbox = self.create_app_widget(app["name"], None, counter)
             GLib.idle_add(self.ui_trendapps_flowbox.insert, listbox, -1)
@@ -2409,13 +2377,13 @@ class MainWindow(object):
     def set_mostdown_apps(self):
         self.Logger.info("in set_mostdown_apps")
         GLib.idle_add(lambda: self.ui_mostdown_flowbox.foreach(lambda child: self.ui_mostdown_flowbox.remove(child)))
-        for app in self.Server.mostdownapplist[:self.home_mostdown_count]:
+        for app in self.Server.most_down_app_list[:self.home_mostdown_count]:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_mostdown_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_mostdown_flowbox.show_all)
 
         GLib.idle_add(lambda: self.ui_mostdownapps_flowbox.foreach(lambda child: self.ui_mostdownapps_flowbox.remove(child)))
-        for app in self.Server.mostdownapplist:
+        for app in self.Server.most_down_app_list:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_mostdownapps_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_mostdownapps_flowbox.show_all)
@@ -2423,13 +2391,13 @@ class MainWindow(object):
     def set_recent_apps(self):
         self.Logger.info("in set_recent_apps")
         GLib.idle_add(lambda: self.ui_recent_flowbox.foreach(lambda child: self.ui_recent_flowbox.remove(child)))
-        for app in self.Server.lastaddedapplist[:self.home_recent_count]:
+        for app in self.Server.recent_app_list[:self.home_recent_count]:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_recent_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_recent_flowbox.show_all)
 
         GLib.idle_add(lambda: self.ui_recentapps_flowbox.foreach(lambda child: self.ui_recentapps_flowbox.remove(child)))
-        for app in self.Server.lastaddedapplist:
+        for app in self.Server.recent_app_list:
             listbox = self.create_app_widget(app["name"], None)
             GLib.idle_add(self.ui_recentapps_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_recentapps_flowbox.show_all)
@@ -4137,7 +4105,7 @@ class MainWindow(object):
             self.ui_settings_update_label.set_tooltip_text(
                 "{} {} {}\n{}: {}\n\n{} ( {} )".format(
                     _("Allows the package manager cache to be updated again on the next application start if"),
-                    self.displayTime(self.Server.aptuptime),
+                    self.displayTime(self.Server.apt_uptime),
                     _("have passed since the last successful update."),
                     _("Last successful update time is"),
                     datetime.fromtimestamp(self.UserSettings.config_lastaptup),
@@ -4147,7 +4115,7 @@ class MainWindow(object):
         else:
             self.ui_settings_update_label.set_tooltip_text("{} {} {}\n{}: {}".format(
                 _("Allows the package manager cache to be updated again on the next application start if"),
-                self.displayTime(self.Server.aptuptime),
+                self.displayTime(self.Server.apt_uptime),
                 _("have passed since the last successful update."),
                 _("Last successful update time is"),
                 datetime.fromtimestamp(self.UserSettings.config_lastaptup)
