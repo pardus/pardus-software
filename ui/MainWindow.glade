@@ -2841,12 +2841,12 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="orientation">vertical</property>
-                                                <property name="spacing">12</property>
                                                 <child>
                                                   <object class="GtkLabel">
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">False</property>
                                                     <property name="halign">start</property>
+                                                    <property name="margin-bottom">12</property>
                                                     <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;About&lt;/b&gt;&lt;/big&gt;</property>
                                                     <property name="use-markup">True</property>
                                                   </object>
@@ -2868,6 +2868,22 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                     <property name="expand">False</property>
                                                     <property name="fill">True</property>
                                                     <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLinkButton" id="ui_ad_description_more_button">
+                                                    <property name="label" translatable="yes">read more</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">True</property>
+                                                    <property name="receives-default">True</property>
+                                                    <property name="halign">end</property>
+                                                    <property name="relief">none</property>
+                                                    <signal name="clicked" handler="on_ui_ad_description_more_button_clicked" swapped="no"/>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">2</property>
                                                   </packing>
                                                 </child>
                                               </object>

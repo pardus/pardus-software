@@ -212,6 +212,7 @@ class MainWindow(object):
         self.ui_ad_image_is_touch = False
 
         self.ui_ad_description_label = self.GtkBuilder.get_object("ui_ad_description_label")
+        self.ui_ad_description_more_button = self.GtkBuilder.get_object("ui_ad_description_more_button")
         self.ui_ad_version_label = self.GtkBuilder.get_object("ui_ad_version_label")
         self.ui_ad_sizetitle_label = self.GtkBuilder.get_object("ui_ad_sizetitle_label")
         self.ui_ad_size_label = self.GtkBuilder.get_object("ui_ad_size_label")
@@ -369,8 +370,6 @@ class MainWindow(object):
 
         self.mac = self.getMac()
 
-        self.par_desc_more = self.GtkBuilder.get_object("par_desc_more")
-
         self.MainWindow = self.GtkBuilder.get_object("MainWindow")
         self.MainWindow.set_application(application)
         self.MainWindow.set_title(_("Pardus Software Center"))
@@ -417,6 +416,8 @@ class MainWindow(object):
 
         self.errormessage = ""
         self.grouperrormessage = ""
+
+        self.ad_full_description_text = ""
 
         self.imgfullscreen_count = 0
 
@@ -648,6 +649,7 @@ class MainWindow(object):
         self.ui_suggest_error_label.set_visible(False)
         self.bottomerrordetails_button.set_visible(False)
         self.ui_repotitle_box.set_visible(False)
+        self.ui_ad_description_more_button.set_visible(False)
 
     def worker(self):
         GLib.idle_add(self.splashspinner.start)
@@ -2552,6 +2554,7 @@ class MainWindow(object):
         self.ui_ad_top_avgrate_label.set_text("")
         self.ui_ad_top_size_label.set_text("")
         self.ui_ad_top_depends_count_label.set_text("")
+        self.ui_ad_description_label.set_text("")
         self.ui_ad_version_label.set_text("")
         self.ui_ad_size_label.set_text("")
         self.ui_ad_required_size_label.set_text("")
@@ -2562,6 +2565,8 @@ class MainWindow(object):
         self.ui_ad_maintainer_name_label.set_text("")
         self.ui_ad_maintainer_web_label.set_text("")
         self.ui_ad_maintainer_mail_label.set_text("")
+
+        self.ui_ad_description_more_button.set_visible(False)
 
         self.ui_ad_remove_button.set_visible(False)
         self.ui_ad_disclaimer_button.set_visible(False)
@@ -2673,7 +2678,12 @@ class MainWindow(object):
             self.ui_ad_icon.set_from_icon_name(app_name, Gtk.IconSize.DIALOG)
             self.ui_ad_icon.set_pixel_size(68)
 
-            self.ui_ad_description_label.set_text(details["description"][self.user_locale])
+            self.set_ad_description_text(
+                details.get("description", {}).get(self.user_locale)
+                or details.get("description", {}).get("en")
+                or ""
+            )
+
             app_version = self.Package.installed_version(app_name)
             self.ui_ad_version_label.set_text("{}".format(app_version))
 
@@ -2842,11 +2852,33 @@ class MainWindow(object):
             self.ui_ad_subcategory_label.set_text("{}".format(app_name))
             self.ui_ad_version_label.set_text("{}".format(app_version))
             self.ui_ad_category_label.set_text("{}".format(app_section if app_section else "-"))
-            self.ui_ad_description_label.set_text(details["description"])
+
+            self.set_ad_description_text(details["description"])
 
             if not app_license:
                 app_license = self.Package.get_license_from_file(app_name)
             self.ui_ad_license_label.set_text("{}".format(app_license if app_license else "-"))
+
+    def set_ad_description_text(self, text):
+        full_text = text or ""
+        full_text = full_text.strip()
+        MAX_CHARS = 300
+        MAX_LINES = 5
+        line_count = full_text.count("\n")
+        needs_read_more = len(full_text) > MAX_CHARS or line_count > MAX_LINES
+        if needs_read_more:
+            short_text = full_text
+            if len(short_text) > MAX_CHARS:
+                short_text = short_text[:MAX_CHARS]
+            if line_count > MAX_LINES:
+                lines = short_text.split("\n")
+                short_text = "\n".join(lines[:MAX_LINES])
+            self.ui_ad_description_more_button.set_visible(True)
+            self.ui_ad_description_label.set_text(short_text)
+        else:
+            self.ui_ad_description_more_button.set_visible(False)
+            self.ui_ad_description_label.set_text(full_text)
+        self.ad_full_description_text = full_text
 
     def app_detail_requireds_thread(self, app):
         app_detail_requireds = self.app_detail_requireds_worker(app)
@@ -4266,6 +4298,10 @@ class MainWindow(object):
             command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Group.py", "add",
                        self.UserSettings.username]
         self.group_process(command)
+
+    def on_ui_ad_description_more_button_clicked(self, button):
+        button.set_visible(False)
+        self.ui_ad_description_label.set_text(self.ad_full_description_text)
 
     def on_ui_ad_image_button_press(self, widget, event):
         # Detect input device type (mouse/touchpad vs touchscreen)
