@@ -137,6 +137,7 @@ class MainWindow(object):
         self.ui_right_stack = self.GtkBuilder.get_object("ui_right_stack")
 
         self.ui_discover_scrolledwindow = self.GtkBuilder.get_object("ui_discover_scrolledwindow")
+        self.ui_pardusapps_scrolledwindow = self.GtkBuilder.get_object("ui_pardusapps_scrolledwindow")
 
         self.ui_currentcat_label = self.GtkBuilder.get_object("ui_currentcat_label")
         self.ui_currentcat_image = self.GtkBuilder.get_object("ui_currentcat_image")
@@ -1436,6 +1437,9 @@ class MainWindow(object):
             self.ui_pardusapps_title_stack.set_visible_child_name("apps")
             self.ui_repotitle_box.set_visible(False)
             self.ui_repoapps_flowbox.set_visible(False)
+
+            # set scroll position to top (reset)
+            self.ui_pardusapps_scrolledwindow.set_vadjustment(Gtk.Adjustment())
 
             self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.current_category.title()))
             icon = next((cat["icon"] for cat in self.categories if cat["name"] == self.current_category), "image-missing-symbolic")
