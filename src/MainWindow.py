@@ -360,10 +360,12 @@ class MainWindow(object):
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
 
-        if self.user_locale == "tr":
-            self.current_category = "tümü"
-        else:
-            self.current_category = "all"
+        self.current_category = "discover"
+        self.cat_all = {
+            "name": "tümü" if self.user_locale == "tr" else "all",
+            "icon": "all",
+            "number": 0
+        }
 
         self.mac = self.getMac()
 
@@ -432,6 +434,8 @@ class MainWindow(object):
         self.slider_auto_time = 6
         self.slider_pause_time = 10
         self.slider_slogan_max_chars = 30
+
+        self.server_cat_all = {}
 
         settings = Gtk.Settings.get_default()
         layout = settings.get_property("gtk-decoration-layout") or ""
@@ -1011,6 +1015,7 @@ class MainWindow(object):
                 self.slider_auto_time = response.get("slider_auto_time", self.slider_auto_time)
                 self.slider_pause_time = response.get("slider_pause_time", self.slider_pause_time)
                 self.slider_slogan_max_chars = response.get("slider_slogan_max_chars", self.slider_slogan_max_chars)
+                self.server_cat_all = response.get("cat_all") or {}
                 self.important_packages = response.get("important_packages", self.important_packages)
                 self.i386_packages = response.get("i386_packages", self.i386_packages)
 
@@ -1018,7 +1023,7 @@ class MainWindow(object):
 
                 with open(self.UserSettings.cats_dir + self.UserSettings.cats_file, 'r', encoding='utf-8') as f:
                     response = json.load(f)
-                    self.cats = response.get("cat-list", [])
+                    self.cats = response.get("categories", [])
 
                 self.prepend_server_icons()
 
@@ -1233,6 +1238,9 @@ class MainWindow(object):
 
             label = Gtk.Label.new()
             label.set_markup("<b>{}</b>".format(_("Updates")))
+            label.set_ellipsize(Pango.EllipsizeMode.END)
+            label.set_max_width_chars(15)
+
             box_updates_count = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
             label_updates_count = Gtk.Label.new()
             label_updates_count.set_markup("{}".format(len(self.upgradables)))
@@ -1316,14 +1324,27 @@ class MainWindow(object):
         if self.Server.connection:
             self.categories = []
             for cat in self.cats:
-                self.categories.append({"name": cat[self.user_locale], "icon": cat["en"]})
+                self.categories.append({
+                    "name": cat[self.user_locale],
+                    "icon": cat.get("icon") or cat["en"],
+                    "number": cat.get("number")
+                })
 
-            self.categories = sorted(self.categories, key=lambda x: x["name"])
+            self.categories = sorted(
+                self.categories,
+                key=lambda x: (
+                    0 if x.get("number") is not None else 1,
+                    x.get("number", float('inf')),
+                    x["name"].lower()
+                )
+            )
 
-            if self.user_locale == "tr":
-                self.categories.insert(0, {"name": "tümü", "icon": "all"})
-            else:
-                self.categories.insert(0, {"name": "all", "icon": "all"})
+            if self.server_cat_all:
+                name_from_server = self.server_cat_all.get(self.user_locale)
+                self.cat_all["name"] = name_from_server if name_from_server else self.cat_all["name"]
+
+            self.categories.insert(0, self.cat_all)
+
 
             # discover
             icon = Gtk.Image.new_from_icon_name("ps-cat-discover-symbolic",  Gtk.IconSize.BUTTON)
@@ -1349,12 +1370,13 @@ class MainWindow(object):
 
                 label = Gtk.Label.new()
                 label.set_markup("<b>{}</b>".format(cat["name"].title()))
+                label.set_ellipsize(Pango.EllipsizeMode.END)
 
                 box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
                 box.pack_start(cat_icon, False, True, 0)
                 box.pack_start(label, False, True, 0)
                 box.set_margin_start(8)
-                box.set_margin_end(30)
+                box.set_margin_end(8)
                 box.set_margin_top(8)
                 box.set_margin_bottom(8)
 
@@ -1375,7 +1397,7 @@ class MainWindow(object):
             box.pack_start(installed_icon, False, True, 0)
             box.pack_start(label, False, True, 0)
             box.set_margin_start(8)
-            box.set_margin_end(30)
+            box.set_margin_end(8)
             box.set_margin_top(8)
             box.set_margin_bottom(8)
 
@@ -3689,7 +3711,7 @@ class MainWindow(object):
             if any(search_entry_text in field.lower() for field in [appname, pn_en, pn_tr, desc_en, desc_tr]):
                 return True
         else:
-            if self.current_category in {"all", "tümü"} or self.current_category in categories:
+            if self.current_category in self.cat_all.get("name", []) or self.current_category in categories:
                 return True
 
         return False
