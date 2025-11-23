@@ -5690,7 +5690,8 @@ Use with caution. Are you sure you want to continue?</property>
     <property name="website-label" translatable="yes">Website</property>
     <property name="authors">Fatih Altun &lt;fatih.altun@pardus.org.tr&gt;</property>
     <property name="translator-credits" translatable="yes" comments="Name Surname &lt;example@examplemail.com&gt;">translator-credits</property>
-    <property name="artists">Yusuf Düzgün &lt;yusuf.duzgun@pardus.org.tr&gt;</property>
+    <property name="artists">Mert Çelik &lt;mert.celik@tubitak.gov.tr&gt;
+Yusuf Düzgün &lt;yusuf.duzgun@pardus.org.tr&gt;</property>
     <property name="logo-icon-name">pardus-software</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
