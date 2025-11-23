@@ -4827,15 +4827,15 @@ class MainWindow(object):
             else:
                 self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Installing"), percent))
             self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].set_sensitive(False)
-        elif ":" in line and ".deb" in line:
+        elif re.match(r"^[A-Za-zÇĞİÖŞÜçğıöşü]+:", line.strip()) and ".deb" in line:
             self.Logger.warning("connection error")
             self.error = True
             self.error_message += line
-        elif ":" in line and "dpkg --configure -a" in line:
+        elif re.match(r"^[A-Za-zÇĞİÖŞÜçğıöşü]+:", line.strip()) and "dpkg --configure -a" in line:
             self.Logger.warning("dpkg --configure -a error")
             self.error = True
             self.dpkgconferror = True
-        elif ":" in line and "/var/lib/dpkg/lock-frontend" in line:
+        elif re.match(r"^[A-Za-zÇĞİÖŞÜçğıöşü]+:", line.strip()) and "/var/lib/dpkg/lock-frontend" in line:
             self.Logger.warning("/var/lib/dpkg/lock-frontend error")
             self.error = True
             self.dpkglockerror = True
