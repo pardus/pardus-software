@@ -2936,7 +2936,7 @@ class MainWindow(object):
         return self.Package.required_changes(app)
 
     def app_detail_requireds_worker_done(self, adr):
-        self.Logger.info("app_detail_requireds_worker_done: {}".format(adr))
+        self.Logger.info("app_detail_requireds_worker_done")
 
         is_installed = self.Package.isinstalled(self.ui_app_name)
         if is_installed is not None:

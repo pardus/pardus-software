@@ -11,6 +11,7 @@ import os
 import re
 import subprocess
 import time
+import threading
 
 import apt
 import apt_pkg
@@ -26,6 +27,7 @@ class Package(object):
         self.secs = []
         self.sections = []
         self.update_cache_error_msg = ""
+        self.cache_lock = threading.Lock()
         self.Logger = Logger(__name__)
 
     def updatecache(self):
@@ -318,6 +320,10 @@ class Package(object):
         return section
 
     def required_changes(self, packagenames, sleep=True):
+        with self.cache_lock:
+            return self._required_changes_internal(packagenames, sleep)
+
+    def _required_changes_internal(self, packagenames, sleep=True):
         if sleep:
             time.sleep(0.25)
 
@@ -417,16 +423,13 @@ class Package(object):
         ret["freed_size"] = freed_size
         ret["install_size"] = install_size
 
-        # self.Logger.info("freed_size {}".format(ret["freed_size"]))
-        # self.Logger.info("download_size {}".format(ret["download_size"]))
-        # self.Logger.info("install_size {}".format(ret["install_size"]))
-        # self.Logger.info("to_install {}".format(ret["to_install"]))
-        # self.Logger.info("to_delete {}".format(ret["to_delete"]))
+        self.Logger.info("_required_changes_internal: {}".format(ret))
 
         return ret
 
     def myapps_remove_details(self, desktopname):
         # self.updatecache()
+        self.Logger.info("myapps_remove_details: {}".format(desktopname))
         try:
             process = subprocess.run(["dpkg", "-S", desktopname], stdout=subprocess.PIPE)
             output = process.stdout.decode("utf-8")
