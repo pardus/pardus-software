@@ -62,10 +62,6 @@ def main():
         subprocess.call(["apt", "autoremove", "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
-    def externalrepo(keyfile, slistfile):
-        subprocess.call(["apt-key", "add", keyfile])
-        subprocess.call(["mv", slistfile, "/etc/apt/sources.list.d/"])
-
     def enable_i386_install(packages):
         print("pardus-software-i386-start", file=sys.stderr)
         subprocess.call(["dpkg", "--add-architecture", "i386"])
@@ -123,9 +119,6 @@ def main():
                 removeresidual(sys.argv[2])
             elif sys.argv[1] == "removeauto":
                 removeauto()
-            elif sys.argv[1] == "externalrepo":
-                externalrepo(sys.argv[2], sys.argv[3])
-                update()
             elif sys.argv[1] == "enablei386andinstall":
                 enable_i386_install(sys.argv[2])
         else:

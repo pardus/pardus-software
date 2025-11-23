@@ -47,22 +47,6 @@ def main():
         subprocess.call(["apt", "update"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
-    def subupgrade(yq, dpkg_conf):
-
-        lock, msg = control_lock()
-        if not lock:
-            if "E:" in msg and "/var/lib/dpkg/lock-frontend" in msg:
-                print("dpkg lock error", file=sys.stderr)
-                sys.exit(11)
-            elif "E:" in msg and "dpkg --configure -a" in msg:
-                print("dpkg interrupt error", file=sys.stderr)
-                sys.exit(12)
-
-        dpkg_conf_list = dpkg_conf.split(" ")
-        yq_list = yq.split(" ")
-        subprocess.call(["apt", "full-upgrade"] + yq_list + dpkg_conf_list,
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
-
     def fixbroken():
         subprocess.call(["apt", "install", "--fix-broken", "-yq"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
@@ -74,35 +58,6 @@ def main():
     def aptclean():
         subprocess.call(["apt", "clean"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
-
-    def externalrepo(key, sources, name):
-        if not re.match(r'^[\w\-]+\.(list|sources)$', name):
-            print("wrong source name for sources.list.d, (re)")
-            return
-
-        base_dir = Path("/etc/apt/sources.list.d").resolve()
-        source_file_path = (base_dir / name).resolve()
-        if base_dir not in source_file_path.parents:
-            print("wrong source name for sources.list.d, (resolve)")
-            return
-
-        tmpkeyfilename = ''.join(random.choice(string.ascii_lowercase) for i in range(13))
-        tmpkeyfile = open(os.path.join("/tmp", tmpkeyfilename), "w")
-        tmpkeyfile.write(key)
-        tmpkeyfile.flush()
-        tmpkeyfile.close()
-        tmpkey = os.path.join("/tmp", tmpkeyfilename)
-
-        subprocess.call(["apt-key", "add", tmpkey])
-
-        base_dir.mkdir(parents=True, exist_ok=True)
-        sdfile = open(source_file_path, "w")
-        sdfile.write(sources)
-        sdfile.flush()
-        sdfile.close()
-
-        if os.path.isfile(tmpkey):
-            os.remove(tmpkey)
 
     def correctsourceslist():
         found = True
@@ -247,10 +202,7 @@ def main():
             aptclean()
 
     if len(sys.argv) > 1:
-        if sys.argv[1] == "externalrepo":
-            externalrepo(sys.argv[2], sys.argv[3], sys.argv[4])
-            update()
-        elif sys.argv[1] == "correctsourceslist":
+        if sys.argv[1] == "correctsourceslist":
             correctsourceslist()
             subupdate()
         elif sys.argv[1] == "update":
@@ -260,9 +212,6 @@ def main():
             subupdate()
             dpkgconfigure()
             fixbroken()
-        elif sys.argv[1] == "upgrade":
-            subupdate()
-            subupgrade(sys.argv[2], sys.argv[3])
         elif sys.argv[1] == "dpkgconfigure":
             dpkgconfigure()
         else:
