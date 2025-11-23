@@ -317,75 +317,6 @@ class Package(object):
             section = package.versions[0].section.lower()
         return section
 
-    def required_changes_upgrade(self, sleep=True):
-        if sleep:
-            time.sleep(0.25)
-        self.cache.clear()
-        to_upgrade = []
-        to_install = []
-        to_delete = []
-        to_keep = []
-        changes_available = None
-        rcu = {"download_size": None, "freed_size": None, "install_size": None, "to_upgrade": None, "to_install": None,
-               "to_delete": None, "to_keep": None, "changes_available": None, "cache_error": True}
-
-        try:
-            self.cache.upgrade(True)
-            cache_error = False
-            self.update_cache_error_msg = ""
-        except Exception as error:
-            self.Logger.info("cache.upgrade Error: {}".format(error))
-            self.update_cache_error_msg = "{}".format(error)
-            return rcu
-
-        to_keep = self.cache.keep_count
-        changes = self.cache.get_changes()
-        if changes:
-            changes_available = True
-            for package in changes:
-                if package.is_installed:
-                    if package.marked_upgrade:
-                        to_upgrade.append(package.name)
-                    elif package.marked_delete:
-                        to_delete.append(package.name)
-                elif package.marked_install:
-                    to_install.append(package.name)
-        else:
-            changes_available = False
-
-        download_size = self.cache.required_download
-        space = self.cache.required_space
-        if space < 0:
-            freed_size = space * -1
-            install_size = 0
-        else:
-            freed_size = 0
-            install_size = space
-
-        to_upgrade = sorted(to_upgrade)
-        to_install = sorted(to_install)
-        to_delete = sorted(to_delete)
-
-        rcu["download_size"] = download_size
-        rcu["freed_size"] = freed_size
-        rcu["install_size"] = install_size
-        rcu["to_upgrade"] = to_upgrade
-        rcu["to_install"] = to_install
-        rcu["to_delete"] = to_delete
-        rcu["to_keep"] = to_keep
-        rcu["changes_available"] = changes_available
-        rcu["cache_error"] = cache_error
-
-        self.Logger.info("freed_size {}".format(rcu["freed_size"]))
-        self.Logger.info("download_size {}".format(rcu["download_size"]))
-        self.Logger.info("install_size {}".format(rcu["install_size"]))
-        self.Logger.info("to_upgrade {}".format(rcu["to_upgrade"]))
-        self.Logger.info("to_install {}".format(rcu["to_install"]))
-        self.Logger.info("to_delete {}".format(rcu["to_delete"]))
-        self.Logger.info("changes_available {}".format(rcu["changes_available"]))
-        self.Logger.info("cache_error {}".format(rcu["cache_error"]))
-        return rcu
-
     def required_changes(self, packagenames, sleep=True):
         if sleep:
             time.sleep(0.25)
@@ -486,11 +417,11 @@ class Package(object):
         ret["freed_size"] = freed_size
         ret["install_size"] = install_size
 
-        self.Logger.info("freed_size {}".format(ret["freed_size"]))
-        self.Logger.info("download_size {}".format(ret["download_size"]))
-        self.Logger.info("install_size {}".format(ret["install_size"]))
-        self.Logger.info("to_install {}".format(ret["to_install"]))
-        self.Logger.info("to_delete {}".format(ret["to_delete"]))
+        # self.Logger.info("freed_size {}".format(ret["freed_size"]))
+        # self.Logger.info("download_size {}".format(ret["download_size"]))
+        # self.Logger.info("install_size {}".format(ret["install_size"]))
+        # self.Logger.info("to_install {}".format(ret["to_install"]))
+        # self.Logger.info("to_delete {}".format(ret["to_delete"]))
 
         return ret
 
@@ -635,7 +566,6 @@ class Package(object):
             except:
                 return False
         try:
-            print(component)
             if component == "non-free":
                 return True
         except:

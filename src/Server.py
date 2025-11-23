@@ -114,7 +114,6 @@ class Server(object):
         try:
             success, data, etag = file.load_contents_finish(result)
         except GLib.Error as error:
-            print()
             self.error_message = "{} : {}".format(error, type)
             self.Logger.warning("{} _open_file_stream Error: {}, {}".format(type, error.domain, error.message))
             self.Logger.exception("{}".format(error))

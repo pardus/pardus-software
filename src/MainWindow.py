@@ -592,7 +592,7 @@ class MainWindow(object):
 
     # def on_MainWindow_configure_event(self, widget, event):
     #     width, height = widget.get_size()
-    #     print("Size: {} x {}".format(width, height))
+    #     self.Logger.info("Size: {} x {}".format(width, height))
 
     def control_display(self):
         self.display_width = 1920
@@ -1139,10 +1139,8 @@ class MainWindow(object):
         GLib.idle_add(self.ui_slider_overlay.add_overlay, btn_next)
 
         GLib.idle_add(self.ui_slider_overlay.show_all)
-        # GLib.idle_add(self.ui_slider_stack.show_all)
 
     def on_slider_app_activated(self, flow_box, child):
-        print(child.name)
         self.set_app_details_page(child.name)
 
     def on_ui_slider_right_button_clicked(self, button):
@@ -1315,15 +1313,6 @@ class MainWindow(object):
 
         self.Logger.info("set_applications done")
 
-    # def on_pardus_apps_listbox_released(self, widget, event, listbox):
-    #     print("on_pardus_apps_listbox_released")
-    #     print(listbox.name)
-
-    # def on_ui_pardusapps_flowbox_child_activated(self, flowbox, child):
-    #     print(f"Left clicked: {child.get_children()[0].get_children()[0].name}")
-    #     GLib.idle_add(flowbox.unselect_all)
-    #     self.set_app_details_page(child.get_children()[0].get_children()[0].name)
-
     def set_categories(self):
         GLib.idle_add(lambda: (self.ui_leftcats_listbox and self.ui_leftcats_listbox.foreach(
             lambda child: self.ui_leftcats_listbox.remove(child)), False))
@@ -1424,15 +1413,12 @@ class MainWindow(object):
         self.searching = False
         self.ui_leftupdates_listbox.unselect_all()
         self.ui_leftinstalled_listbox.unselect_all()
-        print(row.name)
         self.current_category = row.name
         if self.current_category == "discover":
-            print("in discover")
             self.ui_right_stack_navigate_to("discover")
             # set scroll position to top (reset)
             self.ui_discover_scrolledwindow.set_vadjustment(Gtk.Adjustment())
         else:
-            print("in category")
             self.ui_pardusapps_flowbox.invalidate_filter()
             self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("apps")
@@ -1455,7 +1441,6 @@ class MainWindow(object):
         # self.ui_upgradableapps_flowbox.set_visible(True)
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftinstalled_listbox.unselect_all()
-        print("in updates")
         self.ui_right_stack_navigate_to("installed")
 
         # set scroll position to top (reset)
@@ -1471,7 +1456,6 @@ class MainWindow(object):
         # self.ui_upgradableapps_flowbox.set_visible(False)
         self.ui_leftcats_listbox.unselect_all()
         self.ui_leftupdates_listbox.unselect_all()
-        print("in installed")
         self.ui_right_stack_navigate_to("installed")
 
         # set scroll position to top (reset)
@@ -1523,7 +1507,7 @@ class MainWindow(object):
             return
 
         if button.name == 3:
-            print("{} opening".format(app_name))
+            self.Logger.info("{} opening".format(app_name))
             desktop = details.get("desktop")
             desk_id = details.get("id")
             extras = details.get("desktopextras", "")
@@ -1540,13 +1524,13 @@ class MainWindow(object):
             return
 
         if button.name == 9:
-            print("{} opening details page".format(app_name))
+            self.Logger.info("{} opening details page".format(app_name))
             repo_app = details.get("repo_app", "")
             self.set_app_details_page(app, source=1 if not repo_app else 2)
             return
 
-        print("app_name: {}".format(app_name))
-        print("details: {}".format(details))
+        self.Logger.info("app_name: {}".format(app_name))
+        self.Logger.info("details: {}".format(details))
 
         self.update_app_widget_label(app_name)
 
@@ -1956,7 +1940,7 @@ class MainWindow(object):
                 app_icon = Gtk.Image.new_from_icon_name(app["icon_name"], Gtk.IconSize.DND)
         except Exception as e:
             app_icon = Gtk.Image.new_from_icon_name("image-missing-symbolic", Gtk.IconSize.DND)
-            print("Exception on create_myapp_widget: {}, app: {}".format(e, app))
+            self.Logger.exception("Exception on create_myapp_widget: {}, app: {}".format(e, app))
         app_icon.set_pixel_size(32)
         app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
         app_icon.props.halign = Gtk.Align.CENTER
@@ -2201,7 +2185,7 @@ class MainWindow(object):
                 app_icon = Gtk.Image.new_from_icon_name(icon_name if icon_name else app, Gtk.IconSize.DND)
         except Exception as e:
             app_icon = Gtk.Image.new_from_icon_name("image-missing-symbolic", Gtk.IconSize.DND)
-            print("Exception on create_queue_widget: {}, app: {}".format(e, app))
+            self.Logger.exception("Exception on create_queue_widget: {}, app: {}".format(e, app))
         app_icon.set_pixel_size(32)
         app_icon.get_style_context().add_class("pardus-software-mostapp-icon")
         app_icon.props.halign = Gtk.Align.CENTER
@@ -2488,13 +2472,11 @@ class MainWindow(object):
         GLib.idle_add(self.ui_recentapps_flowbox.show_all)
 
     def on_app_listbox_row_activated(self, listbox, row):
-        print(f"on_app_listbox_row_activated: {row.name}")
         # unselect the flowbox
         GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
         self.set_app_details_page(row.name)
 
     def on_repoapp_listbox_row_activated(self, listbox, row):
-        print(f"on_repoapp_listbox_row_activated: {row.name}")
         # unselect the flowbox
         GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
         self.set_app_details_page(row.name, source=2)
@@ -2696,8 +2678,8 @@ class MainWindow(object):
             self.Logger.warning("{} details not found.".format(app_name))
             return
 
-        print("app_name: {}".format(app_name))
-        print("details: {}".format(details))
+        self.Logger.info("app_name: {}".format(app_name))
+        self.Logger.info("details: {}".format(details))
 
         self.ui_app_name = app_name
 
@@ -3317,7 +3299,7 @@ class MainWindow(object):
         self.ui_myapp_details_popover.popdown()
 
     def on_myapp_listbox_row_activated(self, listbox, row):
-        print(f"on_myapp_listbox_row_activated: {row.name}")
+        self.Logger.info(f"on_myapp_listbox_row_activated: {row.name}")
         # unselect the flowbox
         GLib.idle_add(listbox.get_parent().get_parent().unselect_all)
 
@@ -3452,9 +3434,9 @@ class MainWindow(object):
             self.ui_suggest_error_label.set_text(_("Error"))
 
     def app_details_from_server(self, status, response=None, appname=None):
-        print("app_details_from_server, status: {}".format(status))
-        print("app_details_from_server, appname: {}".format(appname))
-        print("{}".format(response))
+        self.Logger.info("app_details_from_server, status: {}".format(status))
+        self.Logger.info("app_details_from_server, appname: {}".format(appname))
+        self.Logger.info("app_details_from_server, response:{}".format(response))
 
         if status and appname == self.ui_app_name:
             GLib.idle_add(self.ui_ad_top_avgrate_label.set_text,
@@ -3988,7 +3970,6 @@ class MainWindow(object):
             row2.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].name["name"])
 
     def on_ui_top_searchentry_focus_in_event(self, widget, event):
-        print("on_ui_top_searchentry_focus_in_event")
         self.searching = True
 
         if self.ui_right_stack.get_visible_child_name() == "installed":
@@ -4006,7 +3987,6 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
 
     def on_ui_top_searchentry_search_changed(self, entry_search):
-        print("on_top_searchentry_search_changed")
         self.searching = True
 
         if self.ui_right_stack.get_visible_child_name() == "installed":
@@ -4135,10 +4115,10 @@ class MainWindow(object):
         return False
 
     def on_ui_top_searchentry_activate(self, entry):
-        print("on_ui_top_searchentry_activate")
+        pass
 
     def on_ui_top_searchentry_icon_press(self, entry, icon_pos, event):
-        print("on_ui_top_searchentry_icon_press")
+        pass
 
     def on_main_key_press_event(self, widget, event):
         if self.mainstack.get_visible_child_name() == "home":
