@@ -3559,7 +3559,7 @@ class MainWindow(object):
                     self.ui_ad_more_comment_button.name = "gnome"
                     gdic = {"user_hash": "0000000000000000000000000000000000000000",
                             "app_id": self.get_gnome_desktop_filename_from_app_name(self.ui_app_name),
-                            "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
+                            "locale": self.user_locale, "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
                     self.GnomeComment.get_comments(self.Server.gnomecommentserver, gdic, self.ui_app_name)
 
     def gnome_comments_from_server(self, status, response=None, appname=None):
@@ -3598,7 +3598,7 @@ class MainWindow(object):
             self.gnome_comment_limit = self.gnome_comment_limit + 10
             gdic = {"user_hash": "0000000000000000000000000000000000000000",
                     "app_id": self.get_gnome_desktop_filename_from_app_name(self.ui_app_name),
-                    "locale": "tr", "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
+                    "locale": self.user_locale, "distro": "Pardus", "version": "unknown", "limit": self.gnome_comment_limit}
             self.GnomeComment.get_comments(self.Server.gnomecommentserver, gdic, self.ui_app_name)
 
     def create_comment_widget(self, comment, gnome=False):
