@@ -1,3 +1,62 @@
+pardus-software (1.0.0~beta4) unstable; urgency=medium
+
+  * Update .pkla as .rules due to pkla deprecated
+  * Update setup.py for pardus-software-group.rules
+  * Enable control_pardus_software_update
+  * Update response gets on home, cats
+  * Add pardus-software-codename-label css
+  * Add codenames from details to ui dynamically
+  * Update cats margin bottom value
+  * Update icon shadow and alpha
+  * Fix typo
+  * Update fixed_height of app image
+  * Update ratings box bottom margin
+  * Update slider background-position as right
+  * Update editor app image pixel size
+  * Fix repotitle box visibility controls
+  * Update spacing on installed apps boxes
+  * Update myapp widget spacings
+  * Update set_slider for new slider ui
+  * Fix repotitle box visible controls
+  * Add search text control for result label
+  * Add auto slide to slider
+  * Add some slider values from server control
+  * Update homepage keys
+  * Update initial setting of category with more dynamic methods
+  * Add homepage trend, down, recent counts from server too
+  * Add read more button for description
+  * Fix ad_availablerepos_box visible control
+  * Update some translatables
+  * Enable set_animations func
+  * Fix typo
+  * Rm python3-matplotlib from recommends
+  * Update suggest app controls
+  * Update config write as more simple and Update config title
+  * Update some UserSettings var and func names
+  * Rm some unnecessary widgets
+  * Update some labels as selectable
+  * Fix app_detail_requireds_thread args
+  * Add get_action_command func for install_recommends and command controls
+  * Add important and not available package short infoq to app detail page
+  * Add set scroll to top on discover clicked
+  * Add set scroll to top on categories clicked
+  * Add set scroll to top on installed and updates clicked
+  * Rm some unnecessary codes
+  * Rm some unnecessary codes
+  * Add thread safe cache lock
+  * Add progress label to myapps size worker thread
+  * Update pot file
+  * Update Turkish translations
+  * Rm some unnecessary action sysaction codes
+  * Rm CellRendererButton
+  * Update app icon
+  * Rm unnecessary rating images
+  * Update debian standards version
+  * Update artists
+  * Update gnome comment locale
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sun, 23 Nov 2025 14:39:07 +0300
+
 pardus-software (1.0.0~beta3) unstable; urgency=medium
 
   * Update some translatables
