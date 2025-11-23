@@ -70,7 +70,6 @@ data_files = [
                    "src/AppImage.py",
                    "src/AppRequest.py",
                    "src/AutoAptUpdate.py",
-                   "src/CellRendererButton.py",
                    "src/GnomeComment.py",
                    "src/GnomeRatingServer.py",
                    "src/Group.py",
