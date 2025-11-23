@@ -1,3 +1,9 @@
+pardus-software (1.0.0~beta5) unstable; urgency=medium
+
+  * Add regex control to apt output error controls
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Sun, 23 Nov 2025 18:23:38 +0300
+
 pardus-software (1.0.0~beta4) unstable; urgency=medium
 
   * Update .pkla as .rules due to pkla deprecated
