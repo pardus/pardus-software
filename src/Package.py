@@ -477,39 +477,73 @@ class Package(object):
             return "size not found"
         return GLib.format_size(size)
 
-    def get_installed_apps(self, du=False, cancel_event=None):
+    def get_installed_apps(self, du=False, cancel_event=None, progress_callback=None, total_callback=None):
         apps = []
-        for app in Gio.DesktopAppInfo.get_all():
+
+        # filter once: only real visible executable apps
+        desktop_apps = [
+            app for app in Gio.DesktopAppInfo.get_all()
+            if app.get_executable() and not app.get_nodisplay()
+        ]
+
+        # total count for progress
+        if du and total_callback:
+            total_callback(len(desktop_apps))
+
+        for app in desktop_apps:
             if cancel_event and cancel_event.is_set():
                 return None
-            id = app.get_id()
+
+            if du and progress_callback:
+                progress_callback()
+
+            app_id = app.get_id()
             name = app.get_name()
             executable = app.get_executable()
-            nodisplay = app.get_nodisplay()
-            icon = "{}".format(app.get_string('Icon'))
-            description = app.get_description() or app.get_generic_name() or app.get_name()
+            icon = "{}".format(app.get_string("Icon"))
+            description = (
+                    app.get_description()
+                    or app.get_generic_name()
+                    or app.get_name()
+            )
             filename = app.get_filename()
             keywords = " ".join(app.get_keywords())
 
             package_name = "-"
             disk_usage = 0
 
-            if executable and not nodisplay:
-                if du:
-                    if cancel_event and cancel_event.is_set():
-                        return None
-                    package_name_found, required_changes, package_name = self.myapps_remove_details(filename)
-                    if package_name_found:
-                        disk_usage = required_changes["freed_size"]
+            if du:
+                if cancel_event and cancel_event.is_set():
+                    return None
 
-                apps.append({"id": id, "name": name, "icon_name": icon, "description": description,
-                             "filename": filename, "keywords": keywords, "executable": executable,
-                             "disk_usage": disk_usage, "package_name": package_name})
+                package_name_found, required_changes, package_name = self.myapps_remove_details(filename)
+
+                if package_name_found and required_changes:
+                    disk_usage = required_changes.get("freed_size") or 0
+
+            apps.append({
+                "id": app_id,
+                "name": name,
+                "icon_name": icon,
+                "description": description,
+                "filename": filename,
+                "keywords": keywords,
+                "executable": executable,
+                "disk_usage": disk_usage,
+                "package_name": package_name,
+            })
 
         if du:
-            apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: x["disk_usage"], reverse=True)
+            apps = sorted(
+                dict((v["name"], v) for v in apps).values(),
+                key=lambda x: x["disk_usage"],
+                reverse=True,
+            )
         else:
-            apps = sorted(dict((v['name'], v) for v in apps).values(), key=lambda x: locale.strxfrm(x["name"]))
+            apps = sorted(
+                dict((v["name"], v) for v in apps).values(),
+                key=lambda x: locale.strxfrm(x["name"]),
+            )
 
         return apps
 

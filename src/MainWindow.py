@@ -133,6 +133,7 @@ class MainWindow(object):
         self.ui_myapps_combobox = self.GtkBuilder.get_object("ui_myapps_combobox")
         self.ui_myapps_du_progress_box = self.GtkBuilder.get_object("ui_myapps_du_progress_box")
         self.ui_myapps_du_spinner = self.GtkBuilder.get_object("ui_myapps_du_spinner")
+        self.ui_myapps_du_progress_label = self.GtkBuilder.get_object("ui_myapps_du_progress_label")
 
         self.ui_right_stack = self.GtkBuilder.get_object("ui_right_stack")
 
@@ -3157,18 +3158,50 @@ class MainWindow(object):
     def set_myapps(self, du=False):
         def clear_flowbox():
             if self.ui_installedapps_flowbox:
-                self.ui_installedapps_flowbox.foreach(lambda row: self.ui_installedapps_flowbox.remove(row))
+                self.ui_installedapps_flowbox.foreach(
+                    lambda row: self.ui_installedapps_flowbox.remove(row)
+                )
             return False
 
         GLib.idle_add(self.ui_myapps_combobox.set_sensitive, False)
         GLib.idle_add(clear_flowbox)
+
         if du:
             GLib.idle_add(self.ui_myapps_du_progress_box.set_visible, True)
             GLib.idle_add(self.ui_myapps_du_spinner.start)
             self.myapps_du_cancel_event = threading.Event()
 
         def run_worker():
-            myapps = self.myapps_worker(du=du, cancel_event=self.myapps_du_cancel_event)
+            processed = {"count": 0}
+            total = {"count": 0}
+
+            def total_callback(count):
+                total["count"] = count
+                GLib.idle_add(
+                    self.ui_myapps_du_progress_label.set_text,
+                    f"0 / {count}",
+                )
+
+            def progress_callback():
+                processed["count"] += 1
+                if total["count"]:
+                    GLib.idle_add(
+                        self.ui_myapps_du_progress_label.set_text,
+                        f"{processed['count']} / {total['count']}",
+                    )
+
+            if du:
+                myapps = self.myapps_worker(
+                    du=True,
+                    cancel_event=self.myapps_du_cancel_event,
+                    progress_callback=progress_callback,
+                    total_callback=total_callback,
+                )
+            else:
+                myapps = self.myapps_worker(
+                    du=False,
+                    cancel_event=self.myapps_du_cancel_event,
+                )
 
             if myapps is not None:
                 GLib.idle_add(self.on_myapps_worker_done, myapps, du)
@@ -3177,8 +3210,13 @@ class MainWindow(object):
 
         threading.Thread(target=run_worker, daemon=True).start()
 
-    def myapps_worker(self, du=False, cancel_event=None):
-        return self.Package.get_installed_apps(du=du, cancel_event=cancel_event)
+    def myapps_worker(self, du=False, cancel_event=None, progress_callback=None, total_callback=None):
+        return self.Package.get_installed_apps(
+            du=du,
+            cancel_event=cancel_event,
+            progress_callback=progress_callback,
+            total_callback=total_callback,
+        )
 
     def on_myapps_worker_done(self, myapps, du=False):
         for pkg in myapps:

@@ -1564,6 +1564,18 @@
                                                             <property name="position">2</property>
                                                           </packing>
                                                         </child>
+                                                        <child>
+                                                          <object class="GtkLabel" id="ui_myapps_du_progress_label">
+                                                            <property name="visible">True</property>
+                                                            <property name="can-focus">False</property>
+                                                            <property name="label">label</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">True</property>
+                                                            <property name="position">3</property>
+                                                          </packing>
+                                                        </child>
                                                       </object>
                                                       <packing>
                                                         <property name="expand">False</property>
@@ -1872,9 +1884,6 @@
                                                         <property name="name">external</property>
                                                         <property name="position">1</property>
                                                       </packing>
-                                                    </child>
-                                                    <child>
-                                                      <placeholder/>
                                                     </child>
                                                   </object>
                                                   <packing>
