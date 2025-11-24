@@ -1,3 +1,10 @@
+pardus-software (1.0.0) unstable; urgency=medium
+
+  * Fix cat icon setting and installed listbox creation
+  * Fix slider timer start order and set_slider controls
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 24 Nov 2025 14:42:52 +0300
+
 pardus-software (1.0.0~beta5) unstable; urgency=medium
 
   * Add regex control to apt output error controls
