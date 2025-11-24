@@ -1318,6 +1318,9 @@ class MainWindow(object):
         GLib.idle_add(lambda: (self.ui_leftcats_listbox and self.ui_leftcats_listbox.foreach(
             lambda child: self.ui_leftcats_listbox.remove(child)), False))
 
+        GLib.idle_add(lambda: (self.ui_leftinstalled_listbox and self.ui_leftinstalled_listbox.foreach(
+            lambda child: self.ui_leftinstalled_listbox.remove(child)), False))
+
         if self.Server.connection:
             self.categories = []
             for cat in self.cats:
@@ -1362,8 +1365,7 @@ class MainWindow(object):
             # categories
             for cat in self.categories:
 
-                cat["icon"] = "ps-cat-{}-symbolic".format(cat["icon"])
-                cat_icon = Gtk.Image.new_from_icon_name(cat["icon"],  Gtk.IconSize.BUTTON)
+                cat_icon = Gtk.Image.new_from_icon_name("ps-cat-{}-symbolic".format(cat["icon"]),  Gtk.IconSize.BUTTON)
 
                 label = Gtk.Label.new()
                 label.set_markup("<b>{}</b>".format(cat["name"].title()))
@@ -1430,8 +1432,9 @@ class MainWindow(object):
             self.ui_pardusapps_scrolledwindow.set_vadjustment(Gtk.Adjustment())
 
             self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.current_category.title()))
-            icon = next((cat["icon"] for cat in self.categories if cat["name"] == self.current_category), "image-missing-symbolic")
-            self.ui_currentcat_image.set_from_icon_name(icon, Gtk.IconSize.DIALOG)
+            self.ui_currentcat_image.set_from_icon_name(
+                next(("ps-cat-{}-symbolic".format(cat["icon"]) for cat in self.categories if cat["name"] == self.current_category),
+                     "image-missing-symbolic"), Gtk.IconSize.DIALOG)
             self.ui_currentcat_image.set_pixel_size(55)
 
     def on_ui_leftupdates_listbox_row_activated(self, listbox, row):
