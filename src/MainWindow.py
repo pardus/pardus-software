@@ -757,8 +757,6 @@ class MainWindow(object):
             if not self.isbroken:
                 GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
                 GLib.idle_add(self.ui_top_searchentry.set_sensitive, True)
-                if self.UserSettings.config_animations:
-                    self.start_slider_timer()
             else:
                 GLib.idle_add(self.homestack.set_visible_child_name, "fixapt")
         else:
@@ -1055,7 +1053,8 @@ class MainWindow(object):
     #         self.PardusComment.control(self.Server.serverurl + "/api/v2/test")
 
     def set_slider(self):
-
+        if not self.Server.connection:
+            return
         stack_counter = 0
         for slider_app in self.Server.slider_app_list:
 
@@ -1140,6 +1139,9 @@ class MainWindow(object):
         GLib.idle_add(self.ui_slider_overlay.add_overlay, btn_next)
 
         GLib.idle_add(self.ui_slider_overlay.show_all)
+
+        if self.UserSettings.config_animations:
+            self.start_slider_timer()
 
     def on_slider_app_activated(self, flow_box, child):
         self.set_app_details_page(child.name)
