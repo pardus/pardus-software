@@ -95,3 +95,16 @@ button.openup-action { color: @theme_selected_bg_color; outline-color: alpha(@th
 button.openup-action:hover { color: @theme_selected_bg_color; background-color: mix(@theme_selected_bg_color, @theme_unfocused_selected_fg_color, 0.81); box-shadow: none; }
 button.openup-action:active, button.openable-action:checked { color: @theme_selected_bg_color; background-color: mix(@theme_selected_bg_color, @theme_unfocused_selected_fg_color, 0.77); box-shadow: none; text-shadow: none; -gtk-icon-shadow: none; }
 button.openup-action:disabled { color: mix(@theme_fg_color, @theme_bg_color, 0.5); background-color: mix(currentColor, @theme_bg_color,0.9); text-shadow: none; -gtk-icon-shadow: none; box-shadow: none; }
+
+
+.queue-highlight {
+    animation: queue-pulse 1s infinite;
+    border-radius: 6px;
+    box-shadow: 0 0 8px @theme_selected_bg_color;
+}
+
+@keyframes queue-pulse {
+    0% { box-shadow: 0 0 4px @theme_selected_bg_color; }
+    50% { box-shadow: 0 0 14px @theme_selected_bg_color; }
+    100% { box-shadow: 0 0 4px @theme_selected_bg_color; }
+}

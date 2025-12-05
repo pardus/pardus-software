@@ -1639,6 +1639,16 @@ class MainWindow(object):
         GLib.idle_add(self.ui_queue_flowbox.insert, listbox, -1)
         GLib.idle_add(self.ui_queue_flowbox.show_all)
 
+    def start_highlight_queue(self):
+        if self.UserSettings.config_animations:
+            self.ui_header_queue_button.get_style_context().add_class("queue-highlight")
+            GLib.timeout_add_seconds(4, self.remove_highlight_queue)
+
+    def remove_highlight_queue(self):
+        if self.UserSettings.config_animations:
+            self.ui_header_queue_button.get_style_context().remove_class("queue-highlight")
+        return False
+
     def action_package(self, app_name, command, desktop_id="", upgrade=False):
         self.inprogress = True
 
@@ -3940,6 +3950,7 @@ class MainWindow(object):
 
     def on_ui_header_queue_button_clicked(self, button):
         self.ui_right_stack_navigate_to("queue")
+        self.remove_highlight_queue()
 
     def add_to_myapps_ui(self, app, du=False):
 
@@ -4806,6 +4817,11 @@ class MainWindow(object):
         line = source.readline()
         self.Logger.info("{}".format(line))
 
+        if not hasattr(self, "_queue_animation_started"):
+            self._queue_animation_started = True
+            self.start_highlight_queue()
+            self.Logger.info("Queue animation started")
+
         return True
 
     def on_action_process_stderr(self, source, condition):
@@ -4850,7 +4866,6 @@ class MainWindow(object):
         return True
 
     def on_action_process_exit(self, pid, status):
-        self.ui_header_queue_button.set_visible(False)
 
         if not self.error:
             if status == 0:
@@ -4916,6 +4931,10 @@ class MainWindow(object):
                 progressbar.set_text("{}".format(_("Installing")))
         else:
             self.bottomrevealer.set_reveal_child(False)
+            self.ui_header_queue_button.set_visible(False)
+            self.remove_highlight_queue()
+            if hasattr(self, "_queue_animation_started"):
+                del self._queue_animation_started
             if not self.error:
                 self.ui_queue_stack.set_visible_child_name("completed")
 
