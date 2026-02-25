@@ -2084,26 +2084,34 @@ class MainWindow(object):
         is_installed = self.Package.isinstalled(app)
         is_upgradable = self.Package.is_upgradable(app)
         is_openable = self.get_desktop_filename_from_app_name(app) != ""
+        is_in_queue = any(item.get("name") == app for item in self.queue)
         if is_installed is not None:
-            action_button.add(action_button_label)
-            if is_installed:
-                if is_upgradable:
-                    self.set_button_class(action_button, 3)
-                    action_button_label.set_markup("<small>{}</small>".format(_("Update")))
-                    action_button.name = 2
-                else:
-                    if is_openable:
-                        self.set_button_class(action_button, 4)
-                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                        action_button.name = 3
-                    else:
-                        self.set_button_class(action_button, 4)
-                        action_button_label.set_markup("<small>{}</small>".format(_("Open")))
-                        action_button.name = 9
+            if is_in_queue:
+                self.set_button_class(action_button, 2)
+                spinner = Gtk.Spinner()
+                action_button.add(spinner)
+                spinner.start()
+                spinner.show_all()
             else:
-                self.set_button_class(action_button, 0)
-                action_button_label.set_markup("<small>{}</small>".format(_("Install")))
-                action_button.name = 1
+                action_button.add(action_button_label)
+                if is_installed:
+                    if is_upgradable:
+                        self.set_button_class(action_button, 3)
+                        action_button_label.set_markup("<small>{}</small>".format(_("Update")))
+                        action_button.name = 2
+                    else:
+                        if is_openable:
+                            self.set_button_class(action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            action_button.name = 3
+                        else:
+                            self.set_button_class(action_button, 4)
+                            action_button_label.set_markup("<small>{}</small>".format(_("Open")))
+                            action_button.name = 9
+                else:
+                    self.set_button_class(action_button, 0)
+                    action_button_label.set_markup("<small>{}</small>".format(_("Install")))
+                    action_button.name = 1
         else:
             self.set_button_class(action_button, 2)
             not_found_image = Gtk.Image.new_from_icon_name("action-unavailable-symbolic", Gtk.IconSize.BUTTON)
@@ -2118,6 +2126,7 @@ class MainWindow(object):
         uninstallbutton.set_tooltip_text(_("Uninstall"))
         uninstallbutton.set_relief(Gtk.ReliefStyle.NONE)
         uninstallbutton.connect("clicked", self.app_widget_action_clicked)
+        uninstallbutton.set_sensitive(not is_in_queue)
 
         summary_label = Gtk.Label.new()
         summary_label.set_markup("<span weight='light' size='small'>{}</span>".format(GLib.markup_escape_text(
@@ -4900,10 +4909,6 @@ class MainWindow(object):
 
         self.update_app_widget_label(self.inprogress_app_name)
 
-        if self.isupgrade:
-            self.get_upgradables()
-            self.set_upgradables()
-
         self.Logger.info("Exit Code: {}".format(status))
 
         self.inprogress = False
@@ -4914,6 +4919,11 @@ class MainWindow(object):
         if len(self.queue) > 0:
             self.queue.pop(0)
             self.ui_queue_flowbox.remove(self.ui_queue_flowbox.get_children()[0])
+
+        if self.isupgrade:
+            self.get_upgradables()
+            self.set_upgradables()
+
         if len(self.queue) > 0:
             self.action_package(self.queue[0]["name"], self.queue[0]["command"], self.queue[0]["desktop_id"],
                                 self.queue[0]["upgrade"])
