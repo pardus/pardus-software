@@ -1,0 +1,1597 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Fatih Altun <fatih.altun@pardus.org.tr>, 2021-2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-24 14:55+0300\n"
+"PO-Revision-Date: 2026-02-24 15:00+0300\n"
+"Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
+"Language-Team: Turkish <dev@pardus.org.tr>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 48.0\n"
+
+#: ui/MainWindow.glade:48
+msgid "Settings"
+msgstr "Ayarlar"
+
+#: ui/MainWindow.glade:104
+msgid "About"
+msgstr "Hakkında"
+
+#: ui/MainWindow.glade:318 ui/MainWindow.glade:5825
+msgid "OK"
+msgstr "Tamam"
+
+#: ui/MainWindow.glade:406
+msgid "Fix"
+msgstr "Onar"
+
+#: ui/MainWindow.glade:676
+msgid "Trending Apps"
+msgstr "Popüler Uygulamalar"
+
+#: ui/MainWindow.glade:696 ui/MainWindow.glade:856 ui/MainWindow.glade:948
+msgid "See all"
+msgstr "Tümünü gör"
+
+#: ui/MainWindow.glade:768
+msgid "Editor's Picks"
+msgstr "Editörün Seçtikleri"
+
+#: ui/MainWindow.glade:836
+msgid "Most Downloaded"
+msgstr "En Çok İndirilenler"
+
+#: ui/MainWindow.glade:928
+msgid "Recently Added"
+msgstr "Son Eklenenler"
+
+#: ui/MainWindow.glade:1093
+msgid "+ Suggest an App"
+msgstr "+ Uygulama Öner"
+
+#: ui/MainWindow.glade:1143 src/MainWindow.py:4066
+msgid "Results"
+msgstr "Sonuçlar"
+
+#: ui/MainWindow.glade:1191 ui/MainWindow.glade:1488
+msgid "<span size='large'><b>All Apps</b></span>"
+msgstr "<span size='large'><b>Tüm Uygulamalar</b></span>"
+
+#: ui/MainWindow.glade:1207 ui/MainWindow.glade:1435 ui/MainWindow.glade:1504
+msgid "Sort by Name"
+msgstr "İsme Göre Sırala"
+
+#: ui/MainWindow.glade:1208 ui/MainWindow.glade:1436
+msgid "Sort by Download"
+msgstr "İndirmeye Göre Sırala"
+
+#: ui/MainWindow.glade:1209 ui/MainWindow.glade:1437
+msgid "Sort by Popularity"
+msgstr "Popülerliğe Göre Sırala"
+
+#: ui/MainWindow.glade:1210 ui/MainWindow.glade:1438
+msgid "Sort by Last Added"
+msgstr "Son Eklenene Göre Sırala"
+
+#: ui/MainWindow.glade:1261
+msgid "<span size='large'><b>Packages</b></span>"
+msgstr "<span size='large'><b>Paketler</b></span>"
+
+#: ui/MainWindow.glade:1366
+msgid "<span size='x-large'><b>Installed Apps</b></span>"
+msgstr "<span size='x-large'><b>Yüklü Uygulamalar</b></span>"
+
+#: ui/MainWindow.glade:1399
+msgid "<span size='large'><b>Updates</b></span>"
+msgstr "<span size='large'><b>Güncellemeler</b></span>"
+
+#: ui/MainWindow.glade:1505
+msgid "Sort by Disk Usage"
+msgstr "Disk Kullanımına Göre Sırala"
+
+#: ui/MainWindow.glade:1548
+msgid "Analyzing Disk Usage"
+msgstr "Disk Kullanımı Analiz Ediliyor"
+
+#: ui/MainWindow.glade:1850 src/MainWindow.py:2837
+msgid "This app is not available in the repos of your version."
+msgstr "Bu uygulama, kullandığınız sürümün depolarında bulunmuyor."
+
+#: ui/MainWindow.glade:1937
+msgid "Ratings"
+msgstr "Puan"
+
+#: ui/MainWindow.glade:2021
+msgid "Downloads"
+msgstr "İndirme"
+
+#: ui/MainWindow.glade:2092
+msgid "Size"
+msgstr "Boyut"
+
+#: ui/MainWindow.glade:2163
+msgid "Dependencies"
+msgstr "Bağımlılıklar"
+
+#: ui/MainWindow.glade:2219
+msgid "Limited information is available for this app."
+msgstr "Bu uygulama hakkında sınırlı bilgi mevcut."
+
+#: ui/MainWindow.glade:2233
+msgid ""
+"Detailed information isn’t available for this app.\n"
+"The application may have been installed using tools such as Flatpak, Snap, "
+"or Wine."
+msgstr ""
+"Bu uygulama hakkında ayrıntılı bilgi mevcut değil.\n"
+"Uygulama Flatpak, Snap veya Wine gibi araçlar kullanılarak yüklenmiş "
+"olabilir."
+
+#: ui/MainWindow.glade:2305
+msgid "<big><b>About</b></big>"
+msgstr "<big><b>Hakkında</b></big>"
+
+#: ui/MainWindow.glade:2331
+msgid "read more"
+msgstr "Devamını oku"
+
+#: ui/MainWindow.glade:2386 ui/MainWindow.glade:6052 src/MainWindow.py:2249
+msgid "Version"
+msgstr "Sürüm"
+
+#: ui/MainWindow.glade:2433 src/MainWindow.py:2840 src/MainWindow.py:2978
+msgid "Download Size"
+msgstr "İndirme Boyutu"
+
+#: ui/MainWindow.glade:2480 src/MainWindow.py:2841 src/MainWindow.py:2979
+msgid "Required Disk Space"
+msgstr "Gerekli Disk Alanı"
+
+#: ui/MainWindow.glade:2527
+msgid "Type"
+msgstr "Tür"
+
+#: ui/MainWindow.glade:2597
+msgid "Category"
+msgstr "Kategori"
+
+#: ui/MainWindow.glade:2643
+msgid "License"
+msgstr "Lisans"
+
+#: ui/MainWindow.glade:2690
+msgid "Component"
+msgstr "Bileşen"
+
+#: ui/MainWindow.glade:2737
+msgid "Developer"
+msgstr "Geliştirici"
+
+#: ui/MainWindow.glade:2801 ui/MainWindow.glade:5690
+msgid "Website"
+msgstr "Web Sitesi"
+
+#: ui/MainWindow.glade:2848
+msgid "E-mail"
+msgstr "E-posta"
+
+#: ui/MainWindow.glade:2912
+msgid "<big><b>Dependencies</b></big>"
+msgstr "<big><b>Bağımlılıklar</b></big>"
+
+#: ui/MainWindow.glade:2953 src/MainWindow.py:1723 src/MainWindow.py:1879
+#: src/MainWindow.py:2113 src/MainWindow.py:2399 src/MainWindow.py:2832
+msgid "Install"
+msgstr "Yükle"
+
+#: ui/MainWindow.glade:3074
+msgid "Remove"
+msgstr "Kaldır"
+
+#: ui/MainWindow.glade:3195
+msgid "Broken"
+msgstr "Hatalı"
+
+#: ui/MainWindow.glade:3315
+msgid "<big><b>Available Repositories</b></big>"
+msgstr "<big><b>Mevcut Depolar</b></big>"
+
+#: ui/MainWindow.glade:3373
+msgid "<big><b>Ratings</b></big>"
+msgstr "<big><b>Değerlendirmeler</b></big>"
+
+#: ui/MainWindow.glade:3384
+msgid "Write Comment"
+msgstr "Yorum Yaz"
+
+#: ui/MainWindow.glade:3947
+msgid "Load More Comments"
+msgstr "Daha Fazla Yorum Yükle"
+
+#: ui/MainWindow.glade:4306
+msgid "<span size='x-large'><b>Downloading Apps</b></span>"
+msgstr "<span size='x-large'><b>İndirilen Uygulamalar</b></span>"
+
+#: ui/MainWindow.glade:4341
+msgid "<span size='large'><b>Queue</b></span>"
+msgstr "<span size='large'><b>Kuyruk</b></span>"
+
+#: ui/MainWindow.glade:4405
+msgid "All processes in the queue have been completed."
+msgstr "Kuyruktaki tüm işlemler tamamlandı."
+
+#: ui/MainWindow.glade:4438 src/MainWindow.py:1354
+msgid "Discover"
+msgstr "Keşfet"
+
+#: ui/MainWindow.glade:4509
+msgid "<span size='x-large'><b>Settings</b></span>"
+msgstr "<span size='x-large'><b>Ayarlar</b></span>"
+
+#: ui/MainWindow.glade:4535
+msgid "<span size='large'><b>Preferences</b></span>"
+msgstr "<span size='large'><b>Tercihler</b></span>"
+
+#: ui/MainWindow.glade:4572
+msgid "Dark Theme"
+msgstr "Koyu Tema"
+
+#: ui/MainWindow.glade:4624
+msgid "Enable Animations"
+msgstr "Animasyonları Etkinleştir"
+
+#: ui/MainWindow.glade:4676
+msgid "Show Gnome Comments"
+msgstr "Gnome Yorumlarını Göster"
+
+#: ui/MainWindow.glade:4741
+msgid "Update Package Manager on Start"
+msgstr "Başlangıçta Paket Yöneticisini Güncelle"
+
+#: ui/MainWindow.glade:4793
+msgid "Show Only Available Applications"
+msgstr "Sadece Mevcut Uygulamaları Göster"
+
+#: ui/MainWindow.glade:4861
+msgid "<span size='large'><b>Other</b></span>"
+msgstr "<span size='large'><b>Diğer</b></span>"
+
+#: ui/MainWindow.glade:4898
+msgid "Clear Cache Files"
+msgstr "Önbellek Dosyalarını Temizle"
+
+#: ui/MainWindow.glade:4912
+msgid "Clear"
+msgstr "Temizle"
+
+#: ui/MainWindow.glade:4993
+msgid "Passwordless Application Usage"
+msgstr "Parolasız Uygulama Kullanımı"
+
+#: ui/MainWindow.glade:5103
+msgid "Could not connect to the server"
+msgstr "Sunucuya bağlanılamadı"
+
+#: ui/MainWindow.glade:5115
+msgid "Retry"
+msgstr "Tekrar Dene"
+
+#: ui/MainWindow.glade:5149
+msgid ""
+"Your system sources list that used by package manager seems broken or your "
+"system has broken dependencies."
+msgstr ""
+"Paket yöneticisi tarafından kullanılan sistem kaynakları listeniz veya sisteminizin bağımlılıkları hatalı görünüyor."
+
+#: ui/MainWindow.glade:5172
+msgid "Try Fix"
+msgstr "Düzeltmeyi Dene"
+
+#: ui/MainWindow.glade:5214
+msgid ""
+"This operation;\n"
+"will remove all sources.list and sources.list.d entries and create "
+"defaults,\n"
+"will run \"apt update\" command,\n"
+"will run \"apt install --fix-broken\" command,\n"
+"will run \"dpkg --configure -a\".\n"
+"\n"
+"Use with caution. Are you sure you want to continue?"
+msgstr ""
+"Bu işlem;\n"
+"sources.list ve sources.list.d (kaynak listesi) girdilerini silecek ve "
+"varsayılanları oluşturacak,\n"
+"\"apt update\" komutunu çalıştıracak,\n"
+"\"apt install --fix-broken\" komutunu çalıştıracak,\n"
+"\"dpkg --configure -a\" komutunu çalıştıracak.\n"
+"\n"
+"Dikkatle kullanın. Devam etmek istediğinize emin misiniz?"
+
+#: ui/MainWindow.glade:5237 src/MainWindow.py:2229
+msgid "Cancel"
+msgstr "İptal"
+
+#: ui/MainWindow.glade:5254
+msgid "Yes"
+msgstr "Evet"
+
+#: ui/MainWindow.glade:5303
+msgid "Operation completed."
+msgstr "İşlem tamamlandı."
+
+#: ui/MainWindow.glade:5316
+msgid "Go to Homepage"
+msgstr "Ana Sayfaya Git"
+
+#: ui/MainWindow.glade:5344
+msgid "You can check the terminal output below."
+msgstr "Aşağıdaki terminal çıktısını kontrol edebilirsiniz."
+
+#: ui/MainWindow.glade:5373
+msgid "The error in the package manager could not be fixed."
+msgstr "Paket yöneticisindeki hata düzeltilemedi."
+
+#: ui/MainWindow.glade:5391
+msgid ""
+"You can follow the instructions by looking at the terminal output below."
+msgstr "Aşağıdaki terminal çıktısına bakarak yönergeleri uygulayabilirsiniz."
+
+#: ui/MainWindow.glade:5403
+msgid "You can ask for help about your problem through Pardus help channels."
+msgstr ""
+"Pardus yardım kanalları aracılığı ile sorununuz hakkında yardım "
+"isteyebilirsiniz."
+
+#: ui/MainWindow.glade:5525
+msgid "Search for apps"
+msgstr "Uygulamaları arayın"
+
+#: ui/MainWindow.glade:5586
+msgid "Auto apt update in progress."
+msgstr "Otomatik paket yöneticisi güncellemesi devam ediyor."
+
+#: ui/MainWindow.glade:5620
+msgid "Pardus Store"
+msgstr "Pardus Mağaza"
+
+#: ui/MainWindow.glade:5688
+msgid "Install, remove, update applications"
+msgstr "Uygulamaları yükleyin, kaldırın, güncelleyin"
+
+#. Name Surname <example@examplemail.com>
+#: ui/MainWindow.glade:5692
+msgid "translator-credits"
+msgstr "Fatih Altun <fatih.altun@pardus.org.tr>"
+
+#: ui/MainWindow.glade:5905
+msgid "<big><b>Write Comment</b></big>"
+msgstr "<big><b>Yorum Yaz</b></big>"
+
+#: ui/MainWindow.glade:6232 ui/MainWindow.glade:6406
+msgid "Full Name"
+msgstr "Tam Adınız"
+
+#: ui/MainWindow.glade:6265
+msgid "Submit Review"
+msgstr "İncelemeyi Gönder"
+
+#: ui/MainWindow.glade:6424
+msgid "Edit"
+msgstr "Düzenle"
+
+#: ui/MainWindow.glade:6509
+msgid ""
+"Comments are public and include both your account and device information. "
+"Anyone can see the name associated with your account and the type of device "
+"you are using. Developers can also view your device details (such as "
+"language, model, and OS version) and may use this information to respond to "
+"you. Past edits are visible to other users and the app developer unless you "
+"delete your comment."
+msgstr ""
+"Yorumlar herkese açıktır ve hem hesap hem de cihaz bilgilerinizi içerir. "
+"Hesabınızla ilişkili adı ve kullandığınız cihaz türünü herkes görebilir. "
+"Geliştiriciler ayrıca cihaz bilgilerinizi (dil, model ve işletim sistemi "
+"sürümü gibi) görüntüleyebilir ve bu bilgileri size yanıt vermek için "
+"kullanabilir. Yorumunuzu silmediğiniz sürece, geçmiş düzenlemeleriniz diğer "
+"kullanıcılar ve uygulama geliştiricisi tarafından görülebilir."
+
+#: ui/MainWindow.glade:6585
+msgid "Your comment has been submitted for review."
+msgstr "Yorumunuz incelemeye gönderildi."
+
+#: ui/MainWindow.glade:6601 ui/MainWindow.glade:8278
+msgid "Thank you!"
+msgstr "Teşekkürler!"
+
+#: ui/MainWindow.glade:6654
+msgid "Disclaimer"
+msgstr "Sorumluluk Reddi"
+
+#: ui/MainWindow.glade:6669
+msgid ""
+"This application served from Pardus non-free package repositories, so that "
+"the OS has nothing to do with the health of the application."
+msgstr ""
+"Bu uygulama Pardus non-free (özgür olmayan) paket depolarında yer almakta "
+"olup Pardus ekibinin çalışmaları dışında sunulan hazır ve bağımsız bir "
+"uygulamadır. Bu sebeple uygulamanın performansı, kararlılığı ve "
+"özelliklerinin Pardus dağıtımıyla ilgisi bulunmamaktadır. Lütfen uygulamayı "
+"bu durumu dikkate alarak yükleyiniz."
+
+#: ui/MainWindow.glade:6891
+msgid "Loading package details"
+msgstr "Paket detayları yükleniyor"
+
+#: ui/MainWindow.glade:6946 ui/MainWindow.glade:8127
+msgid "Application Name"
+msgstr "Uygulama İsmi"
+
+#: ui/MainWindow.glade:6965 ui/MainWindow.glade:6968
+msgid "Package Name"
+msgstr "Paket Adı"
+
+#: ui/MainWindow.glade:7046 ui/MainWindow.glade:7752
+msgid "Packages to remove"
+msgstr "Kaldırılacak paketler"
+
+#: ui/MainWindow.glade:7142
+msgid "Packages to install"
+msgstr "Yüklenecek paketler"
+
+#: ui/MainWindow.glade:7238
+msgid "Broken packages"
+msgstr "Hatalı paketler"
+
+#: ui/MainWindow.glade:7334
+msgid "Disk space to be freed"
+msgstr "Boşalacak disk alanı"
+
+#: ui/MainWindow.glade:7430
+msgid "Download size"
+msgstr "İndirme Boyutu"
+
+#: ui/MainWindow.glade:7526
+msgid "Required disk space"
+msgstr "Gerekli disk alanı"
+
+#: ui/MainWindow.glade:7599 ui/MainWindow.glade:7982
+msgid "Close"
+msgstr "Kapat"
+
+#: ui/MainWindow.glade:7613 src/MainWindow.py:1985 src/MainWindow.py:2126
+msgid "Uninstall"
+msgstr "Kaldır"
+
+#: ui/MainWindow.glade:7678
+msgid "System stability could be impacted"
+msgstr "Sistem kararlılığı etkilenebilir"
+
+#: ui/MainWindow.glade:7696
+msgid "The following important packages will also be removed."
+msgstr "Aşağıdaki önemli paketler de kaldırılacak."
+
+#: ui/MainWindow.glade:7825
+msgid "<big><b>Are you sure you want to proceed with this action?</b></big>"
+msgstr "<big><b>Bu işleme devam etmek istediğinizden emin misiniz?</b></big>"
+
+#: ui/MainWindow.glade:7857
+msgid "Back"
+msgstr "Geri"
+
+#: ui/MainWindow.glade:7871
+msgid "Accept"
+msgstr "Kabul"
+
+#: ui/MainWindow.glade:7951
+msgid "<b>Application could not be uninstalled.</b>"
+msgstr "<b>Uygulama kaldırılamadı.</b>"
+
+#: ui/MainWindow.glade:7967
+msgid ""
+"- Application uninstalling process is only valid for applications that the "
+"package manager (apt) supports.\n"
+"<i><small>(installed from repositories or via the .deb package)</small></i>\n"
+"\n"
+"- For applications installed using tools such as Flatpak, Snap, Wine, you "
+"can review the removal instructions of the relevant application."
+msgstr ""
+"- Uygulama kaldırma işlemi sadece paket yöneticisinin (apt) desteklediği "
+"uygulamalar için geçerlidir.\n"
+"<i><small>(depolardan veya .deb paketi aracılığı ile yüklenenler)</small></"
+"i>\n"
+"\n"
+"- Flatpak, Snap, Wine gibi araçlar kullanarak yüklenen uygulamalar için "
+"ilgili uygulamanın kaldırma yönergelerini inceleyebilirsiniz."
+
+#: ui/MainWindow.glade:8061
+msgid "<big><b>Suggest an Application</b></big>"
+msgstr "<big><b>Uygulama Önerin</b></big>"
+
+#: ui/MainWindow.glade:8141
+msgid "Application Website"
+msgstr "Uygulama Web Sitesi"
+
+#: ui/MainWindow.glade:8155
+msgid "Your Name"
+msgstr "Adınız"
+
+#: ui/MainWindow.glade:8169
+msgid "Your E-Mail"
+msgstr "E-posta adresiniz"
+
+#: ui/MainWindow.glade:8202
+msgid "Send"
+msgstr "Gönder"
+
+#: ui/MainWindow.glade:8262
+msgid "Your suggest has been submitted for review."
+msgstr "Öneriniz değerlendirilmek üzere iletildi."
+
+#: src/MainWindow.py:336 src/MainWindow.py:381
+msgid "Pardus Software Center"
+msgstr "Pardus Yazılım Merkezi"
+
+#: src/MainWindow.py:340
+msgid "About Pardus Software Center"
+msgstr "Pardus Yazılım Merkezi Hakkında"
+
+#: src/MainWindow.py:692
+msgid "Pardus Software Center | New version available"
+msgstr "Pardus Yazılım Merkezi | Yeni sürüm mevcut"
+
+#: src/MainWindow.py:693
+msgid "Please upgrade application"
+msgstr "Lütfen uygulamayı güncelleyin"
+
+#: src/MainWindow.py:765
+msgid "Could not connect to server."
+msgstr "Sunucuya bağlanılamadı."
+
+#: src/MainWindow.py:767
+msgid "Server address"
+msgstr "Sunucu adresi"
+
+#: src/MainWindow.py:781
+msgid "Updating Cache"
+msgstr "Önbellek güncelleniyor"
+
+#: src/MainWindow.py:870
+msgid "Controlling server hashes"
+msgstr "Sunucu sağlama değerleri kontrol ediliyor"
+
+#: src/MainWindow.py:935
+msgid "Getting application metadata from server"
+msgstr "Sunucudan uygulama verileri alınıyor"
+
+#: src/MainWindow.py:1038
+msgid "Preparing the application interface"
+msgstr "Uygulama arayüzü hazırlanıyor"
+
+#: src/MainWindow.py:1248
+msgid "Updates"
+msgstr "Güncellemeler"
+
+#: src/MainWindow.py:1264
+msgid "Some applications are outdated."
+msgstr "Bazı uygulamalar güncel değil."
+
+#: src/MainWindow.py:1394
+msgid "Installed Apps"
+msgstr "Yüklü Uygulamalar"
+
+#: src/MainWindow.py:1707 src/MainWindow.py:1866 src/MainWindow.py:2100
+#: src/MainWindow.py:2386 src/MainWindow.py:2819
+msgid "Update"
+msgstr "Güncelle"
+
+#: src/MainWindow.py:1712 src/MainWindow.py:1719 src/MainWindow.py:1871
+#: src/MainWindow.py:1875 src/MainWindow.py:1976 src/MainWindow.py:2105
+#: src/MainWindow.py:2109 src/MainWindow.py:2391 src/MainWindow.py:2395
+#: src/MainWindow.py:2824 src/MainWindow.py:2828
+msgid "Open"
+msgstr "Aç"
+
+#: src/MainWindow.py:2017
+msgid "Disk Usage"
+msgstr "Disk Kullanımı"
+
+#: src/MainWindow.py:2270
+msgid "Will be upgraded"
+msgstr "Yükseltilecek"
+
+#: src/MainWindow.py:2272
+msgid "Will be removed"
+msgstr "Kaldırılacak"
+
+#: src/MainWindow.py:2274
+msgid "Will be installed"
+msgstr "Yüklenecek"
+
+#: src/MainWindow.py:2836
+msgid "Not Found"
+msgstr "Bulunamadı"
+
+#: src/MainWindow.py:2842 src/MainWindow.py:2843 src/MainWindow.py:2844
+#: src/MainWindow.py:2871
+msgid "None"
+msgstr "Yok"
+
+#: src/MainWindow.py:2853 src/MainWindow.py:4854 src/MainWindow.py:4937
+msgid "Upgrading"
+msgstr "Yükseltiliyor"
+
+#: src/MainWindow.py:2855 src/MainWindow.py:4856 src/MainWindow.py:4939
+msgid "Removing"
+msgstr "Kaldırılıyor"
+
+#: src/MainWindow.py:2857 src/MainWindow.py:4858 src/MainWindow.py:4941
+msgid "Installing"
+msgstr "Yükleniyor"
+
+#: src/MainWindow.py:2867
+msgid "Non-Free"
+msgstr "Özgür Değil"
+
+#: src/MainWindow.py:2870
+msgid "Open Source"
+msgstr "Açık Kaynak"
+
+#: src/MainWindow.py:2969
+msgid "Package Size"
+msgstr "Paket Boyutu"
+
+#: src/MainWindow.py:2970
+msgid "Installed Size"
+msgstr "Kurulum Boyutu"
+
+#: src/MainWindow.py:2994
+msgid "Important Package"
+msgstr "Önemli Paket"
+
+#: src/MainWindow.py:2995
+msgid "Removing this package could impact system stability."
+msgstr "Bu paketin kaldırılması sistem kararlılığını etkileyebilir."
+
+#: src/MainWindow.py:3061 src/MainWindow.py:3065 src/MainWindow.py:3067
+#: src/MainWindow.py:3088 src/MainWindow.py:3091
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+#: src/MainWindow.py:3420
+msgid "{} seconds ago"
+msgstr "{} saniye önce"
+
+#: src/MainWindow.py:3422
+msgid "{} minutes ago"
+msgstr "{} dakika önce"
+
+#: src/MainWindow.py:3424
+msgid "{} hours ago"
+msgstr "{} saat önce"
+
+#: src/MainWindow.py:3426
+msgid "{} days ago"
+msgstr "{} gün önce"
+
+#: src/MainWindow.py:3428
+msgid "{} weeks ago"
+msgstr "{} hafta önce"
+
+#: src/MainWindow.py:3430
+msgid "{} months ago"
+msgstr "{} ay önce"
+
+#: src/MainWindow.py:3432
+msgid "{} years ago"
+msgstr "{} yıl önce"
+
+#: src/MainWindow.py:3466
+msgid "{} Ratings"
+msgstr "{} Değerlendirme"
+
+#: src/MainWindow.py:3477 src/MainWindow.py:3489
+msgid "Please try again soon"
+msgstr "Lütfen birazdan tekrar deneyin"
+
+#: src/MainWindow.py:3479 src/MainWindow.py:3491 src/MainWindow.py:3494
+#: src/MainWindow.py:3496 src/MainWindow.py:4402
+msgid "Error"
+msgstr "Hata"
+
+#: src/MainWindow.py:3546
+msgid "Your comment is under review."
+msgstr "Yorumunuz inceleniyor."
+
+#: src/MainWindow.py:3549
+msgid "You can also add a comment if you want."
+msgstr "İsterseniz yorum da ekleyebilirsiniz."
+
+#: src/MainWindow.py:3553
+msgid "You wrote a review about the application before, thank you."
+msgstr "Uygulama hakkında daha önce yorum yazmıştınız, teşekkürler."
+
+#: src/MainWindow.py:3631 src/MainWindow.py:3634
+msgid "unknown"
+msgstr "bilinmiyor"
+
+#: src/MainWindow.py:3697
+msgid "App"
+msgstr "Uygulama"
+
+#: src/MainWindow.py:4066
+msgid "Results for {}"
+msgstr "{} için sonuçlar"
+
+#: src/MainWindow.py:4287
+msgid "Deactivate"
+msgstr "Devre Dışı Bırak"
+
+#: src/MainWindow.py:4290
+msgid "Activate"
+msgstr "Etkinleştir"
+
+#: src/MainWindow.py:4300 src/MainWindow.py:4310
+msgid ""
+"Allows the package manager cache to be updated again on the next application "
+"start if"
+msgstr "Paket yöneticisi önbelleğinin, son başarılı güncellemeden bu yana"
+
+#: src/MainWindow.py:4302 src/MainWindow.py:4312
+msgid "have passed since the last successful update."
+msgstr "geçtiyse sonraki açılışta yeniden güncellenmesini sağlar."
+
+#: src/MainWindow.py:4303 src/MainWindow.py:4313
+msgid "Last successful update time is"
+msgstr "Son başarılı güncelleme zamanı"
+
+#: src/MainWindow.py:4305
+msgid "The value in your configuration file is used as the wait time."
+msgstr "Bekleme süresi olarak yapılandırma dosyanızdaki değer kullanılıyor."
+
+#: src/MainWindow.py:4334
+msgid "weeks"
+msgstr "hafta"
+
+#: src/MainWindow.py:4335
+msgid "days"
+msgstr "gün"
+
+#: src/MainWindow.py:4336
+msgid "hours"
+msgstr "saat"
+
+#: src/MainWindow.py:4337
+msgid "minutes"
+msgstr "dakika"
+
+#: src/MainWindow.py:4338
+msgid "seconds"
+msgstr "saniye"
+
+#: src/MainWindow.py:4398
+msgid "Cleared"
+msgstr "Temizlendi"
+
+#: src/MainWindow.py:4399
+msgid "Cache files cleared, please close and reopen the application"
+msgstr "Önbellek dosyaları temizlendi, lütfen uygulamayı kapatıp yeniden açın"
+
+#: src/MainWindow.py:4542 src/MainWindow.py:4597
+msgid "All fields must be filled."
+msgstr "Tüm alanlar doldurulmalıdır."
+
+#: src/MainWindow.py:4602
+msgid "Please enter a valid e-mail address."
+msgstr "Lütfen geçerli bir e-posta adresi girin."
+
+#: src/MainWindow.py:4607
+msgid "Please enter a valid website."
+msgstr "Lütfen geçerli bir web sitesi girin."
+
+#: src/MainWindow.py:4668
+msgid "The process is in progress. Please wait..."
+msgstr "İşlem devam ediyor. Lütfen bekleyin..."
+
+#: src/MainWindow.py:4773
+msgid "Updated"
+msgstr "Güncellendi"
+
+#: src/MainWindow.py:4773
+msgid "Removed"
+msgstr "Kaldırıldı"
+
+#: src/MainWindow.py:4776
+msgid "Installed"
+msgstr "Yüklendi"
+
+#: src/MainWindow.py:4847
+msgid "Downloading"
+msgstr "İndiriliyor"
+
+#: src/MainWindow.py:4874
+msgid "i386 activating"
+msgstr "i386 etkinleştiriliyor"
+
+#: src/MainWindow.py:4883
+msgid "Removed: 100%"
+msgstr "Kaldırıldı: 100%"
+
+#: src/MainWindow.py:4885
+msgid "Installed: 100%"
+msgstr "Yüklendi: 100%"
+
+#: src/MainWindow.py:4887
+msgid "Not Completed"
+msgstr "Tamamlanamadı"
+
+#: src/MainWindow.py:4889
+msgid "<b><span color='red'>Connection Error!</span></b>"
+msgstr "<b><span color='red'>Bağlantı Hatası!</span></b>"
+
+#: src/MainWindow.py:4891
+msgid "<b><span color='red'>Dpkg Lock Error!</span></b>"
+msgstr "<b><span color='red'>Dpkg Kilitleme Hatası!</span></b>"
+
+#: src/MainWindow.py:4893
+msgid "<b><span color='red'>Dpkg Interrupt Error!</span></b>"
+msgstr "<b><span color='red'>Dpkg Kesinti Hatası!</span></b>"
+
+#: src/MainWindow.py:4957
+msgid ""
+"Only one software management tool is allowed to run at the same time.\n"
+"Please close the other application e.g. 'Update Manager', 'aptitude' or "
+"'Synaptic' first."
+msgstr ""
+"Aynı anda yalnızca tek bir paket yöneticisi çalışabilir.\n"
+"Lütfen önce diğer uygulamayı, ör. 'Güncelleştirme Yöneticisi', 'aptitude' ya "
+"da 'Synaptic'i kapatın."
+
+#: src/MainWindow.py:4970
+msgid ""
+"dpkg interrupt detected. Click the 'Fix' button or\n"
+"manually run 'sudo dpkg --configure -a' to fix the problem."
+msgstr ""
+"dpkg kesintisi algılandı. Sorunu düzeltmek için \"Düzelt\" butonuna basın\n"
+"veya elle 'sudo dpkg --configure -a' komutunu çalıştırın."
+
+#: src/MainWindow.py:5065 src/MainWindow.py:5139
+msgid "Copy selected text"
+msgstr "Seçili metni kopyala"
+
+#: src/MainWindow.py:5201
+msgid "Error."
+msgstr "Hata"
+
+#: src/MainWindow.py:5203
+msgid "Process completed."
+msgstr "İşlem tamamlandı."
+
+#~ msgid "Package is broken."
+#~ msgstr "Paket hatalı."
+
+#, fuzzy
+#~ msgid "Pardus"
+#~ msgstr "Pardus Oylamaları"
+
+#~ msgid ""
+#~ "<b>Disclaimer</b>\n"
+#~ "\n"
+#~ "This application served from Pardus non-free package repositories,\n"
+#~ "so that the OS has nothing to do with the health of the application."
+#~ msgstr ""
+#~ "<b>Sorumluluk Reddi</b>\n"
+#~ "\n"
+#~ "Bu uygulama Pardus non-free (özgür olmayan) paket depolarında yer almakta "
+#~ "olup\n"
+#~ "Pardus ekibinin çalışmaları dışında sunulan hazır ve bağımsız bir "
+#~ "uygulamadır.\n"
+#~ "Bu sebeple uygulamanın performansı, kararlılığı ve özelliklerinin Pardus "
+#~ "dağıtımıyla\n"
+#~ "ilgisi bulunmamaktadır. Lütfen uygulamayı bu durumu dikkate alarak "
+#~ "yükleyiniz."
+
+#~ msgid "Image 1"
+#~ msgstr "Resim 1"
+
+#~ msgid "Open image on web browser"
+#~ msgstr "Resmi web tarayıcısında aç"
+
+#~ msgid "Download image"
+#~ msgstr "Resmi indir"
+
+#~ msgid "Queue"
+#~ msgstr "Kuyruk"
+
+#~ msgid "Search an app in repo"
+#~ msgstr "Depoda uygulama ara"
+
+#~ msgid "Search"
+#~ msgstr "Ara"
+
+#~ msgid "Search an app in my apps"
+#~ msgstr "Uygulamalarımda ara"
+
+#~ msgid "Categories"
+#~ msgstr "Kategoriler"
+
+#~ msgid "Popular Apps"
+#~ msgstr "Popüler Uygulamalar"
+
+#~ msgid "Last Added Apps"
+#~ msgstr "Son Eklenen Uygulamalar"
+
+#~ msgid "<small>Total App Download Count :</small>"
+#~ msgstr "<small>Toplam Uygulama İndirme Sayısı :</small>"
+
+#~ msgid "<small>Total App Rate Count :</small>"
+#~ msgstr "<small>Toplam Uygulama Oylama Sayısı :</small>"
+
+#~ msgid "You can search for applications in repositories using search."
+#~ msgstr "Aramayı kullanarak depolardaki uygulamaları arayabilirsiniz."
+
+#~ msgid "Show All Applications"
+#~ msgstr "Tüm Uygulamaları Göster"
+
+#~ msgid "Show Installed Applications"
+#~ msgstr "Yüklü Uygulamaları Göster"
+
+#~ msgid "Show Not Installed Applications"
+#~ msgstr "Yüklü Olmayan Uygulamaları Göster"
+
+#~ msgid "<small>Your Rate</small>"
+#~ msgstr "<small>Oyunuz</small>"
+
+#~ msgid "<small>Download</small>"
+#~ msgstr "<small> İndirme</small>"
+
+#~ msgid "Try Update Package Cache"
+#~ msgstr "Paket Önbelleğini Güncellemeyi Dene"
+
+#~ msgid "repo address"
+#~ msgstr "depo adresi"
+
+#~ msgid "No"
+#~ msgstr "Hayır"
+
+#~ msgid "Activating Repo"
+#~ msgstr "Depo etkinleştiriliyor"
+
+#~ msgid "Please wait..."
+#~ msgstr "Lütfen bekleyin..."
+
+#~ msgid "Details"
+#~ msgstr "Detaylar"
+
+#~ msgid "Images"
+#~ msgstr "Resimler"
+
+#~ msgid "Description ..."
+#~ msgstr "Açıklama ..."
+
+#~ msgid "Description"
+#~ msgstr "Açıklama"
+
+#~ msgid "Gnome Software Ratings"
+#~ msgstr "Gnome Yazılım Oylamaları"
+
+#~ msgid "Turkish Comments"
+#~ msgstr "Türkçe Yorumlar"
+
+#~ msgid "English Comments"
+#~ msgstr "İngilizce Yorumlar"
+
+#~ msgid "Gnome Comments"
+#~ msgstr "Gnome Yorumları"
+
+#~ msgid "How many stars would you give this app?"
+#~ msgstr "Bu uygulamaya kaç yıldız verirsiniz?"
+
+#~ msgid ""
+#~ "Your app rating has been successfully submitted; you can also add a "
+#~ "comment if you want."
+#~ msgstr ""
+#~ "Uygulama puanlamanız başarıyla gönderildi; isterseniz yorum da "
+#~ "ekleyebilirsiniz."
+
+#~ msgid "Your Name:"
+#~ msgstr "Adınız:"
+
+#~ msgid "Write your name"
+#~ msgstr "Adınızı yazınız"
+
+#~ msgid "Your Comment:"
+#~ msgstr "Yorumunuz:"
+
+#~ msgid "You have already rated the app."
+#~ msgstr "Uygulamayı zaten oyladınız."
+
+#~ msgid "Your Comment"
+#~ msgstr "Yorumunuz"
+
+#~ msgid "Add Comment"
+#~ msgstr "Yorum Ekle"
+
+#~ msgid "Write Pardus Comment"
+#~ msgstr "Pardus Yorumu Yaz"
+
+#~ msgid "Comments"
+#~ msgstr "Yorumlar"
+
+#~ msgid "Use Server Icons"
+#~ msgstr "Sunucu İkonlarını Kullan"
+
+#~ msgid "Hide External Repo Applications"
+#~ msgstr "Harici Depo Uygulamalarını Gizle"
+
+#~ msgid "Icons"
+#~ msgstr "İkonlar"
+
+#~ msgid "Fix Package Manager Sources List"
+#~ msgstr "Paket yöneticisi kaynak listesini düzelt"
+
+#~ msgid ""
+#~ "Fixes the system sources list that used by package manager. This process "
+#~ "will revert all the changes have been done and will use only Pardus "
+#~ "Official Repository source addresses. Use with caution."
+#~ msgstr ""
+#~ "Paket yöneticisi tarafından kullanılan sistem kaynakları listesini "
+#~ "düzeltir. Bu süreç, kaynak listesi üzerinde yapılan tüm değişiklikleri "
+#~ "geri alacak ve paket yöneticisi sadece Pardus Resmi paket deposu "
+#~ "adreslerini kullanacaktır. Dikkatle kullanın."
+
+#~ msgid "Application Name (*)"
+#~ msgstr "Uygulama İsmi (*)"
+
+#~ msgid "Category (*)"
+#~ msgstr "Kategori (*)"
+
+#~ msgid "Description (Turkish) (*)"
+#~ msgstr "Açıklama (Türkçe) (*)"
+
+#~ msgid "Description (English) (*)"
+#~ msgstr "Açıklama (İngilizce) (*)"
+
+#~ msgid "License (*)"
+#~ msgstr "Lisans (*)"
+
+#~ msgid "Copyright Text"
+#~ msgstr "Telif Hakkı Metni"
+
+#~ msgid "Website (*)"
+#~ msgstr "Web sitesi (*)"
+
+#~ msgid "Icon (svg)"
+#~ msgstr "İkon (svg)"
+
+#~ msgid "Select Icon"
+#~ msgstr "İkon seçiniz"
+
+#~ msgid "Your Name (*)"
+#~ msgstr "Adınız (*)"
+
+#~ msgid "Is the application available in Pardus repositories?"
+#~ msgstr "Uygulama Pardus depolarında mevcut mu?"
+
+#~ msgid "* Required fields"
+#~ msgstr "* Zorunlu alanlar"
+
+#~ msgid "Statistics loading"
+#~ msgstr "İstatistikler yükleniyor"
+
+#~ msgid "Daily App Download Counts"
+#~ msgstr "Günlük Uygulama İndirme Sayıları"
+
+#~ msgid "Used Operating Systems"
+#~ msgstr "Kullanılan İşletim Sistemleri"
+
+#~ msgid "<small>View on apps.pardus.org.tr</small>"
+#~ msgstr "<small>apps.pardus.org.tr ' de görüntüle</small>"
+
+#~ msgid "Click for install"
+#~ msgstr "Yüklemek için tıklayın"
+
+#~ msgid "Maintainer"
+#~ msgstr "Bakımcı"
+
+#~ msgid "description"
+#~ msgstr "açıklama"
+
+#~ msgid "Packages to remove:"
+#~ msgstr "Kaldırılacak paketler:"
+
+#~ msgid "Packages to install:"
+#~ msgstr "Yüklenecek paketler:"
+
+#~ msgid "Broken packages:"
+#~ msgstr "Bozuk paketler:"
+
+#~ msgid "Disk space to be freed:"
+#~ msgstr "Boşalacak disk alanı:"
+
+#~ msgid "Download size:"
+#~ msgstr "İndirme boyutu:"
+
+#~ msgid "Required disk space:"
+#~ msgstr "Gerekli disk alanı:"
+
+#~ msgid "Uninstall Details"
+#~ msgstr "Kaldırma Detayları"
+
+#~ msgid "View more information on the store page"
+#~ msgstr "Mağaza sayfasında daha fazla bilgi görüntüle"
+
+#~ msgid "<b><big>Application could not be uninstalled.</big></b>"
+#~ msgstr "<b><big>Uygulama kaldırılamadı.</big></b>"
+
+#~ msgid "Back to My Apps"
+#~ msgstr "Uygulamalarıma Dön"
+
+#~ msgid "Required disk size:"
+#~ msgstr "Gerekli disk alanı:"
+
+#~ msgid "Upgraded:"
+#~ msgstr "Yükseltilecek:"
+
+#~ msgid "Newly installed:"
+#~ msgstr "Yeni yüklenecek:"
+
+#~ msgid "To remove:"
+#~ msgstr "Kaldırılacak:"
+
+#~ msgid "Not upgraded:"
+#~ msgstr "Yükseltilmeyecek:"
+
+#~ msgid "Ok"
+#~ msgstr "Tamam"
+
+#~ msgid "Store"
+#~ msgstr "Mağaza"
+
+#~ msgid "Repo"
+#~ msgstr "Depo"
+
+#~ msgid "My Apps"
+#~ msgstr "Uygulamalarım"
+
+#~ msgid "Statistics"
+#~ msgstr "İstatistikler"
+
+#~ msgid "Package configuration files"
+#~ msgstr "Paket yapılandırma dosyaları"
+
+#~ msgid "Use new configuration files"
+#~ msgstr "Yeni yapılandırma dosyalarını kullan"
+
+#~ msgid "Use old configuration files"
+#~ msgstr "Eski yapılandırma dosyalarını kullan"
+
+#~ msgid "Ask me what to do"
+#~ msgstr "Ne yapacağımı bana sor"
+
+#~ msgid "Interaction"
+#~ msgstr "Etkileşim"
+
+#~ msgid "Start process (with -yq option)"
+#~ msgstr "İşlemi başlat (-yq seçeneği ile)"
+
+#~ msgid "Ask me before starting the process (without -yq)"
+#~ msgstr "İşleme başlamadan önce bana sor (-yq olmadan)"
+
+#~ msgid ""
+#~ "These comments are pulled from <a href='https://odrs.gnome.org'>GNOME "
+#~ "ODRS</a>."
+#~ msgstr ""
+#~ "Bu yorumlar <a href='https://odrs.gnome.org'>GNOME ODRS</a> ' den "
+#~ "çekilmektedir."
+
+#~ msgid "matplotlib is not found"
+#~ msgstr "matplotlib bulunamadı"
+
+#~ msgid "is None"
+#~ msgstr "Yok"
+
+#~ msgid "Save File"
+#~ msgstr "Dosyayı Kaydet"
+
+#~ msgid "Save"
+#~ msgstr "Kaydet"
+
+#~ msgid "Image"
+#~ msgstr "Resim"
+
+#~ msgid "Status"
+#~ msgstr "Durum"
+
+#~ msgid "Name"
+#~ msgstr "Paket"
+
+#~ msgid "Section"
+#~ msgstr "Bölüm"
+
+#~ msgid "Couldn't get icons"
+#~ msgstr "İkonlar alınamadı"
+
+#~ msgid "Application icons could not be retrieved from the server"
+#~ msgstr "Uygulama ikonları sunucudan alınamadı"
+
+#~ msgid "Category icons could not be retrieved from the server"
+#~ msgstr "Kategori ikonları sunucudan alınamadı"
+
+#~ msgid "Getting icons from server"
+#~ msgstr "Sunucudan ikonlar alınıyor"
+
+#~ msgid "All"
+#~ msgstr "Tümü"
+
+# 'View on' apps.pardus.org.tr.
+#~ msgid "View on {}."
+#~ msgstr "{} ' de görüntüle."
+
+#~ msgid " Uninstall"
+#~ msgstr " Kaldır"
+
+#~ msgid "You need to install the application"
+#~ msgstr "Uygulamayı yüklemeniz gerekiyor"
+
+#~ msgid " Removing"
+#~ msgstr " Kaldırılıyor"
+
+#~ msgid " Installing"
+#~ msgstr " Yükleniyor"
+
+#~ msgid "Enable Repo"
+#~ msgstr "Depoyu Etkinleştir"
+
+#~ msgid "Distro"
+#~ msgstr "Dağıtım"
+
+#~ msgid "App Version"
+#~ msgstr "Uygulama Sürümü"
+
+#~ msgid "Your Rate"
+#~ msgstr "Oyunuz"
+
+#~ msgid ""
+#~ "Your comment has been sent successfully. It will be published after "
+#~ "approval."
+#~ msgstr ""
+#~ "Yorumunuz başarıyla gönderildi. Onaylandıktan sonra yayınlanacaktır."
+
+#~ msgid "Cannot be null"
+#~ msgstr "Boş olamaz"
+
+#~ msgid "available"
+#~ msgstr "mevcut"
+
+#~ msgid "installed"
+#~ msgstr "yüklü"
+
+#~ msgid "not installed"
+#~ msgstr "yüklü değil"
+
+#~ msgid "app"
+#~ msgstr "uygulama"
+
+#~ msgid "apps"
+#~ msgstr "uygulama"
+
+#~ msgid "Updating"
+#~ msgstr "Güncelleniyor"
+
+#~ msgid "Package manager is busy, try again later."
+#~ msgstr "Paket yöneticisi meşgul, daha sonra tekrar deneyin."
+
+#~ msgid "Please try again after the processes in the queue are completed."
+#~ msgstr "Lütfen kuyruktaki işlemler tamamlandıktan sonra tekrar deneyiniz."
+
+#~ msgid "Updates are complete. Your system is up to date."
+#~ msgstr "Güncellemeler tamamlandı. Sisteminiz güncel."
+
+#~ msgid "List of packages on hold"
+#~ msgstr "Tutulan paketlerin listesi"
+
+#~ msgid "You cannot cancel because the application is in progress."
+#~ msgstr "Uygulamanın işlemi devam ettiği için iptal edemezsiniz."
+
+#~ msgid "Are you sure you accept this?"
+#~ msgstr "Bunu kabul ettiğinize emin misiniz?"
+
+#~ msgid "all"
+#~ msgstr "tümü"
+
+#~ msgid "Server Address"
+#~ msgstr "Sunucu Adresi"
+
+#~ msgid "Default"
+#~ msgstr "Varsayılan"
+
+#~ msgid "The python3-matplotlib library is required to view statistics."
+#~ msgstr ""
+#~ "İstatistikleri görüntülemek için python3-matplotlib kütüphanesi "
+#~ "gereklidir."
+
+#~ msgid "Try again by closing and reopening the application."
+#~ msgstr "Uygulamayı kapatıp yeniden açarak tekrar deneyin."
+
+#~ msgid "Daily App Download Counts (Last 30 Days)"
+#~ msgstr "Günlük Uygulama İndirme Sayıları (Son 30 Gün)"
+
+#~ msgid "Used Operating Systems (For App Download)"
+#~ msgstr "Kullanılan İşletim Sistemleri (Uygulama İndirmek İçin)"
+
+#~ msgid "Top 30 App Downloads"
+#~ msgstr "En Çok İndirilen 30 Uygulama"
+
+#~ msgid "Select Category"
+#~ msgstr "Kategori seçiniz"
+
+#~ msgid "is empty"
+#~ msgstr "boş"
+
+#~ msgid "Description (Turkish)"
+#~ msgstr "Açıklama (Türkçe)"
+
+#~ msgid "Description (English)"
+#~ msgstr "Açıklama (İngilizce)"
+
+#~ msgid "Mail"
+#~ msgstr "E-posta"
+
+#~ msgid "Icon not found"
+#~ msgstr "İkon bulunamadı"
+
+#~ msgid "Icon size must be less than 1 MB"
+#~ msgstr "İkon boyutu 1 MB'den küçük olmalıdır"
+
+#~ msgid "Icon file read error"
+#~ msgstr "İkon dosyası okuma hatası"
+
+#~ msgid "Icon file must be svg"
+#~ msgstr "İkon dosyası svg olmalıdır"
+
+#~ msgid ""
+#~ "If you use the server icons, the application icons will be pulled from "
+#~ "the server completely."
+#~ msgstr ""
+#~ "Sunucu ikonlarını kullanırsanız uygulama ikonları eksiksiz olarak "
+#~ "sunucudan çekilecektir."
+
+#~ msgid ""
+#~ "If you turn this option off, application icons will be pulled from your "
+#~ "system,"
+#~ msgstr ""
+#~ "Bu seçeneği kapatırsanız uygulama ikonları sisteminizden çekilecektir ve"
+
+#~ msgid "which may cause some application icons to appear blank."
+#~ msgstr ""
+#~ "Bu da bazı uygulama ikonlarının boş görünmesine neden olabilmektedir."
+
+#~ msgid "Transition animations in the application."
+#~ msgstr "Uygulamadaki geçiş animasyonları."
+
+#~ msgid "Show only available applications in"
+#~ msgstr "Sadece"
+
+#~ msgid "repository."
+#~ msgstr "Deposundaki mevcut uygulamaları göster."
+
+#~ msgid "If you turn this option off, all apps will be shown, but"
+#~ msgstr "Bu seçeneği kapatırsanız tüm uygulamalar gösterilir; ancak"
+
+#~ msgid ""
+#~ "'Not Found' will be displayed for apps not available in the repository."
+#~ msgstr "Depoda bulunmayan uygulamalar için 'Bulunamadı' yazacaktır."
+
+#~ msgid ""
+#~ "Hide applications offered from external repositories (other than Official "
+#~ "Pardus repository)."
+#~ msgstr ""
+#~ "Harici depolardan (Resmi Pardus deposu dışında) sunulan uygulamaları "
+#~ "gizleyin."
+
+#~ msgid "For example, publisher's applications in the Publishers category."
+#~ msgstr "Örneğin, Yayınevleri kategorisindeki yayınevlerinin uygulamaları."
+
+#~ msgid "Default icons use Papirus icon theme."
+#~ msgstr "Varsayılan simgeler Papirus simge temasını kullanır."
+
+#~ msgid "Candy is Candy icon theme."
+#~ msgstr "Candy, Candy ikon temasıdır."
+
+#~ msgid "Flat is Flat Remix icon theme."
+#~ msgstr "Flat, Flat Remix ikon temasıdır."
+
+#~ msgid "Flatery is Flatery icon theme."
+#~ msgstr "Flatery, Flatery ikon temasıdır."
+
+#~ msgid "Kora is Kora icon theme."
+#~ msgstr "Kora, Kora ikon temasıdır."
+
+#~ msgid "Numix is Numix Circle icon theme."
+#~ msgstr "Numix, Numix Circle ikon temasıdır."
+
+#~ msgid "Oranchelo is Oranchelo icon theme."
+#~ msgstr "Oranchelo, Oranchelo ikon temasıdır."
+
+#~ msgid "Tela is Tela icon theme."
+#~ msgstr "Tela, Tela ikon temasıdır."
+
+#~ msgid "Zafiro is Zafiro icon theme."
+#~ msgstr "Zafiro, Zafiro ikon temasıdır."
+
+#~ msgid "Show gnome comments in app comments."
+#~ msgstr "Uygulama yorumlarında gnome yorumlarını göster."
+
+#~ msgid ""
+#~ "GNOME comments are pulled from <a href='https://odrs.gnome.org'>GNOME "
+#~ "ODRS</a>."
+#~ msgstr ""
+#~ "GNOME yorumları <a href='https://odrs.gnome.org'>GNOME ODRS</a>ʼden "
+#~ "çekilmektedir."
+
+#~ msgid "Whether the application prefers to use a dark theme."
+#~ msgstr "Uygulamanın karanlık temayı kullanmayı tercih edip etmediği."
+
+#~ msgid ""
+#~ "If a GTK+ theme includes a dark variant, it will be used instead of the "
+#~ "configured theme."
+#~ msgstr ""
+#~ "Eğer GTK+ temanız karanlık varyant içeriyorsa, yapılandırılmış tema "
+#~ "yerine kullanılacaktır."
+
+#~ msgid " Activating"
+#~ msgstr " Etkinleştiriliyor"
+
+#~ msgid "Repo Activation Completed"
+#~ msgstr "Depo Etkinleştirme Tamamlandı"
+
+#~ msgid "Fixing of system package manager sources list is done."
+#~ msgstr "Paket yöneticisi kaynak listesi başarıyla onarıldı."
+
+#~ msgid "Package manager cache automatically updated."
+#~ msgstr "Paket yöneticisi önbelleği otomatik olarak güncellendi."
+
+#~ msgid "An error occurred while updating the package cache. Exit Code: "
+#~ msgstr "Paket önbelleği güncellenirken bir hata oluştu. Çıkış Kodu:"
+
+#~ msgid "Show only installed apps"
+#~ msgstr "Sadece yüklü uygulamaları göster"
+
+#~ msgid "Show installed apps"
+#~ msgstr "Yüklü uygulamaları göster"
+
+#~ msgid "Repository"
+#~ msgstr "Depo"
+
+#~ msgid "Update Now"
+#~ msgstr "Şimdi Güncelle"
+
+#~ msgid "Update Package Cache"
+#~ msgstr "Paket Önbelleğini Güncelle"
+
+#~ msgid "List of upgradable packages"
+#~ msgstr "Yükseltilebilir paketlerin listesi"
+
+#~ msgid "List of automatically removable all unused packages"
+#~ msgstr "Otomatik olarak kaldırılabilen tüm kullanılmayan paketlerin listesi"
+
+#~ msgid "Autoremovable Packages"
+#~ msgstr "Kullanılmayan Kaldırılabilir Paketler"
+
+#~ msgid "List of unnecessary packages with residual config files"
+#~ msgstr "Kalmış yapılandırma dosyaları içeren gereksiz paketlerin listesi"
+
+#~ msgid "Residual Packages"
+#~ msgstr "Artık Dosyaları Kalan Paketler"
+
+#~ msgid "Package manager is busy"
+#~ msgstr "Paket yöneticisi meşgul"
+
+#~ msgid "No action required"
+#~ msgstr "İşlem gerekmiyor"
+
+#~ msgid "All packages are up to date"
+#~ msgstr "Tüm paketler güncel"
+
+#~ msgid "You can now update package manager cache."
+#~ msgstr "Artık paket yöneticisi önbelleğini güncelleyebilirsiniz."
+
+# View on apps.pardus.org.tr'.'
+#~ msgid "."
+#~ msgstr " ' de görüntüle."
+
+#~ msgid "Upgradable:"
+#~ msgstr "Yükseltilebilir:"
+
+#, fuzzy
+#~ msgid "package"
+#~ msgstr "Bozuk paketler"
+
+#~ msgid "No package is selected."
+#~ msgstr "Paket seçilmedi."
+
+#~ msgid "Most Rated Apps"
+#~ msgstr "Oylaması En Yüksek Uygulamalar"
+
+#~ msgid "Sort by Rating"
+#~ msgstr "Oylamaya göre sırala"
+
+#~ msgid "Write your comment"
+#~ msgstr "Yorumunuzu yazınız"
+
+#~ msgid "Pardus Software Center > Menu > Updates > Update Package Cache"
+#~ msgstr ""
+#~ "Pardus Yazılım Merkezi > Menü > Güncellemeler > Paket Önbelleğini Güncelle"
+
+#~ msgid "of disk space freed"
+#~ msgstr "disk alanı boşalacak"
+
+#~ msgid "to download"
+#~ msgstr "indirilecek"
+
+#~ msgid "of disk space required"
+#~ msgstr "disk alanı gerekli"
+
+# 'View on' apps.pardus.org.tr.
+#~ msgid "View on"
+#~ msgstr " "
+
+#~ msgid "Most Downloaded Apps "
+#~ msgstr "En Çok İndirilen Uygulamalar"
+
+#~ msgid "Correct"
+#~ msgstr "Düzelt"
+
+#~ msgid "loading"
+#~ msgstr "yükleniyor"
+
+#~ msgid "Choose star rating level"
+#~ msgstr "Bu uygulamaya kaç yıldız verirsiniz?"
+
+#~ msgid "Error Code (app)"
+#~ msgstr "Hata Kodu (app)"
+
+#~ msgid "Error Code (cat)"
+#~ msgstr "Hata Kodu (cat)"
+
+#~ msgid "Applied"
+#~ msgstr "Uygulandı"
+
+#~ msgid "Changes applied successfully "
+#~ msgstr "Değişiklikler başarıyla uygulandı"
+
+#~ msgid "Clear Queue"
+#~ msgstr "Kuyruğu Temizle"
+
+#~ msgid ""
+#~ "You can delete applications from the queue by double-clicking the "
+#~ "application in the second row of the queue or clicking clear queue "
+#~ "button. "
+#~ msgstr ""
+#~ "Kuyruğun ikinci satırındaki uygulamaya çift tıklayarak veya kuyruğu "
+#~ "temizle düğmesine tıklayarak uygulamaları kuyruktan silebilirsiniz. "
+
+#~ msgid "Copyright"
+#~ msgstr "Telif hakkı"
+
+#~ msgid "Setting Repo Categories"
+#~ msgstr "Depo kategorileri ayarlanıyor"
+
+#~ msgid "Getting ratings from gnome odrs"
+#~ msgstr "Gnome odrs sunucusundan oylamalar alınıyor"
+
+#~ msgid "Setting applications"
+#~ msgstr "Uygulamalar ayarlanıyor"
+
+#~ msgid "Preferences"
+#~ msgstr "Ayarlar"
