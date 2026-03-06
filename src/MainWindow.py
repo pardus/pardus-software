@@ -1550,6 +1550,8 @@ class MainWindow(object):
 
         self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id, "upgrade": button.name == 2})
         self.add_to_queue_ui(app_name, button.name == 2, details.get("icon_name"))
+        self.Logger.info(f"queue_add: app: {app_name}")
+        self.Logger.info(f"queue: {self.queue}")
         if not self.inprogress:
             self.action_package(app_name, command, desktop_id, button.name == 2)
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
@@ -1677,7 +1679,7 @@ class MainWindow(object):
             self.Logger.info("actionPackage func error")
 
         self.pid = self.action_process(command)
-        self.Logger.info("started pid : {}".format(self.pid))
+        self.Logger.info(f"started pid : {self.pid} with command: {command}")
 
     def update_app_widget_label(self, app_name, from_queue_cancelled=False):
         self.Logger.info("inprogress_app_name: {}, app_name: {}".format(self.inprogress_app_name, app_name))
@@ -2696,7 +2698,7 @@ class MainWindow(object):
             app_name = app
             details = self.apps_full.get(app_name, {})
         else:
-            self.Logger.warning("{} {}".format("set_app_details_page func ERROR for: ", app))
+            self.Logger.warning("{} {} {}".format("set_app_details_page func ERROR for: ", app, source))
             return
 
         if not details:
@@ -4053,6 +4055,7 @@ class MainWindow(object):
         self.searching = True
 
         if self.ui_right_stack.get_visible_child_name() == "installed":
+            self.Logger.info(f"installed_apps searching for: {entry_search.get_text().strip().lower()}")
             self.ui_installedapps_flowbox.invalidate_filter()
         else:
             self.ui_right_stack_navigate_to("apps")
@@ -4062,6 +4065,8 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
 
             text = entry_search.get_text().strip().lower()
+
+            self.Logger.info(f"store_apps searching for: {text}")
 
             self.ui_searchterm_label.set_text(_("Results for {}").format(text) if text else _("Results"))
 
@@ -4082,6 +4087,8 @@ class MainWindow(object):
 
             self._repo_search_cancel_flag = False
             self._search_start_id = GLib.idle_add(self._start_repo_search, text)
+
+            self.Logger.info(f"repo_apps searching for: {text}")
 
     def _clear_repo_results(self):
         if self.ui_repoapps_flowbox:
@@ -4180,6 +4187,10 @@ class MainWindow(object):
 
         GLib.idle_add(self.ui_repoapps_flowbox.show_all)
         GLib.idle_add(self.ui_repotitle_box.set_visible, bool(self.repo_final_list))
+
+        self.Logger.info(f"repo_apps search startswith list: {self._repo_startswith}")
+        self.Logger.info(f"repo_apps search contains list: {self._repo_contains}")
+        self.Logger.info(f"repo_apps search final list: {self.repo_final_list}")
 
         self._repo_startswith = []
         self._repo_contains = []
@@ -4926,9 +4937,13 @@ class MainWindow(object):
         self.inprogress_command = ""
         self.inprogress_desktop = ""
 
+        self.Logger.info(f"queue: {self.queue}")
+
         if len(self.queue) > 0:
+            self.Logger.info(f"queue_pop: {self.queue[0]}")
             self.queue.pop(0)
             self.ui_queue_flowbox.remove(self.ui_queue_flowbox.get_children()[0])
+            self.Logger.info(f"queue: {self.queue}")
 
         if self.isupgrade:
             self.get_upgradables()
