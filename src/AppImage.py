@@ -17,7 +17,6 @@ from Logger import Logger
 class AppImage(object):
     def __init__(self):
 
-        self.imgcache = {}
         self.Logger = Logger(__name__)
 
     def get_image(self, uri, app_name):
@@ -47,8 +46,6 @@ class AppImage(object):
         stream.close_async(GLib.PRIORITY_LOW, None, self._close_stream, None)
 
         self.app_image_from_server(True, pixbuf, uri, app_name)  # Send to MainWindow
-
-        self.imgcache[uri] = pixbuf
 
     def _close_stream(self, stream, result, data):
         try:

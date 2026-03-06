@@ -2698,7 +2698,7 @@ class MainWindow(object):
             app_name = app
             details = self.apps_full.get(app_name, {})
         else:
-            self.Logger.warning("{} {}".format("set_app_details_page func ERROR for: ", app))
+            self.Logger.warning("{} {} {}".format("set_app_details_page func ERROR for: ", app, source))
             return
 
         if not details:
