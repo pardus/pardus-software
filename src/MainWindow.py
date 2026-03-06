@@ -4055,6 +4055,7 @@ class MainWindow(object):
         self.searching = True
 
         if self.ui_right_stack.get_visible_child_name() == "installed":
+            self.Logger.info(f"installed_apps searching for: {entry_search.get_text().strip().lower()}")
             self.ui_installedapps_flowbox.invalidate_filter()
         else:
             self.ui_right_stack_navigate_to("apps")
@@ -4064,6 +4065,8 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
 
             text = entry_search.get_text().strip().lower()
+
+            self.Logger.info(f"store_apps searching for: {text}")
 
             self.ui_searchterm_label.set_text(_("Results for {}").format(text) if text else _("Results"))
 
@@ -4084,6 +4087,8 @@ class MainWindow(object):
 
             self._repo_search_cancel_flag = False
             self._search_start_id = GLib.idle_add(self._start_repo_search, text)
+
+            self.Logger.info(f"repo_apps searching for: {text}")
 
     def _clear_repo_results(self):
         if self.ui_repoapps_flowbox:
@@ -4182,6 +4187,10 @@ class MainWindow(object):
 
         GLib.idle_add(self.ui_repoapps_flowbox.show_all)
         GLib.idle_add(self.ui_repotitle_box.set_visible, bool(self.repo_final_list))
+
+        self.Logger.info(f"repo_apps search startswith list: {self._repo_startswith}")
+        self.Logger.info(f"repo_apps search contains list: {self._repo_contains}")
+        self.Logger.info(f"repo_apps search final list: {self.repo_final_list}")
 
         self._repo_startswith = []
         self._repo_contains = []
