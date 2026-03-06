@@ -1,3 +1,17 @@
+pardus-software (1.0.2) unstable; urgency=medium
+
+  * Fix upgradable apps action button controls
+  * Update queue page labels as translatable
+  * Update pot file
+  * Update Turkish translations
+  * Fix repo search func
+  * Add queue logs
+  * Add searchentry logs
+  * Update app details err log and Rm imgcache
+  * Add upgradable apps to logger
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 06 Mar 2026 14:30:27 +0300
+
 pardus-software (1.0.1) unstable; urgency=medium
 
   [ Hugo Carvalho ]
