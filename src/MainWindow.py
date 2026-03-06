@@ -1225,6 +1225,7 @@ class MainWindow(object):
 
             if is_installed and is_upgradable:
                 self.upgradables[app] = details
+        self.Logger.info(f"Upgradable apps: {', '.join(self.upgradables.keys())}")
 
     def set_upgradables(self):
         if not self.Server.connection:
