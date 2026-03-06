@@ -4057,7 +4057,7 @@ class MainWindow(object):
         else:
             self.ui_right_stack_navigate_to("apps")
             self.ui_pardusapps_title_stack.set_visible_child_name("search")
-            self.ui_repotitle_box.set_visible(self.repo_final_list)
+            self.ui_repotitle_box.set_visible(bool(self.repo_final_list))
 
             self.ui_pardusapps_flowbox.invalidate_filter()
 
@@ -4065,17 +4065,23 @@ class MainWindow(object):
 
             self.ui_searchterm_label.set_text(_("Results for {}").format(text) if text else _("Results"))
 
-            if hasattr(self, "_repo_search_cancel_flag"):
-                self._repo_search_cancel_flag = True
+            self._repo_search_cancel_flag = True
 
-            self._repo_search_cancel_flag = False
+            if getattr(self, "_search_start_id", None):
+                GLib.source_remove(self._search_start_id)
+                self._search_start_id = None
+
+            if getattr(self, "_search_step_id", None):
+                GLib.source_remove(self._search_step_id)
+                self._search_step_id = None
 
             GLib.idle_add(self._clear_repo_results)
 
             if len(text) < 3:
                 return
 
-            GLib.idle_add(self._start_repo_search, text)
+            self._repo_search_cancel_flag = False
+            self._search_start_id = GLib.idle_add(self._start_repo_search, text)
 
     def _clear_repo_results(self):
         if self.ui_repoapps_flowbox:
@@ -4084,13 +4090,10 @@ class MainWindow(object):
         self.repo_final_list = []
 
     def _start_repo_search(self, text):
-        if hasattr(self, "_repo_search_cancel_flag"):
-            self._repo_search_cancel_flag = True
+        self._search_start_id = None
 
-        if len(text) < 3:
-            return
-
-        self._repo_search_cancel_flag = False
+        if self._repo_search_cancel_flag or len(text) < 3:
+            return False
 
         repo_list = self.Package.load_repo_packages()
 
@@ -4105,10 +4108,16 @@ class MainWindow(object):
 
         self._repo_iter = iter(repo_list)
 
-        GLib.idle_add(self._repo_search_step)
+        self._search_step_id = GLib.idle_add(self._repo_search_step)
+        return False
 
     def _repo_search_step(self):
         if self._repo_search_cancel_flag:
+            self._search_step_id = None
+            return False
+
+        if self._repo_phase not in ("startswith", "contains"):
+            self._search_step_id = None
             return False
 
         text = self._repo_search_text
@@ -4147,7 +4156,6 @@ class MainWindow(object):
                 repo_list = self.Package.load_repo_packages()
                 self._repo_iter = iter(repo_list)
                 self._repo_phase = "contains"
-
                 return True
             else:
                 return self._repo_search_finish()
@@ -4155,6 +4163,8 @@ class MainWindow(object):
         return True
 
     def _repo_search_finish(self):
+        self._search_step_id = None
+
         if self._repo_search_cancel_flag:
             return False
 
@@ -4169,7 +4179,7 @@ class MainWindow(object):
             GLib.idle_add(self.ui_repoapps_flowbox.add, widget)
 
         GLib.idle_add(self.ui_repoapps_flowbox.show_all)
-        GLib.idle_add(self.ui_repotitle_box.set_visible, self.repo_final_list)
+        GLib.idle_add(self.ui_repotitle_box.set_visible, bool(self.repo_final_list))
 
         self._repo_startswith = []
         self._repo_contains = []
