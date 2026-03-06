@@ -1550,6 +1550,8 @@ class MainWindow(object):
 
         self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id, "upgrade": button.name == 2})
         self.add_to_queue_ui(app_name, button.name == 2, details.get("icon_name"))
+        self.Logger.info(f"queue_add: app: {app_name}")
+        self.Logger.info(f"queue: {self.queue}")
         if not self.inprogress:
             self.action_package(app_name, command, desktop_id, button.name == 2)
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
@@ -1677,7 +1679,7 @@ class MainWindow(object):
             self.Logger.info("actionPackage func error")
 
         self.pid = self.action_process(command)
-        self.Logger.info("started pid : {}".format(self.pid))
+        self.Logger.info(f"started pid : {self.pid} with command: {command}")
 
     def update_app_widget_label(self, app_name, from_queue_cancelled=False):
         self.Logger.info("inprogress_app_name: {}, app_name: {}".format(self.inprogress_app_name, app_name))
@@ -4926,9 +4928,13 @@ class MainWindow(object):
         self.inprogress_command = ""
         self.inprogress_desktop = ""
 
+        self.Logger.info(f"queue: {self.queue}")
+
         if len(self.queue) > 0:
+            self.Logger.info(f"queue_pop: {self.queue[0]}")
             self.queue.pop(0)
             self.ui_queue_flowbox.remove(self.ui_queue_flowbox.get_children()[0])
+            self.Logger.info(f"queue: {self.queue}")
 
         if self.isupgrade:
             self.get_upgradables()
