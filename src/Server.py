@@ -13,6 +13,12 @@ from hashlib import md5
 from pathlib import Path
 from shutil import rmtree
 
+# Try to import Python 3.12+ security exception
+try:
+    from tarfile import OutsideDestinationError
+except ImportError:
+    OutsideDestinationError = None
+
 import gi
 
 gi.require_version("GLib", "2.0")
@@ -147,6 +153,9 @@ class Server(object):
             self.ServerFilesCB(True, type=type, response=json.loads(data))
 
     def extract_archive(self, archive):
+
+        dest_path = os.path.dirname(archive)
+
         def remove_subdirectories_and_files(directory, excepted_file):
             for root, dirs, files in os.walk(directory, topdown=False):
                 for file in files:
@@ -156,17 +165,46 @@ class Server(object):
                 for dir in dirs:
                     dir_path = os.path.join(root, dir)
                     rmtree(dir_path, ignore_errors=True)
+
+        def is_within_directory(directory, target):
+            """Check if target path stays within the given directory."""
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+            return os.path.commonpath([abs_directory, abs_target]) == abs_directory
+
         try:
-            remove_subdirectories_and_files(os.path.dirname(archive), excepted_file=archive)
-            tar = tarfile.open(archive)
-            extractables = [member for member in tar.getmembers() if member.name.endswith(".svg") or member.name.endswith(".png") or member.name.endswith(".json")]
-            tar.extractall(members=extractables, path=os.path.dirname(archive))
-            tar.close()
-            return True
-        except Exception as error:
-            self.Logger.warning("{} : {}".format("extract error", self.cachedir))
-            self.Logger.exception("{}".format(error))
+            remove_subdirectories_and_files(dest_path, excepted_file=archive)
+            with tarfile.open(archive) as tar:
+                allowed_extensions = (".svg", ".png", ".json")
+                # Only allow regular files with specific extensions
+                extractables = [m for m in tar.getmembers() if m.isfile() and m.name.endswith(allowed_extensions)]
+                try:
+                    # Secure extraction (Python 3.12+)
+                    tar.extractall(members=extractables, path=dest_path, filter="data")
+                except TypeError:
+                    # Fallback for Python < 3.12 (no filter support)
+                    self.Logger.info("filter='data' not supported, using secure fallback method")
+                    safe_extractables = []
+                    for member in extractables:
+                        target_path = os.path.abspath(os.path.join(dest_path, member.name))
+                        if is_within_directory(dest_path, target_path):
+                            safe_extractables.append(member)
+                        else:
+                            self.Logger.warning(f"Skipped unsafe path (possible path traversal): {member.name}")
+                    if safe_extractables:
+                        tar.extractall(members=safe_extractables, path=dest_path)
+                    else:
+                        self.Logger.info("Empty safe_extractables")
+                        return False
+        except Exception as e:
+            # Handle Python 3.12+ path traversal protection
+            if OutsideDestinationError and isinstance(e, OutsideDestinationError):
+                self.Logger.exception(f"Extraction blocked: attempted path traversal detected: {e}")
+                return False
+            # Generic error handling
+            self.Logger.exception(f"Unexpected error while processing tar archive: {e}")
             return False
+        return True
 
     def delete_cache(self):
         try:
