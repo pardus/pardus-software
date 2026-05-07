@@ -31,7 +31,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Notify", "0.7")
 gi.require_version("GdkPixbuf", "2.0")
 gi.require_version("Vte", "2.91")
-from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gdk, Vte, Pango
+from gi.repository import GLib, Gtk, GObject, Notify, GdkPixbuf, Gdk, Vte, Pango, Gio
 
 from Package import Package
 from Server import Server
@@ -66,8 +66,15 @@ class MainWindow(object):
 
         self.error = False
         self.dpkglockerror = False
+        
+        self.MainWindow = self.GtkBuilder.get_object("MainWindow")
+        if self.MainWindow:
+            self.MainWindow.connect("delete-event", self.on_delete_event)
+         
         self.dpkgconferror = False
         self.dpkglockerror_message = ""
+        self.bg_notified = False
+        self.last_notified_percent = -1
         self.error_message = ""
 
         self.searching = False
@@ -579,6 +586,39 @@ class MainWindow(object):
                     continue
                 break
         return mac
+
+    def on_delete_event(self, widget, event):
+        if self.inprogress:
+            self.MainWindow.hide()
+            self.bg_notified = True
+            
+            try:
+                bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+                bus.call_sync(
+                    'org.freedesktop.Notifications',
+                    '/org/freedesktop/Notifications',
+                    'org.freedesktop.Notifications',
+                    'Notify',
+                    GLib.Variant('(susssasa{sv}i)', (
+                        'Pardus Software Center',
+                        0,
+                        'pardus-software',
+                        _('Pardus Software Center'),
+                        _('İşlemler arka planda devam ediyor ({} uygulama)...').format(len(self.queue)) if len(self.queue) > 1 else _('İşlem arka planda devam ediyor...'),
+                        [],
+                        {'desktop-entry': GLib.Variant('s', 'tr.org.pardus.software')},
+                        5000
+                    )),
+                    None,
+                    Gio.DBusCallFlags.NONE,
+                    -1,
+                    None
+                )
+            except Exception as e:
+                self.Logger.exception('Notification error: {}'.format(e))
+
+            return True
+        return False
 
     def get_user_locale(self):
         lang = os.getenv("LANG")
@@ -4855,6 +4895,9 @@ class MainWindow(object):
 
         return True
 
+    def update_progress_notification(self, text, percent):
+        pass
+
     def on_action_process_stderr(self, source, condition):
         if condition == GLib.IO_HUP:
             return False
@@ -4866,18 +4909,23 @@ class MainWindow(object):
         if "dlstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_fraction(int(percent) / 100)
-            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Downloading"), percent))
+            text = "{} : {} %".format(_("Downloading"), percent)
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text(text)
+            self.update_progress_notification(text, percent)
             self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].set_sensitive(True)
         elif "pmstatus" in line:
             percent = line.split(":")[2].split(".")[0]
             self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_fraction(int(percent) / 100)
+            text = ""
             if self.isinstalled:
                 if self.isupgrade:
-                    self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Upgrading"), percent))
+                    text = "{} : {} %".format(_("Upgrading"), percent)
                 else:
-                    self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Removing"), percent))
+                    text = "{} : {} %".format(_("Removing"), percent)
             else:
-                self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text("{} : {} %".format(_("Installing"), percent))
+                text = "{} : {} %".format(_("Installing"), percent)
+            self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_text(text)
+            self.update_progress_notification(text, percent)
             self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[4].set_sensitive(False)
         elif re.match(r"^[A-Za-zÇĞİÖŞÜçğıöşü]+:", line.strip()) and ".deb" in line:
             self.Logger.warning("connection error")
@@ -4937,6 +4985,8 @@ class MainWindow(object):
         self.inprogress_app_name = ""
         self.inprogress_command = ""
         self.inprogress_desktop = ""
+        self.bg_notified = False
+        self.last_notified_percent = -1
 
         self.Logger.info(f"queue: {self.queue}")
 
