@@ -1,3 +1,13 @@
+pardus-software (1.0.4) unstable; urgency=medium
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+
+  [ Fatih Altun ]
+  * Rm unnecessary ssl control
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 12 May 2026 20:31:03 +0300
+
 pardus-software (1.0.3) unstable; urgency=medium
 
   * Fix kill func
