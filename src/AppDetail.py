@@ -32,8 +32,6 @@ class AppDetail(object):
         try:
             input_stream = session.send_finish(result)
         except GLib.Error as error:
-            if message.status_code == Soup.Status.SSL_FAILED:
-                self.session.props.ssl_strict = False
             self.Logger.warning("AppDetail stream Error: {}, {}".format(error.domain, error.message))
             self.Logger.exception("{}".format(error))
             self.app_details_from_server(False)
