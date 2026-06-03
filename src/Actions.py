@@ -41,25 +41,8 @@ def main():
         subprocess.call(["apt", "install", "--upgrade", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
-    def reinstall(debianpackage):
-        subprocess.call(["apt", "install", "--reinstall", debianpackage, "-yq", "-o", "APT::Status-Fd=2"],
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
-
-    def downgrade(packagename):
-        subprocess.call(["apt", "install", "--allow-downgrades", packagename, "-yq", "-o", "APT::Status-Fd=2"],
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
-
     def update():
         subprocess.call(["apt", "update", "-o", "APT::Status-Fd=2"],
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
-
-    def removeresidual(packages):
-        packagelist = packages.split(" ")
-        subprocess.call(["apt", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
-
-    def removeauto():
-        subprocess.call(["apt", "autoremove", "-yq", "-o", "APT::Status-Fd=2"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def enable_i386_install(packages):
@@ -142,19 +125,10 @@ def main():
                 install(sys.argv[2])
             elif sys.argv[1] == "remove":
                 remove(sys.argv[2])
-            elif sys.argv[1] == "reinstall":
-                reinstall(sys.argv[2])
-            elif sys.argv[1] == "downgrade":
-                downgrade(sys.argv[2])
             elif sys.argv[1] == "upgrade":
                 upgrade(sys.argv[2])
             elif sys.argv[1] == "update":
                 update()
-            elif sys.argv[1] == "removeresidual":
-                print(sys.argv[2])
-                removeresidual(sys.argv[2])
-            elif sys.argv[1] == "removeauto":
-                removeauto()
             elif sys.argv[1] == "enablei386andinstall":
                 enable_i386_install(sys.argv[2])
         else:
