@@ -13,7 +13,7 @@ import pwd
 import apt
 import apt_pkg
 import psutil
-
+import re
 
 def main():
     def control_lock():
@@ -26,20 +26,53 @@ def main():
         apt_pkg.pkgsystem_unlock()
         return True
 
+    def parse_packages(packages):
+        packagelist = packages.split()
+
+        valid_packages = []
+        apt_options = []
+
+        package_re = re.compile(r'^[a-z0-9][a-z0-9+.-]*(?::[a-z0-9]+)?$')
+
+        for item in packagelist:
+            if item == "--no-install-recommends":
+                apt_options.append(item)
+            elif package_re.fullmatch(item):
+                valid_packages.append(item)
+            else:
+                raise ValueError(f"Invalid package name: {item}")
+
+        return apt_options, valid_packages
+
     def install(packages):
-        packagelist = packages.split(" ")
-        subprocess.call(["apt", "install", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+        apt_options, valid_packages = parse_packages(packages)
+
+        if not valid_packages:
+            print("No valid package was found to install.")
+            return
+
+        cmd = ["apt", "install", "-yq", "-o", "APT::Status-Fd=2"] + apt_options + ["--"] + valid_packages
+        subprocess.call(cmd, env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def remove(packages):
-        packagelist = packages.split(" ")
-        subprocess.call(["apt", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+        apt_options, valid_packages = parse_packages(packages)
+
+        if not valid_packages:
+            print("No valid package was found to remove.")
+            return
+
+        cmd = ["apt", "remove", "--purge", "-yq", "-o", "APT::Status-Fd=2"] + apt_options + ["--"] + valid_packages
+        subprocess.call(cmd, env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def upgrade(packages):
-        packagelist = packages.split(" ")
-        subprocess.call(["apt", "install", "--upgrade", "-yq", "-o", "APT::Status-Fd=2"] + packagelist,
-                        env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+        apt_options, valid_packages = parse_packages(packages)
+
+        if not valid_packages:
+            print("No valid package was found to upgrade.")
+            return
+
+        cmd = ["apt", "install", "--upgrade", "-yq", "-o", "APT::Status-Fd=2"] + apt_options + ["--"] + valid_packages
+        subprocess.call(cmd, env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
     def update():
         subprocess.call(["apt", "update", "-o", "APT::Status-Fd=2"],
