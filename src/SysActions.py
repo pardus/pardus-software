@@ -22,28 +22,7 @@ import distro
 
 
 def main():
-    def control_lock():
-        msg = ""
-        apt_pkg.init_system()
-        try:
-            apt_pkg.pkgsystem_lock()
-        except SystemError as e:
-            msg = "{}".format(e)
-            print("pardus-software: {}".format(msg), file=sys.stderr)
-            return False, msg
-        apt_pkg.pkgsystem_unlock()
-        return True, msg
-
-    def update():
-        try:
-            cache = apt.Cache()
-            cache.update()
-            cache.open()
-        except Exception as e:
-            print(str(e))
-            subupdate()
-
-    def subupdate():
+    def aptupdate():
         subprocess.call(["apt", "update"],
                         env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
@@ -202,14 +181,9 @@ def main():
             aptclean()
 
     if len(sys.argv) > 1:
-        if sys.argv[1] == "correctsourceslist":
+        if sys.argv[1] == "fixapt":
             correctsourceslist()
-            subupdate()
-        elif sys.argv[1] == "update":
-            update()
-        elif sys.argv[1] == "fixapt":
-            correctsourceslist()
-            subupdate()
+            aptupdate()
             dpkgconfigure()
             fixbroken()
         elif sys.argv[1] == "dpkgconfigure":
