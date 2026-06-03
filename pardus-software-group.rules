@@ -1,8 +1,6 @@
 polkit.addRule(function(action, subject) {
     if (subject.isInGroup("pardus-software")) {
-        if (action.id == "tr.org.pardus.pkexec.pardus-software-action" ||
-            action.id == "tr.org.pardus.pkexec.pardus-software-sysaction") {
-
+        if (action.id == "tr.org.pardus.pkexec.pardus-software-action") {
             return polkit.Result.YES;
         }
     }
