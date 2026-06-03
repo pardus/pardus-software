@@ -40,7 +40,7 @@
     <message xml:lang="tr">Pardus Yazılım Merkezi için yetkilendirme gerekiyor</message>
     <icon_name>preferences-system</icon_name>
     <defaults>
-      <allow_any>yes</allow_any>
+      <allow_any>auth_admin</allow_any>
       <allow_inactive>yes</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
