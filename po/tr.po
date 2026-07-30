@@ -877,6 +877,24 @@ msgstr "Hata."
 msgid "Process completed."
 msgstr "İşlem tamamlandı."
 
+#. Home page section heading. Keep the <span> and <b> markup, translate only
+#. the text inside.
+#: ui/MainWindow.glade:4019
+msgid "<span size='large'><b>Trending Apps</b></span>"
+msgstr "<span size='large'><b>Yükselen Uygulamalar</b></span>"
+
+#. Home page section heading. Keep the <span> and <b> markup, translate only
+#. the text inside.
+#: ui/MainWindow.glade:4106
+msgid "<span size='large'><b>Most Downloaded Apps</b></span>"
+msgstr "<span size='large'><b>En Çok İndirilen Uygulamalar</b></span>"
+
+#. Home page section heading. Keep the <span> and <b> markup, translate only
+#. the text inside.
+#: ui/MainWindow.glade:4193
+msgid "<span size='large'><b>Recent Apps</b></span>"
+msgstr "<span size='large'><b>Son Eklenen Uygulamalar</b></span>"
+
 #~ msgid "Package is broken."
 #~ msgstr "Paket bozuk."
 

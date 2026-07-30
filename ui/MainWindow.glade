@@ -4016,7 +4016,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
                                                         <property name="margin-start">8</property>
-                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;Trending Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="label" translatable="yes" comments="Home page section heading. Keep the &lt;span&gt; and &lt;b&gt; markup, translate only the text inside.">&lt;span size='large'&gt;&lt;b&gt;Trending Apps&lt;/b&gt;&lt;/span&gt;</property>
                                                         <property name="use-markup">True</property>
                                                       </object>
                                                       <packing>
@@ -4103,7 +4103,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;Most Downloaded Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="label" translatable="yes" comments="Home page section heading. Keep the &lt;span&gt; and &lt;b&gt; markup, translate only the text inside.">&lt;span size='large'&gt;&lt;b&gt;Most Downloaded Apps&lt;/b&gt;&lt;/span&gt;</property>
                                                         <property name="use-markup">True</property>
                                                       </object>
                                                       <packing>
@@ -4190,7 +4190,7 @@ The application may have been installed using tools such as Flatpak, Snap, or Wi
                                                       <object class="GtkLabel">
                                                         <property name="visible">True</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label">&lt;span size='large'&gt;&lt;b&gt;Recent Apps&lt;/b&gt;&lt;/span&gt;</property>
+                                                        <property name="label" translatable="yes" comments="Home page section heading. Keep the &lt;span&gt; and &lt;b&gt; markup, translate only the text inside.">&lt;span size='large'&gt;&lt;b&gt;Recent Apps&lt;/b&gt;&lt;/span&gt;</property>
                                                         <property name="use-markup">True</property>
                                                       </object>
                                                       <packing>
