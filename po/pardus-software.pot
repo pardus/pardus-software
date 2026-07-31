@@ -17,6 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/MainWindow.py:767
+msgid "Invalid file"
+msgstr ""
+
+#: src/MainWindow.py:767
+msgid "The file does not exist or is not a .deb package."
+msgstr ""
+
+#: src/MainWindow.py:774
+msgid "Cannot read package"
+msgstr ""
+
+#: src/MainWindow.py:774
+msgid "This file is not a valid Debian package."
+msgstr ""
+
 #: ui/MainWindow.glade:48
 msgid "Settings"
 msgstr ""

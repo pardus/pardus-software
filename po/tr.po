@@ -19,6 +19,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Gtranslator 48.0\n"
 
+#: src/MainWindow.py:767
+msgid "Invalid file"
+msgstr "Geçersiz dosya"
+
+#: src/MainWindow.py:767
+msgid "The file does not exist or is not a .deb package."
+msgstr "Dosya bulunamadı veya bir .deb paketi değil."
+
+#: src/MainWindow.py:774
+msgid "Cannot read package"
+msgstr "Paket okunamadı"
+
+#: src/MainWindow.py:774
+msgid "This file is not a valid Debian package."
+msgstr "Bu dosya geçerli bir Debian paketi değil."
+
 #: ui/MainWindow.glade:48
 msgid "Settings"
 msgstr "Ayarlar"
