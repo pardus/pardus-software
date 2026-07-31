@@ -54,6 +54,22 @@ def main():
         cmd = ["apt", "install", "-yq", "-o", "APT::Status-Fd=2"] + apt_options + ["--"] + valid_packages
         subprocess.call(cmd, env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
 
+    def install_local(debfile):
+        debfile = os.path.abspath(debfile)
+
+        if not os.path.isfile(debfile):
+            print(f"File not found: {debfile}", file=sys.stderr)
+            return
+
+        if not debfile.endswith(".deb"):
+            print("Only .deb files can be installed.", file=sys.stderr)
+            return
+
+        # a path (with a slash) makes apt treat it as a local file
+        cmd = ["apt", "install", "-yq", "-o", "APT::Status-Fd=2",
+               "-o", "Dpkg::Options::=--force-confnew", "--", debfile]
+        subprocess.call(cmd, env={**os.environ, 'DEBIAN_FRONTEND': 'noninteractive'})
+
     def remove(packages):
         apt_options, valid_packages = parse_packages(packages)
 
@@ -156,6 +172,8 @@ def main():
         if control_lock():
             if sys.argv[1] == "install":
                 install(sys.argv[2])
+            elif sys.argv[1] == "installlocal":
+                install_local(sys.argv[2])
             elif sys.argv[1] == "remove":
                 remove(sys.argv[2])
             elif sys.argv[1] == "upgrade":

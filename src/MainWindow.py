@@ -10,6 +10,7 @@ import grp
 import locale
 import os
 import re
+import shutil
 import subprocess
 import threading
 import json
@@ -398,6 +399,9 @@ class MainWindow(object):
         self.queue = []
         self.inprogress = False
 
+        self.localdeb_active = False
+        self._localdeb_tmp = None
+
         self.isbroken = False
 
         self.connection_error_after = False
@@ -697,6 +701,10 @@ class MainWindow(object):
             self.set_available_apps(available=self.UserSettings.config_only_available)
 
     def control_args(self):
+        if "install-deb" in self.Application.args.keys():
+            debfile = self.Application.args["install-deb"]
+            GLib.idle_add(self.open_localdeb, debfile)
+            return
         if "details" in self.Application.args.keys():
             pardus_found = False
             myapps_found = False
@@ -748,6 +756,156 @@ class MainWindow(object):
                         pass
             except Exception as e:
                 self.Logger.exception("{}".format(e))
+
+    def open_localdeb(self, debfile):
+        """Open a local .deb file for installation (--install-deb option)."""
+        import apt.debfile as aptdeb
+
+        debfile = os.path.abspath(debfile)
+
+        if not os.path.isfile(debfile) or not debfile.endswith(".deb"):
+            self.localdeb_error_dialog(_("Invalid file"), _("The file does not exist or is not a .deb package."))
+            return
+
+        try:
+            deb = aptdeb.DebPackage(debfile)
+        except Exception as e:
+            self.Logger.exception(f"open_localdeb: {e}")
+            self.localdeb_error_dialog(_("Cannot read package"), _("This file is not a valid Debian package."))
+            return
+
+        pkgname = deb.pkgname or os.path.basename(debfile)
+
+        def field(key):
+            try:
+                return deb[key] if key in deb else ""
+            except Exception:
+                return ""
+
+        maintainer = field("Maintainer")
+        maintainer_name, maintainer_mail = maintainer, ""
+        try:
+            m = re.match(r"^(.*?)(?:\s*<([^>]+)>)?$", maintainer)
+            if m:
+                maintainer_name = (m.group(1) or "").strip()
+                maintainer_mail = (m.group(2) or "").strip()
+        except Exception as e:
+            self.Logger.exception(f"open_localdeb maintainer: {e}")
+
+        try:
+            installed_size_kb = int(field("Installed-Size") or 0)
+        except Exception:
+            installed_size_kb = 0
+
+        try:
+            deb_size = os.path.getsize(debfile)
+        except Exception:
+            deb_size = 0
+
+        # get the .desktop launcher if any, for "Open" button after install
+        desktop = ""
+        try:
+            for f in deb.filelist:
+                if "/applications/" in f and f.endswith(".desktop"):
+                    desktop = os.path.basename(f)
+                    break
+        except Exception as e:
+            self.Logger.exception(f"open_localdeb filelist: {e}")
+
+        # check() gives an early reason if can't install, still let apt try since it can pull missing deps
+        check_msg = ""
+        try:
+            if not deb.check():
+                check_msg = getattr(deb, "_failure_string", "") or ""
+        except Exception as e:
+            self.Logger.exception(f"open_localdeb check: {e}")
+
+        details = {
+            "name": pkgname,
+            "icon_name": "package-x-generic",
+            "description": field("Description"),
+            "version": field("Version"),
+            "section": field("Section"),
+            "homepage": field("Homepage"),
+            "license": "",
+            "maintainer_name": maintainer_name,
+            "maintainer_mail": maintainer_mail,
+            "depends": field("Depends"),
+            "installed_size_kb": installed_size_kb,
+            "deb_size": deb_size,
+            "check_msg": check_msg,
+            "localdeb": debfile,
+            "desktop": desktop,
+        }
+
+        # show it on the normal details page (source=2)
+        self.set_app_details_page({pkgname: details}, source=2)
+
+    def localdeb_error_dialog(self, title, message):
+        dialog = Gtk.MessageDialog(transient_for=self.MainWindow, modal=True,
+                                   message_type=Gtk.MessageType.ERROR,
+                                   buttons=Gtk.ButtonsType.CLOSE, text=title)
+        dialog.format_secondary_text(message)
+        dialog.run()
+        dialog.destroy()
+
+    def set_localdeb_sizes(self, details):
+        """Populate the details page size/dependency panel from a local .deb."""
+        self.ui_ad_sizetitle_label.set_text(_("Package Size"))
+        self.ui_ad_required_sizetitle_label.set_text(_("Installed Size"))
+
+        deb_size = details.get("deb_size") or 0
+        installed_size = (details.get("installed_size_kb") or 0) * 1024
+
+        self.ui_ad_size_label.set_text(
+            self.Package.beauty_size(deb_size) if deb_size else _("None"))
+        self.ui_ad_required_size_label.set_text(
+            self.Package.beauty_size(installed_size) if installed_size else _("None"))
+        self.ui_ad_top_size_label.set_text(
+            self.Package.beauty_size(installed_size) if installed_size else _("None"))
+
+        deps_raw = details.get("depends") or ""
+        deplist = [d.strip().split()[0] for d in re.split(r"[,|]", deps_raw) if d.strip()]
+        if deplist:
+            self.ui_ad_install_list_label.set_text(", ".join(deplist))
+            self.ui_ad_install_list_count_label.set_text(f"({len(deplist)})")
+            self.ui_ad_install_list_box.set_visible(True)
+            self.ui_ad_top_depends_count_label.set_text(f"{len(deplist)}")
+        else:
+            self.ui_ad_install_list_box.set_visible(False)
+            self.ui_ad_top_depends_count_label.set_text("0")
+
+        self.ui_ad_remove_list_box.set_visible(False)
+        self.ui_ad_broken_list_box.set_visible(False)
+
+    def set_localdeb_action_button(self, is_installed, details=None):
+        """Set the details action button for a local .deb.
+        Open (name 3) if installed with a launcher, else Install (name 1).
+        """
+        if details is None:
+            dic = self.ui_myapp_name_dic if isinstance(self.ui_myapp_name_dic, dict) else {}
+            details = next(iter(dic.values()), {}) if dic else {}
+        desktop = (details or {}).get("desktop", "")
+
+        self.ui_ad_action_button.remove(self.ui_ad_action_button.get_children()[0])
+        label = Gtk.Label.new()
+        label.set_line_wrap(False)
+        label.set_justify(Gtk.Justification.LEFT)
+        label.set_max_width_chars(6)
+        label.set_ellipsize(Pango.EllipsizeMode.END)
+        self.ui_ad_action_button.add(label)
+        if is_installed and desktop:
+            self.set_button_class(self.ui_ad_action_button, 4)
+            label.set_markup("<small>{}</small>".format(_("Open")))
+            self.ui_ad_action_button.name = 3
+        else:
+            self.set_button_class(self.ui_ad_action_button, 0)
+            label.set_markup("<small>{}</small>".format(_("Install")))
+            self.ui_ad_action_button.name = 1
+        self.ui_ad_action_button.set_sensitive(True)
+        self.ui_ad_action_button.show_all()
+        self.ui_ad_remove_button.set_visible(bool(is_installed))
+        self.ui_ad_remove_button.set_sensitive(bool(is_installed))
 
     def set_initial_home(self):
         self.Logger.info("in set_initial_home")
@@ -1532,8 +1690,11 @@ class MainWindow(object):
 
         if button.name == 9:
             self.Logger.info("{} opening details page".format(app_name))
-            repo_app = details.get("repo_app", "")
-            self.set_app_details_page(app, source=1 if not repo_app else 2)
+            if details.get("localdeb"):
+                self.set_app_details_page(app, source=2)
+            else:
+                repo_app = details.get("repo_app", "")
+                self.set_app_details_page(app, source=1 if not repo_app else 2)
             return
 
         self.Logger.info("app_name: {}".format(app_name))
@@ -1543,18 +1704,22 @@ class MainWindow(object):
 
         command = self.get_action_command(app_name, details)
 
+        # install action (name 1) carries .deb path, remove (name 0) uses normal path
+        localdeb = details.get("localdeb") if button.name == 1 else None
+
         desktop_id = details.get("desktop", "")
 
         self.ui_header_queue_button.set_visible(True)
 
         self.ui_queue_stack.set_visible_child_name("inprogress")
 
-        self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id, "upgrade": button.name == 2})
+        self.queue.append({"name": app_name, "command": command, "desktop_id": desktop_id,
+                           "upgrade": button.name == 2, "localdeb": localdeb})
         self.add_to_queue_ui(app_name, button.name == 2, details.get("icon_name"))
         self.Logger.info(f"queue_add: app: {app_name}")
         self.Logger.info(f"queue: {self.queue}")
         if not self.inprogress:
-            self.action_package(app_name, command, desktop_id, button.name == 2)
+            self.action_package(app_name, command, desktop_id, button.name == 2, localdeb)
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
                 app_name, command, desktop_id, button.name == 2))
 
@@ -1610,7 +1775,9 @@ class MainWindow(object):
         return command
 
     def on_ui_ad_action_button_clicked(self, button):
-        if self.ui_app_name in self.apps_full.keys():
+        if self.localdeb_active:
+            name = self.ui_myapp_name_dic
+        elif self.ui_app_name in self.apps_full.keys():
             name = self.ui_app_name
         else:
             name = self.ui_myapp_name_dic
@@ -1618,7 +1785,9 @@ class MainWindow(object):
         self.app_widget_action_clicked(button)
 
     def on_ui_ad_remove_button_clicked(self, button):
-        if self.ui_app_name in self.apps_full.keys():
+        if self.localdeb_active:
+            name = self.ui_myapp_name_dic
+        elif self.ui_app_name in self.apps_full.keys():
             name = self.ui_app_name
         else:
             name = self.ui_myapp_name_dic
@@ -1639,8 +1808,9 @@ class MainWindow(object):
 
     def add_to_queue_ui(self, app_name, upgrade=False, icon_name=None):
         listbox = self.create_queue_widget(app_name, upgrade, icon_name)
-        GLib.idle_add(self.ui_queue_flowbox.insert, listbox, -1)
-        GLib.idle_add(self.ui_queue_flowbox.show_all)
+        # insert synchronously so the widget exists before the process can exit
+        self.ui_queue_flowbox.insert(listbox, -1)
+        self.ui_queue_flowbox.show_all()
 
     def start_highlight_queue(self):
         if self.UserSettings.config_animations:
@@ -1652,7 +1822,7 @@ class MainWindow(object):
             self.ui_header_queue_button.get_style_context().remove_class("queue-highlight")
         return False
 
-    def action_package(self, app_name, command, desktop_id="", upgrade=False):
+    def action_package(self, app_name, command, desktop_id="", upgrade=False, localdeb=None):
         self.inprogress = True
 
         self.inprogress_app_name = app_name
@@ -1662,7 +1832,14 @@ class MainWindow(object):
         self.isinstalled = self.Package.isinstalled(app_name)
         self.isupgrade = self.Package.is_upgradable(app_name) and upgrade
 
-        if self.isinstalled is True:
+        if localdeb:
+            # install a local .deb, treat as install for the progress UI
+            self.isinstalled = False
+            self.isupgrade = False
+            localdeb = self.stage_localdeb(localdeb)
+            command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py",
+                       "installlocal", localdeb]
+        elif self.isinstalled is True:
             if self.isupgrade:
                 command = ["/usr/bin/pkexec", os.path.dirname(os.path.abspath(__file__)) + "/Actions.py", "upgrade",
                            self.inprogress_command]
@@ -1681,6 +1858,22 @@ class MainWindow(object):
 
         self.pid = self.action_process(command)
         self.Logger.info(f"started pid : {self.pid} with command: {command}")
+
+    def stage_localdeb(self, debfile):
+        """Copy the .deb to /tmp so the root apt can read it since the file may be on a mount root can't access."""
+        try:
+            tmpdir = os.path.join("/tmp", "pardus-software")
+            os.makedirs(tmpdir, exist_ok=True)
+            os.chmod(tmpdir, 0o755)
+            dest = os.path.join(tmpdir, os.path.basename(debfile))
+            if os.path.abspath(debfile) != dest:
+                shutil.copyfile(debfile, dest)
+            os.chmod(dest, 0o644)
+            self._localdeb_tmp = dest
+            return dest
+        except Exception as e:
+            self.Logger.exception(f"stage_localdeb: {e}")
+            return debfile
 
     def update_app_widget_label(self, app_name, from_queue_cancelled=False):
         self.Logger.info("inprogress_app_name: {}, app_name: {}".format(self.inprogress_app_name, app_name))
@@ -1818,6 +2011,9 @@ class MainWindow(object):
             if (self.inprogress_app_name != app_name) != from_queue_cancelled:
                 to_spinner(self.ui_ad_action_button)
                 self.ui_ad_remove_button.set_sensitive(False)
+            elif self.localdeb_active:
+                # keep the local .deb button state
+                self.set_localdeb_action_button(self.Package.isinstalled(app_name))
             else:
                 to_normal(self.ui_ad_action_button)
                 self.ui_ad_remove_button.set_sensitive(True)
@@ -2255,7 +2451,8 @@ class MainWindow(object):
         version_label.set_line_wrap(False)
         version_label.set_max_width_chars(21 if self.display_width >= 1920 else 13)
         version_label.set_ellipsize(Pango.EllipsizeMode.END)
-        version_label.set_markup("<span weight='light' size='small'>{}</span>".format(self.Package.candidate_version(app)))
+        queue_version = self.Package.candidate_version(app) if self.Package.control_package_cache(app) else ""
+        version_label.set_markup("<span weight='light' size='small'>{}</span>".format(queue_version or ""))
 
         box_version = Gtk.Box.new(Gtk.Orientation.VERTICAL, 6)
         box_version.props.halign = Gtk.Align.END
@@ -2301,9 +2498,9 @@ class MainWindow(object):
         listbox.set_selection_mode(Gtk.SelectionMode.NONE)
         # listbox.connect("row-activated", self.on_app_listbox_row_activated)
         listbox_row = Gtk.ListBoxRow()
-        GLib.idle_add(listbox_row.add, box)
+        listbox_row.add(box)
         listbox_row.name = app
-        GLib.idle_add(listbox.add, listbox_row)
+        listbox.add(listbox_row)
 
         GLib.idle_add(listbox.get_style_context().add_class, "pardus-software-listbox-mostdown")
 
@@ -2711,6 +2908,9 @@ class MainWindow(object):
 
         self.ui_app_name = app_name
 
+        # local .deb uses the source=2 layout but is not in the apt cache
+        self.localdeb_active = bool(isinstance(details, dict) and details.get("localdeb"))
+
         self.clear_app_details()
 
         self.ui_ad_image_scrolledwindow.set_visible(source == 1)
@@ -2811,7 +3011,17 @@ class MainWindow(object):
                 is_openable = self.get_desktop_filename_from_app_name(app_name) != ""
             else:
                 is_openable = details.get("id", False)
-            if is_installed is not None:
+            if self.localdeb_active:
+                # show Install, then Open (if it has a launcher) and Remove once installed
+                self.set_localdeb_action_button(is_installed, details)
+                self.set_localdeb_sizes(details)
+                if details.get("check_msg"):
+                    self.ui_ad_important_label.set_text(details["check_msg"])
+                    self.ui_ad_important_label.set_tooltip_text("")
+                    self.ui_ad_important_label.set_visible(True)
+                else:
+                    self.ui_ad_important_label.set_visible(False)
+            elif is_installed is not None:
                 command = self.get_action_command(app_name, details)
                 threading.Thread(target=self.app_detail_requireds_thread, args=(command,), daemon=True).start()
                 if is_installed:
@@ -2862,7 +3072,8 @@ class MainWindow(object):
                 if self.ui_ad_remove_button.get_visible():
                     self.ui_ad_remove_button.set_sensitive(False)
 
-            origin_info = self.Package.origins(app_name)
+            # local .deb is not in the cache, skip the origin lookup
+            origin_info = None if self.localdeb_active else self.Package.origins(app_name)
             component = getattr(origin_info, "component", "")
             origin = getattr(origin_info, "origin", "")
             if component == "non-free" or (details.get("component") or {}).get("name", "") == "non-free":
@@ -2898,20 +3109,29 @@ class MainWindow(object):
             app_section = ""
             app_version = ""
             app_license = ""
-            record = self.Package.get_record(app_name)
-            if record:
-                app_section = record.get("Section", "")
-                app_version = record.get("Version", "")
-                maintainer = record.get("Maintainer", "")
-                maintainer_web = record.get("Homepage", "")
-                app_license = record.get("License", "")
-                try:
-                    match = re.match(r"^(.*?)(?:\s*<([^>]+)>)?$", maintainer)
-                    if match:
-                        maintainer_name = (match.group(1) or "").strip()
-                        maintainer_mail = (match.group(2) or "").strip()
-                except Exception as e:
-                    self.Logger.exception("{}".format(e))
+            if self.localdeb_active:
+                # local .deb is not in the cache, read fields directly
+                app_section = details.get("section", "")
+                app_version = details.get("version", "")
+                maintainer_web = details.get("homepage", "")
+                app_license = details.get("license", "")
+                maintainer_name = details.get("maintainer_name", "")
+                maintainer_mail = details.get("maintainer_mail", "")
+            else:
+                record = self.Package.get_record(app_name)
+                if record:
+                    app_section = record.get("Section", "")
+                    app_version = record.get("Version", "")
+                    maintainer = record.get("Maintainer", "")
+                    maintainer_web = record.get("Homepage", "")
+                    app_license = record.get("License", "")
+                    try:
+                        match = re.match(r"^(.*?)(?:\s*<([^>]+)>)?$", maintainer)
+                        if match:
+                            maintainer_name = (match.group(1) or "").strip()
+                            maintainer_mail = (match.group(2) or "").strip()
+                    except Exception as e:
+                        self.Logger.exception(f"{e}")
 
             self.ui_ad_maintainer_name_label.set_markup(maintainer_name)
             self.ui_ad_maintainer_mail_label.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
@@ -2931,7 +3151,7 @@ class MainWindow(object):
 
             self.set_ad_description_text(details["description"])
 
-            if not app_license:
+            if not app_license and not self.localdeb_active:
                 app_license = self.Package.get_license_from_file(app_name)
             self.ui_ad_license_label.set_text("{}".format(app_license if app_license else "-"))
 
@@ -4898,6 +5118,16 @@ class MainWindow(object):
 
     def on_action_process_exit(self, pid, status):
 
+        # remove the staged .deb from the finished install
+        staged = self._localdeb_tmp
+        if staged:
+            self._localdeb_tmp = None
+            try:
+                if os.path.isfile(staged):
+                    os.remove(staged)
+            except Exception as e:
+                self.Logger.exception(f"on_action_process_exit cleanup: {e}")
+
         if not self.error:
             if status == 0:
                 self.ui_queue_flowbox.get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[0].get_children()[3].set_fraction(1)
@@ -4952,7 +5182,7 @@ class MainWindow(object):
 
         if len(self.queue) > 0:
             self.action_package(self.queue[0]["name"], self.queue[0]["command"], self.queue[0]["desktop_id"],
-                                self.queue[0]["upgrade"])
+                                self.queue[0]["upgrade"], self.queue[0].get("localdeb"))
             self.Logger.info("action_package app: {}, command: {}, desktop_id: {}, upgrade: {}".format(
                 self.queue[0]["name"], self.queue[0]["command"], self.queue[0]["desktop_id"],
                 self.queue[0]["upgrade"]))

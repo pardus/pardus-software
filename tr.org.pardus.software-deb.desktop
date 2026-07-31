@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Pardus Software Center Package Installer
+Name[pt]=Instalador de Pacotes do Centro de Software Pardus
+Name[tr]=Pardus Yazılım Merkezi Paket Kurucu
+GenericName=Package Installer
+GenericName[pt]=Instalador de Pacotes
+GenericName[tr]=Paket Kurucu
+Comment=Install local .deb packages
+Comment[pt]=Instalar pacotes .deb locais
+Comment[tr]=Yerel .deb paketlerini kurun
+Exec=pardus-software --install-deb %f
+Icon=pardus-software
+Terminal=false
+Type=Application
+Categories=GTK;System;PackageManager;
+StartupNotify=true
+MimeType=application/vnd.debian.binary-package;
+NoDisplay=true

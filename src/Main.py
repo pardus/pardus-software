@@ -44,6 +44,15 @@ class Application(Gtk.Application):
             None,
         )
 
+        self.add_main_option(
+            "install-deb",
+            ord("i"),
+            GLib.OptionFlags(0),
+            GLib.OptionArg(1),
+            "Install a local .deb package",
+            None,
+        )
+
         # self.add_main_option(
         #     "remove",
         #     ord("r"),
