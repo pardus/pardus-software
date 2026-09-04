@@ -3652,7 +3652,7 @@ class MainWindow(object):
             comment = "{}\n{}".format(comment["summary"], comment["description"])
 
         label_author = Gtk.Label.new()
-        label_author.set_markup("<b>{}</b>".format(author))
+        label_author.set_markup("<b>{}</b>".format(GLib.markup_escape_text(str(author), -1)))
         label_author.set_selectable(True)
 
         label_date = Gtk.Label.new()
@@ -3693,11 +3693,11 @@ class MainWindow(object):
         label_comment.set_xalign = 0.0
 
         label_distro = Gtk.Label.new()
-        label_distro.set_markup("{}".format(distro))
+        label_distro.set_text("{}".format(distro))
         label_distro.set_selectable(True)
 
         label_appversion = Gtk.Label.new()
-        label_appversion.set_markup("{}: {}".format(_("App"), app_version))
+        label_appversion.set_markup("{}: {}".format(_("App"), GLib.markup_escape_text(str(app_version), -1)))
         label_appversion.set_selectable(True)
 
         box_bottom = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 8)
@@ -5076,7 +5076,10 @@ class MainWindow(object):
         self.control_groups()
         if status != 0:
             self.ui_settings_password_info_label.set_markup(
-                "<small><span color='red' weight='light'>{}</span></small>".format(self.grouperrormessage))
+                "<small><span color='red' weight='light'>{}</span></small>".format(
+                    GLib.markup_escape_text(str(self.grouperrormessage), -1)
+                )
+            )
         else:
             self.ui_settings_password_info_label.set_text("")
 
