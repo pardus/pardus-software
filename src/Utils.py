@@ -65,7 +65,7 @@ class Utils(object):
             elif "lxqt" in desktop:
                 output = (subprocess.run(self.de_version_command["lxqt"], shell=False, stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)).stdout.decode().strip()
-                for line in output:
+                for line in output.split("\n"):
                     if "liblxqt" in line:
                         version = line.split()[1].strip()
 
