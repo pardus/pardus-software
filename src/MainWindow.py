@@ -4292,8 +4292,9 @@ class MainWindow(object):
         self.ui_back_button.set_sensitive(current != "discover")
 
     def set_cache_size(self):
-        cache_size = self.Utils.get_path_size(self.Server.cachedir)
-        self.Logger.info("{} : {} bytes".format(self.Server.cachedir, cache_size))
+        cache_dirs = self.Server.get_cache_dirs()
+        cache_size = sum(self.Utils.get_path_size(cache_dir) for cache_dir in cache_dirs)
+        self.Logger.info("{} : {} bytes".format(cache_dirs, cache_size))
         self.ui_settings_cache_size_label.set_markup("<b>({})</b>".format(self.Package.beauty_size(cache_size)))
 
     def control_groups(self):

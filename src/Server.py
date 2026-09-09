@@ -206,9 +206,20 @@ class Server(object):
             return False
         return True
 
+    def get_cache_dirs(self):
+        # Returns the existing cache directories: the one in use and the one
+        # left over from versions before the cache path was moved.
+        cache_dirs = []
+        for cache_dir in ("{}/pardus/pardus-software/".format(GLib.get_user_cache_dir()),
+                          "{}/pardus-software/".format(GLib.get_user_cache_dir())):
+            if Path(cache_dir).exists() and cache_dir not in cache_dirs:
+                cache_dirs.append(cache_dir)
+        return cache_dirs
+
     def delete_cache(self):
         try:
-            rmtree(self.cachedir)
+            for cache_dir in self.get_cache_dirs():
+                rmtree(cache_dir)
             self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
             Path(self.cachedir).mkdir(parents=True, exist_ok=True)
             self.Logger.info("{} removed".format(self.cachedir))
