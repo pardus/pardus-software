@@ -13,71 +13,68 @@ from Logger import Logger
 
 class Utils(object):
     def __init__(self):
-
-        self.de_version_command = {"xfce": ["xfce4-session", "--version"],
-                                   "gnome": ["gnome-shell", "--version"],
-                                   "cinnamon": ["cinnamon", "--version"],
-                                   "mate": ["mate-about", "--version"],
-                                   "kde": ["plasmashell", "--version"],
-                                   "lxqt": ["lxqt-about", "--version"],
-                                   "budgie": ["budgie-desktop", "--version"]}
-
+        self.de_version_command = {
+            "xfce": ["xfce4-session", "--version"],
+            "gnome": ["gnome-shell", "--version"],
+            "cinnamon": ["cinnamon", "--version"],
+            "mate": ["mate-about", "--version"],
+            "kde": ["plasmashell", "--version"],
+            "lxqt": ["lxqt-about", "--version"],
+            "budgie": ["budgie-desktop", "--version"]
+        }
         self.Logger = Logger(__name__)
 
     def get_desktop_env(self):
-        current_desktop = "{}".format(os.environ.get('XDG_CURRENT_DESKTOP'))
-        return current_desktop
+        return os.environ.get('XDG_CURRENT_DESKTOP', '')
 
     def get_desktop_env_version(self, desktop):
-        version = ""
-        desktop = "{}".format(desktop.lower())
+        desktop_key = next(
+            (item for item in str(desktop).lower().split(":")
+             if item in self.de_version_command),
+            None
+        )
+
+        if not desktop_key:
+            return ""
+
         try:
-            if "xfce" in desktop:
-                output = (subprocess.run(self.de_version_command["xfce"], shell=False, stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)).stdout.decode().strip()
-                for line in output.split("\n"):
+            result = subprocess.run(
+                self.de_version_command[desktop_key],
+                capture_output=True,
+                text=True,
+                check=False
+            )
+
+            output = result.stdout.strip()
+            if not output:
+                return ""
+
+            if desktop_key == "xfce":
+                for line in output.splitlines():
                     if line.startswith("xfce4-session "):
-                        version = line.split(" ")[-1].strip("()")
-                        break
+                        return line.split()[-1].strip("()")
 
-            elif "gnome" in desktop:
-                output = (subprocess.run(self.de_version_command["gnome"], shell=False, stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)).stdout.decode().strip()
-                for line in output.split("\n"):
+            elif desktop_key == "gnome":
+                for line in output.splitlines():
                     if "GNOME Shell" in line:
-                        version = line.split(" ")[-1]
+                        return line.split()[-1]
 
-            elif "cinnamon" in desktop:
-                output = (subprocess.run(self.de_version_command["cinnamon"], shell=False, stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = output.split(" ")[-1]
+            elif desktop_key in ("cinnamon", "mate", "kde"):
+                return output.split()[-1]
 
-            elif "mate" in desktop:
-                output = (subprocess.run(self.de_version_command["mate"], shell=False, stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = output.split(" ")[-1]
-
-            elif "kde" in desktop:
-                output = (subprocess.run(self.de_version_command["kde"], shell=False, stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = output.split(" ")[-1]
-
-            elif "lxqt" in desktop:
-                output = (subprocess.run(self.de_version_command["lxqt"], shell=False, stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)).stdout.decode().strip()
-                for line in output.split("\n"):
+            elif desktop_key == "lxqt":
+                for line in output.splitlines():
                     if "liblxqt" in line:
-                        version = line.split()[1].strip()
+                        return line.split()[1].strip()
 
-            elif "budgie" in desktop:
-                output = (subprocess.run(self.de_version_command["budgie"], shell=False, stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)).stdout.decode().strip()
-                version = output.split("\n")[0].strip().split(" ")[-1]
+            elif desktop_key == "budgie":
+                return output.splitlines()[0].strip().split()[-1]
+
         except Exception as e:
             self.Logger.warning("Error on get_desktop_env_version")
             self.Logger.exception("{}".format(e))
 
-        return version
+        return ""
 
     def get_session_type(self):
         session = "{}".format(os.environ.get('XDG_SESSION_TYPE')).capitalize()
