@@ -1317,6 +1317,51 @@ class MainWindow(object):
 
         self.Logger.info("set_applications done")
 
+    def get_category_display_name(self, name):
+        if not name:
+            return ""
+
+        category_map = {
+            "all": _("All"),
+            "tümü": _("All"),
+            "development": _("Development"),
+            "geliştirme": _("Development"),
+            "education": _("Education"),
+            "eğitim": _("Education"),
+            "games": _("Games"),
+            "game": _("Games"),
+            "oyunlar": _("Games"),
+            "graphics": _("Graphics"),
+            "grafik": _("Graphics"),
+            "internet": _("Internet"),
+            "multimedia": _("Multimedia"),
+            "multimedya": _("Multimedia"),
+            "audio & video": _("Audio & Video"),
+            "office": _("Office"),
+            "ofis": _("Office"),
+            "system": _("System"),
+            "sistem": _("System"),
+            "utilities": _("Utilities"),
+            "utility": _("Utilities"),
+            "araçlar": _("Utilities"),
+            "accessories": _("Accessories"),
+            "aksesuarlar": _("Accessories"),
+            "science": _("Science"),
+            "bilim": _("Science"),
+            "finance": _("Finance"),
+            "finans": _("Finance"),
+            "pardus apps": _("Pardus Apps"),
+            "pardus uygulamaları": _("Pardus Apps"),
+            "enterprise": _("Enterprise"),
+            "kurumsal": _("Enterprise"),
+        }
+
+        key = str(name).lower().strip()
+        if key in category_map:
+            return category_map[key]
+
+        return _(str(name).title())
+
     def set_categories(self):
         GLib.idle_add(lambda: (self.ui_leftcats_listbox and self.ui_leftcats_listbox.foreach(
             lambda child: self.ui_leftcats_listbox.remove(child)), False))
@@ -1327,9 +1372,10 @@ class MainWindow(object):
         if self.Server.connection:
             self.categories = []
             for cat in self.cats:
+                cat_name = cat.get(self.user_locale) or cat.get("en", "")
                 self.categories.append({
-                    "name": cat[self.user_locale],
-                    "icon": cat.get("icon") or cat["en"],
+                    "name": cat_name,
+                    "icon": cat.get("icon") or cat.get("en", ""),
                     "number": cat.get("number")
                 })
 
@@ -1338,12 +1384,12 @@ class MainWindow(object):
                 key=lambda x: (
                     0 if x.get("number") is not None else 1,
                     x.get("number", float('inf')),
-                    x["name"].lower()
+                    self.get_category_display_name(x["name"]).lower()
                 )
             )
 
             if self.server_cat_all:
-                name_from_server = self.server_cat_all.get(self.user_locale)
+                name_from_server = self.server_cat_all.get(self.user_locale) or self.server_cat_all.get("en")
                 self.cat_all["name"] = name_from_server if name_from_server else self.cat_all["name"]
 
             self.categories.insert(0, self.cat_all)
@@ -1371,7 +1417,7 @@ class MainWindow(object):
                 cat_icon = Gtk.Image.new_from_icon_name("ps-cat-{}-symbolic".format(cat["icon"]),  Gtk.IconSize.BUTTON)
 
                 label = Gtk.Label.new()
-                label.set_markup("<b>{}</b>".format(cat["name"].title()))
+                label.set_markup("<b>{}</b>".format(GLib.markup_escape_text(self.get_category_display_name(cat["name"]))))
                 label.set_ellipsize(Pango.EllipsizeMode.END)
 
                 box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
@@ -1434,7 +1480,8 @@ class MainWindow(object):
             # set scroll position to top (reset)
             self.ui_pardusapps_scrolledwindow.set_vadjustment(Gtk.Adjustment())
 
-            self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(self.current_category.title()))
+            self.ui_currentcat_label.set_markup("<span size='x-large'><b>{}</b></span>".format(
+                GLib.markup_escape_text(self.get_category_display_name(self.current_category))))
             self.ui_currentcat_image.set_from_icon_name(
                 next(("ps-cat-{}-symbolic".format(cat["icon"]) for cat in self.categories if cat["name"] == self.current_category),
                      "image-missing-symbolic"), Gtk.IconSize.DIALOG)
@@ -3882,7 +3929,16 @@ class MainWindow(object):
         app = row.get_children()[0].get_children()[0].name
         appname, details = next(iter(app.items()))
 
-        categories = {cat[self.user_locale] for cat in details.get("category", [])}
+        categories = set()
+        for cat in details.get("category", []):
+            if isinstance(cat, dict):
+                val = cat.get(self.user_locale) or cat.get("en")
+                if val:
+                    categories.add(val)
+                if "en" in cat:
+                    categories.add(cat["en"])
+                if "tr" in cat:
+                    categories.add(cat["tr"])
 
         search_entry_text = self.ui_top_searchentry.get_text().lower()
 
@@ -3895,7 +3951,7 @@ class MainWindow(object):
             if any(search_entry_text in field.lower() for field in [appname, pn_en, pn_tr, desc_en, desc_tr]):
                 return True
         else:
-            if self.current_category in self.cat_all.get("name", []) or self.current_category in categories:
+            if self.current_category in (self.cat_all.get("name"), "all", "tümü") or self.current_category in categories:
                 return True
 
         return False

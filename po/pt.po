@@ -879,3 +879,67 @@ msgstr "Erro."
 #: src/MainWindow.py:5203
 msgid "Process completed."
 msgstr "Processo concluído."
+
+#: src/MainWindow.py:1324
+msgid "All"
+msgstr "Tudo"
+
+#: src/MainWindow.py:1324
+msgid "Development"
+msgstr "Desenvolvimento"
+
+#: src/MainWindow.py:1324
+msgid "Education"
+msgstr "Educação"
+
+#: src/MainWindow.py:1324
+msgid "Games"
+msgstr "Jogos"
+
+#: src/MainWindow.py:1324
+msgid "Graphics"
+msgstr "Gráficos"
+
+#: src/MainWindow.py:1324
+msgid "Internet"
+msgstr "Internet"
+
+#: src/MainWindow.py:1324
+msgid "Multimedia"
+msgstr "Multimédia"
+
+#: src/MainWindow.py:1324
+msgid "Audio & Video"
+msgstr "Áudio e Vídeo"
+
+#: src/MainWindow.py:1324
+msgid "Office"
+msgstr "Produtividade"
+
+#: src/MainWindow.py:1324
+msgid "System"
+msgstr "Sistema"
+
+#: src/MainWindow.py:1324
+msgid "Utilities"
+msgstr "Utilitários"
+
+#: src/MainWindow.py:1324
+msgid "Accessories"
+msgstr "Acessórios"
+
+#: src/MainWindow.py:1324
+msgid "Science"
+msgstr "Ciência"
+
+#: src/MainWindow.py:1324
+msgid "Finance"
+msgstr "Finanças"
+
+#: src/MainWindow.py:1324
+msgid "Pardus Apps"
+msgstr "Aplicações Pardus"
+
+#: src/MainWindow.py:1324
+msgid "Enterprise"
+msgstr "Empresarial"

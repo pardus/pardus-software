@@ -1614,3 +1614,63 @@ msgstr "<span size='large'><b>Son Eklenen Uygulamalar</b></span>"
 
 #~ msgid "Preferences"
 #~ msgstr "Ayarlar"
+
+#: src/MainWindow.py:1324
+msgid "Development"
+msgstr "Geliştirme"
+
+#: src/MainWindow.py:1324
+msgid "Education"
+msgstr "Eğitim"
+
+#: src/MainWindow.py:1324
+msgid "Games"
+msgstr "Oyunlar"
+
+#: src/MainWindow.py:1324
+msgid "Graphics"
+msgstr "Grafik"
+
+#: src/MainWindow.py:1324
+msgid "Internet"
+msgstr "İnternet"
+
+#: src/MainWindow.py:1324
+msgid "Multimedia"
+msgstr "Multimedya"
+
+#: src/MainWindow.py:1324
+msgid "Audio & Video"
+msgstr "Ses & Video"
+
+#: src/MainWindow.py:1324
+msgid "Office"
+msgstr "Ofis"
+
+#: src/MainWindow.py:1324
+msgid "System"
+msgstr "Sistem"
+
+#: src/MainWindow.py:1324
+msgid "Utilities"
+msgstr "Araçlar"
+
+#: src/MainWindow.py:1324
+msgid "Accessories"
+msgstr "Donatılar"
+
+#: src/MainWindow.py:1324
+msgid "Science"
+msgstr "Bilim"
+
+#: src/MainWindow.py:1324
+msgid "Finance"
+msgstr "Finans"
+
+#: src/MainWindow.py:1324
+msgid "Pardus Apps"
+msgstr "Pardus Uygulamaları"
+
+#: src/MainWindow.py:1324
+msgid "Enterprise"
+msgstr "Kurumsal"
