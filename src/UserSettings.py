@@ -76,9 +76,73 @@ class UserSettings(object):
             'ForceAutoAptUpdateTime': '0'
         }
 
-        if not Path.is_file(Path(self.config_dir + self.configfile)) or force:
+        target_file = Path(self.config_dir) / self.configfile
+        legacy_config_file = Path(GLib.get_user_config_dir()) / "pardus-software" / self.configfile
+
+        # Check whether target_file already exists and has a valid [MAIN] section
+        target_has_main = False
+        if target_file.is_file():
+            try:
+                target_check = configparser.ConfigParser()
+                target_check.read(str(target_file))
+                if 'MAIN' in target_check:
+                    target_has_main = True
+            except Exception:
+                target_has_main = False
+
+        # Migrate settings if target does not have a valid [MAIN] section
+        if not target_has_main:
+            legacy_sources = [f for f in (legacy_config_file, target_file) if f.is_file()]
+            for legacy_source in legacy_sources:
+                try:
+                    legacy_parser = configparser.ConfigParser()
+                    legacy_parser.read(str(legacy_source))
+                    legacy_data = {}
+                    if legacy_parser.defaults():
+                        legacy_data.update(legacy_parser.defaults())
+                    if 'MAIN' in legacy_parser:
+                        legacy_data.update(legacy_parser['MAIN'])
+
+                    def _parse_bool(val, default):
+                        if val is None:
+                            return default
+                        v = str(val).strip().lower()
+                        if v in ('true', 'yes', '1', 'on'):
+                            return 'yes'
+                        elif v in ('false', 'no', '0', 'off'):
+                            return 'no'
+                        return default
+
+                    def _parse_int(val, default):
+                        if val is None:
+                            return default
+                        try:
+                            return str(int(val))
+                        except (ValueError, TypeError):
+                            return default
+
+                    if legacy_data:
+                        self.config['MAIN']['Animations'] = _parse_bool(
+                            legacy_data.get('animations'), self.config['MAIN']['Animations'])
+                        self.config['MAIN']['OnlyAvailableApps'] = _parse_bool(
+                            legacy_data.get('onlyavailableapps') or legacy_data.get('showavailableapps'), self.config['MAIN']['OnlyAvailableApps'])
+                        self.config['MAIN']['GnomeComments'] = _parse_bool(
+                            legacy_data.get('gnomecomments') or legacy_data.get('showgnomecomments'), self.config['MAIN']['GnomeComments'])
+                        self.config['MAIN']['DarkTheme'] = _parse_bool(
+                            legacy_data.get('darktheme') or legacy_data.get('usedarktheme'), self.config['MAIN']['DarkTheme'])
+                        self.config['MAIN']['AutoAptUpdate'] = _parse_bool(
+                            legacy_data.get('autoaptupdate'), self.config['MAIN']['AutoAptUpdate'])
+                        self.config['MAIN']['LastAutoAptUpdate'] = _parse_int(
+                            legacy_data.get('lastautoaptupdate'), self.config['MAIN']['LastAutoAptUpdate'])
+                        self.config['MAIN']['ForceAutoAptUpdateTime'] = _parse_int(
+                            legacy_data.get('forceautoaptupdatetime'), self.config['MAIN']['ForceAutoAptUpdateTime'])
+                        self.Logger.info("Legacy settings migrated successfully from {}".format(legacy_source))
+                except Exception as e:
+                    self.Logger.warning("Failed to migrate legacy settings: {}".format(e))
+
+        if not target_has_main or force:
             if self.create_dir(self.config_dir):
-                with open(self.config_dir + self.configfile, "w") as cf:
+                with open(str(target_file), "w") as cf:
                     self.config.write(cf)
 
     def read_config(self):

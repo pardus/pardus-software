@@ -4293,6 +4293,9 @@ class MainWindow(object):
 
     def set_cache_size(self):
         cache_size = self.Utils.get_path_size(self.Server.cachedir)
+        legacy_cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
+        if Path(legacy_cachedir).exists():
+            cache_size += self.Utils.get_path_size(legacy_cachedir)
         self.Logger.info("{} : {} bytes".format(self.Server.cachedir, cache_size))
         self.ui_settings_cache_size_label.set_markup("<b>({})</b>".format(self.Package.beauty_size(cache_size)))
 
