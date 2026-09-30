@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:55+0300\n"
-"PO-Revision-Date: 2026-02-24 15:00+0300\n"
+"PO-Revision-Date: 2026-09-30 21:07+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <dev@pardus.org.tr>\n"
 "Language: tr\n"
@@ -151,7 +151,7 @@ msgstr "Versiyon"
 
 #: ui/MainWindow.glade:2433 src/MainWindow.py:2840 src/MainWindow.py:2978
 msgid "Download Size"
-msgstr "İndirme boyutu"
+msgstr "İndirme Boyutu"
 
 #: ui/MainWindow.glade:2480 src/MainWindow.py:2841 src/MainWindow.py:2979
 msgid "Required Disk Space"
@@ -276,7 +276,7 @@ msgstr "Temizle"
 
 #: ui/MainWindow.glade:4993
 msgid "Passwordless Application Usage"
-msgstr "Şifresiz Uygulama Kullanımı"
+msgstr "Parolasız Uygulama Kullanımı"
 
 #: ui/MainWindow.glade:5103
 msgid "Could not connect to the server"
