@@ -46,16 +46,8 @@ class Server(object):
         self.server_cats_archive = "cats.tar.gz"
         self.server_home_archive = "home.tar.gz"
 
-
-        # The following cache and config assignments are for backward compatibility
-        self.cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
-        self.configdir = "{}/pardus-software/".format(GLib.get_user_config_dir())
-
-        # The following cache and config assignments are for the new version
-        if not Path(self.cachedir).exists():
-            self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
-        if not Path(self.configdir).exists():
-            self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
+        self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
+        self.configdir = "{}/pardus/pardus-software/".format(GLib.get_user_config_dir())
 
         self.icons_dir = self.cachedir + "icons/"
         self.app_icons_dir = self.icons_dir + "app-icons"
@@ -209,7 +201,6 @@ class Server(object):
     def delete_cache(self):
         try:
             rmtree(self.cachedir)
-            self.cachedir = "{}/pardus/pardus-software/".format(GLib.get_user_cache_dir())
             Path(self.cachedir).mkdir(parents=True, exist_ok=True)
             self.Logger.info("{} removed".format(self.cachedir))
             return True, ""
