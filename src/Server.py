@@ -200,7 +200,11 @@ class Server(object):
 
     def delete_cache(self):
         try:
-            rmtree(self.cachedir)
+            if Path(self.cachedir).exists():
+                rmtree(self.cachedir)
+            legacy_cachedir = "{}/pardus-software/".format(GLib.get_user_cache_dir())
+            if Path(legacy_cachedir).exists():
+                rmtree(legacy_cachedir)
             Path(self.cachedir).mkdir(parents=True, exist_ok=True)
             self.Logger.info("{} removed".format(self.cachedir))
             return True, ""
