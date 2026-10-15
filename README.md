@@ -30,6 +30,21 @@ Run application
 python3 ~/pardus-software/src/Main.py
 ```
 
+### **Run GTK regression checks**
+
+With the application dependencies installed, run from a desktop session:
+
+```bash
+python3 tests/offline_navigation.py
+```
+
+For a headless session, install `xvfb` and `xauth` and run
+`xvfb-run -a python3 tests/offline_navigation.py`.
+These checks load the real Glade widgets and test offline navigation and search
+with supplied connection/permission/APT states. They do not start network or
+package workers, modify packages, or replace a full application test.
+They are run explicitly, outside the Debian package build.
+
 ### **Build deb package**
 
 ```bash
