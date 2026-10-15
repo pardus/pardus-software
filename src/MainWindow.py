@@ -366,6 +366,7 @@ class MainWindow(object):
 
 
         self.noserverlabel = self.GtkBuilder.get_object("noserverlabel")
+        self.offline_installed_button = self.GtkBuilder.get_object("offline_installed_button")
 
         self.current_category = "discover"
         self.cat_all = {
@@ -753,6 +754,7 @@ class MainWindow(object):
         self.Logger.info("in set_initial_home")
 
         GLib.idle_add(self.mainstack.set_visible_child_name, "home")
+        GLib.idle_add(self.ui_leftcats_box.set_visible, self.Server.connection)
         if self.Server.connection:
             if not self.isbroken:
                 GLib.idle_add(self.homestack.set_visible_child_name, "pardushome")
@@ -761,6 +763,7 @@ class MainWindow(object):
                 GLib.idle_add(self.homestack.set_visible_child_name, "fixapt")
         else:
             GLib.idle_add(self.homestack.set_visible_child_name, "noserver")
+            GLib.idle_add(self.offline_installed_button.set_sensitive, bool(self.myapps_perm) and not self.isbroken)
             GLib.idle_add(self.noserverlabel.set_markup, "<b>{}\n\n{}\n\n{}: {}</b>".format(
                 _("Could not connect to server."),
                 self.Server.error_message,
@@ -1229,6 +1232,8 @@ class MainWindow(object):
 
     def set_upgradables(self):
         if not self.Server.connection:
+            GLib.idle_add(self.ui_upgradableapps_box.set_visible, False)
+            GLib.idle_add(self.ui_upgradableapps_flowbox.set_visible, False)
             return
         self.Logger.info("in set_upgradables")
 
@@ -4053,6 +4058,8 @@ class MainWindow(object):
             self.ui_pardusapps_flowbox.invalidate_filter()
 
     def on_ui_top_searchentry_search_changed(self, entry_search):
+        if not entry_search.get_sensitive():
+            return
         self.searching = True
 
         if self.ui_right_stack.get_visible_child_name() == "installed":
@@ -4266,6 +4273,10 @@ class MainWindow(object):
         self.ui_right_stack_navigate_to(previous, record=False)
 
     def ui_right_stack_navigate_to(self, page_name, record=True):
+        if not self.Server.connection:
+            self.homestack.set_visible_child_name("noserver" if page_name == "discover" else "pardushome")
+            self.ui_top_searchentry.set_sensitive(page_name == "installed")
+
         current = self.ui_right_stack.get_visible_child_name()
 
         # Do nothing if trying to navigate to the current page.
@@ -4672,6 +4683,11 @@ class MainWindow(object):
 
     def on_bottomerrorbutton_clicked(self, button):
         self.bottomrevealer.set_reveal_child(False)
+
+    def on_offline_installed_button_clicked(self, button):
+        self.searching = False
+        self.ui_right_stack_navigate_to("installed")
+        self.ui_installedapps_flowbox.invalidate_filter()
 
     def on_retrybutton_clicked(self, button):
         self.connection_error_after = False
