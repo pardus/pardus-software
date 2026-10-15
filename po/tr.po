@@ -1249,9 +1249,6 @@ msgstr "<span size='large'><b>Son Eklenen Uygulamalar</b></span>"
 #~ msgid "Getting icons from server"
 #~ msgstr "Sunucudan ikonlar alınıyor"
 
-#~ msgid "All"
-#~ msgstr "Tümü"
-
 # 'View on' apps.pardus.org.tr.
 #~ msgid "View on {}."
 #~ msgstr "{} ' de görüntüle."
@@ -1614,6 +1611,10 @@ msgstr "<span size='large'><b>Son Eklenen Uygulamalar</b></span>"
 
 #~ msgid "Preferences"
 #~ msgstr "Ayarlar"
+
+#: src/MainWindow.py:1326
+msgid "All"
+msgstr "Tümü"
 
 #: src/MainWindow.py:1324
 msgid "Development"
