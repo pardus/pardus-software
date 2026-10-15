@@ -836,3 +836,67 @@ msgstr ""
 #: src/MainWindow.py:5203
 msgid "Process completed."
 msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "All"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Development"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Education"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Games"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Graphics"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Internet"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Multimedia"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Audio & Video"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Office"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "System"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Utilities"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Accessories"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Science"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Finance"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Pardus Apps"
+msgstr ""
+
+#: src/MainWindow.py:1324
+msgid "Enterprise"
+msgstr ""
