@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pardus-software\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-24 14:55+0300\n"
+"POT-Creation-Date: 2026-10-24 19:14+0300\n"
 "PO-Revision-Date: 2026-03-30 22:42+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
@@ -58,7 +58,7 @@ msgstr "Adicionado recentemente"
 msgid "+ Suggest an App"
 msgstr "+ Sugerir uma aplicação"
 
-#: ui/MainWindow.glade:1143 src/MainWindow.py:4066
+#: ui/MainWindow.glade:1143 src/MainWindow.py:4072
 msgid "Results"
 msgstr "Resultados"
 
@@ -102,7 +102,7 @@ msgstr "Ordenar por utilização do disco"
 msgid "Analyzing Disk Usage"
 msgstr "A analisar a utilização do disco"
 
-#: ui/MainWindow.glade:1850 src/MainWindow.py:2837
+#: ui/MainWindow.glade:1850 src/MainWindow.py:2840
 msgid "This app is not available in the repos of your version."
 msgstr "Esta aplicação não está disponível nos repositórios da sua versão."
 
@@ -144,15 +144,15 @@ msgstr "<big><b>Acerca</b></big>"
 msgid "read more"
 msgstr "saiba mais"
 
-#: ui/MainWindow.glade:2386 ui/MainWindow.glade:6052 src/MainWindow.py:2249
+#: ui/MainWindow.glade:2386 ui/MainWindow.glade:6052 src/MainWindow.py:2252
 msgid "Version"
 msgstr "Versão"
 
-#: ui/MainWindow.glade:2433 src/MainWindow.py:2840 src/MainWindow.py:2978
+#: ui/MainWindow.glade:2433 src/MainWindow.py:2843 src/MainWindow.py:2981
 msgid "Download Size"
 msgstr "Tamanho da transferência"
 
-#: ui/MainWindow.glade:2480 src/MainWindow.py:2841 src/MainWindow.py:2979
+#: ui/MainWindow.glade:2480 src/MainWindow.py:2844 src/MainWindow.py:2982
 msgid "Required Disk Space"
 msgstr "Espaço necessário em disco"
 
@@ -188,8 +188,8 @@ msgstr "E-mail"
 msgid "<big><b>Dependencies</b></big>"
 msgstr "<big><b>Dependências</b></big>"
 
-#: ui/MainWindow.glade:2953 src/MainWindow.py:1723 src/MainWindow.py:1879
-#: src/MainWindow.py:2113 src/MainWindow.py:2399 src/MainWindow.py:2832
+#: ui/MainWindow.glade:2953 src/MainWindow.py:1726 src/MainWindow.py:1882
+#: src/MainWindow.py:2116 src/MainWindow.py:2402 src/MainWindow.py:2835
 msgid "Install"
 msgstr "Instalar"
 
@@ -217,13 +217,28 @@ msgstr "Escrever comentário"
 msgid "Load More Comments"
 msgstr "Carregar mais comentários"
 
+#. Home page section heading. Keep the <span> and <b> markup, translate only the text inside.
+#: ui/MainWindow.glade:4019
+msgid "<span size='large'><b>Trending Apps</b></span>"
+msgstr "<span size='large'><b>Aplicações em destaque</b></span>"
+
+#. Home page section heading. Keep the <span> and <b> markup, translate only the text inside.
+#: ui/MainWindow.glade:4106
+#, fuzzy
+msgid "<span size='large'><b>Most Downloaded Apps</b></span>"
+msgstr "<span size='large'><b>Aplicações mais transferidas</b></span>"
+
+#. Home page section heading. Keep the <span> and <b> markup, translate only the text inside.
+#: ui/MainWindow.glade:4193
+#, fuzzy
+msgid "<span size='large'><b>Recent Apps</b></span>"
+msgstr "<span size='large'><b>Aplicações adicionadas recentemente</b></span>"
+
 #: ui/MainWindow.glade:4306
-#| msgid "<span size='x-large'><b>Installed Apps</b></span>"
 msgid "<span size='x-large'><b>Downloading Apps</b></span>"
 msgstr "<span size='x-large'><b>Transferir aplicações</b></span>"
 
 #: ui/MainWindow.glade:4341
-#| msgid "<span size='large'><b>Other</b></span>"
 msgid "<span size='large'><b>Queue</b></span>"
 msgstr "<span size='large'><b>Fila</b></span>"
 
@@ -231,7 +246,7 @@ msgstr "<span size='large'><b>Fila</b></span>"
 msgid "All processes in the queue have been completed."
 msgstr "Todos os processos em fila de espera foram concluídos."
 
-#: ui/MainWindow.glade:4438 src/MainWindow.py:1354
+#: ui/MainWindow.glade:4438 src/MainWindow.py:1355
 msgid "Discover"
 msgstr "Descubra"
 
@@ -318,7 +333,7 @@ msgstr ""
 "\n"
 "Usar com precaução. Tem a certeza que quer continuar?"
 
-#: ui/MainWindow.glade:5237 src/MainWindow.py:2229
+#: ui/MainWindow.glade:5237 src/MainWindow.py:2232
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -467,7 +482,7 @@ msgstr "Espaço necessário em disco"
 msgid "Close"
 msgstr "Fechar"
 
-#: ui/MainWindow.glade:7613 src/MainWindow.py:1985 src/MainWindow.py:2126
+#: ui/MainWindow.glade:7613 src/MainWindow.py:1988 src/MainWindow.py:2129
 msgid "Uninstall"
 msgstr "Desinstalar"
 
@@ -537,7 +552,8 @@ msgstr "Enviar"
 msgid "Your suggest has been submitted for review."
 msgstr "A sua sugestão foi enviada para análise."
 
-#: src/MainWindow.py:336 src/MainWindow.py:381
+#: src/MainWindow.py:336 src/MainWindow.py:381 src/MainWindow.py:4792
+#: src/MainWindow.py:4807
 msgid "Pardus Software Center"
 msgstr "Centro de Software Pardus"
 
@@ -577,170 +593,179 @@ msgstr "Obter metadados da aplicação a partir do servidor"
 msgid "Preparing the application interface"
 msgstr "A preparar a interface da aplicação"
 
-#: src/MainWindow.py:1248
+#: src/MainWindow.py:1249
 msgid "Updates"
 msgstr "Atualizações"
 
-#: src/MainWindow.py:1264
+#: src/MainWindow.py:1265
 msgid "Some applications are outdated."
 msgstr "Algumas aplicações estão desatualizadas."
 
-#: src/MainWindow.py:1394
+#: src/MainWindow.py:1395
 msgid "Installed Apps"
 msgstr "Aplicações instaladas"
 
-#: src/MainWindow.py:1707 src/MainWindow.py:1866 src/MainWindow.py:2100
-#: src/MainWindow.py:2386 src/MainWindow.py:2819
+#: src/MainWindow.py:1710 src/MainWindow.py:1869 src/MainWindow.py:2103
+#: src/MainWindow.py:2389 src/MainWindow.py:2822
 msgid "Update"
 msgstr "Atualizar"
 
-#: src/MainWindow.py:1712 src/MainWindow.py:1719 src/MainWindow.py:1871
-#: src/MainWindow.py:1875 src/MainWindow.py:1976 src/MainWindow.py:2105
-#: src/MainWindow.py:2109 src/MainWindow.py:2391 src/MainWindow.py:2395
-#: src/MainWindow.py:2824 src/MainWindow.py:2828
+#: src/MainWindow.py:1715 src/MainWindow.py:1722 src/MainWindow.py:1874
+#: src/MainWindow.py:1878 src/MainWindow.py:1979 src/MainWindow.py:2108
+#: src/MainWindow.py:2112 src/MainWindow.py:2394 src/MainWindow.py:2398
+#: src/MainWindow.py:2827 src/MainWindow.py:2831
 msgid "Open"
 msgstr "Abrir"
 
-#: src/MainWindow.py:2017
+#: src/MainWindow.py:2020
 msgid "Disk Usage"
 msgstr "Utilização do disco"
 
-#: src/MainWindow.py:2270
+#: src/MainWindow.py:2273
 msgid "Will be upgraded"
 msgstr "Será atualizado"
 
-#: src/MainWindow.py:2272
+#: src/MainWindow.py:2275
 msgid "Will be removed"
 msgstr "Será removido"
 
-#: src/MainWindow.py:2274
+#: src/MainWindow.py:2277
 msgid "Will be installed"
 msgstr "Será instalado"
 
-#: src/MainWindow.py:2836
+#: src/MainWindow.py:2839
 msgid "Not Found"
 msgstr "Não encontrado"
 
-#: src/MainWindow.py:2842 src/MainWindow.py:2843 src/MainWindow.py:2844
-#: src/MainWindow.py:2871
+#: src/MainWindow.py:2845 src/MainWindow.py:2846 src/MainWindow.py:2847
+#: src/MainWindow.py:2874
 msgid "None"
 msgstr "Nenhuma"
 
-#: src/MainWindow.py:2853 src/MainWindow.py:4854 src/MainWindow.py:4937
+#: src/MainWindow.py:2856 src/MainWindow.py:4876 src/MainWindow.py:4963
 msgid "Upgrading"
 msgstr "A atualizar"
 
-#: src/MainWindow.py:2855 src/MainWindow.py:4856 src/MainWindow.py:4939
+#: src/MainWindow.py:2858 src/MainWindow.py:4878 src/MainWindow.py:4965
 msgid "Removing"
 msgstr "A remover"
 
-#: src/MainWindow.py:2857 src/MainWindow.py:4858 src/MainWindow.py:4941
+#: src/MainWindow.py:2860 src/MainWindow.py:4880 src/MainWindow.py:4967
 msgid "Installing"
 msgstr "A instalar"
 
-#: src/MainWindow.py:2867
+#: src/MainWindow.py:2870
 msgid "Non-Free"
 msgstr "Não-Livre"
 
-#: src/MainWindow.py:2870
+#: src/MainWindow.py:2873
 msgid "Open Source"
 msgstr "Código aberto"
 
-#: src/MainWindow.py:2969
+#: src/MainWindow.py:2972
 msgid "Package Size"
 msgstr "Tamanho do pacote"
 
-#: src/MainWindow.py:2970
+#: src/MainWindow.py:2973
 msgid "Installed Size"
 msgstr "Tamanho instalado"
 
-#: src/MainWindow.py:2994
+#: src/MainWindow.py:2997
 msgid "Important Package"
 msgstr "Pacote importante"
 
-#: src/MainWindow.py:2995
+#: src/MainWindow.py:2998
 msgid "Removing this package could impact system stability."
 msgstr "A remoção deste pacote pode afetar a estabilidade do sistema."
 
-#: src/MainWindow.py:3061 src/MainWindow.py:3065 src/MainWindow.py:3067
-#: src/MainWindow.py:3088 src/MainWindow.py:3091
+#: src/MainWindow.py:3064 src/MainWindow.py:3068 src/MainWindow.py:3070
+#: src/MainWindow.py:3091 src/MainWindow.py:3094
 msgid "Unknown"
 msgstr "Desconhecido"
 
-#: src/MainWindow.py:3420
+#: src/MainWindow.py:3423
+#, python-brace-format
 msgid "{} seconds ago"
 msgstr "{} segundos atrás"
 
-#: src/MainWindow.py:3422
+#: src/MainWindow.py:3425
+#, python-brace-format
 msgid "{} minutes ago"
 msgstr "{} minutos atrás"
 
-#: src/MainWindow.py:3424
+#: src/MainWindow.py:3427
+#, python-brace-format
 msgid "{} hours ago"
 msgstr "{} horas atrás"
 
-#: src/MainWindow.py:3426
+#: src/MainWindow.py:3429
+#, python-brace-format
 msgid "{} days ago"
 msgstr "{} dias atrás"
 
-#: src/MainWindow.py:3428
+#: src/MainWindow.py:3431
+#, python-brace-format
 msgid "{} weeks ago"
 msgstr "{} semanas atrás"
 
-#: src/MainWindow.py:3430
+#: src/MainWindow.py:3433
+#, python-brace-format
 msgid "{} months ago"
 msgstr "{} meses atrás"
 
-#: src/MainWindow.py:3432
+#: src/MainWindow.py:3435
+#, python-brace-format
 msgid "{} years ago"
 msgstr "{} anos atrás"
 
-#: src/MainWindow.py:3466
+#: src/MainWindow.py:3469
+#, python-brace-format
 msgid "{} Ratings"
 msgstr "{} Avaliações"
 
-#: src/MainWindow.py:3477 src/MainWindow.py:3489
+#: src/MainWindow.py:3480 src/MainWindow.py:3492
 msgid "Please try again soon"
 msgstr "Tente novamente em breve"
 
-#: src/MainWindow.py:3479 src/MainWindow.py:3491 src/MainWindow.py:3494
-#: src/MainWindow.py:3496 src/MainWindow.py:4402
+#: src/MainWindow.py:3482 src/MainWindow.py:3494 src/MainWindow.py:3497
+#: src/MainWindow.py:3499 src/MainWindow.py:4424
 msgid "Error"
 msgstr "Erro"
 
-#: src/MainWindow.py:3546
+#: src/MainWindow.py:3549
 msgid "Your comment is under review."
 msgstr "O seu comentário está a ser analisado."
 
-#: src/MainWindow.py:3549
+#: src/MainWindow.py:3552
 msgid "You can also add a comment if you want."
 msgstr "Pode também adicionar um comentário se quiser."
 
-#: src/MainWindow.py:3553
+#: src/MainWindow.py:3556
 msgid "You wrote a review about the application before, thank you."
 msgstr "Escreveu uma avaliação sobre a aplicação anteriormente, obrigado."
 
-#: src/MainWindow.py:3631 src/MainWindow.py:3634
+#: src/MainWindow.py:3634 src/MainWindow.py:3637
 msgid "unknown"
 msgstr "desconhecido"
 
-#: src/MainWindow.py:3697
+#: src/MainWindow.py:3700
 msgid "App"
 msgstr "Aplicação"
 
-#: src/MainWindow.py:4066
+#: src/MainWindow.py:4072
+#, python-brace-format
 msgid "Results for {}"
 msgstr "Resultados para {}"
 
-#: src/MainWindow.py:4287
+#: src/MainWindow.py:4309
 msgid "Deactivate"
 msgstr "Desativar"
 
-#: src/MainWindow.py:4290
+#: src/MainWindow.py:4312
 msgid "Activate"
 msgstr "Ativar"
 
-#: src/MainWindow.py:4300 src/MainWindow.py:4310
+#: src/MainWindow.py:4322 src/MainWindow.py:4332
 msgid ""
 "Allows the package manager cache to be updated again on the next application "
 "start if"
@@ -748,108 +773,108 @@ msgstr ""
 "Permite que o cache do gestor de pacotes seja atualizado novamente no início "
 "da próxima aplicação, se"
 
-#: src/MainWindow.py:4302 src/MainWindow.py:4312
+#: src/MainWindow.py:4324 src/MainWindow.py:4334
 msgid "have passed since the last successful update."
 msgstr "passaram desde a última atualização bem sucedida."
 
-#: src/MainWindow.py:4303 src/MainWindow.py:4313
+#: src/MainWindow.py:4325 src/MainWindow.py:4335
 msgid "Last successful update time is"
 msgstr "A última hora de atualização bem sucedida é"
 
-#: src/MainWindow.py:4305
+#: src/MainWindow.py:4327
 msgid "The value in your configuration file is used as the wait time."
 msgstr ""
 "O valor no seu ficheiro de configuração é utilizado como o tempo de espera."
 
-#: src/MainWindow.py:4334
+#: src/MainWindow.py:4356
 msgid "weeks"
 msgstr "semanas"
 
-#: src/MainWindow.py:4335
+#: src/MainWindow.py:4357
 msgid "days"
 msgstr "dias"
 
-#: src/MainWindow.py:4336
+#: src/MainWindow.py:4358
 msgid "hours"
 msgstr "horas"
 
-#: src/MainWindow.py:4337
+#: src/MainWindow.py:4359
 msgid "minutes"
 msgstr "minutos"
 
-#: src/MainWindow.py:4338
+#: src/MainWindow.py:4360
 msgid "seconds"
 msgstr "segundos"
 
-#: src/MainWindow.py:4398
+#: src/MainWindow.py:4420
 msgid "Cleared"
 msgstr "Limpo"
 
-#: src/MainWindow.py:4399
+#: src/MainWindow.py:4421
 msgid "Cache files cleared, please close and reopen the application"
 msgstr "Ficheiros de cache limpos. Termine e abra novamente a aplicação"
 
-#: src/MainWindow.py:4542 src/MainWindow.py:4597
+#: src/MainWindow.py:4564 src/MainWindow.py:4619
 msgid "All fields must be filled."
 msgstr "Todos os campos devem ser preenchidos."
 
-#: src/MainWindow.py:4602
+#: src/MainWindow.py:4624
 msgid "Please enter a valid e-mail address."
 msgstr "Introduza um endereço de e-mail válido."
 
-#: src/MainWindow.py:4607
+#: src/MainWindow.py:4629
 msgid "Please enter a valid website."
 msgstr "Introduza um website válido."
 
-#: src/MainWindow.py:4668
+#: src/MainWindow.py:4690
 msgid "The process is in progress. Please wait..."
 msgstr "O processo está em curso. Aguarde..."
 
-#: src/MainWindow.py:4773
+#: src/MainWindow.py:4795
 msgid "Updated"
 msgstr "Atualizado"
 
-#: src/MainWindow.py:4773
+#: src/MainWindow.py:4795
 msgid "Removed"
 msgstr "Removido"
 
-#: src/MainWindow.py:4776
+#: src/MainWindow.py:4798
 msgid "Installed"
 msgstr "Instalado"
 
-#: src/MainWindow.py:4847
+#: src/MainWindow.py:4869
 msgid "Downloading"
 msgstr "A transferir"
 
-#: src/MainWindow.py:4874
+#: src/MainWindow.py:4896
 msgid "i386 activating"
 msgstr "i386 a ativar"
 
-#: src/MainWindow.py:4883
+#: src/MainWindow.py:4905
 msgid "Removed: 100%"
 msgstr "Removido : 100%"
 
-#: src/MainWindow.py:4885
+#: src/MainWindow.py:4907
 msgid "Installed: 100%"
 msgstr "Instalado : 100%"
 
-#: src/MainWindow.py:4887
+#: src/MainWindow.py:4909
 msgid "Not Completed"
 msgstr "Não concluído"
 
-#: src/MainWindow.py:4889
+#: src/MainWindow.py:4911
 msgid "<b><span color='red'>Connection Error!</span></b>"
 msgstr "<b><span color='red'>Erro de ligação!</span></b>"
 
-#: src/MainWindow.py:4891
+#: src/MainWindow.py:4913
 msgid "<b><span color='red'>Dpkg Lock Error!</span></b>"
 msgstr "<b><span color='red'>Erro de bloqueio do dpkg!</span></b>"
 
-#: src/MainWindow.py:4893
+#: src/MainWindow.py:4915
 msgid "<b><span color='red'>Dpkg Interrupt Error!</span></b>"
 msgstr "<b><span color='red'>Erro de interrupção do dpkg!</span></b>"
 
-#: src/MainWindow.py:4957
+#: src/MainWindow.py:4983
 msgid ""
 "Only one software management tool is allowed to run at the same time.\n"
 "Please close the other application e.g. 'Update Manager', 'aptitude' or "
@@ -860,7 +885,7 @@ msgstr ""
 "Primeiro termine a outra aplicação, por exemplo, o 'Gestor de atualizações', "
 "'aptitude' ou 'Synaptic'."
 
-#: src/MainWindow.py:4970
+#: src/MainWindow.py:4996
 msgid ""
 "dpkg interrupt detected. Click the 'Fix' button or\n"
 "manually run 'sudo dpkg --configure -a' to fix the problem."
@@ -868,14 +893,14 @@ msgstr ""
 "Interrupção do dpkg detetada. Clique no botão 'Corrigir' ou\n"
 "execute manualmente 'sudo dpkg --configure -a' para corrigir o problema."
 
-#: src/MainWindow.py:5065 src/MainWindow.py:5139
+#: src/MainWindow.py:5091 src/MainWindow.py:5165
 msgid "Copy selected text"
 msgstr "Copiar texto selecionado"
 
-#: src/MainWindow.py:5201
+#: src/MainWindow.py:5227
 msgid "Error."
 msgstr "Erro."
 
-#: src/MainWindow.py:5203
+#: src/MainWindow.py:5229
 msgid "Process completed."
 msgstr "Processo concluído."
