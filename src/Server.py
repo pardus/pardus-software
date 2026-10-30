@@ -99,7 +99,11 @@ class Server(object):
             return False
 
         if success:
-            self.ServerHashesCB(True, json.loads(data))
+            response = self.parse_json(data, "hashes")
+            if isinstance(response, dict) and "md5" in response:
+                self.ServerHashesCB(True, response)
+            else:
+                self.ServerHashesCB(False)
         else:
             self.Logger.warning("_open_hashes_stream is not success")
             self.ServerHashesCB(False)  # Send to MainWindow
@@ -142,7 +146,20 @@ class Server(object):
                 self.Logger.warning("{} file downloaded but md5 is different!".format(download_location))
                 self.ServerFilesCB(False)
         else:
-            self.ServerFilesCB(True, type=type, response=json.loads(data))
+            response = self.parse_json(data, type)
+            if isinstance(response, dict):
+                self.ServerFilesCB(True, type=type, response=response)
+            else:
+                self.ServerFilesCB(False)
+
+    def parse_json(self, data, type):
+        # a proxy or a captive portal can answer with a html page
+        try:
+            return json.loads(data)
+        except ValueError as e:
+            self.error_message = "{} : {}".format(type, e)
+            self.Logger.warning("{} response is not json: {}".format(type, e))
+            return None
 
     def extract_archive(self, archive):
 
