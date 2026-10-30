@@ -782,7 +782,6 @@ class MainWindow(object):
         self.Package = Package()
         if self.Package.updatecache():
             self.isbroken = False
-            self.Package.getApps()
         else:
             self.isbroken = True
             self.Logger.warning("Error while updating Cache")
@@ -5149,7 +5148,6 @@ class MainWindow(object):
             if self.Package.updatecache():
                 self.ui_tryfix_stack.set_visible_child_name("done")
                 self.isbroken = False
-                self.Package.getApps()
             else:
                 self.ui_tryfix_stack.set_visible_child_name("error")
                 self.isbroken = True
