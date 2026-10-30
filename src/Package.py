@@ -471,6 +471,29 @@ class Package(object):
             self.Logger.exception("{}".format(e))
             return False, ""
 
+    def get_packages_of_files(self, filenames):
+        # dpkg reads its whole file database on every run, so ask once
+        def owners(patterns):
+            process = subprocess.run(["dpkg", "-S"] + patterns, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            for line in process.stdout.decode("utf-8", errors="replace").splitlines():
+                names, separator, path = line.rpartition(": ")
+                if separator and not names.startswith("diversion by "):
+                    yield path, names.split(",")[0].split(":")[0].strip()
+
+        packages = dict(owners(filenames))
+
+        # same fallback as a single lookup: desktop files outside of the package paths
+        missing = [filename for filename in filenames if filename not in packages]
+        if missing:
+            by_basename = {}
+            for path, package in owners([os.path.basename(filename) for filename in missing]):
+                by_basename.setdefault(os.path.basename(path), package)
+            for filename in missing:
+                if os.path.basename(filename) in by_basename:
+                    packages[filename] = by_basename[os.path.basename(filename)]
+
+        return packages
+
     def beauty_size(self, size):
         # apt uses MB rather than MiB, so let's stay consistent
         if not isinstance(size, int):
@@ -489,6 +512,14 @@ class Package(object):
         # total count for progress
         if du and total_callback:
             total_callback(len(desktop_apps))
+
+        packages = {}
+        if du and desktop_apps:
+            try:
+                packages = self.get_packages_of_files([app.get_filename() for app in desktop_apps])
+            except Exception as e:
+                self.Logger.warning("Error on get_packages_of_files")
+                self.Logger.exception("{}".format(e))
 
         for app in desktop_apps:
             if cancel_event and cancel_event.is_set():
@@ -516,9 +547,10 @@ class Package(object):
                 if cancel_event and cancel_event.is_set():
                     return None
 
-                package_name_found, required_changes, package_name = self.myapps_remove_details(filename)
+                package_name = packages.get(filename, "")
 
-                if package_name_found and required_changes:
+                if package_name:
+                    required_changes = self.required_changes(package_name, sleep=False)
                     disk_usage = required_changes.get("freed_size") or 0
 
             apps.append({
