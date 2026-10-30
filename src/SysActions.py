@@ -160,7 +160,7 @@ def main():
                 slistd = os.listdir(sdir)
                 for slist in slistd:
                     commented = ""
-                    if slist.endswith(".list"):
+                    if slist.endswith((".list", ".sources")):
                         try:
                             with open(os.path.join(sdir, slist), "r") as sread:
                                 for line in sread.readlines():
