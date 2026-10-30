@@ -763,9 +763,9 @@ class MainWindow(object):
             GLib.idle_add(self.homestack.set_visible_child_name, "noserver")
             GLib.idle_add(self.noserverlabel.set_markup, "<b>{}\n\n{}\n\n{}: {}</b>".format(
                 _("Could not connect to server."),
-                self.Server.error_message,
+                GLib.markup_escape_text("{}".format(self.Server.error_message), -1),
                 _("Server address"),
-                self.Server.serverurl))
+                GLib.markup_escape_text(self.Server.serverurl, -1)))
 
         GLib.idle_add(self.splashspinner.stop)
         GLib.idle_add(self.splashlabel.set_text, "")
@@ -2763,7 +2763,7 @@ class MainWindow(object):
             m_name = maintainer_info.get("name", "")
             m_mail = maintainer_info.get("mail", "")
             m_web = maintainer_info.get("website", "")
-            self.ui_ad_maintainer_name_label.set_markup(m_name)
+            self.ui_ad_maintainer_name_label.set_text(m_name)
             self.ui_ad_maintainer_mail_label.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
                 GLib.markup_escape_text(m_mail, -1),
                 GLib.markup_escape_text(m_mail, -1),
@@ -2913,7 +2913,7 @@ class MainWindow(object):
                 except Exception as e:
                     self.Logger.exception("{}".format(e))
 
-            self.ui_ad_maintainer_name_label.set_markup(maintainer_name)
+            self.ui_ad_maintainer_name_label.set_text(maintainer_name)
             self.ui_ad_maintainer_mail_label.set_markup("<a title='{}' href='mailto:{}'>{}</a>".format(
                 GLib.markup_escape_text(maintainer_mail, -1),
                 GLib.markup_escape_text(maintainer_mail, -1),
@@ -3346,7 +3346,8 @@ class MainWindow(object):
                 self.ui_myapp_pop_notfound_image.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
             self.ui_myapp_pop_notfound_image.set_pixel_size(64)
 
-            self.ui_myapp_pop_notfound_name.set_markup("<span size='large'><b>{}</b></span>".format(name))
+            self.ui_myapp_pop_notfound_name.set_markup(
+                "<span size='large'><b>{}</b></span>".format(GLib.markup_escape_text(name, -1)))
 
     def on_ui_myapp_details_popover_closed(self, popover):
         self.ui_myapp_pop_spinner.stop()
@@ -3652,7 +3653,8 @@ class MainWindow(object):
             comment = "{}\n{}".format(comment["summary"], comment["description"])
 
         label_author = Gtk.Label.new()
-        label_author.set_markup("<b>{}</b>".format(author))
+        # author, distro and version are free text, ODRS keeps them as they were sent
+        label_author.set_markup("<b>{}</b>".format(GLib.markup_escape_text("{}".format(author), -1)))
         label_author.set_selectable(True)
 
         label_date = Gtk.Label.new()
@@ -3693,11 +3695,11 @@ class MainWindow(object):
         label_comment.set_xalign = 0.0
 
         label_distro = Gtk.Label.new()
-        label_distro.set_markup("{}".format(distro))
+        label_distro.set_text("{}".format(distro))
         label_distro.set_selectable(True)
 
         label_appversion = Gtk.Label.new()
-        label_appversion.set_markup("{}: {}".format(_("App"), app_version))
+        label_appversion.set_text("{}: {}".format(_("App"), app_version))
         label_appversion.set_selectable(True)
 
         box_bottom = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 8)
