@@ -7,6 +7,7 @@ Created on Tue Jul  5 08:58:53 2022
 """
 
 import logging
+import logging.handlers
 import sys
 from pathlib import Path
 
@@ -24,6 +25,10 @@ class Logger(object):
 
         loglevel = logging.INFO  # Possible values are {DEBUG, INFO, WARN, ERROR, CRITICAL}
 
+        def file_handler():
+            # every app page writes its whole details and comments here
+            return logging.handlers.RotatingFileHandler(logfile, maxBytes=5 * 1024 * 1024, backupCount=1)
+
         if not Path.is_dir(Path(logdir)):
             Path(logdir).mkdir(parents=True, exist_ok=True)
 
@@ -31,14 +36,14 @@ class Logger(object):
             logging.basicConfig(level=loglevel,
                                 format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s",
                                 datefmt="%Y-%m-%d %H:%M:%S", encoding="utf-8",
-                                handlers=[logging.FileHandler(logfile), logging.StreamHandler()]
+                                handlers=[file_handler(), logging.StreamHandler()]
                                 )
         except Exception as e:
             print("{} - Logger will be use without utf-8 encoding".format(e))
             logging.basicConfig(level=loglevel,
                                 format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s",
                                 datefmt="%Y-%m-%d %H:%M:%S",
-                                handlers=[logging.FileHandler(logfile), logging.StreamHandler()]
+                                handlers=[file_handler(), logging.StreamHandler()]
                                 )
 
         self.logger = logging.getLogger(name)
