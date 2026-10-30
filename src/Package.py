@@ -31,7 +31,6 @@ class Package(object):
         self._repo_packages_cache = None
         try:
             self.cache = apt.Cache()
-            self.cache.open()
         except:
             return False
         if self.cache.broken_count > 0:
