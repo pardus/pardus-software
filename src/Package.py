@@ -23,14 +23,12 @@ from Logger import Logger
 class Package(object):
     def __init__(self):
         self._repo_packages_cache = None
-        self.apps = []
-        self.secs = []
-        self.sections = []
         self.update_cache_error_msg = ""
         self.cache_lock = threading.Lock()
         self.Logger = Logger(__name__)
 
     def updatecache(self):
+        self._repo_packages_cache = None
         try:
             self.cache = apt.Cache()
             self.cache.open()
@@ -40,21 +38,13 @@ class Package(object):
             return False
         return True
 
-    def getApps(self):
-        for mypkg in self.cache:
-            name = mypkg.name
-            try:
-                section = mypkg.candidate.section.lower()
-            except:
-                section = mypkg.versions[0].section.lower()
-            self.apps.append({"name": name, "category": section})
-
     def load_repo_packages(self):
         if self._repo_packages_cache is not None:
             return self._repo_packages_cache
 
-        cache = apt.Cache()
-        self._repo_packages_cache = [pkg.name for pkg in cache if pkg.candidate]
+        # Runs on the main thread when the first search starts, so use the cache
+        # that is already open instead of opening a second one.
+        self._repo_packages_cache = list(self.cache.keys())
 
         self.Logger.info(f"Repo package count: {len(self._repo_packages_cache)}")
 
