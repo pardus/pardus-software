@@ -71,6 +71,8 @@ class MainWindow(object):
         self.error_message = ""
 
         self.searching = False
+        self.search_texts = {}
+        self.search_fold = str.maketrans({"ç": "c", "ğ": "g", "ı": "i", "ö": "o", "ş": "s", "ü": "u", "\u0307": None})
 
         self.bottomrevealer = self.GtkBuilder.get_object("bottomrevealer")
 
@@ -3861,8 +3863,13 @@ class MainWindow(object):
     def on_ui_image_close_button_clicked(self, button):
         self.ui_image_popover.popdown()
 
+    def search_key(self, text):
+        # lower() turns İ into i + combining dot and I into i, so Turkish
+        # words in capitals never matched what people type
+        return text.strip().casefold().translate(self.search_fold)
+
     def installedapps_filter_function(self, row):
-        search_entry_text = self.ui_top_searchentry.get_text().lower()
+        search_entry_text = self.search_key(self.ui_top_searchentry.get_text())
         app = row.get_children()[0].get_children()[0].name
 
         name = app.get("name", "")
@@ -3871,7 +3878,7 @@ class MainWindow(object):
         executable = app.get("executable", "")
 
         if self.searching:
-            if any(search_entry_text in field.lower() for field in [name, description, keywords, executable]):
+            if any(search_entry_text in self.search_key(field) for field in [name, description, keywords, executable]):
                 return True
         else:
             return True
@@ -3882,23 +3889,21 @@ class MainWindow(object):
         app = row.get_children()[0].get_children()[0].name
         appname, details = next(iter(app.items()))
 
+        if self.searching:
+            search_text = self.search_texts.get(appname)
+            if search_text is None:
+                search_text = "\n".join(self.search_key(field) for field in [
+                    appname,
+                    details.get("prettyname", {}).get("en", ""),
+                    details.get("prettyname", {}).get("tr", ""),
+                    details.get("description", {}).get("en", ""),
+                    details.get("description", {}).get("tr", "")])
+                self.search_texts[appname] = search_text
+            return self.search_key(self.ui_top_searchentry.get_text()) in search_text
+
         categories = {cat[self.user_locale] for cat in details.get("category", [])}
 
-        search_entry_text = self.ui_top_searchentry.get_text().lower()
-
-        pn_en = details.get("prettyname", {}).get("en", "")
-        pn_tr = details.get("prettyname", {}).get("tr", "")
-        desc_en = details.get("description", {}).get("en", "")
-        desc_tr = details.get("description", {}).get("tr", "")
-
-        if self.searching:
-            if any(search_entry_text in field.lower() for field in [appname, pn_en, pn_tr, desc_en, desc_tr]):
-                return True
-        else:
-            if self.current_category in self.cat_all.get("name", []) or self.current_category in categories:
-                return True
-
-        return False
+        return self.current_category in self.cat_all.get("name", []) or self.current_category in categories
 
     def on_ui_pardusapps_combobox_changed(self, combo_box):
         if combo_box.get_active() == 0:  # sort by name
@@ -4025,9 +4030,8 @@ class MainWindow(object):
     def myapps_filter_func(self, row):
         # app info defined in uninstall button so getting this widget
         myapp_name = row.get_children()[0].get_children()[3].name
-        search = self.myapps_searchentry.get_text().lower()
-        if search in myapp_name["name"].lower() or search in myapp_name["description"].lower() or \
-                search in myapp_name["keywords"].lower() or search in myapp_name["executable"].lower():
+        search = self.search_key(self.myapps_searchentry.get_text())
+        if any(search in self.search_key(myapp_name[key]) for key in ["name", "description", "keywords", "executable"]):
             return True
 
     def installedapps_sort_func(self, row1, row2):
@@ -4065,11 +4069,12 @@ class MainWindow(object):
 
             self.ui_pardusapps_flowbox.invalidate_filter()
 
-            text = entry_search.get_text().strip().lower()
+            text = self.search_key(entry_search.get_text())
 
             self.Logger.info(f"store_apps searching for: {text}")
 
-            self.ui_searchterm_label.set_text(_("Results for {}").format(text) if text else _("Results"))
+            self.ui_searchterm_label.set_text(
+                _("Results for {}").format(entry_search.get_text().strip()) if text else _("Results"))
 
             self._repo_search_cancel_flag = True
 
