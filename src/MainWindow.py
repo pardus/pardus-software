@@ -4030,9 +4030,8 @@ class MainWindow(object):
     def myapps_filter_func(self, row):
         # app info defined in uninstall button so getting this widget
         myapp_name = row.get_children()[0].get_children()[3].name
-        search = self.myapps_searchentry.get_text().lower()
-        if search in myapp_name["name"].lower() or search in myapp_name["description"].lower() or \
-                search in myapp_name["keywords"].lower() or search in myapp_name["executable"].lower():
+        search = self.search_key(self.myapps_searchentry.get_text())
+        if any(search in self.search_key(myapp_name[key]) for key in ["name", "description", "keywords", "executable"]):
             return True
 
     def installedapps_sort_func(self, row1, row2):
